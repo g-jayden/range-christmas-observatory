@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node scripts/test-sync.mjs && node scripts/test-details.mjs && node scripts/test-update-retention.mjs",
+    "test": "node scripts/test-sync.mjs && node scripts/test-details.mjs && node scripts/test-update-retention.mjs && node scripts/test-controls.mjs",
     "build": "node scripts/build-static.mjs",
     "update": "node server/update-daily.mjs"
   }

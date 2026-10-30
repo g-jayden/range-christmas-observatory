@@ -1,10 +1,12 @@
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';
-import {sync,createReader,atomicJson,SourceError} from './sync.mjs';import {parseDetails,applyDetails} from './details.mjs';
+import {sync,createReader,atomicJson,SourceError} from './sync.mjs';import {parseDetails,applyDetails} from './details.mjs';import {scheduleLabel} from './schedule.mjs';import {apiBase} from './cloud-client.mjs';
 const key=process.env.FIRECRAWL_API_KEY||'',requestedFull=process.env.FULL_DETAILS!=='false';let full=requestedFull;
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-const nextRun=()=>{const local=new Date(Date.now()+8*3600000);return new Date(Date.UTC(local.getUTCFullYear(),local.getUTCMonth(),local.getUTCDate()+1)-8*3600000).toISOString()};
+let scheduleConfig;try{scheduleConfig=JSON.parse(await fs.readFile('web/settings.json','utf8'))}catch{scheduleConfig={intervalDays:7,time:'00:00',nextRunAt:null}}
+if(apiBase)try{const r=await fetch(apiBase+'/public/status');if(r.ok)scheduleConfig=(await r.json()).config}catch{}
+const nextRun=()=>scheduleConfig.nextRunAt;
 let previous=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));
-const state={schedule:'每天北京时间00:00开始',timezone:'Asia/Shanghai',nextCheckAt:nextRun(),startedAt:new Date().toISOString(),lastSuccess:previous.observedAt||null,revision:previous.revision||'baseline',running:true,mode:full?'full':'basic',lastError:null};
+const state={schedule:scheduleLabel(scheduleConfig),timezone:'Asia/Shanghai',nextCheckAt:nextRun(),startedAt:new Date().toISOString(),lastSuccess:previous.observedAt||null,revision:previous.revision||'baseline',running:true,mode:full?'full':'basic',lastError:null};
 async function balance(){if(!key)throw Error('Firecrawl account credential not configured');const r=await fetch('https://api.firecrawl.dev/v2/team/credit-usage',{headers:{authorization:'Bearer '+key},signal:AbortSignal.timeout(20000)});const b=await r.json();if(!r.ok)throw Error('Unable to verify source account quota');return b.data||b;}
 async function parallel(items,limit,task){let i=0;await Promise.all(Array.from({length:Math.min(limit,items.length)},async()=>{while(i<items.length){const item=items[i++];await task(item)}}));}
 try{
@@ -35,7 +37,7 @@ try{
   next=latest;
  }
  next.detailsAudit={mode:full?'all-SKU-pages-attempted':'basic-catalogue-only',checked,issues,completedAt:new Date().toISOString()};
- next.automation={enabled:true,schedule:'0 16 * * *',timezone:'Asia/Shanghai',type:'GitHub Actions daily cloud update',mode:full?'full':'basic'};
+ next.automation={enabled:true,schedule:scheduleLabel(scheduleConfig),intervalDays:scheduleConfig.intervalDays,time:scheduleConfig.time,timezone:'Asia/Shanghai',type:'Configurable periodic cloud update',mode:full?'full':'basic'};
  const images=next.products.filter(p=>/^https:\/\//.test(p.variantImageUrl||p.imageUrl||''));let mirrored=0;const failures=[];
  // Cache genuine source photographs when the source permits a server-side download.
  await fs.mkdir('web/images',{recursive:true});

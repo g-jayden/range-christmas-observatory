@@ -1,8 +1,8 @@
-name: Daily catalogue and permanent website
+name: Full catalogue refresh and permanent website
 on:
   push:
     branches: [main]
-    paths-ignore: ['web/catalogue.json', 'web/status.json', 'web/images/**']
+    paths-ignore: ['web/catalogue.json', 'web/status.json', 'web/settings.json', 'web/images/**']
   workflow_dispatch:
     inputs:
       refresh:
@@ -14,8 +14,10 @@ on:
         type: choice
         options: [full, catalogue]
         default: full
-  schedule:
-    - cron: '0 16 * * *'
+      scheduleLease:
+        description: Internal scheduled execution lease
+        type: string
+        required: false
 permissions:
   contents: write
   pages: write
@@ -27,6 +29,9 @@ jobs:
   website:
     runs-on: ubuntu-latest
     timeout-minutes: 350
+    env:
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -36,7 +41,7 @@ jobs:
         with:
           node-version: '24'
       - name: Verify source parsing and completeness safeguards
-        run: node scripts/test-sync.mjs && node scripts/test-details.mjs && node scripts/test-update-retention.mjs
+        run: node scripts/test-sync.mjs && node scripts/test-details.mjs && node scripts/test-update-retention.mjs && node scripts/test-controls.mjs
       - name: Restore resumable product details
         uses: actions/cache/restore@v6.1.0
         with:
@@ -45,12 +50,18 @@ jobs:
           restore-keys: details-
       - name: Daily source update
         id: refresh
-        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)
+        if: github.event_name == 'workflow_dispatch' && inputs.refresh
         continue-on-error: true
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
           FULL_DETAILS: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'catalogue' && 'false' || 'true' }}
         run: node server/update-daily.mjs
+      - name: Complete the selected interval and preserve the next scheduled time
+        if: always() && steps.refresh.outcome != 'skipped'
+        env:
+          REFRESH_SUCCESS: ${{ steps.refresh.outcome == 'success' }}
+          SCHEDULE_LEASE: ${{ inputs.scheduleLease }}
+        run: node scripts/complete-full.mjs
       - name: Save resumable details
         continue-on-error: true
         if: always() && steps.refresh.outcome != 'skipped'
@@ -62,7 +73,7 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add web/catalogue.json web/status.json web/images
+          git add web/catalogue.json web/status.json web/settings.json web/images
           git diff --cached --quiet || git commit -m "Update audited catalogue and source check status"
           git push
       - uses: actions/configure-pages@v6.0.0
