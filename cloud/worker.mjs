@@ -24,7 +24,7 @@ export class Control{
   const url=new URL(req.url),route=url.pathname;
   if(route==='/public/status'&&req.method==='GET'){
    const config=await this.config(),monitor=await this.db.get('monitor')||{state:'not-started',intervalMinutes:15};
-   return response({config,schedule:scheduleLabel(config),monitor,mailReady:Boolean(this.env.BREVO_API_KEY&&this.env.MAIL_FROM),recent:await this.db.get('recent')||[]});
+   return response({config,schedule:scheduleLabel(config),baselineReady:Boolean(await this.db.get('seeded')),monitor,mailReady:Boolean(this.env.BREVO_API_KEY&&this.env.MAIL_FROM),recent:await this.db.get('recent')||[]});
   }
   if(route.startsWith('/shots/')&&req.method==='GET'){
    const access=route.slice(7);if(!/^[a-f\d]{64}$/.test(access))return response({error:'Not found'},404);
