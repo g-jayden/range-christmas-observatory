@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';import {firstRun,advanceRun,validateSchedule} from '../server/schedule.mjs';import {Control} from '../cloud/worker.mjs';
 const start=new Date('2026-10-30T08:20:00Z');
 assert.equal(firstRun({},start).nextRunAt,'2026-11-05T16:00:00.000Z');
+assert.equal(validateSchedule({intervalDays:'',time:'19:25'}).time,'00:00');
 assert.equal(firstRun({intervalDays:3,time:'23:59'},start).nextRunAt,'2026-11-02T15:59:00.000Z');
 assert.equal(advanceRun(firstRun({},start),new Date('2026-11-22T08:00:00Z')).nextRunAt,'2026-11-26T16:00:00.000Z');
-for(const v of [{intervalDays:1},{intervalDays:30},{time:'24:00'},{time:'1:00'},{time:'12:60'}])assert.throws(()=>validateSchedule(v));
+for(const v of [{intervalDays:1},{intervalDays:30},{intervalDays:7,time:'24:00'},{intervalDays:7,time:'1:00'},{intervalDays:7,time:'12:60'}])assert.throws(()=>validateSchedule(v));
 class Store{
  constructor(){this.m=new Map}
  async get(k){return structuredClone(this.m.get(k))}
