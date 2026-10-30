@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';import {firstRun,advanceRun,validateSchedule} from '../server/schedule.mjs';import {Control} from '../cloud/worker.mjs';import {retryingReader} from '../server/retry-reader.mjs';
+import assert from 'node:assert/strict';import {firstRun,advanceRun,validateSchedule} from '../server/schedule.mjs';import handler,{Control} from '../cloud/worker.mjs';import {retryingReader} from '../server/retry-reader.mjs';
 const start=new Date('2026-10-30T08:20:00Z');
 assert.equal(firstRun({},start).nextRunAt,'2026-11-05T16:00:00.000Z');
 assert.equal(validateSchedule({intervalDays:'',time:'19:25'}).time,'00:00');
@@ -28,7 +28,9 @@ try{
  assert.equal((await call('/subscribe',{email:'reader@example.com',scopes:['tree']})).status,200);assert.equal(sent.length,1);
  const confirmUrl=sent[0].htmlContent.match(/https:\/\/[^" ]+\/confirm\?token=[^" ]+/)[0],form=new URLSearchParams({token:new URL(confirmUrl).searchParams.get('token')});
  const before=await call('/public/status');assert.ok(!(await before.text()).includes('reader@example.com'));
- await app.fetch(new Request(confirmUrl,{method:'POST',body:form}));
+ const frontEnv={CONTROL:{getByName:()=>app}};
+ const blocked=await handler.fetch(new Request(confirmUrl,{method:'POST',headers:{origin:'https://unrelated.example'},body:form}),frontEnv);assert.equal(blocked.status,403);
+ const verified=await handler.fetch(new Request(confirmUrl,{method:'POST',headers:{origin:new URL(confirmUrl).origin},body:form}),frontEnv);assert.equal(verified.status,200,'The confirmation form hosted on the API origin must be allowed to POST');
  for(const [k,v]of await storage.list({prefix:'sub/'})){v.confirmedAt=new Date(Date.now()-10000).toISOString();await storage.put(k,v)}
  const pendingPlan=await(await call('/internal/monitor-plan',{lease:claim.lease,products:[]},'control')).json();assert.deepEqual(pendingPlan.candidates.map(p=>p.sku),['101'],'Detected NEW remains pending if the next list no longer carries its NEW flag');
  const p={...rows[1],kind:'tree',priceGBP:12.99,variantName:'Test <tree>',description:'Actual source product information'};

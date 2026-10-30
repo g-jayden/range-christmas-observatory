@@ -69,6 +69,9 @@ export class Control{
   }
   if(route.startsWith('/internal/')){
    checkAuth(req,this.env.CONTROL_TOKEN);
+   if(route==='/internal/mail-status'&&req.method==='GET'){
+    const subs=[...(await this.db.list({prefix:'sub/'})).values()];return response({confirmedSubscriptions:subs.filter(s=>s.confirmedAt).length,pendingSubscriptions:subs.filter(s=>!s.confirmedAt).length,pendingScreenshots:(await this.db.list({prefix:'pending/'})).size});
+   }
    if(route==='/internal/seed'&&req.method==='POST'){
     if(await this.db.get('seeded'))return response({seeded:true,changed:false});
     const b=await req.json();if(!Array.isArray(b.records)||b.records.length>10000)throw Error('Invalid baseline');
@@ -134,7 +137,7 @@ export class Control{
  }
 }
 export default {async fetch(req,env){
- const origin=req.headers.get('origin');if(origin&&origin!==SITE)return response({error:'Origin not allowed'},403);
+ const origin=req.headers.get('origin'),target=new URL(req.url),sameOriginForm=origin===target.origin&&['/confirm','/unsubscribe'].includes(target.pathname);if(origin&&origin!==SITE&&!sameOriginForm)return response({error:'Origin not allowed'},403);
  const headers={'access-control-allow-origin':SITE,'access-control-allow-methods':'GET,POST,OPTIONS','access-control-allow-headers':'Content-Type,Authorization','vary':'Origin','cache-control':'no-store','x-content-type-options':'nosniff'};
  if(req.method==='OPTIONS')return new Response(null,{status:204,headers});
  const size=Number(req.headers.get('content-length')||0);if(size>8000000)return response({error:'Request too large'},413);
