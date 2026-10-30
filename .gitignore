@@ -1,0 +1,5 @@
+runtime/
+public/
+.env
+node_modules/
+.firecrawl/

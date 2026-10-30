@@ -1,0 +1,1 @@
+{"schedule": "每天北京时间00:00开始（等待云端启用）", "timezone": "Asia/Shanghai", "running": false, "enabled": false, "lastSuccess": "2026-10-30T03:28:31.343Z", "revision": "74f25be130e7affa8b55ffd5efeda15c46e2934d68c468b960485f4093fb58b1", "mode": "initial", "lastError": null, "stats": {"tree": {"count": 1361, "newCount": 108}, "skirt": {"count": 151, "newCount": 17}}}

@@ -1,0 +1,74 @@
+name: Daily catalogue and permanent website
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['web/catalogue.json', 'web/status.json', 'web/images/**']
+  workflow_dispatch:
+    inputs:
+      refresh:
+        description: Refresh source data before publishing
+        type: boolean
+        default: true
+  schedule:
+    - cron: '0 16 * * *'
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: daily-catalogue-pages
+  cancel-in-progress: false
+jobs:
+  website:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - name: Verify source parsing and completeness safeguards
+        run: node scripts/test-sync.mjs && node scripts/test-details.mjs
+      - name: Restore resumable product details
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: runtime/details
+          key: details-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: details-
+      - name: Daily source update
+        id: refresh
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)
+        continue-on-error: true
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          FULL_DETAILS: ${{ vars.FULL_DETAILS || 'true' }}
+        run: node server/update-daily.mjs
+      - name: Save resumable details
+        continue-on-error: true
+        if: always() && steps.refresh.outcome != 'skipped'
+        uses: actions/cache/save@v6.1.0
+        with:
+          path: runtime/details
+          key: details-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Preserve verified snapshot and status
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add web/catalogue.json web/status.json web/images
+          git diff --cached --quiet || git commit -m "Update audited catalogue and source check status"
+          git push
+      - uses: actions/configure-pages@v6.0.0
+      - name: Build site
+        run: node scripts/build-static.mjs
+      - uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          path: public
+      - name: Publish permanent website
+        id: deployment
+        uses: actions/deploy-pages@v5.0.1
+      - name: Flag failed source refresh without losing last complete website
+        if: steps.refresh.outcome == 'failure'
+        run: exit 1
