@@ -3,3 +3,8 @@ public/
 .env
 node_modules/
 .firecrawl/
+
+.wrangler/
+.dev.vars
+.env.*
+*.private*
