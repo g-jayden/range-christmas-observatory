@@ -36,7 +36,7 @@ jobs:
         with:
           node-version: '24'
       - name: Verify source parsing and completeness safeguards
-        run: node scripts/test-sync.mjs && node scripts/test-details.mjs
+        run: node scripts/test-sync.mjs && node scripts/test-details.mjs && node scripts/test-update-retention.mjs
       - name: Restore resumable product details
         uses: actions/cache/restore@v6.1.0
         with:

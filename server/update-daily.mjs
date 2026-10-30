@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';
 import {sync,createReader,atomicJson,SourceError} from './sync.mjs';import {parseDetails,applyDetails} from './details.mjs';
-const key=process.env.FIRECRAWL_API_KEY||'',full=process.env.FULL_DETAILS!=='false';
+const key=process.env.FIRECRAWL_API_KEY||'',requestedFull=process.env.FULL_DETAILS!=='false';let full=requestedFull;
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const nextRun=()=>{const local=new Date(Date.now()+8*3600000);return new Date(Date.UTC(local.getUTCFullYear(),local.getUTCMonth(),local.getUTCDate()+1)-8*3600000).toISOString()};
 let previous=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));
@@ -8,7 +8,9 @@ const state={schedule:'每天北京时间00:00开始',timezone:'Asia/Shanghai',n
 async function balance(){if(!key)throw Error('Firecrawl account credential not configured');const r=await fetch('https://api.firecrawl.dev/v2/team/credit-usage',{headers:{authorization:'Bearer '+key},signal:AbortSignal.timeout(20000)});const b=await r.json();if(!r.ok)throw Error('Unable to verify source account quota');return b.data||b;}
 async function parallel(items,limit,task){let i=0;await Promise.all(Array.from({length:Math.min(limit,items.length)},async()=>{while(i<items.length){const item=items[i++];await task(item)}}));}
 try{
- const credits=await balance();const estimated=(full?previous.products.length:0)+60;if(credits.remainingCredits<estimated)throw Error('Source quota insufficient for complete '+(full?'SKU details':'catalogue')+' update: '+credits.remainingCredits+' available, estimated '+estimated+' required');
+ const credits=await balance();const estimated=previous.products.length+60;
+ if(full&&credits.remainingCredits<estimated){full=false;state.mode='basic';state.fullUpdatePending='采集账户额度尚不足以逐SKU全量复核；本轮更新完整基础目录，原有规格保留核验日期。';console.log('Full SKU recheck pending account credits; complete catalogue fields will still refresh.');}
+ if(credits.remainingCredits<40)throw Error('采集账户额度不足，保留上次完整目录；需要补充采集额度。');
  const paid=credits.planCredits>=100000,delayMs=paid?250:credits.planCredits>=5000?750:6500,workers=paid?8:credits.planCredits>=5000?3:1;
  const reader=createReader({key,delayMs});
  let next=await sync({previous,reader,onProgress:category=>console.log('Catalogue '+category)});
