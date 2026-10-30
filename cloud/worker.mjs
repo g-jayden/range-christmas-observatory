@@ -1,4 +1,4 @@
-import {firstRun,advanceRun,scheduleLabel} from '../server/schedule.mjs';
+import {firstRun,advanceRun,scheduleLabel,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';
 const SITE='https://g-jayden.github.io';
 const HOME=SITE+'/range-christmas-observatory/';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -11,6 +11,11 @@ function verifyUrl(raw,hosts){const u=new URL(raw);if(u.protocol!=='https:'||!ho
 export class Control{
  constructor(ctx,env){this.ctx=ctx;this.env=env;this.db=ctx.storage;}
  async config(){return await this.db.get('config')||firstRun();}
+ async monitorState(){
+  const m=await this.db.get('monitor')||{};
+  if(m.scheduleVersion!=='weekly-wed-0700'){delete m.intervalMinutes;Object.assign(m,{scheduleVersion:'weekly-wed-0700',schedule:'每周三北京时间07:00检查一次新品，完成后推送',weekday:3,time:'07:00',timezone:'Asia/Shanghai',nextRunAt:nextNewCheck(),state:m.lastSuccess?'active':'not-started'});await this.db.put('monitor',m)}
+  return m;
+ }
  async send(to,subject,html,attachments=[],idempotencyKey){
   if(!this.env.BREVO_API_KEY||!this.env.MAIL_FROM)throw Object.assign(Error('邮件服务尚未连接，尚未发送邮件。'),{status:503});
   const r=await fetch('https://api.brevo.com/v3/smtp/email',{method:'POST',headers:{'api-key':this.env.BREVO_API_KEY,'content-type':'application/json'},body:JSON.stringify({sender:{email:this.env.MAIL_FROM,name:'圣诞新品观察'},to:[{email:to}],subject,htmlContent:html,...(idempotencyKey?{headers:{idempotencyKey}}:{}),...(attachments.length?{attachment:attachments}:{})}),signal:AbortSignal.timeout(20000)});
@@ -23,7 +28,7 @@ export class Control{
  async route(req){
   const url=new URL(req.url),route=url.pathname;
   if(route==='/public/status'&&req.method==='GET'){
-   const config=await this.config(),monitor=await this.db.get('monitor')||{state:'not-started',intervalMinutes:15};
+   const config=await this.config(),monitor=await this.monitorState();
    return response({config,schedule:scheduleLabel(config),baselineReady:Boolean(await this.db.get('seeded')),monitor:{...monitor,pendingScreenshots:(await this.db.list({prefix:'pending/'})).size},mailReady:Boolean(this.env.BREVO_API_KEY&&this.env.MAIL_FROM),recent:await this.db.get('recent')||[]});
   }
   if(route.startsWith('/shots/')&&req.method==='GET'){
@@ -44,6 +49,12 @@ export class Control{
    if(route==='/confirm'){sub.confirmedAt=new Date().toISOString();await this.db.put('sub/'+record.id,sub);await this.db.delete('token/'+key)}
    else{await this.db.delete('sub/'+record.id);await this.db.delete('token/'+key)}
    return new Response(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><p>${route==='/confirm'?'订阅已确认。只推送订阅后新发现的NEW，不补发已有基线商品。':'已取消订阅。'}</p><a href="${HOME}">返回网站</a>`,{headers:{'content-type':'text/html;charset=utf-8','cache-control':'no-store'}});
+  }
+  if(req.method==='POST'&&route==='/unsubscribe-by-email'){
+   const b=await req.json(),email=String(b.email||'').trim().toLowerCase();if(!validEmail(email))return response({error:'请输入一个有效邮箱地址。'},400);
+   const id=await hash(email);await this.db.delete('sub/'+id);
+   for(const [key,value]of await this.db.list({prefix:'token/'}))if(value.id===id)await this.db.delete(key);
+   return response({message:'该邮箱的新品邮件订阅已取消，后续不再推送。'});
   }
   if(req.method==='POST'&&route==='/subscribe'){
    const body=await req.json(),email=String(body.email||'').trim().toLowerCase();
@@ -80,12 +91,12 @@ export class Control{
     const entries=Object.entries(values);for(let i=0;i<entries.length;i+=100)await this.db.put(Object.fromEntries(entries.slice(i,i+100)));await this.db.put('seeded',new Date().toISOString());return response({seeded:true,changed:true});
    }
    if(route==='/internal/claim'&&req.method==='POST'){
-    const options=await req.json(),config=await this.config(),now=Date.now(),lease=token(),initialized=await this.db.get('seeded');
+    const options=await req.json(),config=await this.config(),monitorState=await this.monitorState(),now=Date.now(),lease=token(),initialized=await this.db.get('seeded');
     let full=false,monitor=false;
     await this.db.transaction(async db=>{
      const f=await db.get('lease/full');if(now>=Date.parse(config.nextRunAt)&&(!f||f.expires<now)){full=true;await db.put('lease/full',{lease,expires:now+7*3600000,revision:config.revision||null,due:config.nextRunAt})}
-     const m=await db.get('lease/monitor'),last=await db.get('monitor');
-     if(initialized&&this.env.BREVO_API_KEY&&(!m||m.expires<now)&&(options.forceMonitor===true||now-Date.parse(last?.checkedAt||0)>=15*60000)){monitor=true;await db.put('lease/monitor',{lease,expires:now+20*60000})}
+     const m=await db.get('lease/monitor');
+     if(initialized&&this.env.BREVO_API_KEY&&(!m||m.expires<now)&&(options.forceMonitor===true||now>=Date.parse(monitorState.nextRunAt))){monitor=true;await db.put('lease/monitor',{lease,expires:now+20*60000})}
     });
     return response({config,full,monitor,lease});
    }
@@ -112,8 +123,8 @@ export class Control{
    }
    if(route==='/internal/monitor-complete'&&req.method==='POST'){
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
-    const previous=await this.db.get('monitor')||{};
-    await this.db.put('monitor',{...previous,state:b.success?'active':'error',intervalMinutes:15,checkedAt:new Date().toISOString(),lastSuccess:b.success?new Date().toISOString():previous.lastSuccess||null,lastError:b.success?null:String(b.error||'源站检查未完成').slice(0,200),scanned:b.scanned||0,newCount:b.newCount||0});await this.db.delete('lease/monitor');return response({saved:true});
+    const previous=await this.monitorState();
+    await this.db.put('monitor',{...previous,state:b.success?'active':'error',nextRunAt:advanceNewCheck(previous.nextRunAt),checkedAt:new Date().toISOString(),lastSuccess:b.success?new Date().toISOString():previous.lastSuccess||null,lastError:b.success?null:String(b.error||'源站检查未完成').slice(0,200),scanned:b.scanned||0,newCount:b.newCount||0});await this.db.delete('lease/monitor');return response({saved:true});
    }
    if(route==='/internal/deliver'&&req.method==='POST'){
     const events=await this.db.list({prefix:'event/'}),subs=await this.db.list({prefix:'sub/'});let accepted=0;
@@ -126,6 +137,7 @@ export class Control{
       if(!content){const chunks=[];for(let i=0;i<p.screenshotParts;i++)chunks.push(await this.db.get('shot/'+p.sku+'/'+i));content=chunks.join('')}
       const unsubscribe=url.origin+'/unsubscribe?token='+encodeURIComponent(sub.unsubscribe);
       const html=`<div style="font:16px/1.7 Arial,sans-serif;max-width:1000px;margin:auto"><p style="color:#b22">NEW · ${p.kind==='skirt'?'圣诞树裙':'圣诞树'}</p><h1>${esc(p.variantName)}</h1><p>SKU ${esc(p.sku)} · £${Number(p.priceGBP).toFixed(2)} · 发现时间 ${esc(p.detectedAt)}</p><p><a href="${esc(p.sourceUrl)}">打开原站具体商品购买页</a></p><a href="${esc(p.sourceUrl)}"><img src="${url.origin}/shots/${p.imageAccess}" alt="原站商品页真实截图：${esc(p.variantName)}" style="width:100%;height:auto;border:1px solid #ddd"></a><p>${esc(p.description||'完整介绍和规格请查看附件原站截图及购买页。')}</p><p>附件为此SKU商品页的真实截图，包含原站图片、介绍与规格；采集时页面可能变化。正文预览保留14天，附件可长期保存。</p><p><a href="${esc(unsubscribe)}">取消订阅</a> · <a href="${HOME}">查看分析网站</a></p></div>`;
+      if(!await this.db.get(subKey))continue;
       const id=await this.send(sub.email,'NEW｜'+p.variantName,html,[{name:'NEW-'+p.sku+'.png',content}],await hash(p.sku+'/'+subKey));
       await this.db.put(delivered,{acceptedAt:new Date().toISOString(),providerId:id});accepted++;if(accepted>=20)return response({accepted,morePending:true});
      }

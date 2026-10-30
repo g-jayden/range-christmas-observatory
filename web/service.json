@@ -1,1 +1,1 @@
-{"apiBase": "https://range-christmas-control.https-www-therange-co-uk-christmas-2.workers.dev", "monitorIntervalMinutes": 15, "state": "connected"}
+{"apiBase": "https://range-christmas-control.https-www-therange-co-uk-christmas-2.workers.dev", "state": "connected", "newCheckTime": "07:00", "timezone": "Asia/Shanghai", "newCheckWeekday": 3, "newCheckSchedule": "weekly-wednesday"}

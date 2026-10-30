@@ -1,5 +1,9 @@
-import assert from 'node:assert/strict';import {firstRun,advanceRun,validateSchedule} from '../server/schedule.mjs';import handler,{Control} from '../cloud/worker.mjs';import {retryingReader} from '../server/retry-reader.mjs';
+import assert from 'node:assert/strict';import {firstRun,advanceRun,validateSchedule,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';import handler,{Control} from '../cloud/worker.mjs';import {retryingReader} from '../server/retry-reader.mjs';
 const start=new Date('2026-10-30T08:20:00Z');
+assert.equal(nextNewCheck(new Date('2026-10-30T09:00:00Z')),'2026-11-03T23:00:00.000Z');
+assert.equal(nextNewCheck(new Date('2026-11-03T22:59:00Z')),'2026-11-03T23:00:00.000Z');
+assert.equal(nextNewCheck(new Date('2026-11-03T23:00:00Z')),'2026-11-10T23:00:00.000Z');
+assert.equal(advanceNewCheck('2026-11-03T23:00:00Z',new Date('2026-11-03T23:07:00Z')),'2026-11-10T23:00:00.000Z');
 assert.equal(firstRun({},start).nextRunAt,'2026-11-05T16:00:00.000Z');
 assert.equal(validateSchedule({intervalDays:'',time:'19:25'}).time,'00:00');
 assert.equal(firstRun({intervalDays:3,time:'23:59'},start).nextRunAt,'2026-11-02T15:59:00.000Z');
@@ -22,7 +26,8 @@ try{
  assert.equal((await(await call('/public/status')).json()).config.time,'04:17');
  await call('/internal/seed',{records:[{sku:'100',everNew:true},{sku:'101',everNew:false}]},'control');
  let attempts=0;const flaky=retryingReader(async()=>{if(++attempts<3)throw Object.assign(Error('internal proxy error'),{status:502});return 'ok'},{delayMs:0});assert.equal(await flaky('test'),'ok');assert.equal(attempts,3);
- const claim=await(await call('/internal/claim',{},'control')).json();assert.equal(claim.monitor,true);
+ const regular=await(await call('/internal/claim',{},'control')).json();assert.equal(regular.monitor,false,'The old 15-minute timer must not scan source products before the next Wednesday07:00 time');
+ const claim=await(await call('/internal/claim',{forceMonitor:true},'control')).json();assert.equal(claim.monitor,true);
  const rows=[{sku:'100',newStatus:true,sourceUrl:'https://www.therange.co.uk/p/test/#100'},{sku:'101',newStatus:true,sourceUrl:'https://www.therange.co.uk/p/test/#101'}];
  const plan=await(await call('/internal/monitor-plan',{lease:claim.lease,products:rows},'control')).json();assert.deepEqual(plan.candidates.map(p=>p.sku),['101']);
  assert.equal((await call('/subscribe',{email:'reader@example.com',scopes:['tree']})).status,200);assert.equal(sent.length,1);
@@ -38,6 +43,8 @@ try{
  await call('/internal/event',{lease:claim.lease,product:p,screenshotBase64:Buffer.from('image-bytes').toString('base64'),screenshotVerifiedAt:new Date().toISOString()},'control');
  await call('/internal/deliver',{},'control');assert.equal(sent.length,2);assert.equal(sent[1].to[0].email,'reader@example.com');assert.equal(sent[1].attachment[0].name,'NEW-101.png');assert.ok(sent[1].htmlContent.includes('Test &lt;tree&gt;'));
  await call('/internal/deliver',{},'control');assert.equal(sent.length,2,'An already accepted event must not be sent twice');
+ const cancelled=await call('/unsubscribe-by-email',{email:'reader@example.com'});assert.equal(cancelled.status,200);assert.equal((await storage.list({prefix:'sub/'})).size,0);assert.equal((await storage.list({prefix:'token/'})).size,0);await call('/internal/deliver',{},'control');assert.equal(sent.length,2,'Unsubscribed address receives no further events');
+ const absent=await call('/unsubscribe-by-email',{email:'not-present@example.com'});assert.deepEqual(await absent.json(),await cancelled.json(),'Unsubscribe does not reveal whether an address was subscribed');
  const publicView=JSON.stringify(await(await call('/public/status')).json());assert.ok(!publicView.includes('reader@example.com'));assert.ok(!publicView.includes('screenshotBase64'));
  await call('/internal/monitor-complete',{lease:claim.lease,success:false,error:'Source unavailable'},'control');const state=await(await call('/public/status')).json();assert.equal(state.monitor.state,'error');assert.equal(state.monitor.lastSuccess,null);
  const missingMail=new Control({storage:new Store},{ADMIN_TOKEN:'admin',CONTROL_TOKEN:'control'});assert.equal((await missingMail.fetch(new Request('https://worker.example/subscribe',{method:'POST',body:JSON.stringify({email:'reader@example.com'})}))).status,503);

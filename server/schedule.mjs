@@ -17,3 +17,10 @@ export function advanceRun(config,now=new Date()){
  return {...config,nextRunAt:new Date(due).toISOString()};
 }
 export const scheduleLabel=c=>`每隔${c.intervalDays}天，北京时间${c.time}启动`;
+export function nextNewCheck(now=new Date()){
+ const local=new Date(+now+8*3600000),daysToWednesday=(3-local.getUTCDay()+7)%7;let due=Date.UTC(local.getUTCFullYear(),local.getUTCMonth(),local.getUTCDate()+daysToWednesday,7,0)-8*3600000;
+ if(due<=+now)due+=7*DAY;return new Date(due).toISOString();
+}
+export function advanceNewCheck(due,now=new Date()){
+ let value=Date.parse(due);if(!Number.isFinite(value))return nextNewCheck(now);while(value<=+now)value+=7*DAY;return new Date(value).toISOString();
+}
