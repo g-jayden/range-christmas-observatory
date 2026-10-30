@@ -24,7 +24,7 @@ export class Control{
   const url=new URL(req.url),route=url.pathname;
   if(route==='/public/status'&&req.method==='GET'){
    const config=await this.config(),monitor=await this.db.get('monitor')||{state:'not-started',intervalMinutes:15};
-   return response({config,schedule:scheduleLabel(config),baselineReady:Boolean(await this.db.get('seeded')),monitor,mailReady:Boolean(this.env.BREVO_API_KEY&&this.env.MAIL_FROM),recent:await this.db.get('recent')||[]});
+   return response({config,schedule:scheduleLabel(config),baselineReady:Boolean(await this.db.get('seeded')),monitor:{...monitor,pendingScreenshots:(await this.db.list({prefix:'pending/'})).size},mailReady:Boolean(this.env.BREVO_API_KEY&&this.env.MAIL_FROM),recent:await this.db.get('recent')||[]});
   }
   if(route.startsWith('/shots/')&&req.method==='GET'){
    const access=route.slice(7);if(!/^[a-f\d]{64}$/.test(access))return response({error:'Not found'},404);
@@ -77,12 +77,12 @@ export class Control{
     const entries=Object.entries(values);for(let i=0;i<entries.length;i+=100)await this.db.put(Object.fromEntries(entries.slice(i,i+100)));await this.db.put('seeded',new Date().toISOString());return response({seeded:true,changed:true});
    }
    if(route==='/internal/claim'&&req.method==='POST'){
-    const config=await this.config(),now=Date.now(),lease=token(),initialized=await this.db.get('seeded');
+    const options=await req.json(),config=await this.config(),now=Date.now(),lease=token(),initialized=await this.db.get('seeded');
     let full=false,monitor=false;
     await this.db.transaction(async db=>{
      const f=await db.get('lease/full');if(now>=Date.parse(config.nextRunAt)&&(!f||f.expires<now)){full=true;await db.put('lease/full',{lease,expires:now+7*3600000,revision:config.revision||null,due:config.nextRunAt})}
      const m=await db.get('lease/monitor'),last=await db.get('monitor');
-     if(initialized&&this.env.BREVO_API_KEY&&(!m||m.expires<now)&&now-Date.parse(last?.checkedAt||0)>=15*60000){monitor=true;await db.put('lease/monitor',{lease,expires:now+20*60000})}
+     if(initialized&&this.env.BREVO_API_KEY&&(!m||m.expires<now)&&(options.forceMonitor===true||now-Date.parse(last?.checkedAt||0)>=15*60000)){monitor=true;await db.put('lease/monitor',{lease,expires:now+20*60000})}
     });
     return response({config,full,monitor,lease});
    }
@@ -94,18 +94,17 @@ export class Control{
    if(route==='/internal/monitor-plan'&&req.method==='POST'){
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
     if(!Array.isArray(b.products)||b.products.length>10000)throw Error('Invalid scan');
-    const candidates=[];
-    for(const p of b.products){if(!/^\d{1,12}$/.test(p.sku))throw Error('Invalid SKU');verifyUrl(p.sourceUrl,['therange.co.uk']);if(p.newStatus&&!await this.db.get('seen/'+p.sku))candidates.push(p)}
-    return response({candidates});
+    for(const p of b.products){if(!/^\d{1,12}$/.test(p.sku))throw Error('Invalid SKU');verifyUrl(p.sourceUrl,['therange.co.uk']);if(p.newStatus&&!await this.db.get('seen/'+p.sku)&&!await this.db.get('pending/'+p.sku))await this.db.put('pending/'+p.sku,{...p,firstDetectedAt:new Date().toISOString()})}
+    return response({candidates:[...(await this.db.list({prefix:'pending/'})).values()]});
    }
    if(route==='/internal/event'&&req.method==='POST'){
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
     const p=b.product;if(!/^\d{1,12}$/.test(p?.sku))throw Error('Invalid SKU');verifyUrl(p.sourceUrl,['therange.co.uk']);
     if(await this.db.get('seen/'+p.sku))return response({alreadyRecorded:true});
     if(!b.screenshotBase64||b.screenshotBase64.length>7000000||!/^[A-Za-z0-9+/=]+$/.test(b.screenshotBase64))return response({error:'原站截图尚未取得，等待重试；不会用主图冒充截图。'},422);
-    const parts=b.screenshotBase64.match(/.{1,60000}/g),imageAccess=await hash(token()),record={...p,imageAccess,screenshotParts:parts.length,detectedAt:new Date().toISOString(),screenshotVerifiedAt:b.screenshotVerifiedAt};
+    const pending=await this.db.get('pending/'+p.sku),parts=b.screenshotBase64.match(/.{1,60000}/g),imageAccess=await hash(token()),record={...p,imageAccess,screenshotParts:parts.length,detectedAt:pending?.firstDetectedAt||new Date().toISOString(),screenshotVerifiedAt:b.screenshotVerifiedAt};
     const values={};parts.forEach((part,i)=>values['shot/'+p.sku+'/'+i]=part);const entries=Object.entries(values);for(let i=0;i<entries.length;i+=100)await this.db.put(Object.fromEntries(entries.slice(i,i+100)));await this.db.put({['event/'+p.sku]:record,['seen/'+p.sku]:true,['image-access/'+imageAccess]:p.sku});
-    const recent=await this.db.get('recent')||[];recent.unshift({sku:p.sku,name:p.variantName,kind:p.kind,imageUrl:p.variantImageUrl||p.imageUrl,sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,detectedAt:record.detectedAt});await this.db.put('recent',recent.slice(0,30));
+    await this.db.delete('pending/'+p.sku);const recent=await this.db.get('recent')||[];recent.unshift({sku:p.sku,name:p.variantName,kind:p.kind,imageUrl:p.variantImageUrl||p.imageUrl,sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,detectedAt:record.detectedAt});await this.db.put('recent',recent.slice(0,30));
     return response({recorded:true});
    }
    if(route==='/internal/monitor-complete'&&req.method==='POST'){

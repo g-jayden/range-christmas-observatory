@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';import {firstRun,advanceRun,validateSchedule} from '../server/schedule.mjs';import {Control} from '../cloud/worker.mjs';
+import assert from 'node:assert/strict';import {firstRun,advanceRun,validateSchedule} from '../server/schedule.mjs';import {Control} from '../cloud/worker.mjs';import {retryingReader} from '../server/retry-reader.mjs';
 const start=new Date('2026-10-30T08:20:00Z');
 assert.equal(firstRun({},start).nextRunAt,'2026-11-05T16:00:00.000Z');
 assert.equal(validateSchedule({intervalDays:'',time:'19:25'}).time,'00:00');
@@ -21,6 +21,7 @@ try{
  assert.equal((await call('/admin/schedule',{intervalDays:3,time:'04:17'},'admin')).status,200);
  assert.equal((await(await call('/public/status')).json()).config.time,'04:17');
  await call('/internal/seed',{records:[{sku:'100',everNew:true},{sku:'101',everNew:false}]},'control');
+ let attempts=0;const flaky=retryingReader(async()=>{if(++attempts<3)throw Object.assign(Error('internal proxy error'),{status:502});return 'ok'},{delayMs:0});assert.equal(await flaky('test'),'ok');assert.equal(attempts,3);
  const claim=await(await call('/internal/claim',{},'control')).json();assert.equal(claim.monitor,true);
  const rows=[{sku:'100',newStatus:true,sourceUrl:'https://www.therange.co.uk/p/test/#100'},{sku:'101',newStatus:true,sourceUrl:'https://www.therange.co.uk/p/test/#101'}];
  const plan=await(await call('/internal/monitor-plan',{lease:claim.lease,products:rows},'control')).json();assert.deepEqual(plan.candidates.map(p=>p.sku),['101']);
@@ -28,6 +29,8 @@ try{
  const confirmUrl=sent[0].htmlContent.match(/https:\/\/[^" ]+\/confirm\?token=[^" ]+/)[0],form=new URLSearchParams({token:new URL(confirmUrl).searchParams.get('token')});
  const before=await call('/public/status');assert.ok(!(await before.text()).includes('reader@example.com'));
  await app.fetch(new Request(confirmUrl,{method:'POST',body:form}));
+ for(const [k,v]of await storage.list({prefix:'sub/'})){v.confirmedAt=new Date(Date.now()-10000).toISOString();await storage.put(k,v)}
+ const pendingPlan=await(await call('/internal/monitor-plan',{lease:claim.lease,products:[]},'control')).json();assert.deepEqual(pendingPlan.candidates.map(p=>p.sku),['101'],'Detected NEW remains pending if the next list no longer carries its NEW flag');
  const p={...rows[1],kind:'tree',priceGBP:12.99,variantName:'Test <tree>',description:'Actual source product information'};
  assert.equal((await call('/internal/event',{lease:claim.lease,product:p},'control')).status,422);
  await call('/internal/event',{lease:claim.lease,product:p,screenshotBase64:Buffer.from('image-bytes').toString('base64'),screenshotVerifiedAt:new Date().toISOString()},'control');

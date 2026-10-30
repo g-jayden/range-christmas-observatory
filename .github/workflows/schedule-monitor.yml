@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
+    inputs:
+      checkNow:
+        description: Check NEW now without changing the full refresh schedule
+        type: boolean
+        default: false
 permissions:
   contents: read
   actions: write
@@ -16,6 +21,7 @@ jobs:
     env:
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      FORCE_MONITOR: ${{ github.event_name == 'workflow_dispatch' && inputs.checkNow && 'true' || 'false' }}
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-node@v7.1.0

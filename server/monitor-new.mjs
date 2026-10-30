@@ -1,10 +1,11 @@
 import fs from 'node:fs/promises';import {sync,createReader} from './sync.mjs';import {parseDetails} from './details.mjs';import {control} from './cloud-client.mjs';
+import {retryingReader} from './retry-reader.mjs';
 const tick=JSON.parse(await fs.readFile('runtime/tick.json','utf8'));if(!tick.monitor)process.exit(0);
 const lease=tick.lease,key=process.env.FIRECRAWL_API_KEY;let scanned=0,newCount=0;
 try{
  const quota=await fetch('https://api.firecrawl.dev/v2/team/credit-usage',{headers:{authorization:'Bearer '+key}}).then(r=>r.json());const credits=quota.data||quota;
  if(!(credits.remainingCredits>=40))throw Error('采集额度不足，监测暂停；不会虚报本轮无新品。');
- const previous=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),reader=createReader({key,delayMs:credits.planCredits>=100000?250:6500});
+ const previous=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),reader=retryingReader(createReader({key,delayMs:credits.planCredits>=100000?250:6500}));
  const snapshot=await sync({previous,reader});scanned=snapshot.products.length;
  const plan=await control('/internal/monitor-plan',{lease,products:snapshot.products.map(p=>({sku:p.sku,sourceUrl:p.sourceUrl,newStatus:p.newStatus,kind:p.kind,variantName:p.variantName,priceGBP:p.priceGBP,variantImageUrl:p.variantImageUrl,imageUrl:p.imageUrl}))});
  for(const p of plan.candidates){
