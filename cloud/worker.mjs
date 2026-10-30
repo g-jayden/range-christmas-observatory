@@ -96,7 +96,7 @@ export class Control{
     await this.db.transaction(async db=>{
      const f=await db.get('lease/full');if(now>=Date.parse(config.nextRunAt)&&(!f||f.expires<now)){full=true;await db.put('lease/full',{lease,expires:now+7*3600000,revision:config.revision||null,due:config.nextRunAt})}
      const m=await db.get('lease/monitor');
-     if(initialized&&this.env.BREVO_API_KEY&&(!m||m.expires<now)&&(options.forceMonitor===true||now>=Date.parse(monitorState.nextRunAt))){monitor=true;await db.put('lease/monitor',{lease,expires:now+20*60000})}
+     if(initialized&&this.env.BREVO_API_KEY&&(!m||m.expires<now)&&(options.forceMonitor===true||now>=Date.parse(monitorState.nextRunAt))){monitor=true;await db.put('lease/monitor',{lease,expires:now+100*60000})}
     });
     return response({config,full,monitor,lease});
    }

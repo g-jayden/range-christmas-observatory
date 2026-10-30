@@ -18,7 +18,7 @@ try{
   const bytes=Buffer.from(await image.arrayBuffer());if(bytes.length>5000000)throw Error('SKU '+p.sku+'截图超过邮件限制，等待后续处理。');
   await control('/internal/event',{lease,product:{...p,description:detail.text.slice(0,12000),specifications:detail.specs},screenshotBase64:bytes.toString('base64'),screenshotVerifiedAt:detail.observedAt});newCount++;
  }catch(e){if([401,402,429].includes(e.status))throw e;captureIssues.push({sku:p.sku,error:String(e.message).replace(/fc-[\w-]+/g,'[redacted]')});}}
- await control('/internal/deliver',{});
+ let delivery;do{delivery=await control('/internal/deliver',{});}while(delivery.morePending);
  await control('/internal/monitor-complete',{lease,success:true,scanned,newCount});
  console.log(JSON.stringify({success:true,scanned,newCount,pendingScreenshotIssues:captureIssues,mail:'Only confirmed subscribers receive new events; no recipient data is logged.'}));
 }catch(e){const technical=String(e.message).replace(/fc-[\w-]+/g,'[redacted]');const error=/credits|quota|额度/i.test(technical)?'采集额度不足，监测暂停，待额度恢复后自动继续。':/proxy|TUNNEL|timeout|fetch failed/i.test(technical)?'采集服务暂时连接失败，已保留历史记录，将自动重试。':'本轮源站检查未完成，已保留历史及待发送记录。';await control('/internal/monitor-complete',{lease,success:false,error,scanned,newCount}).catch(()=>{});console.error(technical);process.exitCode=1;}
