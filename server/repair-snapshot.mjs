@@ -6,7 +6,7 @@ import {readState,refreshDetails,saveState} from './incremental.mjs';
 import {atomicJson} from './sync.mjs';
 import {sourceUrl} from './free-source.mjs';
 const snapshot=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),status=JSON.parse(await fs.readFile('web/status.json','utf8'));
-const policy={...await loadPolicy(),maxSessionSeconds:120,browserCreditsPerRun:4,maxFallbackScrapesPerRun:26,blockAds:false,repairImagesOnly:true},budget=await openCreditBudget(policy);
+const policy={...await loadPolicy(),maxSessionSeconds:120,browserCreditsPerRun:4,maxFallbackScrapesPerRun:26,blockAds:false,repairImagesOnly:true,imageBatchProbe:true},budget=await openCreditBudget(policy);
 const collection=await readState();collection.completed=[];collection.attempted={};
 const selected=snapshot.products.filter(p=>!verified(p));
 for(const p of selected){delete collection.failures[productKey(p,policy)];p.sourceUrl=sourceUrl('https://www.therange.co.uk/'+p.variantPath.replace('#','/#'));}
