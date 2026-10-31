@@ -16,14 +16,14 @@ const product={sku:'7305060',variantName:'Non-Flocked Christmas Tree',features:{
 assert.throws(()=>parseDetails(valid,'2372015',base+'#2372015'),/SKU/);
 const wrongFamily=structuredClone(valid);wrongFamily.data.familyEvidence.productId='unrelated';assert.throws(()=>parseDetails(wrongFamily,'7305060',base+'#7305060'),/family ID/);
 let navigations=0,apiCalls=[],closed=0;
-const page={goto:async()=>{navigations++;return {status:()=>200}},locator:()=>({innerText:async()=>JSON.stringify(fixture)}),evaluate:async(fn,arg)=>typeof arg==='string'?structuredClone(pageEvidence):arg.map(()=>''),};
+const page={url:()=>base,goto:async()=>{navigations++;return {status:()=>200}},locator:()=>({innerText:async()=>JSON.stringify(fixture)}),evaluate:async()=>({status:200,variants:structuredClone(fixture.variant_arr),evidence:{...structuredClone(pageEvidence),jsonUrl:base+'?json'}}),};
 const context={newPage:async()=>page};
 const savedKey=process.env.FIRECRAWL_API_KEY;process.env.FIRECRAWL_API_KEY='test-key-never-sent';
 try{
  const reader=await createFirecrawlBrowserReader({policy:defaults,budget:{limit:60},fetcher:async(url,options)=>{apiCalls.push({url,method:options.method,body:options.body&&JSON.parse(options.body)});return Response.json(options.method==='DELETE'?{success:true,creditsBilled:2,sessionDurationMs:1000}:{success:true,id:'test-session',cdpUrl:'wss://not-contacted.invalid'})},connect:async()=>({contexts:()=>[context],close:async()=>{closed++}})});
  const first=await reader.raw(base+'#7305060');const second=await reader.raw(base+'#2372015');
  assert.equal(first.data.sourceVariant.sku,7305060);assert.equal(second.data.sourceVariant.sku,2372015);
- assert.equal(navigations,1,'The same official family JSON must be read once for different SKUs');
+ assert.equal(navigations,0,'Families must reuse the website origin without repeated page navigation');
  assert.equal(reader.metrics().familyReads,1);assert.equal(reader.metrics().familyReuse,1);
  await reader.close();await reader.close();assert.equal(closed,1);assert.equal(apiCalls.filter(x=>x.method==='DELETE').length,1);assert.equal(reader.metrics().firecrawlCredits,2);assert.equal(reader.metrics().billingVerified,true);
  assert.equal(apiCalls[0].body.ttl,1800);assert(!('prompt'in apiCalls[0].body),'No AI browser prompt surcharges');assert(!apiCalls.some(c=>c.url.includes('/scrape')),'No per-product paid scrape calls');
