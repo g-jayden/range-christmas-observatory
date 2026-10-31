@@ -8,14 +8,14 @@ export function sourceUrl(raw){
 export function browserMarkdown({features,information,specs}){
  return '## Features\n\n'+features.map(s=>'- '+s).join('\n')+'\n\n## Information\n\n'+information+'\n\n## Specification\n\n'+specs.map(s=>'- '+s).join('\n')+'\n\nAdditional Information';
 }
-export async function createFreeReader({fetcher=fetch,browserFactory,concurrency=4,delayMs=750,maxPages=15000,headless=process.env.COLLECTION_HEADLESS==='true'}={}){
- if(!browserFactory&&process.env.GITHUB_ACTIONS==='true'&&process.env.COLLECTION_BROWSER_CHANNEL==='chrome')return (await import('./native-chrome.mjs')).createNativeChromeReader({concurrency,delayMs,maxPages});
+export async function createFreeReader({fetcher=fetch,browserFactory,concurrency=4,delayMs=750,maxPages=15000,headless=process.env.COLLECTION_HEADLESS==='true',browserEngine=process.env.COLLECTION_BROWSER_CHANNEL||'firefox'}={}){
+ if(!browserFactory&&process.env.GITHUB_ACTIONS==='true'&&browserEngine==='chrome')return (await import('./native-chrome.mjs')).createNativeChromeReader({concurrency,delayMs,maxPages});
  let browser,context,warm,opened=0,cursor=0;const pages=[],waiters=[],blockedHosts=new Set,inflight=new Map;
- const metrics={provider:'self-hosted-browser',firecrawlRequests:0,firecrawlCredits:0,directRequests:0,browserPages:0,screenshots:0,deduplicated:0};
+ const metrics={provider:'self-hosted-browser',browserEngine,firecrawlRequests:0,firecrawlCredits:0,directRequests:0,browserPages:0,screenshots:0,deduplicated:0};
  async function ensureBrowser(){
   if(!warm)warm=(async()=>{
-   const factory=browserFactory||((await import('playwright'))[process.env.COLLECTION_BROWSER_CHANNEL==='firefox'?'firefox':'chromium']);
-   browser=await factory.launch({headless,...(process.env.COLLECTION_BROWSER_CHANNEL&&process.env.COLLECTION_BROWSER_CHANNEL!=='firefox'?{channel:process.env.COLLECTION_BROWSER_CHANNEL}:{})});context=await browser.newContext({viewport:{width:1440,height:1000},locale:'en-GB'});
+   const factory=browserFactory||((await import('playwright'))[browserEngine==='firefox'?'firefox':'chromium']);
+   browser=await factory.launch({headless,...(browserEngine!=='firefox'?{channel:browserEngine}:{})});context=await browser.newContext({viewport:{width:1440,height:1000},locale:'en-GB'});
    const page=await context.newPage();
    pages.push(page);
   })();
@@ -39,7 +39,8 @@ export async function createFreeReader({fetcher=fetch,browserFactory,concurrency
     const text=await page.locator('body').innerText();JSON.parse(text);
     return {success:true,data:{rawHtml:text,metadata:{statusCode:200,sourceURL:url,provider:'native-browser'}}};
    }
-   await page.waitForSelector('#product-dyn-code',{timeout:45000});
+   try{await page.waitForSelector('#product-dyn-code',{timeout:45000})}
+   catch(e){throw new SourceError(`具体SKU页面未就绪 HTTP ${response?.status()}: ${await page.title()}`,response?.status()||0)}
    const expected=new URL(url).hash.slice(1).replace(/^0+(?=\d)/,'');
    if(expected)await page.waitForFunction(sku=>(document.querySelector('#product-dyn-code')?.textContent||'').trim().replace(/^[PM]/i,'').replace(/^0+(?=\d)/,'')===sku,expected,{timeout:12000}).catch(()=>{});
    await page.waitForSelector('#product-dyn-specification-ul li',{timeout:20000});
@@ -64,7 +65,7 @@ export async function createFreeReader({fetcher=fetch,browserFactory,concurrency
    return fromBrowser(url,options,catalogue);
   };
   const promise=run();inflight.set(key,promise);
-  try{return await promise}catch(e){inflight.delete(key);throw e}finally{if(catalogue)inflight.delete(key)}
+  try{return await promise}finally{inflight.delete(key)}
  }
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;
  reader.metrics=()=>({...metrics});reader.close=async()=>{if(browser)await browser.close()};
