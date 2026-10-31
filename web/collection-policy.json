@@ -22,5 +22,20 @@
   "browserConcurrency": 4,
   "maxSessionSeconds": 1800,
   "browserCreditsPerRun": 20,
-  "maxFallbackScrapesPerRun": 40
+  "maxFallbackScrapesPerRun": 40,
+  "enhancedFamilyIds": [
+    "m2976493",
+    "m3318223",
+    "m6837161",
+    "m2678992",
+    "m1405942",
+    "m1657315",
+    "m1657325",
+    "m1657328",
+    "m1657329",
+    "m1657338",
+    "m1657340",
+    "m1549656",
+    "m4068651"
+  ]
 }
