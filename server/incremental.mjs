@@ -57,7 +57,7 @@ export async function refreshDetails({previous,snapshot,reader,policy,budget,sta
     p.detailStatus='本轮详情未通过核验，旧规格不计入当前统计';p.detailCheckedAt=new Date(now()).toISOString();
     if([401,402,429].includes(e.status))halt=true;
    }
-   checked++;await saveState(state,dir);
+   checked++;if(checked%25===0)await saveState(state,dir);
    if(checked%50===0||checked===plan.selected.length)console.log(JSON.stringify({phase:'exact-SKU-verification',checked,succeeded,queued:plan.selected.length}));
   }
  }));
