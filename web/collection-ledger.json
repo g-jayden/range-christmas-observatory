@@ -1,1 +1,1 @@
-{"provider":"native-browser","firecrawlRequests":0,"firecrawlCredits":0,"state":"configured-awaiting-first-cloud-proof"}
+{"provider":"official-browser","firecrawlRequests":0,"firecrawlCredits":0,"lastRun":{"provider":"official-browser","execution":"current-session-browser","firecrawlEnabled":false,"firecrawlRequests":0,"firecrawlCredits":0,"paidFallback":false,"catalogueReused":false,"sourceObservedAt":"2026-10-31T18:32:40.555Z","completedAt":"2026-10-31T18:42:51.293Z","categoryCount":7,"sourceBatches":19,"sourceTotalsVerified":true,"cloudAutomationVerified":false}}
