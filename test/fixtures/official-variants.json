@@ -1,0 +1,92 @@
+{
+  "variant_arr": [
+    {
+      "code": "2372015",
+      "prod_id": 1124988,
+      "sku": 2372015,
+      "id": 3177147,
+      "attributes": {
+        "Christmas Tree Height": "7ft",
+        "Width": "105.4cm",
+        "Fire Retardant": "Yes",
+        "Material": "Plastic",
+        "Shipping Weight": "8kg",
+        "Design": "Non-Flocked",
+        "Length": "105.4cm",
+        "_swatch": "Green",
+        "_hex": "#2D5C33"
+      },
+      "attributes_supplementary": {},
+      "product_specification": [],
+      "features": [],
+      "desc_override": 0,
+      "description_html": ""
+    },
+    {
+      "code": "5480553",
+      "prod_id": 1124988,
+      "sku": 5480553,
+      "id": 3177255,
+      "attributes": {
+        "Christmas Tree Height": "7ft",
+        "Width": "105.4cm",
+        "Fire Retardant": "Yes",
+        "Material": "Plastic",
+        "Shipping Weight": "8kg",
+        "Design": "Snow Flocked",
+        "Length": "105.4cm",
+        "_swatch": "Green",
+        "_hex": "#2D5C33"
+      },
+      "attributes_supplementary": {},
+      "product_specification": [],
+      "features": [],
+      "desc_override": 0,
+      "description_html": ""
+    },
+    {
+      "code": "7305060",
+      "prod_id": 1124988,
+      "sku": 7305060,
+      "id": 3177261,
+      "attributes": {
+        "Christmas Tree Height": "7ft",
+        "Width": "105.4cm",
+        "Fire Retardant": "Yes",
+        "Material": "Plastic",
+        "Shipping Weight": "8kg",
+        "Design": "Non-Flocked",
+        "Length": "105.4cm",
+        "_swatch": "Green",
+        "_hex": "#2D5C33"
+      },
+      "attributes_supplementary": {},
+      "product_specification": [],
+      "features": [],
+      "desc_override": 0,
+      "description_html": ""
+    },
+    {
+      "code": "4627532",
+      "prod_id": 1124988,
+      "sku": 4627532,
+      "id": 7187143,
+      "attributes": {
+        "Christmas Tree Height": "7ft",
+        "Width": "115.4cm",
+        "Fire Retardant": "No",
+        "Material": "Polyvinyl Chloride, Polyethylene",
+        "Shipping Weight": "",
+        "Design": "Snow Flocked",
+        "Length": "213cm",
+        "_swatch": "Green",
+        "_hex": "#2D5C33"
+      },
+      "attributes_supplementary": {},
+      "product_specification": [],
+      "features": [],
+      "desc_override": 0,
+      "description_html": ""
+    }
+  ]
+}
