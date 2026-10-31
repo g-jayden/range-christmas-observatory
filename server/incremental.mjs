@@ -37,7 +37,7 @@ export async function refreshDetails({previous,snapshot,reader,policy,budget,sta
  seedFailures(previous,state.failures,policy);const restored=restoreProducts(snapshot,state,policy);
  const plan=planDetails(previous,snapshot,{policy,failures:state.failures,now:now(),completed:new Set(state.completed||[]),attempted:state.attempted||{},limit:enabled?policy.maxDetailPagesPerRun:0});
  let cursor=0,checked=0,succeeded=0,halt=false;const failures=[];
- await Promise.all(Array.from({length:Math.min(4,plan.selected.length)},async()=>{
+ const workers=await Promise.allSettled(Array.from({length:Math.min(4,plan.selected.length)},async()=>{
   while(cursor<plan.selected.length&&!halt){const item=plan.selected[cursor++],p=item.product;
    if(budget.remaining()<1){halt=true;break}
    state.attempted||={};state.attempted[item.key]=item.fingerprint;
@@ -61,6 +61,7 @@ export async function refreshDetails({previous,snapshot,reader,policy,budget,sta
    if(checked%50===0||checked===plan.selected.length)console.log(JSON.stringify({phase:'exact-SKU-verification',checked,succeeded,queued:plan.selected.length}));
   }
  }));
+ const rejected=workers.find(r=>r.status==='rejected');if(rejected)throw rejected.reason;
  await saveState(state,dir);
  const issues=[...failures,...plan.invalid,...plan.backoff.map(x=>({sku:x.sku,reason:x.reason,retryAt:x.retryAt}))];
  return {mode:'incremental',checked,succeeded,verified:snapshot.products.filter(verified).length,reused:plan.reused.length,restored,queued:plan.eligible,deferred:plan.deferred.length+Math.max(0,plan.selected.length-checked),backoff:plan.backoff.length,invalid:plan.invalid.length,maxAgeDays:policy.detailMaxAgeDays,limit:policy.maxDetailPagesPerRun,issues,completedAt:new Date(now()).toISOString()};
