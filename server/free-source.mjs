@@ -34,7 +34,7 @@ export async function createFreeReader({fetcher=fetch,browserFactory,concurrency
   try{
    if(catalogue){
     if(!page.url().startsWith('https://www.therange.co.uk/')){
-     const landing=await navigate(page,'https://www.therange.co.uk/christmas/christmas-trees/pop-up-trees/');
+     const landing=await navigate(page,'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776');
      if(landing?.status()!==200)throw new SourceError(`官网页面未就绪 HTTP ${landing?.status()}: ${await page.title()}`,landing?.status()||0);
     }
     metrics.nativeApiRequests++;
