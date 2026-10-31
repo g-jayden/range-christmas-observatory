@@ -31,7 +31,7 @@ export function parseVariantDetails(response,expectedSku,sourceUrl,observedAt=ne
  const rawImage=f.offers.find(o=>String(o.sku)===String(expectedSku))?.image||f.gallery.find(g=>g.variants.includes(String(v.id)))?.url;
  const image=rawImage?new URL(decode(rawImage),f.url).href:null;
  const images=f.gallery.filter(g=>!g.variants.length||g.variants.includes(String(v.id))).map(g=>g.url);
- return {sku:String(expectedSku),sourceUrl,observedAt,specs,text,featuresText,image,images,verificationMethod:'official-variant-json-and-product-page',jsonSource:f.jsonUrl,contentHash:createHash('sha256').update(text).digest('hex')};
+ return {sku:String(expectedSku),sourceUrl,observedAt,specs,text,featuresText,image,images,verificationMethod:'official-variant-json-and-product-page',sourceTransport:f.sourceTransport,jsonSource:f.jsonUrl,contentHash:createHash('sha256').update(text).digest('hex')};
 }
 function cm(value){const m=String(value||'').match(/^\s*([\d.]+)\s*(cm|mm|m|ft|inches?|in)\b/i);if(!m)return null;return Number(m[1])*({cm:1,mm:.1,m:100,ft:30.48,in:2.54,inch:2.54,inches:2.54}[m[2].toLowerCase()]);}
 export function productInformation(product,specs){
@@ -45,7 +45,7 @@ export function productInformation(product,specs){
 export function applyDetails(p,d){
  const s=d.specs,t=d.featuresText,lower=t.toLowerCase();
  const info=productInformation(p,s);
- p.attributeObservedAt=d.observedAt;p.detailEvidence={url:d.sourceUrl,text:info.text,sourceContentHash:d.contentHash,verifiedProductSection:true,selectedSku:d.sku,observedAt:d.observedAt,verificationMethod:d.verificationMethod||'selected-SKU-DOM',jsonSource:d.jsonSource};p.productSummary=info.summary;p.specifications=info.specifications;p.descriptionHash=d.contentHash;
+ p.attributeObservedAt=d.observedAt;p.detailEvidence={url:d.sourceUrl,text:info.text,sourceContentHash:d.contentHash,verifiedProductSection:true,selectedSku:d.sku,observedAt:d.observedAt,verificationMethod:d.verificationMethod||'selected-SKU-DOM',sourceTransport:d.sourceTransport,jsonSource:d.jsonSource};p.productSummary=info.summary;p.specifications=info.specifications;p.descriptionHash=d.contentHash;
  const originalHeight=s['Christmas Tree Height'],heightCm=cm(s.Height)||cm(originalHeight);p.heightLabel=originalHeight||(heightCm?heightCm.toFixed(1)+'cm':'高度未确认');p.heightCm=heightCm;p.heightValues=originalHeight?[originalHeight]:[];
  p.treeColor=s.Colour||s.Color||'颜色未确认';p.colorValues=p.treeColor==='颜色未确认'?[]:[p.treeColor];p.material=s.Material||'材质未确认';
  p.skirtDiameterCm=cm(s.Diameter);p.skirtBaseDiameterCm=cm(s['Base Diameter']||s['Bottom Diameter']);p.skirtTopDiameterCm=cm(s['Top Diameter']);
