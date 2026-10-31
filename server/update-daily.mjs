@@ -31,6 +31,9 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
    console.log('同一会话具体SKU已核验 '+p.sku);
   }});
   let next=gathered.snapshot;catalogueReady=true;
+  const oldBySku=new Map(previous.products.map(p=>[p.sku,p])),previousIssues=new Set((previous.detailsAudit?.issues||[]).map(p=>p.sku));
+  const difficult=next.products.filter(p=>oldBySku.get(p.sku)?.detailEvidence?.sourceTransport==='enhanced-batch'||previousIssues.has(p.sku));
+  if(difficult.length)await reader.prepareFamilies?.(difficult);
   const first=preflight&&next.products.find(p=>p.sku===preflight.sku);if(first){applyDetails(first,preflight);first.detailCheckedAt=preflight.observedAt;cacheProduct(first,collection,policy)}
   let notification={success:true,attempted:0,captured:0,deferred:0};
   if(tick.monitor)notification=await checkNew({snapshot:next,reader,policy,budget,state:collection,lease:tick.monitorLease||tick.lease,now});
@@ -46,6 +49,7 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
   }
   for(const p of next.products)if(p.attributeObservedAt&&p.specifications&&p.detailEvidence?.verifiedProductSection){const info=productInformation(p,p.specifications);p.productSummary=info.summary;p.detailEvidence={...p.detailEvidence,text:info.text};}
   const imageAudit=preserveImages(previous,next);
+  await reader.closeBrowser?.();
   const browserImageAudit=await reader.auditImages?.(next.products,previous.browserImageAudit);
   await reader.close?.();const metrics=reader.metrics?.()||{firecrawlRequests:0,firecrawlCredits:0};
   const report={strategy:'Firecrawl按时计费会话＋商品系列JSON复用',provider:'firecrawl-browser',firecrawlEnabled:true,firecrawlRequests:metrics.firecrawlRequests||0,firecrawlCredits:metrics.firecrawlCredits||0,sourceObservedAt:next.observedAt,catalogueReused:false,native:metrics,details:audit,notifications:notification,paidFallback:false,completedAt:new Date(now()).toISOString()};
