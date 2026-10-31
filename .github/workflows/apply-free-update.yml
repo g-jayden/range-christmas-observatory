@@ -1,0 +1,45 @@
+name: Apply zero-credit collector release
+on:
+  push:
+    branches: [main]
+    paths: ['source-update.zip', '.github/workflows/apply-free-update.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Verify and apply the prepared source release
+        env:
+          EXPECTED_SHA256: a78154ad39eedc61d51b50ad69c2a2476727333a7b82f07f367cf174fe9bb12d
+        run: |
+          python3 - <<'PY'
+          import hashlib,os,pathlib,zipfile
+          p=pathlib.Path('source-update.zip')
+          assert hashlib.sha256(p.read_bytes()).hexdigest()==os.environ['EXPECTED_SHA256']
+          with zipfile.ZipFile(p) as z:
+              for name in z.namelist():
+                  q=pathlib.PurePosixPath(name)
+                  assert not q.is_absolute() and '..' not in q.parts and '.git' not in q.parts
+                  assert q.parts[0] in {'web','server','scripts','cloud','.github','test','package.json','README.txt','.gitignore'}
+              z.extractall('.')
+          p.unlink()
+          pathlib.Path('.github/workflows/apply-free-update.yml').unlink()
+          PY
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Replace paid scraping with official-source browser collection"
+          git push
+      - name: Run the real cloud free-source verification
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for attempt in 1 2 3 4 5; do
+            gh workflow run daily-pages.yml --repo "$GITHUB_REPOSITORY" -f refresh=false -f mode=probe && exit 0
+            sleep 5
+          done
+          exit 1
