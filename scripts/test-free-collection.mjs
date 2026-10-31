@@ -33,6 +33,7 @@ assert.throws(()=>createReader({key:'must-never-be-used'}),/禁用/);
 assert.throws(()=>sourceUrl('https://unrelated.example/p/1'));
 assert.throws(()=>sourceUrl('file:///private/file'));
 assert.equal(sourceUrl('https://www.therange.co.uk/p/test-5ft'+String.fromCharCode(19)+'8ft/m1/'), 'https://www.therange.co.uk/p/test-5ft%138ft/m1/');
+assert.equal(sourceUrl('https://www.therange.co.uk/p/christow-pre-lit-valmorel-flocked-christmas-tree-5ft'+String.fromCharCode(19)+'8ft/m1549656/#1549686'),'https://www.therange.co.uk/p/christow-pre-lit-valmorel-flocked-christmas-tree-5ft%C2%BF8ft/m1549656/#1549686');
 let directCalls=0,browserCalls=0;
 const direct=await createFreeReader({fetcher:async url=>{assert.equal(new URL(url).hostname,'search-lon.therange.co.uk');directCalls++;return Response.json(fixture)},browserFactory:{launch:()=>{throw Error('Should not launch a browser')}}});
 assert.equal((await direct(apiUrl('94637'))).products[0].sku,p.sku);assert.equal(directCalls,1);assert.equal(direct.metrics().firecrawlCredits,0);await direct.close();
