@@ -37,7 +37,7 @@ async function readImageBatch(items){
 export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,connect,now=()=>Date.now()}={}){
  const key=process.env.FIRECRAWL_API_KEY;if(!key)throw new SourceError('Firecrawl服务器密钥尚未配置',401);
  let session,browser,context,starting,closed=false,created=0,deadline=0,allocatedPages=0,browserReceipt,sessionClosed=false,browserEndedAt=0;
- const pages=[],waiting=[],families=new Map(),active=new Map();
+ const pages=[],waiting=[],families=new Map(),familyFailures=new Map(),active=new Map();
  const parallel=policy.browserConcurrency||4,ttl=Math.min(1800,policy.maxSessionSeconds||1800,Math.floor(Math.min(budget.limit,policy.browserCreditsPerRun||20)*30));
  const fallbackLimit=Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-Math.ceil(ttl/30))),fallbackCache=new Map();let fallbackReserved=0,scrapeCredits=0,scrapeBillingVerified=true;
  if(ttl<60)throw budgetError('本轮积分不足以创建一个浏览器会话');
@@ -96,6 +96,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  async function familyFor(input){
   const u=new URL(input);u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');const canonical=u.href;
   if(families.has(canonical)){metrics.familyReuse++;return families.get(canonical)}
+  if(familyFailures.has(canonical))throw familyFailures.get(canonical);
   const promise=(async()=>{
    const page=await take();try{
     const jsonUrl=canonical+'?json';
@@ -148,13 +149,14 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   })();active.set(identifier,promise);try{return await promise}finally{active.delete(identifier)}
  }
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;
+ reader.familyReady=input=>{const u=new URL(sourceUrl(input));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return families.has(u.href)};
  reader.prepareFamilies=async products=>{
   const urls=[...new Set(products.map(p=>{const u=new URL(sourceUrl(p.sourceUrl));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return u.href}))];
-  if(urls.length>100)throw Error('定向补查超出单批商品系列上限');if(!urls.length)return;
-  const script='(async()=>{const read='+readFamilyBundle.toString()+';const urls='+JSON.stringify(urls)+';let cursor=0;const results=[];await Promise.all(Array.from({length:4},async()=>{while(cursor<urls.length){const url=urls[cursor++];try{results.push({url,bundle:await read({url,jsonUrl:url+"?json"})})}catch(e){results.push({url,error:e.message})}}}));return results})()';
+  if(!urls.length)return;for(let offset=0;offset<urls.length;offset+=100){const batchUrls=urls.slice(offset,offset+100);
+  const script='(async()=>{const read='+readFamilyBundle.toString()+';const urls='+JSON.stringify(batchUrls)+';let cursor=0;const results=[];await Promise.all(Array.from({length:4},async()=>{while(cursor<urls.length){const url=urls[cursor++];try{results.push({url,bundle:await read({url,jsonUrl:url+"?json"})})}catch(e){results.push({url,error:e.message})}}}));return results})()';
   const results=await scriptAction(script);
-  if(results.length!==urls.length||results.some(r=>!urls.includes(r.url)))throw Error('商品系列批量补查地址不一致');
-  for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();b.evidence.sourceTransport='enhanced-batch';families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}
+  if(results.length!==batchUrls.length||results.some(r=>!batchUrls.includes(r.url)))throw Error('商品系列批量补查地址不一致');
+  for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();b.evidence.sourceTransport='enhanced-batch';families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else {const error=new SourceError('官网商品详情链接异常，未返回可核实的具体SKU规格；本轮目录价格、库存、NEW与图片独立更新',b?.status||0);familyFailures.set(r.url,error);console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}}}
  };
  reader.auditImages=async (products,previous={})=>{
   const allUrls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))],urls=[],results=[];
