@@ -1,6 +1,6 @@
 import {createHash} from 'node:crypto';
 import fs from 'node:fs/promises';
-export const defaults={version:1,retailerId:'the-range-gb',catalogueId:'christmas-trees-skirts',provider:'native',firecrawlEnabled:false,detailMaxAgeDays:0,maxDetailPagesPerRun:10000,maxScreenshotPagesPerRun:1000,maxCreditsPerRun:0,maxCreditsPerCalendarMonth:0,accountReserveCredits:0,maxNativePagesPerRun:20000,browserConcurrency:4,catalogueReuseHours:0,failureRetryDays:[1,3,7,30],permanentFailureRetryDays:0};
+export const defaults={version:1,retailerId:'the-range-gb',catalogueId:'christmas-trees-skirts',provider:'firecrawl-browser',firecrawlEnabled:true,detailMaxAgeDays:0,maxDetailPagesPerRun:10000,maxScreenshotPagesPerRun:1000,maxCreditsPerRun:60,maxCreditsPerCalendarMonth:1000,accountReserveCredits:5000,maxSessionSeconds:1800,maxNativePagesPerRun:20000,browserConcurrency:4,catalogueReuseHours:0,failureRetryDays:[1,3,7,30],permanentFailureRetryDays:0};
 export async function loadPolicy(file='web/collection-policy.json'){
  let supplied={};try{supplied=JSON.parse(await fs.readFile(file,'utf8'))}catch(e){if(e.code!=='ENOENT')throw e}
  const p={...defaults,...supplied};

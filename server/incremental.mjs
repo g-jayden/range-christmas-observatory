@@ -35,7 +35,7 @@ export async function catalogueSnapshot({previous,reader,policy,dir='runtime/col
 }
 export async function refreshDetails({previous,snapshot,reader,policy,budget,state,dir='runtime/collection',now=()=>Date.now(),enabled=true}){
  seedFailures(previous,state.failures,policy);const restored=restoreProducts(snapshot,state,policy);
- const plan=planDetails(previous,snapshot,{policy,failures:state.failures,now:now(),completed:new Set(state.completed||[]),attempted:state.attempted||{},limit:enabled?Math.min(policy.maxDetailPagesPerRun,Math.floor(budget.remaining())):0});
+ const plan=planDetails(previous,snapshot,{policy,failures:state.failures,now:now(),completed:new Set(state.completed||[]),attempted:state.attempted||{},limit:enabled?policy.maxDetailPagesPerRun:0});
  let cursor=0,checked=0,succeeded=0,halt=false;const failures=[];
  await Promise.all(Array.from({length:Math.min(4,plan.selected.length)},async()=>{
   while(cursor<plan.selected.length&&!halt){const item=plan.selected[cursor++],p=item.product;

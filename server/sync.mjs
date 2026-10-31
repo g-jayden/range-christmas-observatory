@@ -15,7 +15,7 @@ export function parseSource(result){
  return d;
 }
 export function apiUrl(categoryId,offset=0,filters={in_stock_f:['true']},facets=false){const u=new URL('https://search-lon.therange.co.uk/api/productlist');for(const [k,v] of Object.entries({categoryId,offset,limit:120,sort:'relevance',filters:JSON.stringify(filters),facets,includePriceFacet:facets}))u.searchParams.set(k,String(v));return u.href;}
-export function createReader(){throw Error('Firecrawl采集已禁用；请使用官网免费采集通道。')}
+export function createReader(){throw Error('逐页Firecrawl抓取已禁用；请使用按时计费的Firecrawl浏览器会话。')}
 export async function collectCategory(id,reader){
  let expected;const products=[],batches=[];
  for(let offset=0;expected===undefined||offset<expected;offset+=120){
