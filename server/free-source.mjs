@@ -11,7 +11,7 @@ export function browserMarkdown({features,information,specs}){
 export async function createFreeReader({fetcher=fetch,browserFactory,concurrency=4,delayMs=750,maxPages=15000,headless=process.env.COLLECTION_HEADLESS==='true',browserEngine=process.env.COLLECTION_BROWSER_CHANNEL||'firefox'}={}){
  if(!browserFactory&&process.env.GITHUB_ACTIONS==='true'&&browserEngine==='chrome')return (await import('./native-chrome.mjs')).createNativeChromeReader({concurrency,delayMs,maxPages});
  let browser,context,warm,opened=0,cursor=0;const pages=[],waiters=[],blockedHosts=new Set,inflight=new Map;
- const metrics={provider:'self-hosted-browser',browserEngine,firecrawlRequests:0,firecrawlCredits:0,directRequests:0,browserPages:0,nativeApiRequests:0,screenshots:0,deduplicated:0};
+ const metrics={provider:'self-hosted-browser',browserEngine,firecrawlRequests:0,firecrawlCredits:0,directRequests:0,browserPages:0,screenshots:0,deduplicated:0};
  async function ensureBrowser(){
   if(!warm)warm=(async()=>{
    const factory=browserFactory||((await import('playwright'))[browserEngine==='firefox'?'firefox':'chromium']);
@@ -32,18 +32,13 @@ export async function createFreeReader({fetcher=fetch,browserFactory,concurrency
  async function fromBrowser(url,options,catalogue){
   const page=await take();
   try{
-   if(catalogue){
-    if(!page.url().startsWith('https://www.therange.co.uk/')){
-     const landing=await navigate(page,'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776');
-     if(landing?.status()!==200)throw new SourceError(`官网页面未就绪 HTTP ${landing?.status()}: ${await page.title()}`,landing?.status()||0);
-    }
-    metrics.nativeApiRequests++;
-    const result=await page.evaluate(async target=>{const response=await fetch(target,{credentials:'include',signal:AbortSignal.timeout(30000)});return {status:response.status,body:await response.text()}},url);
-    if(result.status!==200)throw new SourceError(`官网页面请求目录被拒绝 HTTP ${result.status}`,result.status);
-    const body={success:true,data:{rawHtml:result.body,metadata:{statusCode:result.status,sourceURL:url,provider:'browser-native-fetch'}}};
-    parseSource(body);if(delayMs)await page.waitForTimeout(delayMs);return body;
-   }
    const response=await navigate(page,url);
+   if(catalogue){
+    try{await page.waitForFunction(()=>{try{return Array.isArray(JSON.parse(document.body.innerText).products)}catch{return false}},null,{timeout:45000})}
+    catch(e){throw new SourceError(`官网目录未返回JSON HTTP ${response?.status()}: ${await page.title()}; ${(await page.locator('body').innerText()).slice(0,300)}`,response?.status()||0)}
+    const text=await page.locator('body').innerText();JSON.parse(text);
+    return {success:true,data:{rawHtml:text,metadata:{statusCode:200,sourceURL:url,provider:'native-browser'}}};
+   }
    try{await page.waitForSelector('#product-dyn-code',{timeout:45000})}
    catch(e){throw new SourceError(`具体SKU页面未就绪 HTTP ${response?.status()}: ${await page.title()}`,response?.status()||0)}
    const expected=new URL(url).hash.slice(1).replace(/^0+(?=\d)/,'');
