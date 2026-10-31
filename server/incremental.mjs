@@ -20,7 +20,7 @@ export function restoreProducts(snapshot,state,policy){
  for(const p of snapshot.products){const saved=state.details[productKey(p,policy)];if(saved?.fingerprint===detailFingerprint(p)&&verified({...p,...saved.values})&&(!verified(p)||Date.parse(saved.observedAt)>Date.parse(p.attributeObservedAt))){Object.assign(p,structuredClone(saved.values));restored++}}
  return restored;
 }
-export async function catalogueSnapshot({previous,reader,policy,dir='runtime/collection',now=()=>Date.now(),onProgress=()=>{},forceFresh=false}){
+export async function catalogueSnapshot({previous,reader,policy,dir='runtime/collection',now=()=>Date.now(),onProgress=()=>{},forceFresh=false,onSessionReady=async()=>{}}){
  const scope=digest({retailer:policy.retailerId,catalogue:policy.catalogueId,categories,filters:{in_stock_f:['true']},version:1});let cached;
  try{cached=JSON.parse(await fs.readFile(dir+'/catalogue.json','utf8'))}catch{}
  const observed=Date.parse(cached?.observedAt),age=now()-observed;
@@ -28,25 +28,33 @@ export async function catalogueSnapshot({previous,reader,policy,dir='runtime/col
   try{const snapshot=mergeSnapshot(previous,cached.collected,cached.observedAt);return {snapshot,reused:true,observedAt:cached.observedAt}}catch{}
  }
  const ordered=Object.entries(categories).sort(([a],[b])=>a==='pop-up-trees'?-1:b==='pop-up-trees'?1:0);
- const collected={};for(const [category,id]of ordered){onProgress(category);collected[category]=await collectStableCategory(id,reader);onProgress(category+' '+collected[category].products.length+' SKU已核对')}
+ const collected={};for(const [category,id]of ordered){onProgress(category);collected[category]=await collectStableCategory(id,reader);onProgress(category+' '+collected[category].products.length+' SKU已核对');if(category==='pop-up-trees')await onSessionReady(collected[category].products)}
  const observedAt=new Date(now()).toISOString(),snapshot=mergeSnapshot(previous,collected,observedAt);
  await atomicJson(dir+'/catalogue.json',{scope,observedAt,collected});
  return {snapshot,reused:false,observedAt};
 }
 export async function refreshDetails({previous,snapshot,reader,policy,budget,state,dir='runtime/collection',now=()=>Date.now(),enabled=true}){
  seedFailures(previous,state.failures,policy);const restored=restoreProducts(snapshot,state,policy);
- const plan=planDetails(previous,snapshot,{policy,failures:state.failures,now:now(),completed:new Set(state.completed||[]),limit:enabled?Math.min(policy.maxDetailPagesPerRun,Math.floor(budget.remaining())):0});
+ const plan=planDetails(previous,snapshot,{policy,failures:state.failures,now:now(),completed:new Set(state.completed||[]),attempted:state.attempted||{},limit:enabled?Math.min(policy.maxDetailPagesPerRun,Math.floor(budget.remaining())):0});
  let cursor=0,checked=0,succeeded=0,halt=false;const failures=[];
  await Promise.all(Array.from({length:Math.min(4,plan.selected.length)},async()=>{
   while(cursor<plan.selected.length&&!halt){const item=plan.selected[cursor++],p=item.product;
    if(budget.remaining()<1){halt=true;break}
+   state.attempted||={};state.attempted[item.key]=item.fingerprint;
    try{
     const response=await reader.raw(p.sourceUrl,{formats:['rawHtml','markdown'],waitFor:1500,purpose:'detail'});
     const detail=parseDetails(response,p.sku,p.sourceUrl);applyDetails(p,detail);p.detailCheckedAt=detail.observedAt;cacheProduct(p,state,policy);succeeded++;
    }catch(e){
     if(e.budgetLimited){halt=true;continue}
+    if([401,403].includes(e.status)){halt=true;throw e}
     const failure=failedAttempt(p,e.message,state.failures,policy,now());failures.push({sku:p.sku,url:p.sourceUrl,reason:e.message,retryAt:failure.retryAt});
-    p.detailStatus=verified(p)?'沿用有日期的既有规格，本次重查未通过':'详情核验未通过，已延后重试';p.detailCheckedAt=new Date(now()).toISOString();
+    if(failures.length<=3)console.error(JSON.stringify({phase:'exact-SKU-failure',sku:p.sku,error:e.message}));
+    delete state.details[item.key];
+    if(verified(p))p.previousDetailEvidence={observedAt:p.attributeObservedAt,evidence:p.detailEvidence,specifications:p.specifications};
+    p.attributeObservedAt=null;delete p.detailEvidence;delete p.specifications;delete p.productSummary;
+    p.heightLabel='高度未确认';p.heightCm=null;p.heightValues=[];p.treeColor='颜色未确认';p.colorValues=[];p.material='材质未确认';p.skirtDiameterCm=null;p.skirtBaseDiameterCm=null;p.skirtTopDiameterCm=null;
+    p.features={...(p.listingFeatures||{}),pinecones:null,berries:null,baubles:null};p.style=[['potted','圣诞树盆栽'],['popUp','折叠式圣诞树'],['slim','纤细圣诞树'],['snow','雪景款'],['prelit','预亮灯款']].find(([key])=>p.features[key])?.[1]||'标准／其他装饰待核验';
+    p.detailStatus='本轮详情未通过核验，旧规格不计入当前统计';p.detailCheckedAt=new Date(now()).toISOString();
     if([401,402,429].includes(e.status))halt=true;
    }
    checked++;await saveState(state,dir);
