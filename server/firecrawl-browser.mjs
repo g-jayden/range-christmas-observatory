@@ -20,16 +20,18 @@ async function readFamilyBundle({url,jsonUrl,initial,providedHtml}){
 }
 
 async function readImageBatch(items){
-    let cursor=0;const results=[];await Promise.all(Array.from({length:8},async()=>{while(cursor<items.length){const {url,prior}=items[cursor++];try{
+    let cursor=0;const results=[];await Promise.all(Array.from({length:8},async()=>{while(cursor<items.length){const {url,prior}=items[cursor++];let debug;try{
      const headers={accept:'image/avif,image/webp,image/apng,image/*,*/*;q=0.8'};if(prior?.etag)headers['if-none-match']=prior.etag;else if(prior?.lastModified)headers['if-modified-since']=prior.lastModified;
      const response=await fetch(url,{credentials:'include',headers,cache:'no-cache',signal:AbortSignal.timeout(8000)});
      if(response.status===304&&prior?.hash){results.push({...prior,url,ok:true,revalidated:true});continue;}
      if(response.status!==200||!response.headers.get('content-type')?.startsWith('image/')){results.push({url,ok:false,status:response.status,error:response.status===403?'access-blocked':'not-an-image'});continue;}
-     const blob=await response.blob(),bitmap=await createImageBitmap(blob),width=bitmap.width,height=bitmap.height;bitmap.close();
+     const blob=await response.blob();debug={mime:blob.type,size:blob.size,magic:Array.from(new Uint8Array(await blob.slice(0,16).arrayBuffer()))};let width,height;
+     try{const bitmap=await createImageBitmap(blob);width=bitmap.width;height=bitmap.height;bitmap.close();}
+     catch{const objectUrl=URL.createObjectURL(blob);try{const image=new Image();image.src=objectUrl;await image.decode();width=image.naturalWidth;height=image.naturalHeight;}finally{URL.revokeObjectURL(objectUrl)}}
      const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await blob.arrayBuffer()))).map(x=>x.toString(16).padStart(2,'0')).join('');
      let binary='';const bytes=new Uint8Array(await blob.arrayBuffer());for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));
      results.push({url,ok:width>0&&height>0,width,height,hash,bytes:blob.size,mime:blob.type,dataBase64:btoa(binary),etag:response.headers.get('etag'),lastModified:response.headers.get('last-modified')});
-    }catch(e){results.push({url,ok:false,error:'image-fetch-or-decode-failed: '+String(e.message).slice(0,120)})}}}));return results;
+    }catch(e){results.push({url,ok:false,debug,error:'image-fetch-or-decode-failed: '+String(e.message).slice(0,120)})}}}));return results;
    }
 
 export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,connect,now=()=>Date.now()}={}){
@@ -61,14 +63,14 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   })();fallbackCache.set(url,promise);return promise;
  }
 
- async function imageAction(items){
-  guard();if(fallbackReserved>=fallbackLimit)throw budgetError('图片批量核验已达到本轮付费请求上限');fallbackReserved++;metrics.scrapeRequests++;metrics.imageBatchRequests=(metrics.imageBatchRequests||0)+1;
+ async function scriptAction(script){
+  guard();if(fallbackReserved>=fallbackLimit)throw budgetError('批量核验已达到本轮付费请求上限');fallbackReserved++;metrics.scrapeRequests++;
   let charged=false;try{
-   const result=await api('scrape','POST',{url:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776',formats:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,blockAds:false,parsers:[],timeout:45000,actions:[{type:'executeJavascript',script:'('+readImageBatch.toString()+')('+JSON.stringify(items)+')'}]});
+   const result=await api('scrape','POST',{url:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776',formats:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,blockAds:false,parsers:[],timeout:45000,actions:[{type:'executeJavascript',script}]});
    const cost=result.data?.metadata?.creditsUsed;scrapeCredits+=Number.isFinite(cost)?cost:1;charged=true;if(!Number.isFinite(cost))scrapeBillingVerified=false;
    if(result.data?.metadata?.statusCode!==200)throw new SourceError('图片批量核验入口失败 HTTP '+result.data?.metadata?.statusCode,result.data?.metadata?.statusCode||0);
    let value=result.data?.actions?.javascriptReturns?.[0]?.value;if(typeof value==='string')value=JSON.parse(value);
-   if(!Array.isArray(value)||value.length!==items.length||value.some(r=>!items.some(i=>i.url===r.url)))throw Error('图片批量核验没有返回全部请求地址');
+   if(!Array.isArray(value))throw Error('批量核验没有返回结构化结果');
    return value;
   }catch(e){if(!charged){scrapeCredits++;scrapeBillingVerified=false;}throw e;}
  }
@@ -145,21 +147,32 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   })();active.set(identifier,promise);try{return await promise}finally{active.delete(identifier)}
  }
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;
+ reader.prepareFamilies=async products=>{
+  const urls=[...new Set(products.map(p=>{const u=new URL(sourceUrl(p.sourceUrl));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return u.href}))];
+  if(urls.length>100)throw Error('定向补查超出单批商品系列上限');if(!urls.length)return;
+  const script='(async()=>{const read='+readFamilyBundle.toString()+';const urls='+JSON.stringify(urls)+';let cursor=0;const results=[];await Promise.all(Array.from({length:4},async()=>{while(cursor<urls.length){const url=urls[cursor++];try{results.push({url,bundle:await read({url,jsonUrl:url+"?json"})})}catch(e){results.push({url,error:e.message})}}}));return results})()';
+  const results=await scriptAction(script);
+  if(results.length!==urls.length||results.some(r=>!urls.includes(r.url)))throw Error('商品系列批量补查地址不一致');
+  for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}
+ };
  reader.auditImages=async (products,previous={})=>{
-  const urls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))];
+  const allUrls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))],urls=[],results=[];
+  for(const url of allUrls){const old=previous.entries?.[url];let retained=false;if(policy.repairImagesOnly&&old?.ok&&/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(old.cachedImageUrl||'')){try{retained=createHash('sha256').update(await fs.readFile('web/'+old.cachedImageUrl)).digest('hex')===old.hash;}catch{}}if(retained)results.push({...old,observedAt:old.observedAt||previous.observedAt,retained:true});else urls.push(url);}
   for(const url of urls){const u=new URL(url);if(u.protocol!=='https:'||u.hostname!=='www.therange.co.uk'||!u.pathname.startsWith('/media/'))throw Error('商品图片来源未通过核验');}
-  const results=[];await fs.mkdir('web/images/source',{recursive:true});
-   for(let offset=0;offset<urls.length;){guard();const size=offset===0?3:200;const batch=await imageAction(urls.slice(offset,offset+size).map(url=>({url,prior:previous.entries?.[url]})));
-    if(offset===0&&batch.some(r=>!r.ok))throw Error('图片批量通道尚未通过小样本核验：'+JSON.stringify(batch.map(({url,ok,status,error})=>({url,ok,status,error}))));offset+=size;
+  await fs.mkdir('web/images/source',{recursive:true});
+   for(let offset=0;offset<urls.length;offset+=200){guard();const items=urls.slice(offset,offset+200).map(url=>({url,prior:previous.entries?.[url]}));metrics.imageBatchRequests=(metrics.imageBatchRequests||0)+1;const batch=await scriptAction('('+readImageBatch.toString()+')('+JSON.stringify(items)+')');
+    if(batch.length!==items.length||batch.some(r=>!items.some(i=>i.url===r.url)))throw Error('图片批量核验没有返回全部请求地址');
+    if(!policy.repairImagesOnly&&offset===0&&batch.filter(r=>!r.ok).length>batch.length*.8)throw Error('图片主通道未通过，停止后续付费批次');
+    batch.forEach(r=>r.observedAt=new Date(now()).toISOString());
     for(const item of batch){if(!item.ok)continue;try{
      if(item.dataBase64){const bytes=Buffer.from(item.dataBase64,'base64');if(createHash('sha256').update(bytes).digest('hex')!==item.hash)throw Error('image hash mismatch');const ext=({'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif','image/avif':'avif'})[item.mime];if(!ext)throw Error('unsupported image type');item.cachedImageUrl='images/source/'+item.hash+'.'+ext;await fs.writeFile('web/'+item.cachedImageUrl,bytes);delete item.dataBase64;}
      if(!item.cachedImageUrl||!/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(item.cachedImageUrl))throw Error('image cache missing');
      const stored=await fs.readFile('web/'+item.cachedImageUrl);if(createHash('sha256').update(stored).digest('hex')!==item.hash)throw Error('cached image hash mismatch');
     }catch(e){delete item.dataBase64;item.ok=false;item.error=e.message}}
-    results.push(...batch);console.log(JSON.stringify({phase:'image-verification',checked:results.length,total:urls.length}));}
-  const byUrl=new Map(results.map(r=>[r.url,r]));for(const p of products){const r=byUrl.get(p.variantImageUrl||p.imageUrl);if(r?.ok){p.cachedImageUrl=r.cachedImageUrl;p.imageCacheEvidence={sourceUrl:r.url,sha256:r.hash,observedAt:new Date(now()).toISOString()};}}
-  metrics.sourceImageChecks+=results.length;const loaded=results.filter(r=>r.ok).length;
-  return {mode:'live-enhanced-batches-and-original-image-cache',checked:results.length,loaded,failed:results.length-loaded,failures:results.filter(r=>!r.ok),entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString(),perImageScrapeRequests:0,batchScrapeRequests:metrics.imageBatchRequests||0};
+    results.push(...batch);console.log(JSON.stringify({phase:'image-verification',checked:results.length,total:allUrls.length}));}
+  const byUrl=new Map(results.map(r=>[r.url,r]));for(const p of products){const r=byUrl.get(p.variantImageUrl||p.imageUrl);if(r?.ok){p.cachedImageUrl=r.cachedImageUrl;p.imageCacheEvidence={sourceUrl:r.url,sha256:r.hash,observedAt:r.observedAt};}}
+  metrics.sourceImageChecks+=urls.length;const loaded=results.filter(r=>r.ok).length;
+  return {mode:'live-enhanced-batches-and-original-image-cache',checked:results.length,rechecked:urls.length,retained:allUrls.length-urls.length,loaded,failed:results.length-loaded,failures:results.filter(r=>!r.ok),entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString(),perImageScrapeRequests:0,batchScrapeRequests:metrics.imageBatchRequests||0};
  };
  reader.metrics=()=>({...metrics,sessionSeconds:created?Math.ceil((now()-created)/1000):0});
  reader.close=async()=>{
