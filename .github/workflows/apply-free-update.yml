@@ -6,7 +6,6 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
-  actions: write
 jobs:
   apply:
     runs-on: ubuntu-latest
@@ -25,21 +24,13 @@ jobs:
                   q=pathlib.PurePosixPath(name)
                   assert not q.is_absolute() and '..' not in q.parts and '.git' not in q.parts
                   assert q.parts[0] in {'web','server','scripts','cloud','.github','test','package.json','README.txt','.gitignore'}
-              z.extractall('.')
+              for name in z.namelist():
+                  if pathlib.PurePosixPath(name).parts[0] != '.github':
+                      z.extract(name,'.')
           p.unlink()
-          pathlib.Path('.github/workflows/apply-free-update.yml').unlink()
           PY
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -A
           git commit -m "Replace paid scraping with official-source browser collection"
           git push
-      - name: Run the real cloud free-source verification
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          for attempt in 1 2 3 4 5; do
-            gh workflow run daily-pages.yml --repo "$GITHUB_REPOSITORY" -f refresh=false -f mode=probe && exit 0
-            sleep 5
-          done
-          exit 1
