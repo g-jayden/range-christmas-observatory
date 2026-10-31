@@ -1,29 +1,31 @@
-name: Full catalogue refresh and permanent website
+name: Free source collection and permanent website
 on:
   push:
     branches: [main]
-    paths-ignore: ['web/catalogue.json', 'web/status.json', 'web/settings.json', 'web/images/**']
+    paths-ignore: ['web/catalogue.json', 'web/status.json', 'web/settings.json', 'web/collection-ledger.json', 'web/images/**']
+  schedule:
+    - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
       refresh:
-        description: Refresh source data before publishing
+        description: Refresh official source data before publishing
         type: boolean
         default: true
       mode:
-        description: Full SKU verification or catalogue connection check
+        description: Source collection mode
         type: choice
-        options: [full, catalogue]
-        default: full
-      scheduleLease:
-        description: Internal scheduled execution lease
-        type: string
-        required: false
+        options: [verify-all, catalogue, probe]
+        default: verify-all
+      checkNew:
+        description: Check NEW now without changing the regular schedule
+        type: boolean
+        default: false
 permissions:
   contents: write
   pages: write
   id-token: write
 concurrency:
-  group: daily-catalogue-pages
+  group: range-source-and-pages
   cancel-in-progress: false
 jobs:
   website:
@@ -32,6 +34,8 @@ jobs:
     env:
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      COLLECTION_MODE: ${{ inputs.mode || 'verify-all' }}
+      COLLECTION_HEADLESS: 'false'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -40,51 +44,75 @@ jobs:
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
-      - name: Verify source parsing and completeness safeguards
-        run: node scripts/test-sync.mjs && node scripts/test-details.mjs && node scripts/test-update-retention.mjs && node scripts/test-controls.mjs
-      - name: Restore resumable product details
+      - name: Check the configured full and NEW schedules
+        id: tick
+        env:
+          MANUAL_REFRESH: ${{ inputs.refresh }}
+          FORCE_MONITOR: ${{ inputs.checkNew && 'true' || 'false' }}
+        run: node scripts/schedule-tick.mjs
+      - name: Verify source integrity and zero-Firecrawl safeguards
+        if: steps.tick.outputs.publish == 'true' || inputs.mode == 'probe'
+        run: npm test
+      - name: Install the open source browser collector
+        if: steps.tick.outputs.work == 'true' || inputs.mode == 'probe'
+        run: npm install --no-audit --no-fund && npx playwright install --with-deps chromium
+      - name: Restore resumable free collection state
+        if: steps.tick.outputs.work == 'true'
         uses: actions/cache/restore@v6.1.0
         with:
-          path: runtime/details
-          key: details-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: details-
-      - name: Daily source update
+          path: runtime/collection
+          key: native-collection-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: native-collection-
+      - name: Prove the free API, exact SKU and screenshot route
+        if: inputs.mode == 'probe'
+        run: xvfb-run -a node scripts/probe-free-source.mjs
+      - name: Collect official source data without Firecrawl
         id: refresh
-        if: github.event_name == 'workflow_dispatch' && inputs.refresh
+        if: steps.tick.outputs.work == 'true'
         continue-on-error: true
+        run: xvfb-run -a node server/update-daily.mjs
+      - name: Complete the selected interval
+        if: always() && steps.tick.outputs.full == 'true' && steps.refresh.outcome != 'skipped'
         env:
-          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
-          FULL_DETAILS: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'catalogue' && 'false' || 'true' }}
-        run: node server/update-daily.mjs
-      - name: Complete the selected interval and preserve the next scheduled time
-        if: always() && steps.refresh.outcome != 'skipped'
-        env:
-          REFRESH_SUCCESS: ${{ steps.refresh.outcome == 'success' }}
-          SCHEDULE_LEASE: ${{ inputs.scheduleLease }}
+          REFRESH_SUCCESS: ${{ steps.refresh.outputs.catalogue_success == 'true' }}
+          SCHEDULE_LEASE: ${{ steps.tick.outputs.full_lease }}
         run: node scripts/complete-full.mjs
-      - name: Save resumable details
+      - name: Save collection checkpoints
+        if: always() && steps.tick.outputs.work == 'true'
         continue-on-error: true
-        if: always() && steps.refresh.outcome != 'skipped'
         uses: actions/cache/save@v6.1.0
         with:
-          path: runtime/details
-          key: details-${{ github.run_id }}-${{ github.run_attempt }}
-      - name: Preserve verified snapshot and status
+          path: runtime/collection
+          key: native-collection-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Preserve data and source status
+        if: steps.tick.outputs.publish == 'true'
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add web/catalogue.json web/status.json web/settings.json web/images
-          git diff --cached --quiet || git commit -m "Update audited catalogue and source check status"
+          git add web/catalogue.json web/status.json web/settings.json web/collection-ledger.json web/images
+          git diff --cached --quiet || git commit -m "Update free-source catalogue and verification status"
+          git pull --rebase
           git push
       - uses: actions/configure-pages@v6.0.0
+        if: steps.tick.outputs.publish == 'true'
       - name: Build site
+        if: steps.tick.outputs.publish == 'true'
         run: node scripts/build-static.mjs
       - uses: actions/upload-pages-artifact@v5.0.0
+        if: steps.tick.outputs.publish == 'true'
         with:
           path: public
       - name: Publish permanent website
         id: deployment
+        if: steps.tick.outputs.publish == 'true'
         uses: actions/deploy-pages@v5.0.1
-      - name: Flag failed source refresh without losing last complete website
+      - name: Save the real free-source proof
+        if: always() && inputs.mode == 'probe'
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: free-source-proof
+          path: runtime/free-source-proof.json
+          retention-days: 3
+      - name: Report unsuccessful source collection
         if: steps.refresh.outcome == 'failure'
         run: exit 1
