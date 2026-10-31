@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 import {createFirecrawlBrowserReader} from '../server/firecrawl-browser.mjs';
 import {parseDetails,applyDetails} from '../server/details.mjs';
 import {defaults} from '../server/collection-policy.mjs';
@@ -30,11 +31,25 @@ try{
 }finally{if(savedKey===undefined)delete process.env.FIRECRAWL_API_KEY;else process.env.FIRECRAWL_API_KEY=savedKey}
 const root=process.cwd(),temp=await fs.mkdtemp(path.join(os.tmpdir(),'range-credit-budget-'));
 try{
- process.chdir(temp);const policy={...defaults,maxCreditsPerCalendarMonth:70};
+ process.chdir(temp);
+ const imageBytes=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aH1cAAAAASUVORK5CYII=','base64');
+ const imageHash=createHash('sha256').update(imageBytes).digest('hex');
+ const sourceImage='https://www.therange.co.uk/media/fixture.png';
+ process.env.FIRECRAWL_API_KEY='test-key-never-sent';
+ const imageReader=await createFirecrawlBrowserReader({policy:defaults,budget:{limit:60},fetcher:async(url,options)=>{
+  const body=JSON.parse(options.body);assert.equal(body.proxy,'enhanced');assert.equal(body.maxAge,0);assert.equal(body.location.country,'GB');assert.equal(body.actions[0].type,'executeJavascript');
+  return Response.json({success:true,data:{metadata:{statusCode:200,creditsUsed:1},actions:{javascriptReturns:[{value:[{url:sourceImage,ok:true,width:1,height:1,mime:'image/png',hash:imageHash,dataBase64:imageBytes.toString('base64'),bytes:imageBytes.length}]}]}}});
+ },connect:async()=>{throw Error('Image batches must not open a second billed browser session')}});
+ const imageProduct={sku:'fixture',variantImageUrl:sourceImage};
+ const imageAudit=await imageReader.auditImages([imageProduct]);await imageReader.close();
+ assert.equal(imageAudit.loaded,1);assert.equal(imageAudit.failed,0);assert.equal(imageReader.metrics().firecrawlCredits,1);assert.equal(imageReader.metrics().billingVerified,true);
+ assert.deepEqual(await fs.readFile('web/'+imageProduct.cachedImageUrl),imageBytes,'Published image bytes must match the verified source exactly');assert.equal(imageProduct.imageCacheEvidence.sha256,imageHash);
+ if(savedKey===undefined)delete process.env.FIRECRAWL_API_KEY;else process.env.FIRECRAWL_API_KEY=savedKey;
+ const policy={...defaults,maxCreditsPerCalendarMonth:70};
  assert.equal((await reserveCredits(policy,{key:'first',accountRemaining:10000})).limit,60);
  assert.equal((await reserveCredits(policy,{key:'second',accountRemaining:10000})).limit,10);
  await assert.rejects(reserveCredits(policy,{key:'third',accountRemaining:10000}),/积分上限/);
  const ledger=await readLedger();assert.equal(Object.values(Object.values(ledger.periods)[0].reservations).reduce((n,r)=>n+r.amount,0),70);
  await assert.rejects(reserveCredits({...policy,maxCreditsPerCalendarMonth:200},{key:'account-low',accountRemaining:5001}),/保留额度/);
-}finally{process.chdir(root);await fs.rm(temp,{recursive:true,force:true})}
+}finally{if(savedKey===undefined)delete process.env.FIRECRAWL_API_KEY;else process.env.FIRECRAWL_API_KEY=savedKey;process.chdir(root);await fs.rm(temp,{recursive:true,force:true})}
 console.log('PASS: exact official JSON SKU and family identity, source colour/dimensions, shared family reads, time-billed sessions, authoritative receipts, session cleanup, durable monthly caps and account reserves.');
