@@ -10,4 +10,10 @@ const live=mergeSnapshot(seed,collected,'2026-10-30T10:00:00Z');assert.equal(liv
 const cat=Object.keys(categories)[0],changed=structuredClone(collected);const target=changed[cat].products.find(p=>!p.newIn);for(const v of Object.values(changed)){for(const product of v.products){if(product.sku===target.sku){product.price=12345;product.newIn=true;product.variantImageUrl='https://www.therange.co.uk/media/updated.jpg';}}}
 const next=mergeSnapshot(live,changed,'2026-10-30T10:05:00Z'),n=next.products.find(p=>p.sku===target.sku);assert.equal(n.priceGBP,123.45);assert.equal(n.newStatus,true);assert.equal(n.variantImageUrl,'https://www.therange.co.uk/media/updated.jpg');assert.equal(n.firstNewObservedAt,'2026-10-30T10:05:00Z');
 const broken=structuredClone(changed);const multiple=broken[cat].products.find(p=>Object.values(broken).filter(x=>x.products.some(v=>v.sku===p.sku)).length>1);broken[cat].products=broken[cat].products.map(p=>p.sku===multiple.sku?{...p,price:2}:p);assert.throws(()=>mergeSnapshot(seed,broken),/inconsistent/);
-console.log('PASS: source errors rejected, pagination reconciled, changed totals abort, tree/skirt separation, dated attribute preservation, new price/image/NEW applied, baseline excluded, conflicting snapshots rejected.');
+const negativeSeed=structuredClone(seed),plain=negativeSeed.products[0];
+plain.variantName='Artificial Christmas Tree - Non-Flocked';plain.features.snow=true;plain.style='雪景款';
+const negativeSources=Object.fromEntries(Object.keys(categories).map(c=>{const rows=c==='artificial-trees'?[plain]:[];return [c,{products:rows,audit:{expected:rows.length,observed:rows.length,unique:rows.length,complete:true,records:rows.map(p=>p.sku),batches:[]}}]}));
+const corrected=mergeSnapshot(negativeSeed,negativeSources).products.find(p=>p.sku===plain.sku);
+assert.equal(corrected.features.snow,false);assert.notEqual(corrected.style,'雪景款');
+assert.equal(mergeSnapshot(seed,collected,'2026-10-31T16:05:00Z').observedDate,'2026-11-01');
+console.log('PASS: pagination, stock/NEW updates, tree/skirt separation, conflict rejection, and explicit Non-Flocked titles override stale snow classifications.');

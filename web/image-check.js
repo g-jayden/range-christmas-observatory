@@ -1,5 +1,5 @@
 (()=>{const E=id=>document.getElementById(id);let data,report;
-function src(p){try{const u=p.cachedImageUrl?new URL(p.cachedImageUrl,location.href):new URL(p.variantImageUrl||p.imageUrl,p.sourceUrl);if(u.protocol!=='https:'&&u.origin!==location.origin)return '';if(!p.cachedImageUrl&&data.observedAt)u.searchParams.set('catalogue_check',String(Date.parse(data.observedAt)));return u.href}catch{return ''}}
+function src(p){try{const u=p.cachedImageUrl?new URL(p.cachedImageUrl,location.href):new URL(p.variantImageUrl||p.imageUrl,p.sourceUrl);if(u.protocol!=='https:'&&u.origin!==location.origin)return '';return u.href}catch{return ''}}
 fetch('catalogue.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{data=d;E('source').textContent=`当前目录：${d.products.length}个SKU；采集时间：${d.observedAt||d.observedDate}`;E('start').disabled=false}).catch(()=>E('source').textContent='目录加载失败，请刷新重试。');
 E('start').onclick=async()=>{E('start').disabled=true;const groups=new Map;for(const p of data.products){const url=src(p);if(!groups.has(url))groups.set(url,[]);groups.get(url).push(p.sku)}const entries=[...groups],results=[];let cursor=0,loaded=0,failed=0;
 report={revision:data.revision,sourceObservedAt:data.observedAt||data.observedDate,startedAt:new Date().toISOString(),products:data.products.length,uniqueImageUrls:entries.length,results};

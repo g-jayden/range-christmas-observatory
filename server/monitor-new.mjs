@@ -1,4 +1,4 @@
-import fs from 'node:fs/promises';import {sync,createReader} from './sync.mjs';import {parseDetails} from './details.mjs';import {control} from './cloud-client.mjs';
+import fs from 'node:fs/promises';import {sync,createReader} from './sync.mjs';import {parseDetails,productInformation} from './details.mjs';import {control} from './cloud-client.mjs';
 import {retryingReader} from './retry-reader.mjs';
 const tick=JSON.parse(await fs.readFile('runtime/tick.json','utf8'));if(!tick.monitor)process.exit(0);
 const lease=tick.lease,key=process.env.FIRECRAWL_API_KEY;let scanned=0,newCount=0;
@@ -16,7 +16,8 @@ try{
   const u=new URL(address);if(u.protocol!=='https:')throw Error('Invalid screenshot transport');
   const image=await fetch(u,{signal:AbortSignal.timeout(30000)});if(!image.ok||!image.headers.get('content-type')?.startsWith('image/'))throw Error('SKU '+p.sku+'截图下载未完成。');
   const bytes=Buffer.from(await image.arrayBuffer());if(bytes.length>5000000)throw Error('SKU '+p.sku+'截图超过邮件限制，等待后续处理。');
-  await control('/internal/event',{lease,product:{...p,description:detail.text.slice(0,12000),specifications:detail.specs},screenshotBase64:bytes.toString('base64'),screenshotVerifiedAt:detail.observedAt});newCount++;
+  const info=productInformation(p,detail.specs);
+  await control('/internal/event',{lease,product:{...p,description:info.summary,specifications:info.specifications},screenshotBase64:bytes.toString('base64'),screenshotVerifiedAt:detail.observedAt});newCount++;
  }catch(e){if([401,402,429].includes(e.status))throw e;captureIssues.push({sku:p.sku,error:String(e.message).replace(/fc-[\w-]+/g,'[redacted]')});}}
  let delivery;do{delivery=await control('/internal/deliver',{});}while(delivery.morePending);
  await control('/internal/monitor-complete',{lease,success:true,scanned,newCount});

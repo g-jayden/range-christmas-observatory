@@ -56,19 +56,25 @@ export function mergeSnapshot(previous,collected,now=stamp()){
   if(ex||negative.test(p.variantName)){excluded.push(ex||{sku:p.sku,name:p.variantName,reason:'明确非目标商品/真树：依据商品名称与目录记录',sourceUrl:'https://www.therange.co.uk/'+p.variantPath.replace('#','/#')});continue;}
   const sameFamily=prior&&prior.productPath===p.productPath;
   const features={potted:p.categories.includes('potted-christmas-trees')||/\bpotted\b|pot base/i.test(p.variantName),popUp:p.categories.includes('pop-up-trees')||/pop[ -]?up|collapsible/i.test(p.variantName),slim:p.categories.includes('slim-christmas-trees')||/\bslim\b|pencil/i.test(p.variantName),snow:p.categories.includes('snowy-christmas-trees')||/snow|flock|frost/i.test(p.variantName),prelit:p.categories.includes('prelit-christmas-trees')||/pre[ -]?lit|fibre optic|fiber optic|with .*lights/i.test(p.variantName)};
+  const explicitNonFlocked=/\bnon[ -]flocked\b/i.test(p.variantName)&&!p.categories.includes('snowy-christmas-trees');
+  if(explicitNonFlocked)features.snow=false;
   const kind=p.categories.includes('christmas-tree-skirt')?'skirt':'tree';
   // Prior manual/facet evidence remains dated; never label it freshly rechecked.
   const stableDescription=sameFamily&&prior.variantName===p.variantName;
-  let style=nextStyle(features);if(stableDescription)style=prior.style;
+  let style=nextStyle(features);if(stableDescription&&!(explicitNonFlocked&&prior.style==='雪景款'))style=prior.style;
+  const retainedFeatures=stableDescription?{...prior.features}:features;
+  if(explicitNonFlocked)retainedFeatures.snow=false;
   const h=firstBySku[p.sku]||{firstObservedAt:now,firstNewObservedAt:null,everNew:false,arrivalEvidence:'observed-after-baseline'};
   if(p.newIn&&!h.everNew){h.firstNewObservedAt=now;h.arrivalEvidence='observed-after-baseline'}h.everNew||=p.newIn;firstBySku[p.sku]=h;
   const out={...(prior||{}),...p,kind,priceGBP:p.price/100,currency:'GBP',sourceUrl:'https://www.therange.co.uk/'+p.variantPath.replace('#','/#'),newStatus:p.newIn,newEvidence:{kind:'website_flag',field:'newIn',value:p.newIn,observedAt:now},observedAt:now,firstObservedAt:h.firstObservedAt,firstNewObservedAt:h.firstNewObservedAt,arrivalEvidence:h.arrivalEvidence,everNew:h.everNew,features:stableDescription?prior.features:features,style,attributeObservedAt:sameFamily?(Object.hasOwn(prior,'attributeObservedAt')?prior.attributeObservedAt:previous.observedAt||previous.observedDate):null,detailEvidence:stableDescription?prior.detailEvidence:undefined,attributeEvidence:stableDescription?prior.attributeEvidence:undefined,heightLabel:sameFamily?prior.heightLabel:'高度未确认',treeColor:sameFamily?prior.treeColor:'颜色未确认',heightValues:sameFamily?prior.heightValues:[],colorValues:sameFamily?prior.colorValues:[],imageStatus:'source-url-current; browser-load-pending'};
   // Keep a separately verified PDP image when the source listing still uses its placeholder.
   if(/placeholder/i.test(out.variantImageUrl||out.imageUrl||'')&&prior?.imageEvidence){out.variantImageUrl=prior.variantImageUrl;out.imageEvidence=prior.imageEvidence;out.imageStatus='PDP override retained; recheck pending';}
+  out.features=retainedFeatures;
   if(!out.detailEvidence&&out.arrivalEvidence==='observed-after-baseline'&&!(out.heightValues?.length||out.colorValues?.length))out.attributeObservedAt=null;
   products.push(out);
  }
- const result={...previous,products,sources,excluded,conflicts:[],observedDate:now.slice(0,10),observedAt:now,firstObservedHistory:firstBySku,updatedAt:now,imageAudit:{status:'Latest source image addresses obtained; browser-load validation is separate',observedAt:now},automation:{enabled:true,provider:'Firecrawl REST',intervalDays:7,time:'00:00',timezone:'Asia/Shanghai',sourceFields:['name','brand','price','stock','newIn','imageUrl','purchaseUrl'],attributeStatus:'Prior height/colour/PDP evidence remains explicitly dated; not a live re-verification'}};
+ const observedDate=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(now));
+ const result={...previous,products,sources,excluded,conflicts:[],observedDate,observedAt:now,firstObservedHistory:firstBySku,updatedAt:now,imageAudit:{status:'Latest source image addresses obtained; browser-load validation is separate',observedAt:now},automation:{enabled:true,provider:'Firecrawl REST',intervalDays:7,time:'00:00',timezone:'Asia/Shanghai',sourceFields:['name','brand','price','stock','newIn','imageUrl','purchaseUrl'],attributeStatus:'Prior height/colour/PDP evidence remains explicitly dated; not a live re-verification'}};
  result.stats=Object.fromEntries(['tree','skirt'].map(kind=>{const rows=products.filter(p=>p.kind===kind);return [kind,{count:rows.length,newCount:rows.filter(p=>p.newStatus).length}]}));
  result.revision=createHash('sha256').update(JSON.stringify({products:products.map(({observedAt,newEvidence,...p})=>({...p,newEvidence:{...newEvidence,observedAt:undefined}})),sources:Object.fromEntries(Object.entries(sources).map(([k,v])=>[k,v.records]))})).digest('hex');
  return result;

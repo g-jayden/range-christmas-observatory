@@ -36,7 +36,7 @@ try{
   for(const p of latest.products){const detail=detailsBySku.get(p.sku);if(detail&&detail.productPath===p.productPath){const fields=['heightLabel','heightCm','heightValues','treeColor','colorValues','material','skirtDiameterCm','skirtBaseDiameterCm','skirtTopDiameterCm','specifications','style','features','detailEvidence','attributeObservedAt','images','descriptionHash','detailStatus','detailCheckedAt'];for(const k of fields)p[k]=detail[k];}else{p.attributeObservedAt=null;issues.push({sku:p.sku,error:'SKU first appeared during final reconciliation; detailed specifications pending'});}}
   next=latest;
  }
- next.detailsAudit={mode:full?'all-SKU-pages-attempted':'basic-catalogue-only',checked,issues,completedAt:new Date().toISOString()};
+ next.detailsAudit={mode:full?'all-SKU-pages-attempted':'basic-catalogue-only',checked,verified:next.products.filter(p=>p.attributeObservedAt&&p.detailEvidence?.verifiedProductSection).length,issues,completedAt:new Date().toISOString()};
  next.automation={enabled:true,schedule:scheduleLabel(scheduleConfig),intervalDays:scheduleConfig.intervalDays,time:scheduleConfig.time,timezone:'Asia/Shanghai',type:'Configurable periodic cloud update',mode:full?'full':'basic'};
  const images=next.products.filter(p=>/^https:\/\//.test(p.variantImageUrl||p.imageUrl||''));let mirrored=0;const failures=[];
  // Cache genuine source photographs when the source permits a server-side download.

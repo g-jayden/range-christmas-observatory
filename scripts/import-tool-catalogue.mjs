@@ -1,0 +1,21 @@
+import fs from 'node:fs/promises';
+import {sync, parseSource, atomicJson, categories} from '../server/sync.mjs';
+const ids = Object.fromEntries(Object.entries(categories).map(([name, id]) => [id, name]));
+const previous = JSON.parse(await fs.readFile('web/catalogue.json', 'utf8'));
+const reader = async url => {
+  const u = new URL(url), name = ids[u.searchParams.get('categoryId')], offset = u.searchParams.get('offset');
+  if (!name) throw Error('Unexpected source category');
+  return parseSource(JSON.parse(await fs.readFile(`runtime/source/${name}-${offset}.json`, 'utf8')));
+};
+const next = await sync({previous, reader, onProgress: console.log});
+next.collectionMethod = 'Live public catalogue retrieved through the connected Firecrawl account';
+next.detailsAudit = {mode:'basic-catalogue-only', checked:0, issues:[], completedAt:new Date().toISOString()};
+await atomicJson('web/catalogue.json', next);
+const status = JSON.parse(await fs.readFile('web/status.json', 'utf8'));
+Object.assign(status, {lastSuccess:next.observedAt, revision:next.revision, running:false, mode:'basic', lastError:null, stats:next.stats, completedAt:new Date().toISOString(), detailsAudit:next.detailsAudit});
+delete status.browserImageAudit;
+delete status.imageAudit;
+delete status.fullUpdatePending;
+await atomicJson('web/status.json', status);
+await atomicJson('runtime/detail-jobs.json', next.products.map(p => ({sku:p.sku, url:p.sourceUrl, name:p.variantName, kind:p.kind})));
+console.log(JSON.stringify({stats:next.stats, products:next.products.length, excluded:next.excluded.length, revision:next.revision}));

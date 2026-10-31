@@ -3,7 +3,7 @@ const decode=s=>String(s).replaceAll('&amp;','&').replaceAll('&quot;','"').repla
 export function parseDetails(response,expectedSku,sourceUrl,observedAt=new Date().toISOString()){
  const data=response?.data;if(!response.success||data?.metadata?.statusCode!==200||!data.rawHtml||!data.markdown)throw Error('PDP did not return complete source content');
  const sku=data.rawHtml.match(/id=["']product-dyn-code["'][^>]*>\s*([^<]+)/i)?.[1]?.trim().replace(/^[PM]/i,'');
- if(sku!==String(expectedSku))throw Error('PDP selected SKU does not match requested SKU: '+expectedSku+' / '+(sku||'unknown'));
+ if(String(sku).replace(/^0+(?=\d)/,'')!==String(expectedSku).replace(/^0+(?=\d)/,''))throw Error('PDP selected SKU does not match requested SKU: '+expectedSku+' / '+(sku||'unknown'));
  const start=data.markdown.indexOf('## Features'),specIndex=data.markdown.indexOf('## Specification');
  if(start<0||specIndex<start)throw Error('PDP feature/specification sections missing for '+expectedSku);
  const end=data.markdown.indexOf('Additional Information',specIndex),section=data.markdown.slice(start,end<0?specIndex+10000:end);
@@ -15,9 +15,18 @@ export function parseDetails(response,expectedSku,sourceUrl,observedAt=new Date(
  return {sku:String(expectedSku),sourceUrl,observedAt,specs,text:section,featuresText:section.slice(0,section.indexOf('## Specification')),image:image?decode(image):null,images:images.map(decode),offer:offer||null,contentHash:createHash('sha256').update(section).digest('hex')};
 }
 function cm(value){const m=String(value||'').match(/^\s*([\d.]+)\s*(cm|mm|m|ft|inches?|in)\b/i);if(!m)return null;return Number(m[1])*({cm:1,mm:.1,m:100,ft:30.48,in:2.54,inch:2.54,inches:2.54}[m[2].toLowerCase()]);}
+export function productInformation(product,specs){
+ const names={'Christmas Tree Height':'标称树高',Height:'高度',Width:'宽度',Depth:'深度',Length:'长度',Diameter:'直径','Base Diameter':'底部直径','Bottom Diameter':'底部直径','Top Diameter':'顶部直径',Weight:'重量','Shipping Weight':'运输重量',Material:'材质','Material Composition':'材质组成',Colour:'颜色',Color:'颜色','Tip Count':'枝尖数量','Number of LEDs':'灯珠数量','Light Colour':'灯光颜色','Branch Construction':'枝条结构','Fire Retardant':'阻燃属性','Pack Size':'包装数量','Model Number':'型号','Cable Length':'线缆长度','Batteries Required':'电池要求','Indoor/Outdoor':'使用场景',Occasion:'适用节日',Shape:'形状',Finish:'表面效果',Fabric:'面料',Size:'尺寸',Design:'图案',Type:'类型',Waterproof:'防水属性',Capacity:'容量','Assembly Required':'组装要求','Machine Washable':'可否机洗','Power Source':'电源类型','Power Type':'电源类型'};
+ const specifications=Object.fromEntries(Object.entries(specs).filter(([key,value])=>names[key]&&String(value).length<=180));
+ const highlights=['Christmas Tree Height','Diameter','Base Diameter','Colour','Color','Material','Tip Count','Number of LEDs','Light Colour'].filter(key=>specifications[key]).map(key=>names[key]+'：'+specifications[key]);
+ const summary=[Number.isFinite(product.priceGBP)?'本次售价 £'+product.priceGBP.toFixed(2):'',...highlights].filter(Boolean).join('；')+'。';
+ const text='商品概览\n'+summary+'\n\n商品规格\n'+Object.entries(specifications).map(([key,value])=>names[key]+'：'+value).join('\n')+'\n\n完整介绍请查看原站购买页。';
+ return {specifications,summary,text};
+}
 export function applyDetails(p,d){
  const s=d.specs,t=d.featuresText,lower=t.toLowerCase();
- p.attributeObservedAt=d.observedAt;p.detailEvidence={url:d.sourceUrl,text:d.text,verifiedProductSection:true,selectedSku:d.sku,observedAt:d.observedAt};p.specifications=s;p.descriptionHash=d.contentHash;
+ const info=productInformation(p,s);
+ p.attributeObservedAt=d.observedAt;p.detailEvidence={url:d.sourceUrl,text:info.text,sourceContentHash:d.contentHash,verifiedProductSection:true,selectedSku:d.sku,observedAt:d.observedAt};p.productSummary=info.summary;p.specifications=info.specifications;p.descriptionHash=d.contentHash;
  const originalHeight=s['Christmas Tree Height'],heightCm=cm(s.Height||s.Length);p.heightLabel=originalHeight||(heightCm?heightCm.toFixed(1)+'cm':'高度未确认');p.heightCm=heightCm;p.heightValues=originalHeight?[originalHeight]:[];
  p.treeColor=s.Colour||s.Color||'颜色未确认';p.colorValues=p.treeColor==='颜色未确认'?[]:[p.treeColor];p.material=s.Material||'材质未确认';
  p.skirtDiameterCm=cm(s.Diameter);p.skirtBaseDiameterCm=cm(s['Base Diameter']||s['Bottom Diameter']);p.skirtTopDiameterCm=cm(s['Top Diameter']);
