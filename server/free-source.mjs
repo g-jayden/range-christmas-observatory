@@ -1,8 +1,9 @@
-import {SourceError,parseSource} from './sync.mjs';
+import {SourceError,parseSource,correctKnownProductPath} from './sync.mjs';
 const ALLOWED=['www.therange.co.uk','search-lon.therange.co.uk'];
 export function sourceUrl(raw){
  const clean=String(raw).replace(/[\u0000-\u001f]/g,c=>encodeURIComponent(c)),u=new URL(clean);
  if(u.protocol!=='https:'||!ALLOWED.includes(u.hostname))throw Error('Unsupported source URL');
+ if(u.hostname==='www.therange.co.uk')u.pathname=correctKnownProductPath(u.pathname);
  return u.href;
 }
 export function browserMarkdown({features,information,specs}){
