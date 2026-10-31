@@ -4,11 +4,11 @@ import {loadPolicy} from '../server/collection-policy.mjs';
 import {openCreditBudget} from '../server/credit-budget.mjs';
 import {apiUrl,categories,collectStableCategory} from '../server/sync.mjs';
 import {parseDetails} from '../server/details.mjs';
-const policy={...await loadPolicy(),maxSessionSeconds:120},budget=await openCreditBudget(policy);
+const policy={...await loadPolicy(),maxSessionSeconds:60,browserCreditsPerRun:2,maxFallbackScrapesPerRun:2},budget=await openCreditBudget(policy);
 let reader,proof={success:false,verifiedAt:new Date().toISOString()},error;
 await fs.mkdir('runtime',{recursive:true});
 try{
- reader=await createFirecrawlBrowserReader({policy,budget});
+ reader=await createFirecrawlBrowserReader({policy,budget:{...budget,limit:4}});
  const category=await reader(apiUrl('2645121'));
  if(category.products.length!==category.totalResults||new Set(category.products.map(p=>p.sku)).size!==category.totalResults)throw Error('Category completeness failed');
  const product=category.products.find(p=>p.sku==='12776')||category.products[0],url='https://www.therange.co.uk/'+product.variantPath.replace('#','/#');
