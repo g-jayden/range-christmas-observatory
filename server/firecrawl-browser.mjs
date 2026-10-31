@@ -30,13 +30,13 @@ async function readImageBatch(items){
      catch{const objectUrl=URL.createObjectURL(blob);try{const image=new Image();image.src=objectUrl;await image.decode();width=image.naturalWidth;height=image.naturalHeight;}finally{URL.revokeObjectURL(objectUrl)}}
      const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await blob.arrayBuffer()))).map(x=>x.toString(16).padStart(2,'0')).join('');
      let binary='';const bytes=new Uint8Array(await blob.arrayBuffer());for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));
-     results.push({url,ok:width>0&&height>0,width,height,hash,bytes:blob.size,mime:blob.type,dataBase64:btoa(binary),etag:response.headers.get('etag'),lastModified:response.headers.get('last-modified')});
+     results.push({url,ok:width>=64&&height>=64,error:width<64||height<64?'placeholder-too-small':undefined,width,height,hash,bytes:blob.size,mime:blob.type,dataBase64:btoa(binary),etag:response.headers.get('etag'),lastModified:response.headers.get('last-modified')});
     }catch(e){results.push({url,ok:false,debug,error:'image-fetch-or-decode-failed: '+String(e.message).slice(0,120)})}}}));return results;
    }
 
 export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,connect,now=()=>Date.now()}={}){
  const key=process.env.FIRECRAWL_API_KEY;if(!key)throw new SourceError('Firecrawl服务器密钥尚未配置',401);
- let session,browser,context,starting,closed=false,created=0,deadline=0,allocatedPages=0;
+ let session,browser,context,starting,closed=false,created=0,deadline=0,allocatedPages=0,browserReceipt,sessionClosed=false,browserEndedAt=0;
  const pages=[],waiting=[],families=new Map(),active=new Map();
  const parallel=policy.browserConcurrency||4,ttl=Math.min(1800,policy.maxSessionSeconds||1800,Math.floor(Math.min(budget.limit,policy.browserCreditsPerRun||20)*30));
  const fallbackLimit=Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-Math.ceil(ttl/30))),fallbackCache=new Map();let fallbackReserved=0,scrapeCredits=0,scrapeBillingVerified=true;
@@ -66,7 +66,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  async function scriptAction(script){
   guard();if(fallbackReserved>=fallbackLimit)throw budgetError('批量核验已达到本轮付费请求上限');fallbackReserved++;metrics.scrapeRequests++;
   let charged=false;try{
-   const result=await api('scrape','POST',{url:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776',formats:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,blockAds:false,parsers:[],timeout:45000,actions:[{type:'executeJavascript',script}]});
+   const result=await api('scrape','POST',{url:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776',formats:['rawHtml',{type:'screenshot',fullPage:false}],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,blockAds:false,parsers:[],timeout:45000,actions:[{type:'executeJavascript',script}]});
    const cost=result.data?.metadata?.creditsUsed;scrapeCredits+=Number.isFinite(cost)?cost:1;charged=true;if(!Number.isFinite(cost))scrapeBillingVerified=false;
    if(result.data?.metadata?.statusCode!==200)throw new SourceError('图片批量核验入口失败 HTTP '+result.data?.metadata?.statusCode,result.data?.metadata?.statusCode||0);
    let value=result.data?.actions?.javascriptReturns?.[0]?.value;if(typeof value==='string')value=JSON.parse(value);
@@ -77,6 +77,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
 
  function guard(){if(closed||deadline&&now()+30000>=deadline)throw budgetError('本轮浏览器运行时间已达到积分硬上限，已停止新增请求');}
  async function start(){
+  if(sessionClosed)throw Error('本轮浏览器已完成并关闭，不能重新创建付费会话');
   if(!starting)starting=(async()=>{
    guard();created=now();deadline=created+ttl*1000;
    try{session=await api('interact','POST',{ttl,activityTtl:120,streamWebView:false,blockAds:policy.blockAds===true,location:{country:'US'}});}
@@ -153,17 +154,17 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   const script='(async()=>{const read='+readFamilyBundle.toString()+';const urls='+JSON.stringify(urls)+';let cursor=0;const results=[];await Promise.all(Array.from({length:4},async()=>{while(cursor<urls.length){const url=urls[cursor++];try{results.push({url,bundle:await read({url,jsonUrl:url+"?json"})})}catch(e){results.push({url,error:e.message})}}}));return results})()';
   const results=await scriptAction(script);
   if(results.length!==urls.length||results.some(r=>!urls.includes(r.url)))throw Error('商品系列批量补查地址不一致');
-  for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}
+  for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();b.evidence.sourceTransport='enhanced-batch';families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}
  };
  reader.auditImages=async (products,previous={})=>{
   const allUrls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))],urls=[],results=[];
-  for(const url of allUrls){const old=previous.entries?.[url];let retained=false;if(policy.repairImagesOnly&&old?.ok&&/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(old.cachedImageUrl||'')){try{retained=createHash('sha256').update(await fs.readFile('web/'+old.cachedImageUrl)).digest('hex')===old.hash;}catch{}}if(retained)results.push({...old,observedAt:old.observedAt||previous.observedAt,retained:true});else urls.push(url);}
-  for(const url of urls){const u=new URL(url);if(u.protocol!=='https:'||u.hostname!=='www.therange.co.uk'||!u.pathname.startsWith('/media/'))throw Error('商品图片来源未通过核验');}
+  for(const url of allUrls){const old=previous.entries?.[url];let retained=false;if(policy.repairImagesOnly&&old?.ok&&old.width>=64&&old.height>=64&&/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(old.cachedImageUrl||'')){try{retained=createHash('sha256').update(await fs.readFile('web/'+old.cachedImageUrl)).digest('hex')===old.hash;}catch{}}if(retained)results.push({...old,observedAt:old.observedAt||previous.observedAt,retained:true});else urls.push(url);}
+  for(const url of allUrls){const u=new URL(url);if(u.protocol!=='https:'||u.hostname!=='www.therange.co.uk'||!u.pathname.startsWith('/media/'))throw Error('商品图片来源未通过核验');}
   await fs.mkdir('web/images/source',{recursive:true});
-   for(let offset=0;offset<urls.length;offset+=200){guard();const items=urls.slice(offset,offset+200).map(url=>({url,prior:previous.entries?.[url]}));metrics.imageBatchRequests=(metrics.imageBatchRequests||0)+1;const batch=await scriptAction('('+readImageBatch.toString()+')('+JSON.stringify(items)+')');
+   for(let offset=0;offset<urls.length;){guard();const size=policy.imageBatchProbe&&offset===0?3:200;const items=urls.slice(offset,offset+size).map(url=>({url,prior:previous.entries?.[url]}));metrics.imageBatchRequests=(metrics.imageBatchRequests||0)+1;const batch=await scriptAction('('+readImageBatch.toString()+')('+JSON.stringify(items)+')');
     if(batch.length!==items.length||batch.some(r=>!items.some(i=>i.url===r.url)))throw Error('图片批量核验没有返回全部请求地址');
-    if(!policy.repairImagesOnly&&offset===0&&batch.filter(r=>!r.ok).length>batch.length*.8)throw Error('图片主通道未通过，停止后续付费批次');
-    batch.forEach(r=>r.observedAt=new Date(now()).toISOString());
+    if(offset===0&&batch.filter(r=>!r.ok||r.width<64||r.height<64).length>batch.length*.8)throw Error('图片主通道未通过，停止后续付费批次');
+    offset+=size;batch.forEach(r=>{r.observedAt=new Date(now()).toISOString();if(r.width<64||r.height<64){r.ok=false;r.error='placeholder-too-small'}});
     for(const item of batch){if(!item.ok)continue;try{
      if(item.dataBase64){const bytes=Buffer.from(item.dataBase64,'base64');if(createHash('sha256').update(bytes).digest('hex')!==item.hash)throw Error('image hash mismatch');const ext=({'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif','image/avif':'avif'})[item.mime];if(!ext)throw Error('unsupported image type');item.cachedImageUrl='images/source/'+item.hash+'.'+ext;await fs.writeFile('web/'+item.cachedImageUrl,bytes);delete item.dataBase64;}
      if(!item.cachedImageUrl||!/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(item.cachedImageUrl))throw Error('image cache missing');
@@ -174,14 +175,17 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   metrics.sourceImageChecks+=urls.length;const loaded=results.filter(r=>r.ok).length;
   return {mode:'live-enhanced-batches-and-original-image-cache',checked:results.length,rechecked:urls.length,retained:allUrls.length-urls.length,loaded,failed:results.length-loaded,failures:results.filter(r=>!r.ok),entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString(),perImageScrapeRequests:0,batchScrapeRequests:metrics.imageBatchRequests||0};
  };
- reader.metrics=()=>({...metrics,sessionSeconds:created?Math.ceil((now()-created)/1000):0});
+ reader.metrics=()=>({...metrics,sessionSeconds:created?Math.ceil(((browserEndedAt||now())-created)/1000):0});
+ reader.closeBrowser=async()=>{
+  if(!session||sessionClosed)return;sessionClosed=true;
+  try{if(session.id)browserReceipt=await api('interact/'+encodeURIComponent(session.id),'DELETE');}
+  catch{metrics.closeReceiptUnavailable=true;}
+  finally{await browser?.close().catch(()=>{});browserEndedAt=now();deadline=0;}
+ };
  reader.close=async()=>{
   if(closed)return;closed=true;for(const waiter of waiting.splice(0))waiter.reject(budgetError('浏览器会话已关闭'));
-  let receipt;
-  try{if(session?.id)receipt=await api('interact/'+encodeURIComponent(session.id),'DELETE');}
-  catch{metrics.closeReceiptUnavailable=true;}
-  finally{await browser?.close().catch(()=>{});}
-  if(session){metrics.browserCredits=Number.isFinite(receipt?.creditsBilled)?receipt.creditsBilled:ttl/30;metrics.scrapeCredits=scrapeCredits;metrics.firecrawlCredits=metrics.browserCredits+scrapeCredits;metrics.billingVerified=Number.isFinite(receipt?.creditsBilled)&&scrapeBillingVerified;metrics.sessionDurationMs=receipt?.sessionDurationMs;metrics.receipt={sessionId:session.id,creditsBilled:metrics.firecrawlCredits,browserCredits:metrics.browserCredits,scrapeCredits,billingVerified:metrics.billingVerified};}
+  await reader.closeBrowser();
+  if(session){metrics.browserCredits=Number.isFinite(browserReceipt?.creditsBilled)?browserReceipt.creditsBilled:ttl/30;metrics.scrapeCredits=scrapeCredits;metrics.firecrawlCredits=metrics.browserCredits+scrapeCredits;metrics.billingVerified=Number.isFinite(browserReceipt?.creditsBilled)&&scrapeBillingVerified;metrics.sessionDurationMs=browserReceipt?.sessionDurationMs;metrics.receipt={sessionId:session.id,creditsBilled:metrics.firecrawlCredits,browserCredits:metrics.browserCredits,scrapeCredits,billingVerified:metrics.billingVerified};}
   else {metrics.browserCredits=created&&metrics.creationUncertain?ttl/30:0;metrics.scrapeCredits=scrapeCredits;metrics.firecrawlCredits=metrics.browserCredits+scrapeCredits;metrics.billingVerified=!metrics.creationUncertain&&scrapeBillingVerified;metrics.receipt={creditsBilled:metrics.firecrawlCredits,browserCredits:metrics.browserCredits,scrapeCredits,billingVerified:metrics.billingVerified};}
   metrics.closed=true;
  };
