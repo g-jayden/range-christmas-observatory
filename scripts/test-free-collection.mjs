@@ -5,10 +5,11 @@ import os from 'node:os';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {createFreeReader,sourceUrl,browserMarkdown} from '../server/free-source.mjs';
-import {createReader,apiUrl} from '../server/sync.mjs';
+import {createReader,apiUrl,SourceError} from '../server/sync.mjs';
 import {defaults,planDetails,productKey} from '../server/collection-policy.mjs';
 import {catalogueHtml,listText} from '../server/native-chrome.mjs';
 import {recordSourceOutcome,sourceCircuitOpen} from '../server/source-health.mjs';
+import {refreshDetails,cacheProduct} from '../server/incremental.mjs';
 assert.equal(catalogueHtml('<pre>{"products":[{"sku":"1","variantName":"Red &amp; White"}]}</pre>').products[0].variantName,'Red & White');
 assert.throws(()=>catalogueHtml('<title>Just a moment...</title>'),/no rendered data/);
 assert.deepEqual(listText('<ul><li>Colour: <span>Red &amp; White</span></li><li>Height: 180cm</li></ul>'),['Colour: Red & White','Height: 180cm']);
@@ -44,6 +45,19 @@ const unchanged=planDetails({products:[p]},{products:[a]},{policy,now,failures:{
 const priceOnly=structuredClone(p);priceOnly.priceGBP+=10;assert.equal(planDetails({products:[p]},{products:[priceOnly]},{policy,now,failures:{}}).selected.length,0);
 assert.equal(planDetails({products:[p]},{products:[changed]},{policy,now,failures:{}}).selected.length,1);
 assert.equal(changed.heightLabel,'高度未确认','Changed variant data must not be presented as newly verified old attributes');
+const detailDir=await fs.mkdtemp(path.join(os.tmpdir(),'range-detail-attempt-'));
+try{
+ const current={products:[structuredClone(p)]},state={details:{},failures:{},attempted:{}},strict={...policy,detailMaxAgeDays:0};
+ cacheProduct(structuredClone(p),state,strict);state.completed=[];
+ let reads=0;const unavailable={raw:async()=>{reads++;throw new SourceError('Temporary PDP outage',500)}};
+ await refreshDetails({previous:{products:[p]},snapshot:current,reader:unavailable,policy:strict,budget:{remaining:()=>100},state,dir:detailDir,now:()=>now});
+ assert.equal(current.products[0].attributeObservedAt,null,'A failed refresh must invalidate active old details');
+ assert.equal(current.products[0].specifications,undefined);
+ assert.equal(state.details[productKey(p,strict)],undefined,'A stale cached specification must not restore failed facts');
+ await refreshDetails({previous:current,snapshot:structuredClone(current),reader:unavailable,policy:strict,budget:{remaining:()=>100},state,dir:detailDir,now:()=>now});
+ assert.equal(reads,1,'Final catalogue reconciliation must not repeat a failed SKU in the same run');
+ await assert.rejects(refreshDetails({previous:{products:[p]},snapshot:{products:[structuredClone(p)]},reader:{raw:async()=>{throw new SourceError('HTTP 403',403)}},policy:strict,budget:{remaining:()=>100},state:{details:{},failures:{}},dir:detailDir,now:()=>now}),e=>e.status===403);
+}finally{await fs.rm(detailDir,{recursive:true,force:true})}
 assert.notEqual(productKey(p,{retailerId:'retailer-a'}),productKey(p,{retailerId:'retailer-b'}));
 assert(browserMarkdown({features:['Test feature'],information:'Test information',specs:['Height: 180cm']}).includes('## Specification\n\n- Height: 180cm'));
 for(const name of ['.github/workflows/daily-pages.yml','.github/workflows/schedule-monitor.yml','server/update-daily.mjs','server/monitor-new.mjs'])assert(!(await fs.readFile(name,'utf8')).includes('FIRECRAWL_API_KEY'),'Active entrypoint must not receive the paid API key: '+name);
