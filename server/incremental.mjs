@@ -27,7 +27,8 @@ export async function catalogueSnapshot({previous,reader,policy,dir='runtime/col
  if(!forceFresh&&cached?.scope===scope&&age>=0&&age<=policy.catalogueReuseHours*3600000&&observed>Date.parse(previous.observedAt||0)){
   try{const snapshot=mergeSnapshot(previous,cached.collected,cached.observedAt);return {snapshot,reused:true,observedAt:cached.observedAt}}catch{}
  }
- const collected={};for(const [category,id]of Object.entries(categories)){onProgress(category);collected[category]=await collectStableCategory(id,reader)}
+ const ordered=Object.entries(categories).sort(([a],[b])=>a==='pop-up-trees'?-1:b==='pop-up-trees'?1:0);
+ const collected={};for(const [category,id]of ordered){onProgress(category);collected[category]=await collectStableCategory(id,reader);onProgress(category+' '+collected[category].products.length+' SKU已核对')}
  const observedAt=new Date(now()).toISOString(),snapshot=mergeSnapshot(previous,collected,observedAt);
  await atomicJson(dir+'/catalogue.json',{scope,observedAt,collected});
  return {snapshot,reused:false,observedAt};
@@ -49,6 +50,7 @@ export async function refreshDetails({previous,snapshot,reader,policy,budget,sta
     if([401,402,429].includes(e.status))halt=true;
    }
    checked++;await saveState(state,dir);
+   if(checked%50===0||checked===plan.selected.length)console.log(JSON.stringify({phase:'exact-SKU-verification',checked,succeeded,queued:plan.selected.length}));
   }
  }));
  await saveState(state,dir);
