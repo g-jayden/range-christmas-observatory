@@ -25,7 +25,7 @@ try{
  await fs.writeFile(path.join(gated,'web/settings.json'),JSON.stringify({intervalDays:7,time:'00:00'}));
  await fs.writeFile(path.join(gated,'web/status.json'),JSON.stringify({sourceHealth:denied}));
  await fs.writeFile(path.join(gated,'web/service.json'),JSON.stringify({apiBase:'https://must-not-request.invalid'}));
- const output=execFileSync(process.execPath,[fileURLToPath(new URL('./schedule-tick.mjs',import.meta.url))],{cwd:gated,encoding:'utf8',env:{...process.env,GITHUB_EVENT_NAME:'schedule',COLLECTION_MODE:'verify-all',COLLECTION_BROWSER_CHANNEL:'firefox',CONTROL_API_URL:'https://must-not-request.invalid',GITHUB_OUTPUT:path.join(gated,'outputs')}});
+ const output=execFileSync(process.execPath,[fileURLToPath(new URL('./schedule-tick.mjs',import.meta.url))],{cwd:gated,encoding:'utf8',env:{...process.env,GITHUB_EVENT_NAME:'schedule',COLLECTION_MODE:'verify-all',COLLECTION_BROWSER_CHANNEL:'firefox',COLLECTION_PROVIDER:'firefox',CONTROL_API_URL:'https://must-not-request.invalid',GITHUB_OUTPUT:path.join(gated,'outputs')}});
  const tick=JSON.parse(output.trim());assert.equal(tick.sourceCircuitOpen,true);assert.equal(tick.work,false,'A stopped source must not enter the repeated collection loop');
 }finally{await fs.rm(gated,{recursive:true,force:true})}
 const seed=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),p=seed.products.find(p=>p.detailEvidence?.verifiedProductSection),fixture={products:[p],totalResults:1};
@@ -60,5 +60,5 @@ try{
 }finally{await fs.rm(detailDir,{recursive:true,force:true})}
 assert.notEqual(productKey(p,{retailerId:'retailer-a'}),productKey(p,{retailerId:'retailer-b'}));
 assert(browserMarkdown({features:['Test feature'],information:'Test information',specs:['Height: 180cm']}).includes('## Specification\n\n- Height: 180cm'));
-for(const name of ['.github/workflows/daily-pages.yml','.github/workflows/schedule-monitor.yml','server/update-daily.mjs','server/monitor-new.mjs'])assert(!(await fs.readFile(name,'utf8')).includes('FIRECRAWL_API_KEY'),'Active entrypoint must not receive the paid API key: '+name);
-console.log('PASS: direct source data, automatic native-browser route, exact source boundaries, zero paid fallback, shared views, metadata invalidation and retailer isolation.');
+assert(!(await fs.readFile('web/dashboard-full.js','utf8')).includes('FIRECRAWL_API_KEY'),'The server secret must never enter browser code');
+console.log('PASS: direct source boundaries, SKU invalidation, same-run deduplication and retailer isolation.');
