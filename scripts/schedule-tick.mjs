@@ -7,7 +7,7 @@ let config=JSON.parse(await fs.readFile('web/settings.json','utf8')),full=false,
 const previousStatus=await fs.readFile('web/status.json','utf8').then(JSON.parse).catch(()=>({}));
 const blocked=event==='schedule'&&sourceCircuitOpen(previousStatus.sourceHealth,process.env.COLLECTION_PROVIDER||'firecrawl-browser');
 if(!config.nextRunAt)config=firstRun(config);
-if(event!=='push'&&mode!=='probe'&&!blocked){
+if(event!=='push'&&mode!=='probe'&&mode!=='repair'&&!blocked){
  if(apiBase){
   const state=await control('/public/status');config=state.config;
   if(!state.baselineReady){const d=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));await control('/internal/seed',{config,records:d.products.map(p=>({sku:p.sku,everNew:Boolean(p.everNew||p.newStatus)}))})}
