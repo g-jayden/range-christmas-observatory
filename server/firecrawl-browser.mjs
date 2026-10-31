@@ -29,32 +29,32 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  }
  async function take(){await start();guard();if(pages.length)return pages.pop();if(allocatedPages<parallel){allocatedPages++;return context.newPage()}return new Promise((resolve,reject)=>waiting.push({resolve,reject}))}
  function release(page){const waiter=waiting.shift();if(waiter)waiter.resolve(page);else pages.push(page)}
- async function navigate(page,url){guard();metrics.browserPages++;const response=await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});if(!response||response.status()>=400)throw new SourceError('官网请求失败 HTTP '+(response?.status()||0),response?.status()||0);return response;}
+ async function navigate(page,url){guard();metrics.browserPages++;const response=await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});if(!response||response.status()>=400)throw new SourceError('官网请求失败 HTTP '+(response?.status()||0)+' '+new URL(url).pathname,response?.status()||0);return response;}
  async function jsonPage(page,url){await navigate(page,url);let text;try{text=await page.locator('body').innerText();return JSON.parse(text)}catch{throw new SourceError('官网未返回可验证的JSON：'+await page.title(),/Just a moment|security verification/i.test(text||'')?403:0)}}
  async function familyFor(input){
   const u=new URL(input);u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'')+'/';const canonical=u.href;
   if(families.has(canonical)){metrics.familyReuse++;return families.get(canonical)}
   const promise=(async()=>{
    const page=await take();try{
-    const jsonUrl=canonical+'?json',body=await jsonPage(page,jsonUrl);
-    if(!Array.isArray(body.variant_arr)||!body.variant_arr.length)throw Error('官网商品规格数据缺少SKU');
-    // The page's own product.js uses ?json and maps _swatch to Colour.
-    const evidence=await page.evaluate(async url=>{
-     const response=await fetch(url,{credentials:'include',signal:AbortSignal.timeout(20000)});const text=await response.text();
-     if(response.status!==200)return {status:response.status};
-     const doc=new DOMParser().parseFromString(text,'text/html'),plain=html=>new DOMParser().parseFromString(String(html||''),'text/html').body.textContent.replace(/\s+/g,' ').trim();
+    const jsonUrl=canonical+'?json';
+    let initial;
+    if(!page.url().startsWith('https://www.therange.co.uk/'))initial=await jsonPage(page,jsonUrl);
+    const bundle=await page.evaluate(async ({url,jsonUrl,initial})=>{
+     const read=async(target,json)=>{const response=await fetch(target,{credentials:'include',signal:AbortSignal.timeout(20000)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}};
+     const [data,html]=await Promise.all([initial?{status:200,value:initial}:read(jsonUrl,true),read(url,false)]);
+     if(data.status!==200||html.status!==200)return {status:data.status!==200?data.status:html.status};
+     const body=data.value,doc=new DOMParser().parseFromString(html.value,'text/html'),plain=html=>new DOMParser().parseFromString(String(html||''),'text/html').body.textContent.replace(/\s+/g,' ').trim();
      const description=doc.querySelector('#product-description')?.cloneNode(true);description?.querySelectorAll('a,script,style,#product-dyn-variant-desc').forEach(e=>e.remove());
      let product;for(const el of doc.querySelectorAll('script[type="application/ld+json"]')){try{const d=JSON.parse(el.textContent);if(d['@type']==='Product')product=d}catch{}}
      const offers=product?.offers?.offers||[product?.offers];
-     return {status:response.status,url,productId:doc.querySelector('#product_id')?.value||null,title:doc.title,features:Array.from(doc.querySelectorAll('#product-dyn-features-ul li')).map(e=>plain(e.textContent)),information:description?plain(description.textContent):'',offers:offers.filter(Boolean).map(o=>({sku:String(o.sku),image:o.image?.url||null})),gallery:Array.from(doc.querySelectorAll('img[data-variant]')).map(e=>({url:e.getAttribute('src'),variants:(e.getAttribute('data-variant')||'').split(',').filter(Boolean)}))};
-    },canonical);
-    if(evidence.status!==200)throw new SourceError('官网商品介绍请求失败 HTTP '+evidence.status,evidence.status);
-    if(!evidence.productId||!evidence.offers.length)throw Error('商品介绍页面身份核验未通过：'+evidence.title);
-    evidence.jsonUrl=jsonUrl;
-    const variants=body.variant_arr.map(v=>({code:v.code,prod_id:v.prod_id,sku:v.sku,id:v.id,attributes:v.attributes,attributes_supplementary:{'Model Number':v.attributes_supplementary?.['Model Number']},product_specification:v.product_specification||[],features:v.features||[],desc_override:v.desc_override,description_html:v.description_html||''}));
-    const descriptions=await page.evaluate(htmls=>htmls.map(html=>new DOMParser().parseFromString(html,'text/html').body.textContent.replace(/\s+/g,' ').trim()),variants.map(v=>v.description_html));
-    variants.forEach((v,i)=>{v.descriptionText=descriptions[i];delete v.description_html});metrics.familyReads++;
-    return {variants,evidence};
+     const evidence={url,jsonUrl,productId:doc.querySelector('#product_id')?.value||null,title:doc.title,features:Array.from(doc.querySelectorAll('#product-dyn-features-ul li')).map(e=>plain(e.textContent)),information:description?plain(description.textContent):'',offers:offers.filter(Boolean).map(o=>({sku:String(o.sku),image:o.image?.url||null})),gallery:Array.from(doc.querySelectorAll('img[data-variant]')).map(e=>({url:e.getAttribute('src'),variants:(e.getAttribute('data-variant')||'').split(',').filter(Boolean)}))};
+     const variants=Array.isArray(body.variant_arr)?body.variant_arr.map(v=>({code:v.code,prod_id:v.prod_id,sku:v.sku,id:v.id,attributes:v.attributes,attributes_supplementary:{'Model Number':v.attributes_supplementary?.['Model Number']},product_specification:v.product_specification||[],features:v.features||[],desc_override:v.desc_override,descriptionText:plain(v.description_html)})):[];
+     return {status:200,variants,evidence};
+    },{url:canonical,jsonUrl,initial});
+    if(bundle.status!==200)throw new SourceError('官网商品数据请求失败 HTTP '+bundle.status,bundle.status);
+    const {variants,evidence}=bundle;
+    if(!variants.length||!evidence.productId||!evidence.offers.length)throw Error('商品系列身份核验未通过：'+evidence.title);
+    metrics.familyReads++;return {variants,evidence};
    }finally{release(page)}
   })();families.set(canonical,promise);return promise;
  }
