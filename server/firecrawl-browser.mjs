@@ -2,18 +2,46 @@ import {SourceError,parseSource} from './sync.mjs';
 import {sourceUrl} from './free-source.mjs';
 import {budgetError} from './credit-budget.mjs';
 
+async function readFamilyBundle({url,jsonUrl,initial,providedHtml}){
+ const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(20000)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch{return {status:0}}};
+ const [data,html]=await Promise.all([initial?{status:200,value:initial}:read(jsonUrl,true),providedHtml?{status:200,value:providedHtml}:read(url,false)]);
+ if(data.status!==200||html.status!==200)return {status:data.status!==200?data.status:html.status,jsonStatus:data.status,htmlStatus:html.status,jsonBody:data.value,html:html.value};
+ const body=data.value,doc=new DOMParser().parseFromString(html.value,'text/html'),plain=html=>new DOMParser().parseFromString(String(html||''),'text/html').body.textContent.replace(/\s+/g,' ').trim();
+ const description=doc.querySelector('#product-description')?.cloneNode(true);description?.querySelectorAll('a,script,style,#product-dyn-variant-desc').forEach(e=>e.remove());
+ let product;for(const el of doc.querySelectorAll('script[type="application/ld+json"]')){try{const d=JSON.parse(el.textContent);if(d['@type']==='Product')product=d}catch{}}
+ const offers=product?.offers?.offers||[product?.offers];
+ const evidence={url,jsonUrl,productId:doc.querySelector('#product_id')?.value||null,title:doc.title,features:Array.from(doc.querySelectorAll('#product-dyn-features-ul li')).map(e=>plain(e.textContent)),information:description?plain(description.textContent):'',offers:offers.filter(Boolean).map(o=>({sku:String(o.sku),image:o.image?.url||null})),gallery:Array.from(doc.querySelectorAll('img[data-variant]')).map(e=>({url:e.getAttribute('src'),variants:(e.getAttribute('data-variant')||'').split(',').filter(Boolean)}))};
+ const variants=Array.isArray(body.variant_arr)?body.variant_arr.map(v=>({code:v.code,prod_id:v.prod_id,sku:v.sku,id:v.id,attributes:v.attributes,attributes_supplementary:{'Model Number':v.attributes_supplementary?.['Model Number']},product_specification:v.product_specification||[],features:v.features||[],desc_override:v.desc_override,descriptionText:plain(v.description_html)})):[];
+ return {status:200,variants,evidence};
+}
+
 export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,connect,now=()=>Date.now()}={}){
  const key=process.env.FIRECRAWL_API_KEY;if(!key)throw new SourceError('Firecrawl服务器密钥尚未配置',401);
  let session,browser,context,starting,closed=false,created=0,deadline=0,allocatedPages=0;
  const pages=[],waiting=[],families=new Map(),active=new Map();
- const parallel=policy.browserConcurrency||4,ttl=Math.min(1800,policy.maxSessionSeconds||1800,Math.floor(budget.limit*30));
+ const parallel=policy.browserConcurrency||4,ttl=Math.min(1800,policy.maxSessionSeconds||1800,Math.floor(Math.min(budget.limit,policy.browserCreditsPerRun||20)*30));
+ const fallbackLimit=Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-Math.ceil(ttl/30))),fallbackCache=new Map();let fallbackReserved=0,scrapeCredits=0,scrapeBillingVerified=true;
  if(ttl<60)throw budgetError('本轮积分不足以创建一个浏览器会话');
- const metrics={provider:'firecrawl-browser',billingMode:'code-session-time',firecrawlRequests:0,scrapeRequests:0,firecrawlCredits:0,creditsEstimatedUpperBound:ttl/30,browserPages:0,familyReads:0,familyReuse:0,screenshots:0,sourceImageChecks:0};
+ const metrics={provider:'firecrawl-browser',billingMode:'code-session-time',firecrawlRequests:0,scrapeRequests:0,firecrawlCredits:0,creditsEstimatedUpperBound:ttl/30+fallbackLimit,browserCreditUpperBound:ttl/30,fallbackLimit,browserPages:0,familyReads:0,familyReuse:0,screenshots:0,sourceImageChecks:0};
  async function api(path,method,body){
   metrics.firecrawlRequests++;
   const response=await fetcher('https://api.firecrawl.dev/v2/'+path,{method,headers:{authorization:'Bearer '+key,...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(45000)});
   const result=await response.json();if(!response.ok||result.success===false)throw new SourceError('Firecrawl '+method+' 请求未成功 HTTP '+response.status,response.status);
   return result;
+ }
+ async function scrapeRaw(url){
+  guard();if(fallbackCache.has(url))return fallbackCache.get(url);
+  if(fallbackReserved>=fallbackLimit)throw budgetError('受阻地址的定额抓取已达本轮上限，未启动更多付费请求');
+  fallbackReserved++;metrics.scrapeRequests++;
+  const promise=(async()=>{
+   let charged=false;try{
+    const result=await api('scrape','POST',{url,formats:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'auto',skipTlsVerification:false,parsers:[],timeout:45000});
+    const cost=result.data?.metadata?.creditsUsed;
+    scrapeCredits+=Number.isFinite(cost)?cost:1;charged=true;if(!Number.isFinite(cost))scrapeBillingVerified=false;
+    if(!result.data?.rawHtml||result.data.metadata?.statusCode!==200)throw new SourceError('Firecrawl源站抓取失败 HTTP '+result.data?.metadata?.statusCode,result.data?.metadata?.statusCode||0);
+    return result.data.rawHtml;
+   }catch(error){if(!charged){scrapeCredits++;scrapeBillingVerified=false}throw error}
+  })();fallbackCache.set(url,promise);return promise;
  }
  function guard(){if(closed||deadline&&now()+30000>=deadline)throw budgetError('本轮浏览器运行时间已达到积分硬上限，已停止新增请求');}
  async function start(){
@@ -38,19 +66,15 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    const page=await take();try{
     const jsonUrl=canonical+'?json';
     let initial;
-    if(!page.url().startsWith('https://www.therange.co.uk/'))initial=await jsonPage(page,jsonUrl);
-    const bundle=await page.evaluate(async ({url,jsonUrl,initial})=>{
-     const read=async(target,json)=>{const response=await fetch(target,{credentials:'include',signal:AbortSignal.timeout(20000)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}};
-     const [data,html]=await Promise.all([initial?{status:200,value:initial}:read(jsonUrl,true),read(url,false)]);
-     if(data.status!==200||html.status!==200)return {status:data.status!==200?data.status:html.status};
-     const body=data.value,doc=new DOMParser().parseFromString(html.value,'text/html'),plain=html=>new DOMParser().parseFromString(String(html||''),'text/html').body.textContent.replace(/\s+/g,' ').trim();
-     const description=doc.querySelector('#product-description')?.cloneNode(true);description?.querySelectorAll('a,script,style,#product-dyn-variant-desc').forEach(e=>e.remove());
-     let product;for(const el of doc.querySelectorAll('script[type="application/ld+json"]')){try{const d=JSON.parse(el.textContent);if(d['@type']==='Product')product=d}catch{}}
-     const offers=product?.offers?.offers||[product?.offers];
-     const evidence={url,jsonUrl,productId:doc.querySelector('#product_id')?.value||null,title:doc.title,features:Array.from(doc.querySelectorAll('#product-dyn-features-ul li')).map(e=>plain(e.textContent)),information:description?plain(description.textContent):'',offers:offers.filter(Boolean).map(o=>({sku:String(o.sku),image:o.image?.url||null})),gallery:Array.from(doc.querySelectorAll('img[data-variant]')).map(e=>({url:e.getAttribute('src'),variants:(e.getAttribute('data-variant')||'').split(',').filter(Boolean)}))};
-     const variants=Array.isArray(body.variant_arr)?body.variant_arr.map(v=>({code:v.code,prod_id:v.prod_id,sku:v.sku,id:v.id,attributes:v.attributes,attributes_supplementary:{'Model Number':v.attributes_supplementary?.['Model Number']},product_specification:v.product_specification||[],features:v.features||[],desc_override:v.desc_override,descriptionText:plain(v.description_html)})):[];
-     return {status:200,variants,evidence};
-    },{url:canonical,jsonUrl,initial});
+    if(!page.url().startsWith('https://www.therange.co.uk/')){
+     try{initial=await jsonPage(page,jsonUrl)}catch(e){if([400,404].includes(e.status))throw e;initial=JSON.parse(await scrapeRaw(jsonUrl));}
+    }
+    let bundle=await page.evaluate(readFamilyBundle,{url:canonical,jsonUrl,initial});
+    if(bundle.status!==200){
+     const json=bundle.jsonStatus===200?bundle.jsonBody:JSON.parse(await scrapeRaw(jsonUrl));
+     const html=bundle.htmlStatus===200?bundle.html:await scrapeRaw(canonical);
+     bundle=await page.evaluate(readFamilyBundle,{url:canonical,jsonUrl,initial:json,providedHtml:html});
+    }
     if(bundle.status!==200)throw new SourceError('官网商品数据请求失败 HTTP '+bundle.status,bundle.status);
     const {variants,evidence}=bundle;
     if(!variants.length||!evidence.productId||!evidence.offers.length)throw Error('商品系列身份核验未通过：'+evidence.title);
@@ -80,7 +104,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   const url=sourceUrl(input),u=new URL(url),catalogue=u.pathname==='/api/productlist';
   const identifier=JSON.stringify({url,formats:options.formats||[]});if(active.has(identifier))return active.get(identifier);
   const promise=(async()=>{
-   if(catalogue){const page=await take();try{const body=await jsonPage(page,url);return {success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200,sourceURL:url,provider:'firecrawl-browser'}}}}finally{release(page)}}
+   if(catalogue){const page=await take();try{let body;try{body=await jsonPage(page,url)}catch(e){if([400,404].includes(e.status))throw e;body=JSON.parse(await scrapeRaw(url));}return {success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200,sourceURL:url,provider:'firecrawl-browser'}}}}finally{release(page)}}
    const family=await familyFor(url),sku=u.hash.slice(1).replace(/^0+(?=\d)/,''),variant=family.variants.find(v=>String(v.sku).replace(/^0+(?=\d)/,'')===sku);
    if(!variant)throw Error('官网商品JSON没有请求的具体SKU：'+sku);
    const data={sourceVariant:variant,familyEvidence:family.evidence,metadata:{statusCode:200,sourceURL:url,provider:'firecrawl-browser'}};
@@ -108,7 +132,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   try{if(session?.id)receipt=await api('interact/'+encodeURIComponent(session.id),'DELETE');}
   catch{metrics.closeReceiptUnavailable=true;}
   finally{await browser?.close().catch(()=>{});}
-  if(session){metrics.firecrawlCredits=Number.isFinite(receipt?.creditsBilled)?receipt.creditsBilled:ttl/30;metrics.billingVerified=Number.isFinite(receipt?.creditsBilled);metrics.sessionDurationMs=receipt?.sessionDurationMs;metrics.receipt={sessionId:session.id,creditsBilled:metrics.firecrawlCredits,billingVerified:metrics.billingVerified};}
+  if(session){metrics.browserCredits=Number.isFinite(receipt?.creditsBilled)?receipt.creditsBilled:ttl/30;metrics.scrapeCredits=scrapeCredits;metrics.firecrawlCredits=metrics.browserCredits+scrapeCredits;metrics.billingVerified=Number.isFinite(receipt?.creditsBilled)&&scrapeBillingVerified;metrics.sessionDurationMs=receipt?.sessionDurationMs;metrics.receipt={sessionId:session.id,creditsBilled:metrics.firecrawlCredits,browserCredits:metrics.browserCredits,scrapeCredits,billingVerified:metrics.billingVerified};}
   metrics.closed=true;
  };
  return reader;
