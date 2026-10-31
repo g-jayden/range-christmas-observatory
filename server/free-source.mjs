@@ -35,9 +35,6 @@ export async function createFreeReader({fetcher=fetch,browserFactory,concurrency
    if(!browserFactory&&process.env.GITHUB_ACTIONS==='true'&&process.env.COLLECTION_BROWSER_CHANNEL==='chrome')({browser,context,cleanup}=await cloudChrome(factory));
    else{browser=await factory.launch({headless,...(process.env.COLLECTION_BROWSER_CHANNEL?{channel:process.env.COLLECTION_BROWSER_CHANNEL}:{})});context=await browser.newContext({viewport:{width:1440,height:1000},locale:'en-GB'})}
    const page=await context.newPage();
-   metrics.browserPages++;const response=await page.goto('https://www.therange.co.uk/christmas/christmas-trees/pop-up-trees/',{waitUntil:'domcontentloaded',timeout:60000});
-   try{await page.waitForSelector('#product-list, .product-list, #category-plp-container, .category-plp-container',{timeout:45000})}
-   catch(e){const title=await page.title(),text=(await page.locator('body').innerText()).slice(0,500);throw new SourceError(`官网浏览器入口未就绪 HTTP ${response?.status()}: ${title}; ${text}`)}
    pages.push(page);
   })();
   await warm;
@@ -55,7 +52,8 @@ export async function createFreeReader({fetcher=fetch,browserFactory,concurrency
   try{
    const response=await navigate(page,url);
    if(catalogue){
-    await page.waitForFunction(()=>{try{return Array.isArray(JSON.parse(document.body.innerText).products)}catch{return false}},null,{timeout:45000});
+    try{await page.waitForFunction(()=>{try{return Array.isArray(JSON.parse(document.body.innerText).products)}catch{return false}},null,{timeout:45000})}
+    catch(e){throw new SourceError(`官网目录未返回JSON HTTP ${response?.status()}: ${await page.title()}; ${(await page.locator('body').innerText()).slice(0,300)}`)}
     const text=await page.locator('body').innerText();JSON.parse(text);
     return {success:true,data:{rawHtml:text,metadata:{statusCode:200,sourceURL:url,provider:'native-browser'}}};
    }
