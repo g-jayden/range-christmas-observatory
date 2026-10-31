@@ -5,7 +5,7 @@ import {sourceUrl} from './free-source.mjs';
 import {budgetError} from './credit-budget.mjs';
 
 async function readFamilyBundle({url,jsonUrl,initial,providedHtml}){
- const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(20000)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch{return {status:0}}};
+ const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(20000)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch{return {status:0}}};
  const [data,html]=await Promise.all([initial?{status:200,value:initial}:read(jsonUrl,true),providedHtml?{status:200,value:providedHtml}:read(url,false)]);
  if(data.status!==200||html.status!==200)return {status:data.status!==200?data.status:html.status,jsonStatus:data.status,htmlStatus:html.status,jsonBody:data.value,html:html.value};
  const body=data.value,doc=new DOMParser().parseFromString(html.value,'text/html'),plain=html=>new DOMParser().parseFromString(String(html||''),'text/html').body.textContent.replace(/\s+/g,' ').trim();
@@ -20,7 +20,7 @@ async function readFamilyBundle({url,jsonUrl,initial,providedHtml}){
 }
 
 async function readImageBatch(items){
-    let cursor=0;const results=[];await Promise.all(Array.from({length:8},async()=>{while(cursor<items.length){const {url,prior}=items[cursor++];let debug;try{
+    let cursor=0;const results=[];await Promise.all(Array.from({length:8},async()=>{while(cursor<items.length){const {url,prior,hashOnly}=items[cursor++];let debug;try{
      const headers={accept:'image/avif,image/webp,image/apng,image/*,*/*;q=0.8'};if(prior?.etag)headers['if-none-match']=prior.etag;else if(prior?.lastModified)headers['if-modified-since']=prior.lastModified;
      const response=await fetch(url,{credentials:'include',headers,cache:'no-cache',signal:AbortSignal.timeout(8000)});
      if(response.status===304&&prior?.hash){results.push({...prior,url,ok:true,revalidated:true});continue;}
@@ -29,8 +29,8 @@ async function readImageBatch(items){
      try{const bitmap=await createImageBitmap(blob);width=bitmap.width;height=bitmap.height;bitmap.close();}
      catch{const objectUrl=URL.createObjectURL(blob);try{const image=new Image();image.src=objectUrl;await image.decode();width=image.naturalWidth;height=image.naturalHeight;}finally{URL.revokeObjectURL(objectUrl)}}
      const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await blob.arrayBuffer()))).map(x=>x.toString(16).padStart(2,'0')).join('');
-     let binary='';const bytes=new Uint8Array(await blob.arrayBuffer());for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));
-     results.push({url,ok:width>=64&&height>=64,error:width<64||height<64?'placeholder-too-small':undefined,width,height,hash,bytes:blob.size,mime:blob.type,dataBase64:btoa(binary),etag:response.headers.get('etag'),lastModified:response.headers.get('last-modified')});
+     const same=prior?.hash===hash&&prior?.cachedImageUrl;let dataBase64;if(!same&&!hashOnly){let binary='';const bytes=new Uint8Array(await blob.arrayBuffer());for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));dataBase64=btoa(binary);}
+     results.push({url,ok:width>=64&&height>=64,error:width<64||height<64?'placeholder-too-small':undefined,width,height,hash,bytes:blob.size,mime:blob.type,dataBase64,cachedImageUrl:same?prior.cachedImageUrl:undefined,needsBody:!same&&hashOnly,etag:response.headers.get('etag'),lastModified:response.headers.get('last-modified')});
     }catch(e){results.push({url,ok:false,debug,error:'image-fetch-or-decode-failed: '+String(e.message).slice(0,120)})}}}));return results;
    }
 
@@ -44,7 +44,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  const metrics={provider:'firecrawl-browser',billingMode:'code-session-time',firecrawlRequests:0,scrapeRequests:0,firecrawlCredits:0,creditsEstimatedUpperBound:ttl/30+fallbackLimit,browserCreditUpperBound:ttl/30,fallbackLimit,browserPages:0,familyReads:0,familyReuse:0,screenshots:0,sourceImageChecks:0};
  async function api(path,method,body){
   metrics.firecrawlRequests++;
-  const response=await fetcher('https://api.firecrawl.dev/v2/'+path,{method,headers:{authorization:'Bearer '+key,...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(45000)});
+  const response=await fetcher('https://api.firecrawl.dev/v2/'+path,{method,headers:{authorization:'Bearer '+key,...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(105000)});
   const result=await response.json();if(!response.ok||result.success===false)throw new SourceError('Firecrawl '+method+' 请求未成功 HTTP '+response.status,response.status);
   return result;
  }
@@ -66,7 +66,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  async function scriptAction(script){
   guard();if(fallbackReserved>=fallbackLimit)throw budgetError('批量核验已达到本轮付费请求上限');fallbackReserved++;metrics.scrapeRequests++;
   let charged=false;try{
-   const result=await api('scrape','POST',{url:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776',formats:['rawHtml',{type:'screenshot',fullPage:false}],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,blockAds:false,parsers:[],timeout:45000,actions:[{type:'executeJavascript',script}]});
+   const result=await api('scrape','POST',{url:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776',formats:['rawHtml',{type:'screenshot',fullPage:false}],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,blockAds:false,parsers:[],timeout:90000,actions:[{type:'executeJavascript',script}]});
    const cost=result.data?.metadata?.creditsUsed;scrapeCredits+=Number.isFinite(cost)?cost:1;charged=true;if(!Number.isFinite(cost))scrapeBillingVerified=false;
    if(result.data?.metadata?.statusCode!==200)throw new SourceError('图片批量核验入口失败 HTTP '+result.data?.metadata?.statusCode,result.data?.metadata?.statusCode||0);
    let value=result.data?.actions?.javascriptReturns?.[0]?.value;if(typeof value==='string')value=JSON.parse(value);
@@ -85,7 +85,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    if(!session.id||!session.cdpUrl)throw Error('Firecrawl没有返回浏览器会话');
    try{browser=await(connect||(async url=>(await import('playwright')).chromium.connectOverCDP(url)))(session.cdpUrl);}
    catch{throw Error('Firecrawl浏览器连接失败；会话将立即关闭');}
-   context=browser.contexts()[0]||await browser.newContext({viewport:{width:1440,height:1000},locale:'en-GB'});
+   context=browser.contexts()[0]||await browser.newContext({viewport:{width:1440,height:1000},locale:'en-GB'});await context.setExtraHTTPHeaders?.({'Cache-Control':'no-cache'});
   })();
   await starting;
  }
@@ -159,23 +159,37 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();b.evidence.sourceTransport='enhanced-batch';families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else {const error=new SourceError('官网商品详情链接异常，未返回可核实的具体SKU规格；本轮目录价格、库存、NEW与图片独立更新',b?.status||0);familyFailures.set(r.url,error);console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}}}
  };
  reader.auditImages=async (products,previous={})=>{
-  const allUrls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))],urls=[],results=[];
-  for(const url of allUrls){const old=previous.entries?.[url];let retained=false;if(policy.repairImagesOnly&&old?.ok&&old.width>=64&&old.height>=64&&/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(old.cachedImageUrl||'')){try{retained=createHash('sha256').update(await fs.readFile('web/'+old.cachedImageUrl)).digest('hex')===old.hash;}catch{}}if(retained)results.push({...old,observedAt:old.observedAt||previous.observedAt,retained:true});else urls.push(url);}
-  for(const url of allUrls){const u=new URL(url);if(u.protocol!=='https:'||u.hostname!=='www.therange.co.uk'||!u.pathname.startsWith('/media/'))throw Error('商品图片来源未通过核验');}
-  await fs.mkdir('web/images/source',{recursive:true});
-   for(let offset=0;offset<urls.length;){guard();const size=policy.imageBatchProbe&&offset===0?3:200;const items=urls.slice(offset,offset+size).map(url=>({url,prior:previous.entries?.[url]}));metrics.imageBatchRequests=(metrics.imageBatchRequests||0)+1;const batch=await scriptAction('('+readImageBatch.toString()+')('+JSON.stringify(items)+')');
-    if(batch.length!==items.length||batch.some(r=>!items.some(i=>i.url===r.url)))throw Error('图片批量核验没有返回全部请求地址');
-    if(offset===0&&batch.filter(r=>!r.ok||r.width<64||r.height<64).length>batch.length*.8)throw Error('图片主通道未通过，停止后续付费批次');
-    offset+=size;batch.forEach(r=>{r.observedAt=new Date(now()).toISOString();if(r.width<64||r.height<64){r.ok=false;r.error='placeholder-too-small'}});
-    for(const item of batch){if(!item.ok)continue;try{
+  const allUrls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))],results=[],known=[],newUrls=[],validPrior={};
+  for(const url of allUrls){
+   const u=new URL(url);if(u.protocol!=='https:'||u.hostname!=='www.therange.co.uk'||!u.pathname.startsWith('/media/'))throw Error('商品图片来源未通过核验');
+   const old=previous.entries?.[url];let valid=false;if(old?.ok&&old.width>=64&&old.height>=64&&/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(old.cachedImageUrl||'')){try{valid=createHash('sha256').update(await fs.readFile('web/'+old.cachedImageUrl)).digest('hex')===old.hash;}catch{}}
+   if(valid){validPrior[url]={hash:old.hash,cachedImageUrl:old.cachedImageUrl,etag:old.etag,lastModified:old.lastModified,width:old.width,height:old.height,bytes:old.bytes,mime:old.mime};if(policy.repairImagesOnly)results.push({...old,observedAt:old.observedAt||previous.observedAt,retained:true});else known.push(url);}else newUrls.push(url);
+  }
+  const tasks=[];for(let offset=0;offset<known.length;offset+=400)tasks.push({urls:known.slice(offset,offset+400),hashOnly:true});
+  for(let offset=0;offset<newUrls.length;){const size=policy.imageBatchProbe&&offset===0?3:200;tasks.push({urls:newUrls.slice(offset,offset+size),hashOnly:false});offset+=size;}
+  await fs.mkdir('web/images/source',{recursive:true});let rechecked=0,changed=0;
+  for(let taskIndex=0;taskIndex<tasks.length;taskIndex++){
+   guard();const task=tasks[taskIndex],items=task.urls.map(url=>({url,prior:validPrior[url],hashOnly:task.hashOnly}));metrics.imageBatchRequests=(metrics.imageBatchRequests||0)+1;
+   const batch=await scriptAction('('+readImageBatch.toString()+')('+JSON.stringify(items)+')');
+   if(batch.length!==items.length||batch.some(r=>!items.some(i=>i.url===r.url)))throw Error('图片批量核验没有返回全部请求地址');
+   if(taskIndex===0&&batch.filter(r=>!r.ok||r.width<64||r.height<64).length>batch.length*.8)throw Error('图片主通道未通过，停止后续付费批次');
+   rechecked+=batch.length;const needsBody=[];
+   for(const item of batch){
+    item.observedAt=new Date(now()).toISOString();if(item.width<64||item.height<64){item.ok=false;item.error='placeholder-too-small'}
+    if(item.ok&&item.needsBody){needsBody.push(item.url);changed++;continue;}
+    if(item.ok)try{
      if(item.dataBase64){const bytes=Buffer.from(item.dataBase64,'base64');if(createHash('sha256').update(bytes).digest('hex')!==item.hash)throw Error('image hash mismatch');const ext=({'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif','image/avif':'avif'})[item.mime];if(!ext)throw Error('unsupported image type');item.cachedImageUrl='images/source/'+item.hash+'.'+ext;await fs.writeFile('web/'+item.cachedImageUrl,bytes);delete item.dataBase64;}
      if(!item.cachedImageUrl||!/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(item.cachedImageUrl))throw Error('image cache missing');
      const stored=await fs.readFile('web/'+item.cachedImageUrl);if(createHash('sha256').update(stored).digest('hex')!==item.hash)throw Error('cached image hash mismatch');
-    }catch(e){delete item.dataBase64;item.ok=false;item.error=e.message}}
-    results.push(...batch);console.log(JSON.stringify({phase:'image-verification',checked:results.length,total:allUrls.length}));}
+    }catch(e){delete item.dataBase64;item.ok=false;item.error=e.message;}
+    results.push(item);
+   }
+   for(let offset=0;offset<needsBody.length;offset+=200)tasks.push({urls:needsBody.slice(offset,offset+200),hashOnly:false});
+   console.log(JSON.stringify({phase:'image-verification',checked:results.length,total:allUrls.length,changed}));
+  }
   const byUrl=new Map(results.map(r=>[r.url,r]));for(const p of products){const r=byUrl.get(p.variantImageUrl||p.imageUrl);if(r?.ok){p.cachedImageUrl=r.cachedImageUrl;p.imageCacheEvidence={sourceUrl:r.url,sha256:r.hash,observedAt:r.observedAt};}}
-  metrics.sourceImageChecks+=urls.length;const loaded=results.filter(r=>r.ok).length;
-  return {mode:'live-enhanced-batches-and-original-image-cache',checked:results.length,rechecked:urls.length,retained:allUrls.length-urls.length,loaded,failed:results.length-loaded,failures:results.filter(r=>!r.ok),entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString(),perImageScrapeRequests:0,batchScrapeRequests:metrics.imageBatchRequests||0};
+  metrics.sourceImageChecks+=rechecked;const loaded=results.filter(r=>r.ok).length;
+  return {mode:'live-enhanced-batches-and-original-image-cache',checked:results.length,rechecked,retained:policy.repairImagesOnly?allUrls.length-newUrls.length:0,changed,loaded,failed:results.length-loaded,failures:results.filter(r=>!r.ok),entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString(),perImageScrapeRequests:0,batchScrapeRequests:metrics.imageBatchRequests||0};
  };
  reader.metrics=()=>({...metrics,sessionSeconds:created?Math.ceil(((browserEndedAt||now())-created)/1000):0});
  reader.closeBrowser=async()=>{
