@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
+import {detailFingerprint} from './collection-policy.mjs';
 
 export const categories={'artificial-trees':'94637','prelit-christmas-trees':'94634','snowy-christmas-trees':'94636','slim-christmas-trees':'2645178','pop-up-trees':'2645121','potted-christmas-trees':'2645136','christmas-tree-skirt':'410728'};
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -14,18 +15,7 @@ export function parseSource(result){
  return d;
 }
 export function apiUrl(categoryId,offset=0,filters={in_stock_f:['true']},facets=false){const u=new URL('https://search-lon.therange.co.uk/api/productlist');for(const [k,v] of Object.entries({categoryId,offset,limit:120,sort:'relevance',filters:JSON.stringify(filters),facets,includePriceFacet:facets}))u.searchParams.set(k,String(v));return u.href;}
-export function createReader({fetcher=fetch,delayMs=6500,key=process.env.FIRECRAWL_API_KEY||'',rawDir}={}){
- let nextStart=0;
- const raw=async(url,options={})=>{
-  const start=Math.max(nextStart,Date.now());nextStart=start+delayMs;await sleep(Math.max(0,start-Date.now()));
-  const response=await fetcher('https://api.firecrawl.dev/v2/scrape',{method:'POST',headers:{'content-type':'application/json',...(key?{authorization:'Bearer '+key}:{})},body:JSON.stringify({url,formats:options.formats||['rawHtml'],onlyMainContent:false,maxAge:0,...(options.waitFor?{waitFor:options.waitFor}:{})}),signal:AbortSignal.timeout(90000)});
-  const body=await response.json();
-  if(!response.ok||!body.success){const retry=response.headers.get('retry-after');throw new SourceError(String(body.error||'Source provider HTTP '+response.status),response.status,Number(retry)||0)}
-  if(rawDir){await fs.mkdir(rawDir,{recursive:true});await fs.writeFile(path.join(rawDir,createHash('sha256').update(url).digest('hex')+'.json'),JSON.stringify({requestedUrl:url,receivedAt:stamp(),response:body}));}
-  return body;
- };
- const reader=async url=>parseSource(await raw(url));reader.raw=raw;return reader;
-}
+export function createReader(){throw Error('Firecrawl采集已禁用；请使用官网免费采集通道。')}
 export async function collectCategory(id,reader){
  let expected;const products=[],batches=[];
  for(let offset=0;expected===undefined||offset<expected;offset+=120){
@@ -69,7 +59,9 @@ export function mergeSnapshot(previous,collected,now=stamp()){
   const out={...(prior||{}),...p,kind,priceGBP:p.price/100,currency:'GBP',sourceUrl:'https://www.therange.co.uk/'+p.variantPath.replace('#','/#'),newStatus:p.newIn,newEvidence:{kind:'website_flag',field:'newIn',value:p.newIn,observedAt:now},observedAt:now,firstObservedAt:h.firstObservedAt,firstNewObservedAt:h.firstNewObservedAt,arrivalEvidence:h.arrivalEvidence,everNew:h.everNew,features:stableDescription?prior.features:features,style,attributeObservedAt:sameFamily?(Object.hasOwn(prior,'attributeObservedAt')?prior.attributeObservedAt:previous.observedAt||previous.observedDate):null,detailEvidence:stableDescription?prior.detailEvidence:undefined,attributeEvidence:stableDescription?prior.attributeEvidence:undefined,heightLabel:sameFamily?prior.heightLabel:'高度未确认',treeColor:sameFamily?prior.treeColor:'颜色未确认',heightValues:sameFamily?prior.heightValues:[],colorValues:sameFamily?prior.colorValues:[],imageStatus:'source-url-current; browser-load-pending'};
   // Keep a separately verified PDP image when the source listing still uses its placeholder.
   if(/placeholder/i.test(out.variantImageUrl||out.imageUrl||'')&&prior?.imageEvidence){out.variantImageUrl=prior.variantImageUrl;out.imageEvidence=prior.imageEvidence;out.imageStatus='PDP override retained; recheck pending';}
-  out.features=retainedFeatures;
+  out.rawSourceUrl=out.sourceUrl;out.sourceUrl=out.sourceUrl.replace(/[\u0000-\u001f]/g,'-');
+  out.features=retainedFeatures;out.listingFeatures=features;out.listingVariantImageUrl=p.variantImageUrl;
+  out.currentDetailFingerprint=detailFingerprint(out);
   if(!out.detailEvidence&&out.arrivalEvidence==='observed-after-baseline'&&!(out.heightValues?.length||out.colorValues?.length))out.attributeObservedAt=null;
   products.push(out);
  }
@@ -80,10 +72,10 @@ export function mergeSnapshot(previous,collected,now=stamp()){
  return result;
 }
 function nextStyle(features){return [['potted','圣诞树盆栽'],['popUp','折叠式圣诞树'],['slim','纤细圣诞树'],['snow','雪景款'],['prelit','预亮灯款']].find(([k])=>features[k])?.[1]||'标准／其他装饰待核验';}
-export async function sync({previous,reader,onProgress=()=>{}}){
+export async function sync({previous,reader,onProgress=()=>{},resolvePlaceholderImages=false}){
  const collected={};for(const [category,id]of Object.entries(categories)){onProgress(category);collected[category]=await collectStableCategory(id,reader)}
  const result=mergeSnapshot(previous,collected),issues=[];
- if(reader.raw)for(const p of result.products){if(!/placeholder/i.test(p.imageUrl||'')&&!/placeholder/i.test(p.variantImageUrl||''))continue;
+ if(resolvePlaceholderImages&&reader.raw)for(const p of result.products){if(!/placeholder/i.test(p.imageUrl||'')&&!/placeholder/i.test(p.variantImageUrl||''))continue;
   try{const response=await reader.raw(p.sourceUrl.split('#')[0]);if(response.data?.metadata?.statusCode!==200)throw Error('Product page unavailable');let image=response.data.metadata['og:image']||response.data.metadata.ogImage;
    if(!image){const tag=response.data.rawHtml?.match(/<meta\b[^>]*\bproperty=["']og:image["'][^>]*>/i)?.[0];image=tag?.match(/\bcontent=["']([^"']+)/i)?.[1];}
    if(!image)throw Error('No product image in PDP metadata');const url=new URL(image.replaceAll('&amp;','&'),p.sourceUrl);if(url.protocol!=='https:'||url.hostname!=='www.therange.co.uk')throw Error('Unexpected image origin');

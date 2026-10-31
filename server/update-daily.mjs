@@ -1,51 +1,51 @@
-import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';
-import {sync,createReader,atomicJson,SourceError} from './sync.mjs';import {parseDetails,applyDetails} from './details.mjs';import {scheduleLabel} from './schedule.mjs';import {apiBase} from './cloud-client.mjs';
-const key=process.env.FIRECRAWL_API_KEY||'',requestedFull=process.env.FULL_DETAILS!=='false';let full=requestedFull;
-const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-let scheduleConfig;try{scheduleConfig=JSON.parse(await fs.readFile('web/settings.json','utf8'))}catch{scheduleConfig={intervalDays:7,time:'00:00',nextRunAt:null}}
-if(apiBase)try{const r=await fetch(apiBase+'/public/status');if(r.ok)scheduleConfig=(await r.json()).config}catch{}
-const nextRun=()=>scheduleConfig.nextRunAt;
-let previous=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));
-const state={schedule:scheduleLabel(scheduleConfig),timezone:'Asia/Shanghai',nextCheckAt:nextRun(),startedAt:new Date().toISOString(),lastSuccess:previous.observedAt||null,revision:previous.revision||'baseline',running:true,mode:full?'full':'basic',lastError:null};
-async function balance(){if(!key)throw Error('Firecrawl account credential not configured');const r=await fetch('https://api.firecrawl.dev/v2/team/credit-usage',{headers:{authorization:'Bearer '+key},signal:AbortSignal.timeout(20000)});const b=await r.json();if(!r.ok)throw Error('Unable to verify source account quota');return b.data||b;}
-async function parallel(items,limit,task){let i=0;await Promise.all(Array.from({length:Math.min(limit,items.length)},async()=>{while(i<items.length){const item=items[i++];await task(item)}}));}
-try{
- const credits=await balance();const estimated=previous.products.length+60;
- if(full&&credits.remainingCredits<estimated){full=false;state.mode='basic';state.fullUpdatePending='采集账户额度尚不足以逐SKU全量复核；本轮更新完整基础目录，原有规格保留核验日期。';console.log('Full SKU recheck pending account credits; complete catalogue fields will still refresh.');}
- if(credits.remainingCredits<40)throw Error('采集账户额度不足，保留上次完整目录；需要补充采集额度。');
- const paid=credits.planCredits>=100000,delayMs=paid?250:credits.planCredits>=5000?750:6500,workers=paid?8:credits.planCredits>=5000?3:1;
- const reader=createReader({key,delayMs});
- let next=await sync({previous,reader,onProgress:category=>console.log('Catalogue '+category)});
- const issues=[];let checked=0;const cacheDir='runtime/details';await fs.mkdir(cacheDir,{recursive:true});
- if(full){
-  await parallel(next.products,workers,async p=>{
-   const file=path.join(cacheDir,p.sku+'.json');let detail;
-   try{detail=JSON.parse(await fs.readFile(file,'utf8'));if(detail.observedDay!==today())detail=null}catch{}
-   if(!detail){
-    for(let attempt=0;attempt<2;attempt++){
-     try{const response=await reader.raw(p.sourceUrl,{formats:['rawHtml','markdown'],waitFor:1500});detail=parseDetails(response,p.sku,p.sourceUrl);detail.observedDay=today();await atomicJson(file,detail);break;}
-     catch(e){if([401,402,429].includes(e.status))throw e;if(attempt===1)issues.push({sku:p.sku,error:e.message});}
-    }
-   }
-   if(detail)applyDetails(p,detail);else{p.attributeObservedAt=null;p.heightLabel='高度未确认';p.treeColor='颜色未确认';p.material='材质未确认';p.detailStatus='本轮原站规格未能核验';p.style='标准／其他装饰待核验';p.detailCheckedAt=new Date().toISOString();}
-   checked++;if(checked%50===0)console.log('PDP checked '+checked+'/'+next.products.length);
-  });
-  // Reconcile stock/name/price/NEW/image changes that happened during PDP collection.
-  const latest=await sync({previous:next,reader,onProgress:category=>console.log('Final reconciliation '+category)});
-  const detailsBySku=new Map(next.products.map(p=>[p.sku,p]));
-  for(const p of latest.products){const detail=detailsBySku.get(p.sku);if(detail&&detail.productPath===p.productPath){const fields=['heightLabel','heightCm','heightValues','treeColor','colorValues','material','skirtDiameterCm','skirtBaseDiameterCm','skirtTopDiameterCm','specifications','style','features','detailEvidence','attributeObservedAt','images','descriptionHash','detailStatus','detailCheckedAt'];for(const k of fields)p[k]=detail[k];}else{p.attributeObservedAt=null;issues.push({sku:p.sku,error:'SKU first appeared during final reconciliation; detailed specifications pending'});}}
-  next=latest;
- }
- next.detailsAudit={mode:full?'all-SKU-pages-attempted':'basic-catalogue-only',checked,verified:next.products.filter(p=>p.attributeObservedAt&&p.detailEvidence?.verifiedProductSection).length,issues,completedAt:new Date().toISOString()};
- next.automation={enabled:true,schedule:scheduleLabel(scheduleConfig),intervalDays:scheduleConfig.intervalDays,time:scheduleConfig.time,timezone:'Asia/Shanghai',type:'Configurable periodic cloud update',mode:full?'full':'basic'};
- const images=next.products.filter(p=>/^https:\/\//.test(p.variantImageUrl||p.imageUrl||''));let mirrored=0;const failures=[];
- // Cache genuine source photographs when the source permits a server-side download.
- await fs.mkdir('web/images',{recursive:true});
- await parallel(images,4,async p=>{const url=p.variantImageUrl||p.imageUrl;try{const origin=new URL(url);if(origin.protocol!=='https:'||!(origin.hostname==='therange.co.uk'||origin.hostname.endsWith('.therange.co.uk')))throw Error('Unexpected source image origin');const r=await fetch(url,{headers:{'user-agent':'TheRangeCatalogueResearch/1.0'},signal:AbortSignal.timeout(20000)});if(!r.ok||!r.headers.get('content-type')?.startsWith('image/'))throw Error('Source image HTTP '+r.status);const b=Buffer.from(await r.arrayBuffer());if(b.length>5000000)throw Error('Source image exceeds site cache limit');const ext=r.headers.get('content-type').includes('png')?'png':r.headers.get('content-type').includes('webp')?'webp':'jpg',name=createHash('sha256').update(b).digest('hex')+'.'+ext;await fs.writeFile('web/images/'+name,b);p.cachedImageUrl='images/'+name;p.imageStatus='cloud-source-image-downloaded';p.imageCheckedAt=new Date().toISOString();mirrored++;}catch(e){delete p.cachedImageUrl;p.imageStatus='current-source-url; browser-load-required';failures.push({sku:p.sku,reason:e.message});}});
- next.imageAudit={checked:images.length,mirrored,sourceUrlsRetained:failures.length,failures,completedAt:new Date().toISOString()};
- const used=new Set(next.products.map(p=>p.cachedImageUrl?.split('/').pop()).filter(Boolean));for(const name of await fs.readdir('web/images'))if(/^[a-f0-9]{64}\.(jpg|png|webp)$/.test(name)&&!used.has(name))await fs.unlink(path.join('web/images',name));
- next.updatedAt=new Date().toISOString();next.revision=createHash('sha256').update(JSON.stringify(next)).digest('hex');
- await atomicJson('web/catalogue.json',next);
- Object.assign(state,{running:false,lastSuccess:next.observedAt,completedAt:next.updatedAt,revision:next.revision,stats:next.stats,detailsAudit:next.detailsAudit,imageAudit:{checked:images.length,mirrored,sourceUrlsRetained:failures.length},nextCheckAt:nextRun()});
- await atomicJson('web/status.json',state);console.log(JSON.stringify({success:true,stats:next.stats,detailsChecked:checked,detailIssues:issues.length,imagesMirrored:mirrored,sourceImagesRetained:failures.length}));
-}catch(e){state.running=false;state.lastError={message:String(e.message).replace(/fc-[\w-]+/g,'[redacted]'),at:new Date().toISOString()};await atomicJson('web/status.json',state);console.error(state.lastError.message);process.exitCode=1;}
+import fs from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
+import {createFreeReader} from './free-source.mjs';
+import {loadPolicy,digest,imageMapFingerprint} from './collection-policy.mjs';
+import {catalogueSnapshot,readState,refreshDetails,preserveImages,saveState} from './incremental.mjs';
+import {checkNew} from './new-events.mjs';
+import {atomicJson} from './sync.mjs';
+import {scheduleLabel} from './schedule.mjs';
+import {control,apiBase} from './cloud-client.mjs';
+export async function runUpdate({readerFactory=createFreeReader,now=()=>Date.now()}={}){
+ const previous=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),policy=await loadPolicy();
+ let tick;try{tick=JSON.parse(await fs.readFile('runtime/tick.json','utf8'))}catch{tick={full:true,monitor:false,lease:null}}
+ let config;try{config=JSON.parse(await fs.readFile('web/settings.json','utf8'))}catch{config={intervalDays:7,time:'00:00'}}
+ if(tick.config)config=tick.config;
+ const state={schedule:scheduleLabel(config),timezone:'Asia/Shanghai',nextCheckAt:config.nextRunAt||null,startedAt:new Date(now()).toISOString(),lastSuccess:previous.observedAt||null,revision:previous.revision,running:true,mode:'native-free',lastError:null,provider:'native-browser',firecrawlRequests:0,firecrawlCredits:0};
+ const collection=await readState();collection.completed=[];
+ const budget={remaining:()=>Infinity,summary:()=>({provider:'native-browser',credits:0,firecrawlRequests:0,runLimit:0,monthLimit:0})};
+ let reader,catalogueReady=false;
+ try{
+  reader=await readerFactory({concurrency:policy.browserConcurrency||4,maxPages:policy.maxNativePagesPerRun||20000});
+  const gathered=await catalogueSnapshot({previous,reader,policy,now,forceFresh:true,onProgress:c=>console.log('官网免费目录 '+c)});
+  let next=gathered.snapshot;catalogueReady=true;
+  let notification={success:true,attempted:0,captured:0,deferred:0};
+  if(tick.monitor)notification=await checkNew({snapshot:next,reader,policy,budget,state:collection,lease:tick.monitorLease||tick.lease,now});
+  const detailEnabled=tick.full!==false&&process.env.COLLECTION_MODE!=='catalogue';
+  const audit=await refreshDetails({previous,snapshot:next,reader,policy,budget,state:collection,now,enabled:detailEnabled});
+  const imageAudit=preserveImages(previous,next),metrics=reader.metrics?.()||{firecrawlRequests:0,firecrawlCredits:0};
+  const report={strategy:'官网接口＋自有浏览器',provider:'native-browser',firecrawlEnabled:false,firecrawlRequests:0,firecrawlCredits:0,sourceObservedAt:next.observedAt,catalogueReused:false,native:metrics,details:audit,notifications:notification,paidFallback:false,completedAt:new Date(now()).toISOString()};
+  next.detailsAudit=audit;next.collectionAudit=report;next.imageAudit=imageAudit;
+  next.automation={enabled:true,mode:'native-free',provider:'native-browser',intervalDays:config.intervalDays,time:config.time,timezone:'Asia/Shanghai',schedule:scheduleLabel(config)};
+  next.updatedAt=new Date(now()).toISOString();next.revision=digest({observedAt:next.observedAt,products:next.products,sources:next.sources,excluded:next.excluded});
+  const oldStatus=await fs.readFile('web/status.json','utf8').then(JSON.parse).catch(()=>({}));
+  if(oldStatus.browserImageAudit&&imageMapFingerprint(previous.products)===imageMapFingerprint(next.products))state.browserImageAudit={...oldStatus.browserImageAudit,catalogueRevision:next.revision,imageMapReconciled:true};
+  await atomicJson('web/catalogue.json',next);
+  Object.assign(state,{running:false,lastSuccess:next.observedAt,completedAt:next.updatedAt,revision:next.revision,stats:next.stats,detailsAudit:audit,imageAudit,collectionAudit:report});
+  await atomicJson('web/status.json',state);
+  await atomicJson('web/collection-ledger.json',{provider:'native-browser',firecrawlRequests:0,firecrawlCredits:0,lastRun:report});
+  await saveState(collection);
+  if(process.env.GITHUB_OUTPUT)await fs.appendFile(process.env.GITHUB_OUTPUT,'catalogue_success=true\n');
+  console.log(JSON.stringify({success:true,stats:next.stats,detailsChecked:audit.checked,detailIssues:audit.issues.length,native:metrics,firecrawlCredits:0}));
+  return {success:true,catalogueReady:true,state,snapshot:next};
+ }catch(e){
+  const message=String(e.message).replace(/fc-[\w-]+/g,'[redacted]');
+  state.running=false;state.lastError={message,at:new Date(now()).toISOString(),phase:catalogueReady?'details':'catalogue'};state.collectionAudit={provider:'native-browser',firecrawlEnabled:false,firecrawlRequests:0,firecrawlCredits:0,native:reader?.metrics?.()||{},paidFallback:false,verifiedNewSnapshot:false};
+  await atomicJson('web/status.json',state);await saveState(collection);
+  if(tick.monitor&&apiBase)await control('/internal/monitor-complete',{lease:tick.monitorLease||tick.lease,success:false,error:'免费采集通道本轮未完成，正在重试核验',scanned:0,newCount:0}).catch(()=>{});
+  console.error(message);return {success:false,catalogueReady:false,state};
+ }finally{await reader?.close?.()}
+}
+if(process.argv[1]&&fileURLToPath(import.meta.url)===fileURLToPath(new URL('file://'+process.argv[1]))){const result=await runUpdate();if(!result.success)process.exitCode=1}

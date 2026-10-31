@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "retailerId": "the-range-gb",
+  "catalogueId": "christmas-trees-skirts",
+  "detailMaxAgeDays": 0,
+  "maxDetailPagesPerRun": 10000,
+  "maxScreenshotPagesPerRun": 1000,
+  "maxCreditsPerRun": 0,
+  "maxCreditsPerCalendarMonth": 0,
+  "accountReserveCredits": 500,
+  "catalogueReuseHours": 6,
+  "failureRetryDays": [
+    1,
+    3,
+    7,
+    30
+  ],
+  "permanentFailureRetryDays": 0,
+  "provider": "native",
+  "firecrawlEnabled": false,
+  "maxNativePagesPerRun": 20000,
+  "browserConcurrency": 4
+}
