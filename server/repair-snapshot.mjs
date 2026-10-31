@@ -6,16 +6,16 @@ import {readState,refreshDetails,saveState} from './incremental.mjs';
 import {atomicJson} from './sync.mjs';
 import {sourceUrl} from './free-source.mjs';
 const snapshot=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),status=JSON.parse(await fs.readFile('web/status.json','utf8'));
-const policy={...await loadPolicy(),maxSessionSeconds:120,browserCreditsPerRun:4,maxFallbackScrapesPerRun:6,blockAds:false},budget=await openCreditBudget(policy);
+const policy={...await loadPolicy(),maxSessionSeconds:120,browserCreditsPerRun:4,maxFallbackScrapesPerRun:26,blockAds:false},budget=await openCreditBudget(policy);
 const collection=await readState();collection.completed=[];collection.attempted={};
 const selected=snapshot.products.filter(p=>!verified(p));
 for(const p of selected){delete collection.failures[productKey(p,policy)];p.sourceUrl=sourceUrl('https://www.therange.co.uk/'+p.variantPath.replace('#','/#'));}
 let reader,report={phase:'targeted-repair-and-images',success:false},error;
 try{
- reader=await createFirecrawlBrowserReader({policy,budget:{...budget,limit:10}});
+ reader=await createFirecrawlBrowserReader({policy,budget:{...budget,limit:30}});
+ const images=await reader.auditImages(snapshot.products,snapshot.browserImageAudit);
  let audit;try{audit=await refreshDetails({previous:{...snapshot,products:selected},snapshot:{products:selected},reader,policy,budget,state:collection});}catch(e){audit={checked:0,succeeded:0,error:e.message};console.error(JSON.stringify({phase:'repair-specifications',error:e.message}));}
 
- const images=await reader.auditImages(snapshot.products,snapshot.browserImageAudit);
  await reader.close();const metrics=reader.metrics();
  const unresolved=snapshot.products.filter(p=>!verified(p));
  snapshot.detailsAudit={...snapshot.detailsAudit,verified:snapshot.products.length-unresolved.length,succeeded:snapshot.products.length-unresolved.length,issues:unresolved.map(p=>({sku:p.sku,url:p.sourceUrl,reason:collection.failures[productKey(p,policy)]?.error||'官网尚无可核实的具体SKU规格'})),repair:{checked:audit.checked,succeeded:audit.succeeded,completedAt:new Date().toISOString()}};
