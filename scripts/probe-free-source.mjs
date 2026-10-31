@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import {createFreeReader} from '../server/free-source.mjs';
-import {apiUrl} from '../server/sync.mjs';
+import {apiUrl,categories,collectStableCategory} from '../server/sync.mjs';
 import {parseDetails} from '../server/details.mjs';
 const reader=await createFreeReader();
 let phase='catalogue',products=0;
@@ -15,8 +15,13 @@ try{
  const response=await reader.raw(url,{formats:['rawHtml','markdown',{type:'screenshot'}]});
  const detail=parseDetails(response,product.sku,url);
  if(!response.data.screenshotBase64)throw Error('Free screenshot was not generated');
+ const sourceChecks={};phase='all-categories';
+ for(const [name,id]of Object.entries(categories)){
+  const collected=await collectStableCategory(id,reader);sourceChecks[name]={expected:collected.audit.expected,unique:collected.audit.unique,complete:collected.audit.complete};
+  console.log(JSON.stringify({phase:'category-proof',category:name,...sourceChecks[name]}));
+ }
  const metrics=reader.metrics();if(metrics.firecrawlRequests!==0||metrics.firecrawlCredits!==0)throw Error('Paid request detected');
- await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/free-source-proof.json',JSON.stringify({success:true,source:'native-browser',products:category.totalResults,sku:detail.sku,specifications:detail.specs,screenshotBytes:Buffer.from(response.data.screenshotBase64,'base64').length,metrics,verifiedAt:new Date().toISOString()},null,2));
+ await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/free-source-proof.json',JSON.stringify({success:true,source:'native-browser',products:category.totalResults,sourceChecks,sku:detail.sku,specifications:detail.specs,screenshotBytes:Buffer.from(response.data.screenshotBase64,'base64').length,metrics,verifiedAt:new Date().toISOString()},null,2));
  console.log(JSON.stringify({success:true,products:category.totalResults,sku:detail.sku,metrics}));
 }catch(e){
  await fs.writeFile('runtime/free-source-proof.json',JSON.stringify({success:false,catalogueSuccess:products>0,products,phase,error:e.message,metrics:reader.metrics(),verifiedAt:new Date().toISOString()},null,2));throw e;
