@@ -46,7 +46,7 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
   }
   for(const p of next.products)if(p.attributeObservedAt&&p.specifications&&p.detailEvidence?.verifiedProductSection){const info=productInformation(p,p.specifications);p.productSummary=info.summary;p.detailEvidence={...p.detailEvidence,text:info.text};}
   const imageAudit=preserveImages(previous,next);
-  const browserImageAudit=await reader.auditImages?.(next.products);
+  const browserImageAudit=await reader.auditImages?.(next.products,previous.browserImageAudit);
   await reader.close?.();const metrics=reader.metrics?.()||{firecrawlRequests:0,firecrawlCredits:0};
   const report={strategy:'Firecrawl按时计费会话＋商品系列JSON复用',provider:'firecrawl-browser',firecrawlEnabled:true,firecrawlRequests:metrics.firecrawlRequests||0,firecrawlCredits:metrics.firecrawlCredits||0,sourceObservedAt:next.observedAt,catalogueReused:false,native:metrics,details:audit,notifications:notification,paidFallback:false,completedAt:new Date(now()).toISOString()};
   if(browserImageAudit){next.browserImageAudit=browserImageAudit;state.browserImageAudit=browserImageAudit;}
