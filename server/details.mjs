@@ -17,6 +17,7 @@ export function parseDetails(response,expectedSku,sourceUrl,observedAt=new Date(
 }
 export function parseVariantDetails(response,expectedSku,sourceUrl,observedAt=new Date().toISOString()){
  const data=response.data,v=data.sourceVariant,f=data.familyEvidence;
+ observedAt=f.observedAt||observedAt;
  if(!response.success||data.metadata?.statusCode!==200||String(v.sku)!==String(expectedSku)||String(v.code).replace(/^0+(?=\d)/,'')!==String(expectedSku).replace(/^0+(?=\d)/,''))throw Error('Official variant SKU does not match requested SKU: '+expectedSku);
  const requested=new URL(sourceUrl),family=new URL(f.url),json=new URL(f.jsonUrl);
  if(requested.origin!==family.origin||requested.pathname.replace(/\/$/,'')!==family.pathname.replace(/\/$/,'')||json.origin!==family.origin||json.pathname!==family.pathname||!json.searchParams.has('json'))throw Error('Variant family source path does not match requested product');
@@ -27,7 +28,8 @@ export function parseVariantDetails(response,expectedSku,sourceUrl,observedAt=ne
  const features=[...f.features,...(v.features||[])],information=[v.desc_override===1?'':f.information,v.descriptionText||''].filter(Boolean).join('\n');
  const featuresText='## Features\n'+features.map(x=>'- '+x).join('\n')+'\n\n## Information\n'+information;
  const text=featuresText+'\n\n## Specification\n'+Object.entries(specs).map(([k,value])=>'- '+k+': '+value).join('\n');
- const image=f.offers.find(o=>String(o.sku)===String(expectedSku))?.image||null;
+ const rawImage=f.offers.find(o=>String(o.sku)===String(expectedSku))?.image||f.gallery.find(g=>g.variants.includes(String(v.id)))?.url;
+ const image=rawImage?new URL(decode(rawImage),f.url).href:null;
  const images=f.gallery.filter(g=>!g.variants.length||g.variants.includes(String(v.id))).map(g=>g.url);
  return {sku:String(expectedSku),sourceUrl,observedAt,specs,text,featuresText,image,images,verificationMethod:'official-variant-json-and-product-page',jsonSource:f.jsonUrl,contentHash:createHash('sha256').update(text).digest('hex')};
 }
