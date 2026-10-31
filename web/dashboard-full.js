@@ -20,7 +20,7 @@ async function poll(){
   const blocked=state.sourceHealth?.state==='blocked',isPaid=state.mode==='firecrawl-browser',cost=state.collectionAudit?.native||{};
   const period=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit'}).format(new Date()),used=ledger.periods?.[period]?.used||0;
   E('freshness').textContent=`更新计划：${schedule}。最近完整目录采集：${date}。${state.lastError?(blocked?'本轮未完成，受阻请求已停止，不会无限重试。':'本轮未完成，未冒充新数据发布。'):isPaid?'目录、价格、在库、NEW及对应SKU规格来自本轮官网；图片地址按SKU对应并实际加载核对。':'历史目录与各款规格分别保留真实核验日期；Firecrawl节省模式正在进行首轮云端核验。'}${state.browserImageAudit?.catalogueRevision===D.revision?' 本轮图片：'+state.browserImageAudit.loaded+'个地址加载成功，'+state.browserImageAudit.failed+'个失败。':''}`;
-  E('collectionState').textContent=isPaid?`Firecrawl按运行时间计费 · ${cost.billingVerified?'本轮账单':'本轮保守计费上界'} ${Number(state.firecrawlCredits||0).toFixed(2)} 积分 · 本月本项目 ${Number(used).toFixed(2)} / 1000 积分。${cost.closed?'会话已关闭。':''}同款多规格共享官网数据；六个入口共用一次更新；没有逐SKU或逐图片的付费抓取。`:'六个入口共享同一份目录。新版本使用Firecrawl按时计费会话；每轮最多60积分，每月本项目最多1000积分。首次成功前不将历史数据标为最新。';
+  E('collectionState').textContent=isPaid?`Firecrawl按运行时间计费 · ${cost.billingVerified?'本轮账单':'本轮保守计费上界'} ${Number(state.firecrawlCredits||0).toFixed(2)} 积分 · 本月本项目 ${Number(used).toFixed(2)} / 1000 积分。${cost.closed?'会话已关闭。':''}同款多规格共享官网数据；六个入口共用一次更新；受阻地址补抓 ${cost.scrapeRequests||0} 次，按商品系列共享，不逐SKU或逐图片重复付费。`:'六个入口共享同一份目录。新版本使用Firecrawl按时计费会话；每轮最多60积分，每月本项目最多1000积分。首次成功前不将历史数据标为最新。';
  }catch{E('freshness').textContent='状态检查未成功；目录及各SKU规格仍以显示的原采集日期为准。';}
 }
 
