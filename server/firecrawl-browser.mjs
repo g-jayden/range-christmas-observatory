@@ -10,9 +10,9 @@ async function readFamilyBundle({url,jsonUrl,initial,providedHtml}){
  const description=doc.querySelector('#product-description')?.cloneNode(true);description?.querySelectorAll('a,script,style,#product-dyn-variant-desc').forEach(e=>e.remove());
  const sourceJson=text=>JSON.parse(text.replace(/[\u0000-\u001f]/g,' '));
  let product;for(const el of doc.querySelectorAll('script[type="application/ld+json"]')){try{const d=sourceJson(el.textContent);if(d['@type']==='Product')product=d}catch{}}
- let gtm;for(const el of doc.querySelectorAll('script:not([src])')){const match=el.textContent.match(/var\s+gtm_product_data\s*=\s*(\[[\s\S]*?\])\s*;/);if(match){try{gtm=sourceJson(match[1])}catch{}}}
+ let gtm,gtmId;for(const el of doc.querySelectorAll('script:not([src])')){const match=el.textContent.match(/(?:var\s+)?gtm_product_data\s*=\s*(\[[\s\S]*?\])\s*;/);if(match){gtmId=match[1].match(/["']prod_id["']\s*:\s*["']?(\d+)/)?.[1];try{gtm=sourceJson(match[1])}catch{}}}
  const offers=product?.offers?.offers||[product?.offers];
- const evidence={url,jsonUrl,productId:doc.querySelector('#product_id')?.value||gtm?.[0]?.prod_id||null,title:doc.title,features:Array.from(doc.querySelectorAll('#product-dyn-features-ul li')).map(e=>plain(e.textContent)),information:description?plain(description.textContent):'',offers:offers.filter(Boolean).map(o=>({sku:String(o.sku),image:o.image?.url||null})),gallery:Array.from(doc.querySelectorAll('img[data-variant]')).map(e=>({url:e.getAttribute('src'),variants:(e.getAttribute('data-variant')||'').split(',').filter(Boolean)}))};
+ const evidence={url,jsonUrl,productId:doc.querySelector('#product_id')?.value||gtm?.[0]?.prod_id||gtmId||null,title:doc.title,features:Array.from(doc.querySelectorAll('#product-dyn-features-ul li')).map(e=>plain(e.textContent)),information:description?plain(description.textContent):'',offers:offers.filter(Boolean).map(o=>({sku:String(o.sku),image:o.image?.url||null})),gallery:Array.from(doc.querySelectorAll('img[data-variant]')).map(e=>({url:e.getAttribute('src'),variants:(e.getAttribute('data-variant')||'').split(',').filter(Boolean)}))};
  const variants=Array.isArray(body.variant_arr)?body.variant_arr.map(v=>({code:v.code,prod_id:v.prod_id,sku:v.sku,id:v.id,attributes:v.attributes,attributes_supplementary:{'Model Number':v.attributes_supplementary?.['Model Number']},product_specification:v.product_specification||[],features:v.features||[],desc_override:v.desc_override,descriptionText:plain(v.description_html)})):[];
  return {status:200,variants,evidence};
 }
@@ -49,7 +49,8 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  async function start(){
   if(!starting)starting=(async()=>{
    guard();created=now();deadline=created+ttl*1000;
-   session=await api('interact','POST',{ttl,activityTtl:120,streamWebView:false,blockAds:true});
+   try{session=await api('interact','POST',{ttl,activityTtl:120,streamWebView:false,blockAds:policy.blockAds===true});}
+   catch(error){metrics.creationUncertain=![400,401,402,403,429].includes(error.status);throw error;}
    if(!session.id||!session.cdpUrl)throw Error('Firecrawl没有返回浏览器会话');
    try{browser=await(connect||(async url=>(await import('playwright')).chromium.connectOverCDP(url)))(session.cdpUrl);}
    catch{throw Error('Firecrawl浏览器连接失败；会话将立即关闭');}
@@ -62,7 +63,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  async function navigate(page,url){guard();metrics.browserPages++;const response=await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});if(!response||response.status()>=400)throw new SourceError('官网请求失败 HTTP '+(response?.status()||0)+' '+new URL(url).pathname,response?.status()||0);return response;}
  async function jsonPage(page,url){await navigate(page,url);let text;try{text=await page.locator('body').innerText();return JSON.parse(text)}catch{throw new SourceError('官网未返回可验证的JSON：'+await page.title(),/Just a moment|security verification/i.test(text||'')?403:0)}}
  async function familyFor(input){
-  const u=new URL(input);u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'')+'/';const canonical=u.href;
+  const u=new URL(input);u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');const canonical=u.href;
   if(families.has(canonical)){metrics.familyReuse++;return families.get(canonical)}
   const promise=(async()=>{
    const page=await take();try{
@@ -72,6 +73,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
      try{initial=await jsonPage(page,jsonUrl)}catch(e){if([400,404].includes(e.status))throw e;initial=JSON.parse(await scrapeRaw(jsonUrl));}
     }
     let bundle=await page.evaluate(readFamilyBundle,{url:canonical,jsonUrl,initial});
+    if([400,404].includes(bundle.jsonStatus)||[400,404].includes(bundle.htmlStatus))throw new SourceError('官网商品数据请求失败 HTTP 404',404);
     if(bundle.status!==200){
      const json=bundle.jsonStatus===200?bundle.jsonBody:JSON.parse(await scrapeRaw(jsonUrl));
      const html=bundle.htmlStatus===200?bundle.html:await scrapeRaw(canonical);
@@ -79,8 +81,8 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
     }
     if(bundle.status!==200)throw new SourceError('官网商品数据请求失败 HTTP '+bundle.status,bundle.status);
     const {variants,evidence}=bundle;
-    if(!variants.length||!evidence.productId||!evidence.offers.length)throw Error('商品系列身份核验未通过：'+evidence.title);
-    metrics.familyReads++;return {variants,evidence};
+    if(!variants.length||!evidence.productId)throw Error('商品系列身份核验未通过：'+evidence.title);
+    evidence.observedAt=new Date(now()).toISOString();metrics.familyReads++;return {variants,evidence};
    }finally{release(page)}
   })();families.set(canonical,promise);return promise;
  }
@@ -115,17 +117,25 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   })();active.set(identifier,promise);try{return await promise}finally{active.delete(identifier)}
  }
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;
- reader.auditImages=async products=>{
+ reader.auditImages=async (products,previous={})=>{
   const urls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))];
   for(const url of urls){const u=new URL(url);if(u.protocol!=='https:'||u.hostname!=='www.therange.co.uk'||!u.pathname.startsWith('/media/'))throw Error('商品图片来源未通过核验');}
   const page=await take(),results=[];try{
    await navigate(page,'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776');
-   for(let offset=0;offset<urls.length;offset+=60){guard();const batch=await page.evaluate(async urls=>{
-    let cursor=0;const results=[];await Promise.all(Array.from({length:8},async()=>{while(cursor<urls.length){const url=urls[cursor++];results.push(await new Promise(resolve=>{const image=new Image(),timer=setTimeout(()=>{image.src='';resolve({url,ok:false,error:'timeout'})},8000);image.onload=()=>{clearTimeout(timer);resolve({url,ok:image.naturalWidth>0,width:image.naturalWidth,height:image.naturalHeight})};image.onerror=()=>{clearTimeout(timer);resolve({url,ok:false,error:'load-failed'})};image.src=url}))}}));return results;
-   },urls.slice(offset,offset+60));results.push(...batch);console.log(JSON.stringify({phase:'image-verification',checked:results.length,total:urls.length}));}
+   for(let offset=0;offset<urls.length;offset+=60){guard();const batch=await page.evaluate(async items=>{
+    let cursor=0;const results=[];await Promise.all(Array.from({length:8},async()=>{while(cursor<items.length){const {url,prior}=items[cursor++];try{
+     const headers={accept:'image/avif,image/webp,image/apng,image/*,*/*;q=0.8'};if(prior?.etag)headers['if-none-match']=prior.etag;else if(prior?.lastModified)headers['if-modified-since']=prior.lastModified;
+     const response=await fetch(url,{credentials:'include',headers,cache:'no-cache',signal:AbortSignal.timeout(8000)});
+     if(response.status===304&&prior?.hash){results.push({...prior,url,ok:true,revalidated:true});continue;}
+     if(response.status!==200||!response.headers.get('content-type')?.startsWith('image/')){results.push({url,ok:false,status:response.status,error:response.status===403?'access-blocked':'not-an-image'});continue;}
+     const blob=await response.blob(),bitmap=await createImageBitmap(blob),width=bitmap.width,height=bitmap.height;bitmap.close();
+     const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await blob.arrayBuffer()))).map(x=>x.toString(16).padStart(2,'0')).join('');
+     results.push({url,ok:width>0&&height>0,width,height,hash,bytes:blob.size,etag:response.headers.get('etag'),lastModified:response.headers.get('last-modified')});
+    }catch(e){results.push({url,ok:false,error:'image-fetch-or-decode-failed'})}}}));return results;
+   },urls.slice(offset,offset+60).map(url=>({url,prior:previous.entries?.[url]})));results.push(...batch);console.log(JSON.stringify({phase:'image-verification',checked:results.length,total:urls.length}));}
   }finally{release(page)}
   metrics.sourceImageChecks+=results.length;const loaded=results.filter(r=>r.ok).length;
-  return {mode:'source-address-and-browser-decode',checked:results.length,loaded,failed:results.length-loaded,failures:results.filter(r=>!r.ok),observedAt:new Date(now()).toISOString(),perImageScrapeRequests:0};
+  return {mode:'source-bytes-decode-and-hash',checked:results.length,loaded,failed:results.length-loaded,failures:results.filter(r=>!r.ok),entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString(),perImageScrapeRequests:0};
  };
  reader.metrics=()=>({...metrics,sessionSeconds:created?Math.ceil((now()-created)/1000):0});
  reader.close=async()=>{
@@ -135,6 +145,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   catch{metrics.closeReceiptUnavailable=true;}
   finally{await browser?.close().catch(()=>{});}
   if(session){metrics.browserCredits=Number.isFinite(receipt?.creditsBilled)?receipt.creditsBilled:ttl/30;metrics.scrapeCredits=scrapeCredits;metrics.firecrawlCredits=metrics.browserCredits+scrapeCredits;metrics.billingVerified=Number.isFinite(receipt?.creditsBilled)&&scrapeBillingVerified;metrics.sessionDurationMs=receipt?.sessionDurationMs;metrics.receipt={sessionId:session.id,creditsBilled:metrics.firecrawlCredits,browserCredits:metrics.browserCredits,scrapeCredits,billingVerified:metrics.billingVerified};}
+  else if(created&&metrics.creationUncertain){metrics.firecrawlCredits=ttl/30;metrics.billingVerified=false;}
   metrics.closed=true;
  };
  return reader;
