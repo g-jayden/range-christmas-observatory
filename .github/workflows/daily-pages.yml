@@ -28,8 +28,8 @@ on:
       browser:
         description: Standard browser engine
         type: choice
-        options: [chrome, firefox]
-        default: chrome
+        options: [firefox, chrome]
+        default: firefox
 permissions:
   contents: write
   pages: write
@@ -46,7 +46,7 @@ jobs:
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
       COLLECTION_MODE: ${{ inputs.mode || 'verify-all' }}
       COLLECTION_HEADLESS: 'false'
-      COLLECTION_BROWSER_CHANNEL: ${{ inputs.browser || 'chrome' }}
+      COLLECTION_BROWSER_CHANNEL: ${{ inputs.browser || 'firefox' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
