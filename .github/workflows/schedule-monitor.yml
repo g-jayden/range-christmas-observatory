@@ -1,42 +1,18 @@
-name: Scheduled refresh and Wednesday NEW mail
+name: Legacy NEW check entrypoint
 on:
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
       checkNow:
-        description: Check NEW now without changing the full refresh schedule
         type: boolean
         default: false
 permissions:
-  contents: read
   actions: write
-concurrency:
-  group: schedule-monitor-tick
-  cancel-in-progress: false
 jobs:
-  watch:
+  redirect:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
-    env:
-      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
-      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
-      FORCE_MONITOR: ${{ github.event_name == 'workflow_dispatch' && inputs.checkNow && 'true' || 'false' }}
     steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-node@v7.1.0
-        with:
-          node-version: '24'
-      - name: Check configured schedule and weekly Wednesday 07:00 NEW check
-        id: tick
-        run: node scripts/schedule-tick.mjs
-      - name: Queue full refresh only when the selected period is due
-        if: steps.tick.outputs.full == 'true'
+      - name: Use the single free collector
         env:
           GH_TOKEN: ${{ github.token }}
-        run: node scripts/dispatch-full.mjs
-      - name: Check all seven source catalogues for newly marked NEW products
-        if: steps.tick.outputs.monitor == 'true'
-        env:
-          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
-        run: node server/monitor-new.mjs
+          CHECK_NEW: ${{ inputs.checkNow }}
+        run: gh workflow run daily-pages.yml --repo "$GITHUB_REPOSITORY" -f refresh=false -f mode=verify-all -f checkNew="$CHECK_NEW"
