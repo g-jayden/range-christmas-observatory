@@ -13,7 +13,7 @@ const observed=new Date(data.observedAt).toLocaleString('zh-CN',{timeZone:'Asia/
 let html=await fs.readFile('web/index.html','utf8');
 const begin=html.indexOf('<section class="automationPanel"'),end=html.indexOf('<aside class="notice">',begin);
 if(begin<0||end<0)throw Error('Cloud settings panel not found');
-const panel=`<section class="portableInfo"><h2>可独立打开的分析快照</h2><p>目录采集：北京时间 ${observed}。已收录圣诞树 <b>${data.stats.tree.count}</b> 款、树裙 <b>${data.stats.skirt.count}</b> 款；具体SKU详情已核验 <b>${data.detailsAudit.verified}/${data.products.length}</b> 款。</p><p class="muted">本文件保存本次数据，不会在电脑关机后自行更新。商品图片和购买页需要联网。云端全量更新可选每隔3／5／7天及具体时分，默认7天00:00；新品每周三07:00检查。订阅、退订和修改计划请进入正式网站。</p><a class="onlineButton" href="${home}" target="_blank" rel="noopener">打开正式网站 · 更新设置与邮箱订阅 ↗</a><p class="muted">正式网站以其页面标注的采集时间为准。</p></section>`;
+const panel=`<section class="portableInfo"><h2>可独立打开的分析快照</h2><p>目录采集：北京时间 ${observed}。已收录圣诞树 <b>${data.stats.tree.count}</b> 款、树裙 <b>${data.stats.skirt.count}</b> 款；具体SKU详情已核验 <b>${data.detailsAudit.verified}/${data.products.length}</b> 款。</p><p class="muted">本文件保存本次数据，不会在电脑关机后自行更新。商品图片和购买页需要联网。本轮通过官网浏览器取得目录，Firecrawl调用0次。云端自动采集实测遇到官网访问验证，尚未接通；正式网站保留更新时间与订阅设置，并标注实际运行状态。</p><a class="onlineButton" href="${home}" target="_blank" rel="noopener">打开正式网站 · 更新设置与邮箱订阅 ↗</a><p class="muted">正式网站以其页面标注的采集时间为准。</p></section>`;
 html=html.slice(0,begin)+panel+html.slice(end);
 html=html.replace('<link rel="stylesheet" href="dashboard-full.css">',`<style>${css}\n.onlineButton{display:inline-block;background:var(--ink);color:#fff;text-decoration:none;border-radius:9px;padding:10px 16px}.portableInfo{border-top:3px solid #b79b56}.portableInfo h2{font-size:20px}</style>`);
 html=html.replace('href="image-check.html"','href="商品图片核验.html"');
