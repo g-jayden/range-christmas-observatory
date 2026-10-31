@@ -44,6 +44,9 @@ try{
  const imageAudit=await imageReader.auditImages([imageProduct]);await imageReader.close();
  assert.equal(imageAudit.loaded,1);assert.equal(imageAudit.failed,0);assert.equal(imageReader.metrics().firecrawlCredits,1);assert.equal(imageReader.metrics().billingVerified,true);
  assert.deepEqual(await fs.readFile('web/'+imageProduct.cachedImageUrl),imageBytes,'Published image bytes must match the verified source exactly');assert.equal(imageProduct.imageCacheEvidence.sha256,imageHash);
+ const badProduct={sku:'placeholder',variantImageUrl:sourceImage};
+ const badImageReader=await createFirecrawlBrowserReader({policy:defaults,budget:{limit:60},fetcher:async()=>Response.json({success:true,data:{metadata:{statusCode:200,creditsUsed:1},actions:{javascriptReturns:[{value:[{url:sourceImage,ok:true,width:1,height:1,mime:'image/png',hash:imageHash,dataBase64:imageBytes.toString('base64')}]}]}}})});
+ await assert.rejects(badImageReader.auditImages([badProduct]),/图片主通道未通过/);await badImageReader.close();assert.equal(badProduct.cachedImageUrl,undefined,'HTTP 200 and a valid image MIME cannot make a 1px placeholder a product photo');assert.equal(badImageReader.metrics().firecrawlCredits,1);
  if(savedKey===undefined)delete process.env.FIRECRAWL_API_KEY;else process.env.FIRECRAWL_API_KEY=savedKey;
  const policy={...defaults,maxCreditsPerCalendarMonth:70};
  assert.equal((await reserveCredits(policy,{key:'first',accountRemaining:10000})).limit,60);
