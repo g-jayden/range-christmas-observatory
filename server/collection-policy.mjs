@@ -37,7 +37,7 @@ export function failedAttempt(p,error,failures,policy,now=Date.now(),suffix=''){
  failures[key]={fingerprint,attempts,lastAttemptAt:new Date(now).toISOString(),retryAt:new Date(now+days*86400000).toISOString(),error:String(error).slice(0,300)};
  return failures[key];
 }
-export function planDetails(previous,next,{policy,failures={},now=Date.now(),limit=policy.maxDetailPagesPerRun,completed=new Set()}={}){
+export function planDetails(previous,next,{policy,failures={},now=Date.now(),limit=policy.maxDetailPagesPerRun,completed=new Set(),attempted={}}={}){
  const old=new Map(previous.products.map(p=>[p.sku,p])),queue=[],reused=[],backoff=[],invalid=[];
  for(const p of next.products){
   const prior=old.get(p.sku),same=unchangedDetailInput(prior,p),key=productKey(p,policy),failure=failures[key],fingerprint=detailFingerprint(p);
@@ -45,6 +45,7 @@ export function planDetails(previous,next,{policy,failures={},now=Date.now(),lim
   if(/[\u0000-\u001f]/.test(p.sourceUrl||'')){invalid.push({sku:p.sku,reason:'原站链接格式异常，等待目录地址修复；不重复付费请求'});continue;}
   const currentProof=verified(p)&&p.detailInputFingerprint===fingerprint;
   if(currentProof&&completed.has(key)){reused.push(p.sku);continue;}
+  if(attempted[key]===fingerprint){backoff.push({sku:p.sku,reason:failure?.error||'此SKU已在本轮核验，不重复请求'});continue;}
   const trusted=(currentProof||same&&verified(prior))&&verified(p);
   if(trusted)p.detailInputFingerprint=fingerprint;
   if(failure&&failure.fingerprint===fingerprint&&Date.parse(failure.retryAt)>now){backoff.push({sku:p.sku,retryAt:failure.retryAt,reason:failure.error});continue;}
