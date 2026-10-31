@@ -44,6 +44,12 @@ try{
  const imageAudit=await imageReader.auditImages([imageProduct]);await imageReader.close();
  assert.equal(imageAudit.loaded,1);assert.equal(imageAudit.failed,0);assert.equal(imageReader.metrics().firecrawlCredits,1);assert.equal(imageReader.metrics().billingVerified,true);
  assert.deepEqual(await fs.readFile('web/'+imageProduct.cachedImageUrl),imageBytes,'Published image bytes must match the verified source exactly');assert.equal(imageProduct.imageCacheEvidence.sha256,imageHash);
+ let digestRequests=0;
+ const digestReader=await createFirecrawlBrowserReader({policy:defaults,budget:{limit:60},fetcher:async(url,options)=>{
+  digestRequests++;assert(JSON.parse(options.body).actions[0].script.includes('"hashOnly":true'));
+  return Response.json({success:true,data:{metadata:{statusCode:200,creditsUsed:1},actions:{javascriptReturns:[{value:[{url:sourceImage,ok:true,width:300,height:300,mime:'image/png',hash:imageHash,cachedImageUrl:imageProduct.cachedImageUrl,bytes:imageBytes.length}]}]}}});
+ }});
+ const digestAudit=await digestReader.auditImages([imageProduct],imageAudit);await digestReader.close();assert.equal(digestAudit.loaded,1);assert.equal(digestAudit.changed,0);assert.equal(digestRequests,1,'Unchanged photographs need one batch, without a second body request');assert.deepEqual(await fs.readFile('web/'+imageProduct.cachedImageUrl),imageBytes);
  const badProduct={sku:'placeholder',variantImageUrl:sourceImage};
  const badImageReader=await createFirecrawlBrowserReader({policy:defaults,budget:{limit:60},fetcher:async()=>Response.json({success:true,data:{metadata:{statusCode:200,creditsUsed:1},actions:{javascriptReturns:[{value:[{url:sourceImage,ok:true,width:1,height:1,mime:'image/png',hash:imageHash,dataBase64:imageBytes.toString('base64')}]}]}}})});
  await assert.rejects(badImageReader.auditImages([badProduct]),/图片主通道未通过/);await badImageReader.close();assert.equal(badProduct.cachedImageUrl,undefined,'HTTP 200 and a valid image MIME cannot make a 1px placeholder a product photo');assert.equal(badImageReader.metrics().firecrawlCredits,1);
