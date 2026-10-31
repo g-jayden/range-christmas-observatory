@@ -1,13 +1,32 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import os from 'node:os';
+import {execFileSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {createFreeReader,sourceUrl,browserMarkdown} from '../server/free-source.mjs';
 import {createReader,apiUrl} from '../server/sync.mjs';
 import {defaults,planDetails,productKey} from '../server/collection-policy.mjs';
 import {catalogueHtml,listText} from '../server/native-chrome.mjs';
+import {recordSourceOutcome,sourceCircuitOpen} from '../server/source-health.mjs';
 assert.equal(catalogueHtml('<pre>{"products":[{"sku":"1","variantName":"Red &amp; White"}]}</pre>').products[0].variantName,'Red & White');
 assert.throws(()=>catalogueHtml('<title>Just a moment...</title>'),/no rendered data/);
 assert.deepEqual(listText('<ul><li>Colour: <span>Red &amp; White</span></li><li>Height: 180cm</li></ul>'),['Colour: Red & White','Height: 180cm']);
+const denied=recordSourceOutcome(null,{success:false,message:'HTTP 403: Just a moment...'});
+assert(sourceCircuitOpen(denied));
+const temporary=recordSourceOutcome(null,{success:false,message:'HTTP 503'});
+assert(!sourceCircuitOpen(temporary));
+assert(sourceCircuitOpen(recordSourceOutcome(temporary,{success:false,message:'HTTP 503'})),'Repeated failures must stop automatic collection after two attempts');
+assert(!sourceCircuitOpen(recordSourceOutcome(denied,{success:true})));
+const gated=await fs.mkdtemp(path.join(os.tmpdir(),'range-source-gate-'));
+try{
+ await fs.mkdir(path.join(gated,'web'));
+ await fs.writeFile(path.join(gated,'web/settings.json'),JSON.stringify({intervalDays:7,time:'00:00'}));
+ await fs.writeFile(path.join(gated,'web/status.json'),JSON.stringify({sourceHealth:denied}));
+ await fs.writeFile(path.join(gated,'web/service.json'),JSON.stringify({apiBase:'https://must-not-request.invalid'}));
+ const output=execFileSync(process.execPath,[fileURLToPath(new URL('./schedule-tick.mjs',import.meta.url))],{cwd:gated,encoding:'utf8',env:{...process.env,GITHUB_EVENT_NAME:'schedule',COLLECTION_MODE:'verify-all',COLLECTION_BROWSER_CHANNEL:'firefox',CONTROL_API_URL:'https://must-not-request.invalid',GITHUB_OUTPUT:path.join(gated,'outputs')}});
+ const tick=JSON.parse(output.trim());assert.equal(tick.sourceCircuitOpen,true);assert.equal(tick.work,false,'A stopped source must not enter the repeated collection loop');
+}finally{await fs.rm(gated,{recursive:true,force:true})}
 const seed=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),p=seed.products.find(p=>p.detailEvidence?.verifiedProductSection),fixture={products:[p],totalResults:1};
 assert.throws(()=>createReader({key:'must-never-be-used'}),/禁用/);
 assert.throws(()=>sourceUrl('https://unrelated.example/p/1'));
