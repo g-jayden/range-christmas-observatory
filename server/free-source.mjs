@@ -1,4 +1,22 @@
 import {SourceError,parseSource} from './sync.mjs';
+import {spawn} from 'node:child_process';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+async function cloudChrome(chromium){
+ const profile=await fs.mkdtemp(path.join(os.tmpdir(),'range-public-source-'));
+ const executable=process.platform==='darwin'?'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome':process.platform==='win32'?path.join(process.env.PROGRAMFILES||'C:\\Program Files','Google','Chrome','Application','chrome.exe'):'/opt/google/chrome/chrome';
+ const child=spawn(executable,['--remote-debugging-address=127.0.0.1','--remote-debugging-port=9222','--user-data-dir='+profile,'--no-first-run','--window-size=1440,1000','--lang=en-GB','about:blank'],{stdio:'ignore'});
+ let launchError;child.on('error',e=>{launchError=e});
+ try{
+  for(let attempt=0;attempt<40;attempt++){
+   if(launchError)throw launchError;
+   try{const reply=await fetch('http://127.0.0.1:9222/json/version');if(reply.ok){const browser=await chromium.connectOverCDP('http://127.0.0.1:9222');return {browser,context:browser.contexts()[0],cleanup:async()=>{child.kill();await fs.rm(profile,{recursive:true,force:true}).catch(()=>{})}}}}catch{}
+   await new Promise(resolve=>setTimeout(resolve,250));
+  }
+  throw Error('Cloud Chrome did not start');
+ }catch(e){child.kill();await fs.rm(profile,{recursive:true,force:true}).catch(()=>{});throw e}
+}
 const ALLOWED=['www.therange.co.uk','search-lon.therange.co.uk'];
 export function sourceUrl(raw){
  const clean=String(raw).replace(/[\u0000-\u001f]/g,'-'),u=new URL(clean);
@@ -9,12 +27,13 @@ export function browserMarkdown({features,information,specs}){
  return '## Features\n\n'+features.map(s=>'- '+s).join('\n')+'\n\n## Information\n\n'+information+'\n\n## Specification\n\n'+specs.map(s=>'- '+s).join('\n')+'\n\nAdditional Information';
 }
 export async function createFreeReader({fetcher=fetch,browserFactory,concurrency=4,delayMs=750,maxPages=15000,headless=process.env.COLLECTION_HEADLESS==='true'}={}){
- let browser,context,warm,opened=0,cursor=0;const pages=[],waiters=[],blockedHosts=new Set,inflight=new Map;
+ let browser,context,warm,cleanup,opened=0,cursor=0;const pages=[],waiters=[],blockedHosts=new Set,inflight=new Map;
  const metrics={provider:'self-hosted-browser',firecrawlRequests:0,firecrawlCredits:0,directRequests:0,browserPages:0,screenshots:0,deduplicated:0};
  async function ensureBrowser(){
   if(!warm)warm=(async()=>{
    const factory=browserFactory||((await import('playwright')).chromium);
-   browser=await factory.launch({headless,...(process.env.COLLECTION_BROWSER_CHANNEL?{channel:process.env.COLLECTION_BROWSER_CHANNEL}:{})});context=await browser.newContext({viewport:{width:1440,height:1000},locale:'en-GB'});
+   if(!browserFactory&&process.env.GITHUB_ACTIONS==='true'&&process.env.COLLECTION_BROWSER_CHANNEL==='chrome')({browser,context,cleanup}=await cloudChrome(factory));
+   else{browser=await factory.launch({headless,...(process.env.COLLECTION_BROWSER_CHANNEL?{channel:process.env.COLLECTION_BROWSER_CHANNEL}:{})});context=await browser.newContext({viewport:{width:1440,height:1000},locale:'en-GB'})}
    const page=await context.newPage();
    metrics.browserPages++;const response=await page.goto('https://www.therange.co.uk/christmas/christmas-trees/pop-up-trees/',{waitUntil:'domcontentloaded',timeout:60000});
    try{await page.waitForSelector('#product-list, .product-list, #category-plp-container, .category-plp-container',{timeout:45000})}
@@ -68,6 +87,6 @@ export async function createFreeReader({fetcher=fetch,browserFactory,concurrency
   try{return await promise}catch(e){inflight.delete(key);throw e}finally{if(catalogue)inflight.delete(key)}
  }
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;
- reader.metrics=()=>({...metrics});reader.close=async()=>{if(browser)await browser.close()};
+ reader.metrics=()=>({...metrics});reader.close=async()=>{try{if(browser)await browser.close()}finally{await cleanup?.()}};
  return reader;
 }
