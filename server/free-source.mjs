@@ -14,10 +14,11 @@ export async function createFreeReader({fetcher=fetch,browserFactory,concurrency
  async function ensureBrowser(){
   if(!warm)warm=(async()=>{
    const factory=browserFactory||((await import('playwright')).chromium);
-   browser=await factory.launch({headless});context=await browser.newContext({viewport:{width:1440,height:1000},locale:'en-GB'});
+   browser=await factory.launch({headless,...(process.env.COLLECTION_BROWSER_CHANNEL?{channel:process.env.COLLECTION_BROWSER_CHANNEL}:{})});context=await browser.newContext({viewport:{width:1440,height:1000},locale:'en-GB'});
    const page=await context.newPage();
-   metrics.browserPages++;await page.goto('https://www.therange.co.uk/christmas/christmas-trees/pop-up-trees/',{waitUntil:'domcontentloaded',timeout:60000});
-   await page.waitForSelector('#product-list, .product-list, #category-plp-container, .category-plp-container',{timeout:45000});
+   metrics.browserPages++;const response=await page.goto('https://www.therange.co.uk/christmas/christmas-trees/pop-up-trees/',{waitUntil:'domcontentloaded',timeout:60000});
+   try{await page.waitForSelector('#product-list, .product-list, #category-plp-container, .category-plp-container',{timeout:45000})}
+   catch(e){const title=await page.title(),text=(await page.locator('body').innerText()).slice(0,500);throw new SourceError(`官网浏览器入口未就绪 HTTP ${response?.status()}: ${title}; ${text}`)}
    pages.push(page);
   })();
   await warm;
