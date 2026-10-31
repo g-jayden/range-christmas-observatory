@@ -1,3 +1,5 @@
+import fs from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 import {SourceError,parseSource} from './sync.mjs';
 import {sourceUrl} from './free-source.mjs';
 import {budgetError} from './credit-budget.mjs';
@@ -37,7 +39,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   fallbackReserved++;metrics.scrapeRequests++;
   const promise=(async()=>{
    let charged=false;try{
-    const result=await api('scrape','POST',{url,formats:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'auto',skipTlsVerification:false,parsers:[],timeout:45000});
+    const result=await api('scrape','POST',{url,formats:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'auto',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,parsers:[],timeout:45000});
     const cost=result.data?.metadata?.creditsUsed;
     scrapeCredits+=Number.isFinite(cost)?cost:1;charged=true;if(!Number.isFinite(cost))scrapeBillingVerified=false;
     if(!result.data?.rawHtml||result.data.metadata?.statusCode!==200)throw new SourceError('Firecrawl源站抓取失败 HTTP '+result.data?.metadata?.statusCode,result.data?.metadata?.statusCode||0);
@@ -49,7 +51,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  async function start(){
   if(!starting)starting=(async()=>{
    guard();created=now();deadline=created+ttl*1000;
-   try{session=await api('interact','POST',{ttl,activityTtl:120,streamWebView:false,blockAds:policy.blockAds===true});}
+   try{session=await api('interact','POST',{ttl,activityTtl:120,streamWebView:false,blockAds:policy.blockAds===true,location:{country:'GB'}});}
    catch(error){metrics.creationUncertain=![400,401,402,403,429].includes(error.status);throw error;}
    if(!session.id||!session.cdpUrl)throw Error('Firecrawl没有返回浏览器会话');
    try{browser=await(connect||(async url=>(await import('playwright')).chromium.connectOverCDP(url)))(session.cdpUrl);}
@@ -63,7 +65,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  async function navigate(page,url){guard();metrics.browserPages++;const response=await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});if(!response||response.status()>=400)throw new SourceError('官网请求失败 HTTP '+(response?.status()||0)+' '+new URL(url).pathname,response?.status()||0);return response;}
  async function jsonPage(page,url){await navigate(page,url);let text;try{text=await page.locator('body').innerText();return JSON.parse(text)}catch{throw new SourceError('官网未返回可验证的JSON：'+await page.title(),/Just a moment|security verification/i.test(text||'')?403:0)}}
  async function familyFor(input){
-  const u=new URL(input);u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');const canonical=u.href;
+  const u=new URL(input);u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'')+'/';const canonical=u.href;
   if(families.has(canonical)){metrics.familyReuse++;return families.get(canonical)}
   const promise=(async()=>{
    const page=await take();try{
@@ -120,7 +122,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  reader.auditImages=async (products,previous={})=>{
   const urls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))];
   for(const url of urls){const u=new URL(url);if(u.protocol!=='https:'||u.hostname!=='www.therange.co.uk'||!u.pathname.startsWith('/media/'))throw Error('商品图片来源未通过核验');}
-  const page=await take(),results=[];try{
+  const page=await take(),results=[];await fs.mkdir('web/images/source',{recursive:true});try{
    await navigate(page,'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776');
    for(let offset=0;offset<urls.length;offset+=60){guard();const batch=await page.evaluate(async items=>{
     let cursor=0;const results=[];await Promise.all(Array.from({length:8},async()=>{while(cursor<items.length){const {url,prior}=items[cursor++];try{
@@ -130,10 +132,18 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
      if(response.status!==200||!response.headers.get('content-type')?.startsWith('image/')){results.push({url,ok:false,status:response.status,error:response.status===403?'access-blocked':'not-an-image'});continue;}
      const blob=await response.blob(),bitmap=await createImageBitmap(blob),width=bitmap.width,height=bitmap.height;bitmap.close();
      const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await blob.arrayBuffer()))).map(x=>x.toString(16).padStart(2,'0')).join('');
-     results.push({url,ok:width>0&&height>0,width,height,hash,bytes:blob.size,etag:response.headers.get('etag'),lastModified:response.headers.get('last-modified')});
-    }catch(e){results.push({url,ok:false,error:'image-fetch-or-decode-failed'})}}}));return results;
-   },urls.slice(offset,offset+60).map(url=>({url,prior:previous.entries?.[url]})));results.push(...batch);console.log(JSON.stringify({phase:'image-verification',checked:results.length,total:urls.length}));}
+     let binary='';const bytes=new Uint8Array(await blob.arrayBuffer());for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));
+     results.push({url,ok:width>0&&height>0,width,height,hash,bytes:blob.size,mime:blob.type,dataBase64:btoa(binary),etag:response.headers.get('etag'),lastModified:response.headers.get('last-modified')});
+    }catch(e){results.push({url,ok:false,error:'image-fetch-or-decode-failed: '+String(e.message).slice(0,120)})}}}));return results;
+   },urls.slice(offset,offset+60).map(url=>({url,prior:previous.entries?.[url]})));
+    for(const item of batch){if(!item.ok)continue;try{
+     if(item.dataBase64){const bytes=Buffer.from(item.dataBase64,'base64');if(createHash('sha256').update(bytes).digest('hex')!==item.hash)throw Error('image hash mismatch');const ext=({'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif','image/avif':'avif'})[item.mime];if(!ext)throw Error('unsupported image type');item.cachedImageUrl='images/source/'+item.hash+'.'+ext;await fs.writeFile('web/'+item.cachedImageUrl,bytes);delete item.dataBase64;}
+     if(!item.cachedImageUrl||!/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(item.cachedImageUrl))throw Error('image cache missing');
+     const stored=await fs.readFile('web/'+item.cachedImageUrl);if(createHash('sha256').update(stored).digest('hex')!==item.hash)throw Error('cached image hash mismatch');
+    }catch(e){delete item.dataBase64;item.ok=false;item.error=e.message}}
+    results.push(...batch);console.log(JSON.stringify({phase:'image-verification',checked:results.length,total:urls.length}));}
   }finally{release(page)}
+  const byUrl=new Map(results.map(r=>[r.url,r]));for(const p of products){const r=byUrl.get(p.variantImageUrl||p.imageUrl);if(r?.ok){p.cachedImageUrl=r.cachedImageUrl;p.imageCacheEvidence={sourceUrl:r.url,sha256:r.hash,observedAt:new Date(now()).toISOString()};}}
   metrics.sourceImageChecks+=results.length;const loaded=results.filter(r=>r.ok).length;
   return {mode:'source-bytes-decode-and-hash',checked:results.length,loaded,failed:results.length-loaded,failures:results.filter(r=>!r.ok),entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString(),perImageScrapeRequests:0};
  };
