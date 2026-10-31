@@ -20,5 +20,7 @@
   "firecrawlEnabled": true,
   "maxNativePagesPerRun": 20000,
   "browserConcurrency": 4,
-  "maxSessionSeconds": 1800
+  "maxSessionSeconds": 1800,
+  "browserCreditsPerRun": 20,
+  "maxFallbackScrapesPerRun": 40
 }
