@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {createFirecrawlBrowserReader} from './firecrawl-browser.mjs';
 import {openCreditBudget} from './credit-budget.mjs';
-import {loadPolicy,digest,imageMapFingerprint} from './collection-policy.mjs';
+import {loadPolicy,digest,imageMapFingerprint,productKey} from './collection-policy.mjs';
 import {catalogueSnapshot,readState,refreshDetails,preserveImages,saveState,cacheProduct} from './incremental.mjs';
 import {checkNew} from './new-events.mjs';
 import {atomicJson} from './sync.mjs';
@@ -32,8 +32,8 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
   }});
   let next=gathered.snapshot;catalogueReady=true;
   const oldBySku=new Map(previous.products.map(p=>[p.sku,p])),previousIssues=new Set((previous.detailsAudit?.issues||[]).map(p=>p.sku));
-  const difficult=next.products.filter(p=>oldBySku.get(p.sku)?.detailEvidence?.sourceTransport==='enhanced-batch'||previousIssues.has(p.sku));
-  if(difficult.length)await reader.prepareFamilies?.(difficult);
+  const difficult=next.products.filter(p=>oldBySku.get(p.sku)?.detailEvidence?.sourceTransport==='enhanced-batch'||previousIssues.has(p.sku)||(policy.enhancedFamilyIds||[]).some(id=>p.productPath?.endsWith('/'+id)));
+  if(difficult.length){await reader.prepareFamilies?.(difficult);for(const p of difficult)if(reader.familyReady?.(p.sourceUrl))delete collection.failures[productKey(p,policy)];}
   const first=preflight&&next.products.find(p=>p.sku===preflight.sku);if(first){applyDetails(first,preflight);first.detailCheckedAt=preflight.observedAt;cacheProduct(first,collection,policy)}
   let notification={success:true,attempted:0,captured:0,deferred:0};
   if(tick.monitor)notification=await checkNew({snapshot:next,reader,policy,budget,state:collection,lease:tick.monitorLease||tick.lease,now});
