@@ -1,4 +1,4 @@
-name: Free source collection and permanent website
+name: Credit controlled collection and permanent website
 on:
   push:
     branches: [main]
@@ -28,25 +28,26 @@ on:
       browser:
         description: Standard browser engine
         type: choice
-        options: [firefox, chrome]
-        default: firefox
+        options: [firecrawl-browser]
+        default: firecrawl-browser
 permissions:
   contents: write
   pages: write
   id-token: write
 concurrency:
-  group: range-source-and-pages-${{ inputs.mode == 'probe' && inputs.runner || 'production' }}
+  group: range-source-and-pages-production
   cancel-in-progress: false
 jobs:
   website:
     runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
-    timeout-minutes: 350
+    timeout-minutes: 40
     env:
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
       COLLECTION_MODE: ${{ inputs.mode || 'verify-all' }}
       COLLECTION_HEADLESS: 'false'
-      COLLECTION_BROWSER_CHANNEL: ${{ inputs.browser || 'firefox' }}
+      COLLECTION_PROVIDER: firecrawl-browser
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -61,43 +62,47 @@ jobs:
           MANUAL_REFRESH: ${{ inputs.refresh }}
           FORCE_MONITOR: ${{ inputs.checkNew && 'true' || 'false' }}
         run: node scripts/schedule-tick.mjs
-      - name: Verify source integrity and zero-Firecrawl safeguards
+      - name: Verify source integrity, SKU matching and credit limits
         if: steps.tick.outputs.publish == 'true' || inputs.mode == 'probe'
         run: npm test
-      - name: Install the open source browser collector
+      - name: Install the browser client
         if: steps.tick.outputs.work == 'true' || inputs.mode == 'probe'
-        shell: bash
+        run: npm install --no-audit --no-fund
+      - name: Reserve the run budget before opening a paid session
+        id: budget
+        if: steps.tick.outputs.work == 'true' || inputs.mode == 'probe'
+        continue-on-error: true
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
         run: |
-          case "$COLLECTION_BROWSER_CHANNEL" in chrome|firefox) ;; *) exit 1 ;; esac
-          npm install --no-audit --no-fund
-          npx playwright install --with-deps "$COLLECTION_BROWSER_CHANNEL"
+          node scripts/reserve-credits.mjs
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add web/collection-ledger.json
+          git diff --cached --quiet || git commit -m "Reserve the bounded Firecrawl collection budget"
+          git pull --rebase
+          git push
       - name: Restore resumable free collection state
         if: steps.tick.outputs.work == 'true'
         uses: actions/cache/restore@v6.1.0
         with:
           path: runtime/collection
-          key: native-collection-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: native-collection-
-      - name: Prove the free API, exact SKU and screenshot route
-        if: inputs.mode == 'probe'
-        shell: bash
-        run: |
-          if [ "$RUNNER_OS" = Linux ]; then
-            xvfb-run -a node scripts/probe-free-source.mjs
-          else
-            node scripts/probe-free-source.mjs
-          fi
-      - name: Collect official source data without Firecrawl
-        id: refresh
-        if: steps.tick.outputs.work == 'true'
+          key: firecrawl-collection-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: firecrawl-collection-
+      - name: Prove the complete source, exact variant and screenshot route
+        id: probe
+        if: inputs.mode == 'probe' && steps.budget.outcome == 'success'
         continue-on-error: true
-        shell: bash
-        run: |
-          if [ "$RUNNER_OS" = Linux ]; then
-            xvfb-run -a node server/update-daily.mjs
-          else
-            node server/update-daily.mjs
-          fi
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: node scripts/probe-free-source.mjs
+      - name: Collect official source data in a time-billed Firecrawl session
+        id: refresh
+        if: steps.tick.outputs.work == 'true' && steps.budget.outcome == 'success'
+        continue-on-error: true
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: node server/update-daily.mjs
       - name: Complete the selected interval
         if: always() && steps.tick.outputs.full == 'true' && steps.refresh.outcome != 'skipped'
         env:
@@ -110,9 +115,9 @@ jobs:
         uses: actions/cache/save@v6.1.0
         with:
           path: runtime/collection
-          key: native-collection-${{ github.run_id }}-${{ github.run_attempt }}
+          key: firecrawl-collection-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Preserve data and source status
-        if: steps.tick.outputs.publish == 'true'
+        if: always() && (steps.tick.outputs.publish == 'true' || inputs.mode == 'probe')
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
@@ -133,7 +138,7 @@ jobs:
         id: deployment
         if: steps.tick.outputs.publish == 'true'
         uses: actions/deploy-pages@v5.0.1
-      - name: Save the real free-source proof
+      - name: Save the real source and credit proof
         if: always() && inputs.mode == 'probe'
         uses: actions/upload-artifact@v7.0.2
         with:
@@ -141,5 +146,5 @@ jobs:
           path: runtime/free-source-proof.json
           retention-days: 3
       - name: Report unsuccessful source collection
-        if: steps.refresh.outcome == 'failure'
+        if: steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure'
         run: exit 1
