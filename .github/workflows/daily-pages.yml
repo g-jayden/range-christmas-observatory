@@ -14,7 +14,7 @@ on:
       mode:
         description: Source collection mode
         type: choice
-        options: [verify-all, catalogue, probe]
+        options: [verify-all, catalogue, probe, repair]
         default: verify-all
       checkNew:
         description: Check NEW now without changing the regular schedule
@@ -66,11 +66,11 @@ jobs:
         if: steps.tick.outputs.publish == 'true' || inputs.mode == 'probe'
         run: npm test
       - name: Install the browser client
-        if: steps.tick.outputs.work == 'true' || inputs.mode == 'probe'
+        if: steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair'
         run: npm install --no-audit --no-fund
       - name: Reserve the run budget before opening a paid session
         id: budget
-        if: steps.tick.outputs.work == 'true' || inputs.mode == 'probe'
+        if: steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair'
         continue-on-error: true
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
@@ -83,7 +83,7 @@ jobs:
           git pull --rebase
           git push
       - name: Restore resumable free collection state
-        if: steps.tick.outputs.work == 'true'
+        if: (steps.tick.outputs.work == 'true' || inputs.mode == 'repair')
         uses: actions/cache/restore@v6.1.0
         with:
           path: runtime/collection
@@ -103,6 +103,13 @@ jobs:
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
         run: node server/update-daily.mjs
+      - name: Repair remaining SKU evidence and verify original images
+        id: repair
+        if: inputs.mode == 'repair' && steps.budget.outcome == 'success'
+        continue-on-error: true
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: node server/repair-snapshot.mjs
       - name: Complete the selected interval
         if: always() && steps.tick.outputs.full == 'true' && steps.refresh.outcome != 'skipped'
         env:
@@ -146,5 +153,5 @@ jobs:
           path: runtime/free-source-proof.json
           retention-days: 3
       - name: Report unsuccessful source collection
-        if: steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure'
+        if: steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure' || steps.repair.outcome == 'failure'
         run: exit 1
