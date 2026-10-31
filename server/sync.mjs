@@ -7,6 +7,14 @@ export const categories={'artificial-trees':'94637','prelit-christmas-trees':'94
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const stamp=()=>new Date().toISOString();
 export class SourceError extends Error{constructor(message,status=0,retryAfter=0){super(message);this.status=status;this.retryAfter=retryAfter;}}
+// These two corrected paths are published by the retailer itself. Do not guess
+// replacements for other corrupt catalogue slugs; SKU and family checks still apply.
+export function correctKnownProductPath(pathname){
+ if(!/(?:%13|\u0013)/i.test(pathname))return pathname;
+ const canonical={m1549656:'/p/christow-pre-lit-valmorel-flocked-christmas-tree-5ft%C2%BF8ft/m1549656',m4068651:'/p/pre-lit-mixed-pe-pvc-christmas-tree-%C2%BF-450-warm-white-leds-with-8-lighting-modes/m4068651'};
+ const found=canonical[pathname.match(/\/(m\d+)\/?$/)?.[1]];
+ return found?found+(pathname.endsWith('/')?'/':''):pathname;
+}
 export function parseSource(result){
  if(!result?.success||!result.data?.rawHtml)throw new SourceError('Data provider did not return raw source data');
  if(result.data.metadata?.statusCode!==200)throw new SourceError('Source returned non-200 status',result.data.metadata?.statusCode);
@@ -59,7 +67,7 @@ export function mergeSnapshot(previous,collected,now=stamp()){
   const out={...(prior||{}),...p,kind,priceGBP:p.price/100,currency:'GBP',sourceUrl:'https://www.therange.co.uk/'+p.variantPath.replace('#','/#'),newStatus:p.newIn,newEvidence:{kind:'website_flag',field:'newIn',value:p.newIn,observedAt:now},observedAt:now,firstObservedAt:h.firstObservedAt,firstNewObservedAt:h.firstNewObservedAt,arrivalEvidence:h.arrivalEvidence,everNew:h.everNew,features:stableDescription?prior.features:features,style,attributeObservedAt:sameFamily?(Object.hasOwn(prior,'attributeObservedAt')?prior.attributeObservedAt:previous.observedAt||previous.observedDate):null,detailEvidence:stableDescription?prior.detailEvidence:undefined,attributeEvidence:stableDescription?prior.attributeEvidence:undefined,heightLabel:sameFamily?prior.heightLabel:'高度未确认',treeColor:sameFamily?prior.treeColor:'颜色未确认',heightValues:sameFamily?prior.heightValues:[],colorValues:sameFamily?prior.colorValues:[],imageStatus:'source-url-current; browser-load-pending'};
   // Keep a separately verified PDP image when the source listing still uses its placeholder.
   if(/placeholder/i.test(out.variantImageUrl||out.imageUrl||'')&&prior?.imageEvidence){out.variantImageUrl=prior.variantImageUrl;out.imageEvidence=prior.imageEvidence;out.imageStatus='PDP override retained; recheck pending';}
-  out.rawSourceUrl=out.sourceUrl;out.sourceUrl=new URL(out.sourceUrl.replace(/[\u0000-\u001f]/g,c=>encodeURIComponent(c))).href;
+  out.rawSourceUrl=out.sourceUrl;const sourceAddress=new URL(out.sourceUrl.replace(/[\u0000-\u001f]/g,c=>encodeURIComponent(c)));sourceAddress.pathname=correctKnownProductPath(sourceAddress.pathname);out.sourceUrl=sourceAddress.href;
   out.features=retainedFeatures;out.listingFeatures=features;out.listingVariantImageUrl=p.variantImageUrl;
   out.currentDetailFingerprint=detailFingerprint(out);
   if(!out.detailEvidence&&out.arrivalEvidence==='observed-after-baseline'&&!(out.heightValues?.length||out.colorValues?.length))out.attributeObservedAt=null;
