@@ -32,13 +32,13 @@ try{
 const root=process.cwd(),temp=await fs.mkdtemp(path.join(os.tmpdir(),'range-credit-budget-'));
 try{
  process.chdir(temp);
- const imageBytes=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aH1cAAAAASUVORK5CYII=','base64');
+ const imageBytes=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAIAAAD2HxkiAAADWUlEQVR4nO3TMQ0AMAzAsIIYnAEr/MHIMUsGkCdz9gKhyQvgcyaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIfYAYpW4jxcwWYcAAAAASUVORK5CYII=','base64');
  const imageHash=createHash('sha256').update(imageBytes).digest('hex');
  const sourceImage='https://www.therange.co.uk/media/fixture.png';
  process.env.FIRECRAWL_API_KEY='test-key-never-sent';
  const imageReader=await createFirecrawlBrowserReader({policy:defaults,budget:{limit:60},fetcher:async(url,options)=>{
   const body=JSON.parse(options.body);assert.equal(body.proxy,'enhanced');assert.equal(body.maxAge,0);assert.equal(body.location.country,'GB');assert.equal(body.actions[0].type,'executeJavascript');
-  return Response.json({success:true,data:{metadata:{statusCode:200,creditsUsed:1},actions:{javascriptReturns:[{value:[{url:sourceImage,ok:true,width:1,height:1,mime:'image/png',hash:imageHash,dataBase64:imageBytes.toString('base64'),bytes:imageBytes.length}]}]}}});
+  return Response.json({success:true,data:{metadata:{statusCode:200,creditsUsed:1},actions:{javascriptReturns:[{value:[{url:sourceImage,ok:true,width:300,height:300,mime:'image/png',hash:imageHash,dataBase64:imageBytes.toString('base64'),bytes:imageBytes.length}]}]}}});
  },connect:async()=>{throw Error('Image batches must not open a second billed browser session')}});
  const imageProduct={sku:'fixture',variantImageUrl:sourceImage};
  const imageAudit=await imageReader.auditImages([imageProduct]);await imageReader.close();
