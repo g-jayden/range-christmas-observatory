@@ -26,7 +26,7 @@ try{
  assert.equal(navigations,0,'Families must reuse the website origin without repeated page navigation');
  assert.equal(reader.metrics().familyReads,1);assert.equal(reader.metrics().familyReuse,1);
  await reader.close();await reader.close();assert.equal(closed,1);assert.equal(apiCalls.filter(x=>x.method==='DELETE').length,1);assert.equal(reader.metrics().firecrawlCredits,2);assert.equal(reader.metrics().billingVerified,true);
- assert.equal(apiCalls[0].body.ttl,1800);assert(!('prompt'in apiCalls[0].body),'No AI browser prompt surcharges');assert(!apiCalls.some(c=>c.url.includes('/scrape')),'No per-product paid scrape calls');
+ assert.equal(apiCalls[0].body.ttl,600);assert.equal(reader.metrics().fallbackLimit,40);assert(!('prompt'in apiCalls[0].body),'No AI browser prompt surcharges');assert(!apiCalls.some(c=>c.url.includes('/scrape')),'No per-product paid scrape calls');
 }finally{if(savedKey===undefined)delete process.env.FIRECRAWL_API_KEY;else process.env.FIRECRAWL_API_KEY=savedKey}
 const root=process.cwd(),temp=await fs.mkdtemp(path.join(os.tmpdir(),'range-credit-budget-'));
 try{
