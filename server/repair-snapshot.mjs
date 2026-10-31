@@ -13,7 +13,8 @@ for(const p of selected){delete collection.failures[productKey(p,policy)];p.sour
 let reader,report={phase:'targeted-repair-and-images',success:false},error;
 try{
  reader=await createFirecrawlBrowserReader({policy,budget:{...budget,limit:10}});
- const audit=await refreshDetails({previous:{...snapshot,products:selected},snapshot:{products:selected},reader,policy,budget,state:collection});
+ let audit;try{audit=await refreshDetails({previous:{...snapshot,products:selected},snapshot:{products:selected},reader,policy,budget,state:collection});}catch(e){audit={checked:0,succeeded:0,error:e.message};console.error(JSON.stringify({phase:'repair-specifications',error:e.message}));}
+
  const images=await reader.auditImages(snapshot.products,snapshot.browserImageAudit);
  await reader.close();const metrics=reader.metrics();
  const unresolved=snapshot.products.filter(p=>!verified(p));
@@ -25,10 +26,10 @@ try{
  snapshot.collectionAudit.supplementalRuns=[...(snapshot.collectionAudit.supplementalRuns||[]),supplementary];
  snapshot.collectionAudit.firecrawlCredits=snapshot.collectionAudit.native.firecrawlCredits+snapshot.collectionAudit.supplementalRuns.reduce((n,r)=>n+r.firecrawlCredits,0);
  Object.assign(status,{revision:snapshot.revision,detailsAudit:snapshot.detailsAudit,browserImageAudit:images,collectionAudit:snapshot.collectionAudit,firecrawlCredits:snapshot.collectionAudit.firecrawlCredits});
- report={phase:'targeted-repair-and-images',success:true,checked:audit.checked,repaired:audit.succeeded,remaining:unresolved.length,images:{checked:images.checked,loaded:images.loaded,failed:images.failed},native:metrics,completedAt:snapshot.updatedAt};
+ report={phase:'targeted-repair-and-images',success:unresolved.length===0&&images.failed===0,checked:audit.checked,repaired:audit.succeeded,remaining:unresolved.length,images:{checked:images.checked,loaded:images.loaded,failed:images.failed},native:metrics,completedAt:snapshot.updatedAt};
  await budget.settle({credits:metrics.firecrawlCredits,receipt:metrics.receipt,report});
  await atomicJson('web/catalogue.json',snapshot);await atomicJson('web/status.json',status);await saveState(collection);
- console.log(JSON.stringify(report));
+ console.log(JSON.stringify(report));if(!report.success)process.exitCode=1;
 }catch(e){error=e;report.error=e.message;console.error(e.message)}
 finally{
  await reader?.close();const metrics=reader?.metrics()||{};
