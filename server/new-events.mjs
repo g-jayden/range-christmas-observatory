@@ -13,10 +13,10 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
    if(/[\u0000-\u001f]/.test(p.sourceUrl)){deferred++;continue;}
    attempted++;
    try{
-    const capture=await reader.raw(p.sourceUrl,{formats:['rawHtml','markdown',{type:'screenshot',fullPage:true,quality:75,viewport:{width:1920,height:1080}}],waitFor:2000,purpose:'screenshot'});
+    const capture=await reader.raw(p.sourceUrl,{formats:reader.captureVerified&&deferDelivery?['rawHtml','markdown']:['rawHtml','markdown',{type:'screenshot',fullPage:true,quality:75,viewport:{width:1920,height:1080}}],waitFor:2000,purpose:'screenshot'});
     const detail=parseDetails(capture,p.sku,p.sourceUrl);applyDetails(p,detail);cacheProduct(p,state,policy);await saveState(state,dir);
-    const screenshot=capture.data?.screenshotBase64;if(!screenshot)throw Error('该SKU原站截图未生成，等待浏览器重试');
-    const bytes=Buffer.from(screenshot,'base64');if(bytes.length>5000000)throw Error('截图超过邮件限制');
+    const screenshot=capture.data?.screenshotBase64;if(!screenshot&&!(reader.captureVerified&&deferDelivery))throw Error('该SKU原站截图未生成，等待浏览器重试');
+    const bytes=Buffer.from(screenshot||'','base64');if(bytes.length>5000000)throw Error('截图超过邮件限制');
     const info=productInformation(p,detail.specs);
     const event={lease,product:{...candidate,...p,newStatus:candidate.newStatus,description:info.summary,specifications:info.specifications},screenshotBase64:bytes.toString('base64'),screenshotVerifiedAt:detail.observedAt};if(deferDelivery)events.push(event);else await controlCall('/internal/event',event);
     delete state.failures[key];captured++;
@@ -43,4 +43,13 @@ export async function finishNewEvents(result,{snapshot,lease,controlCall=control
  let delivery;do{delivery=await controlCall('/internal/deliver',{});}while(delivery.morePending);
  await controlCall('/internal/monitor-complete',{lease,success:result.success,error:result.success?undefined:'部分新品截图或详情未通过核验，待下次每日任务处理',scanned:result.scanned,newCount:result.captured});
  const {events,...publicResult}=result;return {...publicResult,delivery};
+}
+
+export async function captureNewScreenshots(result,{reader,state,policy,now=()=>Date.now()}={}){
+ if(!reader.captureVerified)return result;
+ const verified=[];
+ for(const event of result.events||[])try{
+  event.screenshotBase64=await reader.captureVerified(event.product.sourceUrl);verified.push(event);
+ }catch(e){const failure=failedAttempt(event.product,e.message,state.failures,policy,now(),':screenshot');result.issues.push({sku:event.product.sku,reason:String(e.message).slice(0,200),retryAt:failure.retryAt});result.success=false;result.deferred++;}
+ result.events=verified;result.captured=verified.length;return result;
 }
