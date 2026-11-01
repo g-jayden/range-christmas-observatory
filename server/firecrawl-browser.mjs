@@ -163,6 +163,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   })();active.set(identifier,promise);try{return await promise}finally{active.delete(identifier)}
  }
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;
+ reader.captureVerified=enhancedCapture;
  reader.familyReady=input=>{const u=new URL(sourceUrl(input));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return families.has(u.href)};
  reader.prepareFamilies=async products=>{
   const urls=[...new Set(products.map(p=>{const u=new URL(sourceUrl(p.sourceUrl));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return u.href}))];
@@ -205,7 +206,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   metrics.sourceImageChecks+=rechecked;const loaded=results.filter(r=>r.ok).length;
   return {mode:'live-enhanced-batches-and-original-image-cache',checked:results.length,rechecked,retained:policy.repairImagesOnly?allUrls.length-newUrls.length:0,changed,loaded,failed:results.length-loaded,failures:results.filter(r=>!r.ok),entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString(),perImageScrapeRequests:0,batchScrapeRequests:metrics.imageBatchRequests||0};
  };
- reader.metrics=()=>({...metrics,sessionSeconds:created?Math.ceil(((browserEndedAt||now())-created)/1000):0});
+ reader.metrics=()=>({...metrics,scrapeCredits,sessionSeconds:created?Math.ceil(((browserEndedAt||now())-created)/1000):0});
  reader.closeBrowser=async()=>{
   if(!session||sessionClosed)return;sessionClosed=true;
   try{if(session.id)browserReceipt=await api('interact/'+encodeURIComponent(session.id),'DELETE');}
