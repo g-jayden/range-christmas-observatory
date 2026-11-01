@@ -18,7 +18,7 @@ class Store{
  async transaction(fn){return fn(this)}
 }
 const storage=new Store,env={ADMIN_TOKEN:'admin',CONTROL_TOKEN:'control',BREVO_API_KEY:'test-only',MAIL_FROM:'sender@example.com'},app=new Control({storage},env),sent=[];
-const original=globalThis.fetch;globalThis.fetch=async(url,opts)=>{assert.equal(url,'https://api.brevo.com/v3/smtp/email');sent.push(JSON.parse(opts.body));return Response.json({messageId:'test-'+sent.length},{status:201})};
+const original=globalThis.fetch;globalThis.fetch=async(url,opts)=>{assert.equal(url,'https://api.brevo.com/v3/smtp/email');const message=JSON.parse(opts.body);if(message.headers?.idempotencyKey)assert.match(message.headers.idempotencyKey,/^[a-f0-9]{8}-[a-f0-9]{4}-5[a-f0-9]{3}-8[a-f0-9]{3}-[a-f0-9]{12}$/);sent.push(message);return Response.json({messageId:'test-'+sent.length},{status:201})};
 async function call(path,body,secret){return app.fetch(new Request('https://worker.example'+path,{method:body===undefined?'GET':'POST',headers:{...(secret?{authorization:'Bearer '+secret}:{}),...(body===undefined?{}:{'content-type':'application/json'})},body:body===undefined?undefined:JSON.stringify(body)}))}
 try{
  assert.equal((await call('/admin/schedule',{intervalDays:3,time:'04:17'})).status,401);
