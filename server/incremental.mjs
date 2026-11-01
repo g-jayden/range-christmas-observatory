@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import {categories,collectStableCategory,mergeSnapshot,atomicJson} from './sync.mjs';
 import {digest,productKey,detailFingerprint,verified,seedFailures,planDetails,failedAttempt,imageMapFingerprint} from './collection-policy.mjs';
 import {parseDetails,applyDetails} from './details.mjs';
-const detailFields=['appearanceSource','sourceColour','sourceMaterial','heightLabel','heightCm','heightValues','treeColor','colorValues','material','skirtDiameterCm','skirtBaseDiameterCm','skirtTopDiameterCm','specifications','style','features','detailEvidence','attributeObservedAt','images','descriptionHash','productSummary','detailInputFingerprint','detailStatus','detailCheckedAt'];
+const detailFields=['originalImages','originalImageUrl','appearanceSource','sourceColour','sourceMaterial','heightLabel','heightCm','heightValues','treeColor','colorValues','material','skirtDiameterCm','skirtBaseDiameterCm','skirtTopDiameterCm','specifications','style','features','detailEvidence','attributeObservedAt','images','descriptionHash','productSummary','detailInputFingerprint','detailStatus','detailCheckedAt'];
 export async function readState(dir='runtime/collection'){
  let state;try{state=JSON.parse(await fs.readFile(dir+'/details.json','utf8'))}catch{state={version:1,details:{},failures:{}}}
  state.details||={};state.failures||={};return state;
