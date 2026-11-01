@@ -41,7 +41,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  let session,browser,context,starting,closed=false,created=0,deadline=0,allocatedPages=0,browserReceipt,sessionClosed=false,browserEndedAt=0;
  const pages=[],waiting=[],families=new Map(),familyFailures=new Map(),active=new Map();
  const parallel=policy.browserConcurrency||4,ttl=Math.min(1800,policy.maxSessionSeconds||1800,Math.floor(Math.min(budget.limit,policy.browserCreditsPerRun||20)*30));
- const fallbackLimit=Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-Math.ceil(ttl/30))),fallbackCache=new Map();let fallbackReserved=0,scrapeCredits=0,scrapeBillingVerified=true;
+ const fallbackLimit=Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-Math.ceil(ttl/30))),fallbackCache=new Map(),captureOriginals=new Map();let fallbackReserved=0,scrapeCredits=0,scrapeBillingVerified=true;
  if(ttl<60)throw budgetError('本轮积分不足以创建一个浏览器会话');
  const metrics={provider:'firecrawl-browser',billingMode:'code-session-time',firecrawlRequests:0,scrapeRequests:0,firecrawlCredits:0,creditsEstimatedUpperBound:ttl/30+fallbackLimit,browserCreditUpperBound:ttl/30,fallbackLimit,browserPages:0,familyReads:0,familyReuse:0,screenshots:0,sourceImageChecks:0};
  async function api(path,method,body){
@@ -120,15 +120,16 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    }finally{release(page)}
   })();families.set(canonical,promise);return promise;
  }
- async function enhancedCapture(url){
+ async function enhancedCapture(url,options={}){
   guard();if(fallbackReserved>=fallbackLimit)throw budgetError('新品截图已达到本轮付费上限');fallbackReserved++;metrics.scrapeRequests++;
   const expected=new URL(url).hash.slice(1).replace(/^0+(?=\d)/,'');let charged=false;
-  const script='(async()=>{const sku='+JSON.stringify(expected)+';if(typeof initJson!=="function")throw Error("Official product initializer missing");if(typeof g_variantArr==="undefined"||!g_variantArr.length){const data=await(await fetch("?json",{credentials:"include",cache:"no-store"})).json();initJson(data)}const v=g_variantArr.find(v=>String(v.sku)===sku);if(!v)throw Error("SKU not present");selectAttrFilterByVariant(v);const wait=async()=>{for(let n=0;n<30;n++){const selected=(document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"").replace(/^0+(?=\\d)/,"");const images=Array.from(document.querySelectorAll("#variant_container img")).filter(i=>i.complete&&i.naturalWidth>=64&&i.naturalHeight>=64);if(selected===sku&&images.length){document.querySelector("#variant_container").scrollIntoView();return {sku:selected,images:images.length}}await new Promise(r=>setTimeout(r,300))}throw Error("Selected SKU or real product image not ready")};return await wait()})()';
+  const script='(async()=>{const preferred='+JSON.stringify(options.preferredThumbnail||null)+';const sku='+JSON.stringify(expected)+';if(typeof initJson!=="function")throw Error("Official product initializer missing");if(typeof g_variantArr==="undefined"||!g_variantArr.length){const data=await(await fetch("?json",{credentials:"include",cache:"no-store"})).json();initJson(data)}const v=g_variantArr.find(v=>String(v.sku)===sku);if(!v)throw Error("SKU not present");if((document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"")!==sku)selectAttrFilterByVariant(v);if(preferred){const thumb=Array.from(document.querySelectorAll("#product-gallery .rsThumb img")).find(i=>i.src===preferred);thumb?.parentElement?.click();}const wait=async()=>{for(let n=0;n<30;n++){const selected=(document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"").replace(/^0+(?=\\d)/,"");const images=Array.from(document.querySelectorAll("#variant_container img")).filter(i=>i.complete&&i.naturalWidth>=64&&i.naturalHeight>=64);if(selected===sku&&images.length){document.querySelector("#variant_container").scrollIntoView();const root=document.querySelector("#product-gallery .rsOverflow"),box=root?.getBoundingClientRect();const originals=Array.from(document.querySelectorAll("#product-gallery .rsMainSlideImage")).filter(i=>i.complete&&i.naturalWidth>=64&&i.naturalHeight>=64).map(i=>{const r=i.getBoundingClientRect();const area=box?Math.max(0,Math.min(r.right,box.right)-Math.max(r.left,box.left))*Math.max(0,Math.min(r.bottom,box.bottom)-Math.max(r.top,box.top)):0;return {url:i.currentSrc||i.src,width:i.naturalWidth,height:i.naturalHeight,visibleArea:area,selectedSku:selected}}).filter(i=>i.visibleArea>0).sort((a,b)=>b.visibleArea-a.visibleArea);return {sku:selected,images:images.length,originals}}await new Promise(r=>setTimeout(r,300))}throw Error("Selected SKU or real product image not ready")};return await wait()})()';
   try{
    const response=await api('scrape','POST',{url,formats:['rawHtml',{type:'screenshot',fullPage:false}],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},blockAds:false,parsers:[],timeout:90000,actions:[{type:'executeJavascript',script}]});
    const cost=response.data?.metadata?.creditsUsed;scrapeCredits+=Number.isFinite(cost)?cost:1;charged=true;if(!Number.isFinite(cost))scrapeBillingVerified=false;
    let proof=response.data?.actions?.javascriptReturns?.[0]?.value;if(typeof proof==='string')proof=JSON.parse(proof);
    if(response.data?.metadata?.statusCode!==200||proof?.sku!==expected||!proof.images||!response.data.screenshot)throw Error('Enhanced selected-SKU screenshot evidence failed');
+   captureOriginals.set(sourceUrl(url),proof.originals||[]);
    const target=new URL(response.data.screenshot);if(target.protocol!=='https:')throw Error('Screenshot must use HTTPS');
    const image=await fetcher(target.href,{signal:AbortSignal.timeout(30000)});if(!image.ok||!image.headers.get('content-type')?.startsWith('image/'))throw Error('Screenshot image unavailable');
    const bytes=Buffer.from(await image.arrayBuffer());if(bytes.length<2000||bytes.length>5000000)throw Error('Screenshot image size invalid');metrics.screenshots++;return bytes.toString('base64');
@@ -165,7 +166,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   })();active.set(identifier,promise);try{return await promise}finally{active.delete(identifier)}
  }
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;
- reader.captureVerified=enhancedCapture;
+ reader.captureVerified=enhancedCapture;reader.originalsFor=url=>captureOriginals.get(sourceUrl(url))||[];
  reader.familyReady=input=>{const u=new URL(sourceUrl(input));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return families.has(u.href)};
  reader.prepareFamilies=async products=>{
   const urls=[...new Set(products.map(p=>{const u=new URL(sourceUrl(p.sourceUrl));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return u.href}))];
@@ -175,7 +176,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   if(results.length!==batchUrls.length||results.some(r=>!batchUrls.includes(r.url)))throw Error('商品系列批量补查地址不一致');
   for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();b.evidence.sourceTransport='enhanced-batch';families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else {const error=new SourceError('官网商品详情链接异常，未返回可核实的具体SKU规格；本轮目录价格、库存、NEW与图片独立更新',b?.status||0);familyFailures.set(r.url,error);console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}}}
  };
- reader.auditImages=async (products,previous={})=>{
+ reader.auditImages=async (products,previous={},options={})=>{
   const allUrls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))],results=[],known=[],newUrls=[],validPrior={};
   for(const url of allUrls){
    const u=new URL(url);if(u.protocol!=='https:'||u.hostname!=='www.therange.co.uk'||!u.pathname.startsWith('/media/'))throw Error('商品图片来源未通过核验');
@@ -183,7 +184,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    if(valid){validPrior[url]={hash:old.hash,cachedImageUrl:old.cachedImageUrl,etag:old.etag,lastModified:old.lastModified,width:old.width,height:old.height,bytes:old.bytes,mime:old.mime};if(policy.repairImagesOnly)results.push({...old,observedAt:old.observedAt||previous.observedAt,retained:true});else known.push(url);}else newUrls.push(url);
   }
   const tasks=[];for(let offset=0;offset<known.length;offset+=400)tasks.push({urls:known.slice(offset,offset+400),hashOnly:true});
-  for(let offset=0;offset<newUrls.length;){const size=policy.imageBatchProbe&&offset===0?3:200;tasks.push({urls:newUrls.slice(offset,offset+size),hashOnly:false});offset+=size;}
+  for(let offset=0;offset<newUrls.length;){const size=policy.imageBatchProbe&&offset===0?3:Math.min(200,options.bodyBatchSize||200);tasks.push({urls:newUrls.slice(offset,offset+size),hashOnly:false});offset+=size;}
   await fs.mkdir('web/images/source',{recursive:true});let rechecked=0,changed=0;
   for(let taskIndex=0;taskIndex<tasks.length;taskIndex++){
    guard();const task=tasks[taskIndex],items=task.urls.map(url=>({url,prior:validPrior[url],hashOnly:task.hashOnly}));metrics.imageBatchRequests=(metrics.imageBatchRequests||0)+1;

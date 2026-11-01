@@ -11,8 +11,8 @@ if(!config.nextRunAt)config=firstRun(config);
 let daily=await readDailyMonitor();await saveDailyMonitor(daily);
 if(event!=='push'&&!['probe','repair','monitor-probe'].includes(mode)&&!blocked){
  if(apiBase){
-  const state=await control('/public/status');config=state.config;
-  if(!state.baselineReady){const d=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));await control('/internal/seed',{config,records:d.products.map(p=>({sku:p.sku,everNew:Boolean(p.everNew||p.newStatus)}))})}
+  const savedConfig=config;const state=await control('/public/status');config=state.config;
+  if(!state.baselineReady){const d=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));await control('/internal/seed',{config:savedConfig,records:d.products.map(p=>({sku:p.sku,everNew:Boolean(p.everNew||p.newStatus)}))});config=(await control('/public/status')).config;}
   const wantsDaily=dailyDue(daily)||process.env.FORCE_MONITOR==='true';
   if(wantsDaily||Date.now()>=Date.parse(config.nextRunAt)){
    const claim=await control('/internal/claim',{forceMonitor:wantsDaily});({config,full,monitor,lease}=claim);fullLease=full?lease:null;

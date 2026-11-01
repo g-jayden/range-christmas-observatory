@@ -8,6 +8,17 @@ const validEmail=s=>typeof s==='string'&&s.length<=254&&/^[^\s@<>;,]+@[^\s@<>;,]
 function response(value,status=200){return Response.json(value,{status,headers:{'cache-control':'no-store'}})}
 function checkAuth(req,secret){if(!secret||req.headers.get('authorization')!=='Bearer '+secret)throw Object.assign(Error('无权执行此操作。'),{status:401});}
 function verifyUrl(raw,hosts){const u=new URL(raw);if(u.protocol!=='https:'||!hosts.some(h=>u.hostname===h||u.hostname.endsWith('.'+h)))throw Error('非允许的来源地址。');return u.href;}
+function mailAssets(p){
+ const m=p.mailAssets;if(!m?.card?.url||!m?.original?.url)throw Error('完整信息卡或官网原图尚未生成');
+ const allowed=raw=>{const u=new URL(raw);if(u.origin!==SITE||!u.pathname.startsWith('/range-christmas-observatory/mail-assets/'+p.sku+'/'))throw Error('Invalid generated mail asset');return u.href;};
+ return [{name:'NEW-'+p.sku+'-完整信息卡.png',url:allowed(m.card.url)},{name:'NEW-'+p.sku+'-官网原图.'+new URL(m.original.url).pathname.split('.').pop(),url:allowed(m.original.url)},...(m.proof?.url?[{name:'NEW-'+p.sku+'-原站商品页.png',url:allowed(m.proof.url)}]:[])];
+}
+function productMail(p,origin,test=false,unsubscribe=null){
+ const m=p.mailAssets,has=m?.card?.url&&m?.original?.url; if(has)mailAssets(p);
+ const checked=p.newEvidence?.observedAt||p.observedAt||p.detectedAt;
+ const header=test?'测试示例 · 原站NEW标记，不代表今天首次上架':'NEW · '+(p.kind==='skirt'?'圣诞树裙':'圣诞树');
+ return `<div style="font:16px/1.8 Arial,sans-serif;max-width:900px;margin:auto;color:#173c32"><p>${esc(header)}</p><h1>${esc(p.variantName)}</h1>${has?`<a href="${esc(m.original.url)}"><img src="${esc(m.original.url)}" alt="官网原始商品照片" style="width:100%;max-width:700px;height:auto"></a>`:`<img src="${origin}/shots/${p.imageAccess}" alt="具体SKU原站截图" style="width:100%;height:auto">`}<p>SKU：${esc(p.sku)}<br>价格：£${Number(p.priceGBP).toFixed(2)}${p.kind==='tree'?'<br>高度：'+esc(p.heightLabel||'未提供'):''}<br>本体颜色：${esc(p.treeColor||'待核验')}<br>${p.kind==='tree'?'分类：'+esc(p.style||'其它树形类别'):'材质：'+esc(p.material||'未提供')}</p><p><a href="${esc(p.sourceUrl)}">查看原站具体SKU购买页</a></p>${has?`<p><a href="${esc(m.card.url)}">保存完整信息卡PNG</a> · <a href="${esc(m.original.url)}">下载官网原图</a></p><p>原图 ${Number(m.original.width)}×${Number(m.original.height)} 像素，原文件未经放大或二次压缩。信息卡与原图也作为独立附件，可长期保存。</p>`:''}<p style="font-size:13px;color:#607168">价格与NEW核验时间：${esc(checked)}；下单时以官网为准。${test?'本测试不改变新品去重基线。':''}</p>${unsubscribe?`<p><a href="${esc(unsubscribe)}">取消订阅</a> · <a href="${HOME}">查看分析网站</a></p>`:`<p><a href="${HOME}">查看分析网站</a></p>`}</div>`;
+}
 export class Control{
  constructor(ctx,env){this.ctx=ctx;this.env=env;this.db=ctx.storage;}
  async config(){return await this.db.get('config')||firstRun();}
@@ -66,7 +77,7 @@ export class Control{
    if(rate.count>=5||old&&Date.now()-old.requestedAt<60000)return response({error:'申请过于频繁，请稍后重试。'},429);
    rate.count++;await this.db.put(limitKey,rate);
    const confirm=token(),unsub=token(),now=Date.now(),scopes=['tree','skirt'].filter(x=>(body.scopes||['tree','skirt']).includes(x));if(!scopes.length)return response({error:'至少选择一个产品范围。'},400);
-   await this.send(email,'请确认：圣诞新品邮件订阅',`<h2>确认接收圣诞新品</h2><p>发现新的NEW商品后，我们会发送原站商品页截图与具体SKU购买链接。</p><p><a href="${url.origin}/confirm?token=${encodeURIComponent(confirm)}">确认订阅</a></p><p>如果不是你申请，请忽略此邮件。确认链接24小时内有效。</p>`);
+   await this.send(email,'请确认：圣诞新品邮件订阅',`<h2>确认接收圣诞新品</h2><p>发现新的NEW商品后，我们会发送原站商品页截图与具体SKU购买链接。</p><p><a href="${HOME}confirm.html#token=${encodeURIComponent(confirm)}">确认订阅</a></p><p>如果不是你申请，请忽略此邮件。确认链接24小时内有效。</p>`);
    await this.db.put('sub/'+id,{email,scopes,requestedAt:now,confirmedAt:null,unsubscribe:unsub});
    await this.db.put('token/'+await hash(confirm),{id,action:'/confirm',expires:now+86400000});
    await this.db.put('token/'+await hash(unsub),{id,action:'/unsubscribe',expires:now+3660*86400000});
@@ -80,6 +91,13 @@ export class Control{
   }
   if(route.startsWith('/internal/')){
    checkAuth(req,this.env.CONTROL_TOKEN);
+   if(route==='/internal/test-email'&&req.method==='POST'){
+    const b=await req.json(),email=String(b.email||'').trim().toLowerCase(),sub=validEmail(email)&&await this.db.get('sub/'+await hash(email));
+    if(!sub?.confirmedAt)return response({error:'测试邮箱尚未确认订阅'},409);
+    const p=b.product;if(!/^\d{1,12}$/.test(String(p?.sku))||p.newStatus!==true)throw Error('测试商品必须有真实NEW证据');verifyUrl(p.sourceUrl,['therange.co.uk']);
+    const assets=mailAssets(p),key=String(b.requestId||'');if(!/^[A-Za-z0-9_-]{4,100}$/.test(key))throw Error('Invalid test request');const prior=await this.db.get('test/'+key);if(prior)return response({accepted:true,alreadySent:true});
+    const messageId=await this.send(email,'【测试】NEW 商品信息与高清下载｜'+p.variantName,productMail(p,url.origin,true),assets,await hash('test/'+key));await this.db.put('test/'+key,{messageId,at:new Date().toISOString()});return response({accepted:true,messageId});
+   }
    if(route==='/internal/mail-status'&&req.method==='GET'){
     const subs=[...(await this.db.list({prefix:'sub/'})).values()];return response({confirmedSubscriptions:subs.filter(s=>s.confirmedAt).length,pendingSubscriptions:subs.filter(s=>!s.confirmedAt).length,pendingScreenshots:(await this.db.list({prefix:'pending/'})).size});
    }
@@ -136,9 +154,8 @@ export class Control{
       const delivered='delivered/'+p.sku+'/'+subKey.slice(4);if(await this.db.get(delivered))continue;
       if(!content){const chunks=[];for(let i=0;i<p.screenshotParts;i++)chunks.push(await this.db.get('shot/'+p.sku+'/'+i));content=chunks.join('')}
       const unsubscribe=url.origin+'/unsubscribe?token='+encodeURIComponent(sub.unsubscribe);
-      const html=`<div style="font:16px/1.7 Arial,sans-serif;max-width:1000px;margin:auto"><p style="color:#b22">NEW · ${p.kind==='skirt'?'圣诞树裙':'圣诞树'}</p><h1>${esc(p.variantName)}</h1><p>SKU ${esc(p.sku)} · £${Number(p.priceGBP).toFixed(2)} · 发现时间 ${esc(p.detectedAt)}</p><p><a href="${esc(p.sourceUrl)}">打开原站具体商品购买页</a></p><a href="${esc(p.sourceUrl)}"><img src="${url.origin}/shots/${p.imageAccess}" alt="原站商品页真实截图：${esc(p.variantName)}" style="width:100%;height:auto;border:1px solid #ddd"></a><p>${esc(p.description||'完整介绍和规格请查看附件原站截图及购买页。')}</p><p>附件为此SKU商品页的真实截图，包含原站图片、介绍与规格；采集时页面可能变化。正文预览保留14天，附件可长期保存。</p><p><a href="${esc(unsubscribe)}">取消订阅</a> · <a href="${HOME}">查看分析网站</a></p></div>`;
-      if(!await this.db.get(subKey))continue;
-      const id=await this.send(sub.email,'NEW｜'+p.variantName,html,[{name:'NEW-'+p.sku+'.png',content}],await hash(p.sku+'/'+subKey));
+      const html=productMail(p,url.origin,false,unsubscribe);
+      const id=await this.send(sub.email,'NEW｜'+p.variantName,html,(p.mailAssets?.card&&p.mailAssets?.original)?mailAssets(p):[{name:'NEW-'+p.sku+'.png',content}],await hash(p.sku+'/'+subKey));
       await this.db.put(delivered,{acceptedAt:new Date().toISOString(),providerId:id});accepted++;if(accepted>=20)return response({accepted,morePending:true});
      }
     }

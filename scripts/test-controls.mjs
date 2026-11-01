@@ -31,7 +31,7 @@ try{
  const rows=[{sku:'100',newStatus:true,sourceUrl:'https://www.therange.co.uk/p/test/#100'},{sku:'101',newStatus:true,sourceUrl:'https://www.therange.co.uk/p/test/#101'}];
  const plan=await(await call('/internal/monitor-plan',{lease:claim.lease,products:rows},'control')).json();assert.deepEqual(plan.candidates.map(p=>p.sku),['101']);
  assert.equal((await call('/subscribe',{email:'reader@example.com',scopes:['tree']})).status,200);assert.equal(sent.length,1);
- const confirmUrl=sent[0].htmlContent.match(/https:\/\/[^" ]+\/confirm\?token=[^" ]+/)[0],form=new URLSearchParams({token:new URL(confirmUrl).searchParams.get('token')});
+ const confirmationLink=sent[0].htmlContent.match(/https:\/\/[^" ]+\/confirm\.html#token=[^" ]+/)[0];assert(confirmationLink.startsWith('https://g-jayden.github.io/range-christmas-observatory/confirm.html#token='));const confirmUrl='https://worker.example/confirm',form=new URLSearchParams({token:new URLSearchParams(new URL(confirmationLink).hash.slice(1)).get('token')});
  const before=await call('/public/status');assert.ok(!(await before.text()).includes('reader@example.com'));
  const frontEnv={CONTROL:{getByName:()=>app}};
  const blocked=await handler.fetch(new Request(confirmUrl,{method:'POST',headers:{origin:'https://unrelated.example'},body:form}),frontEnv);assert.equal(blocked.status,403);
@@ -48,5 +48,13 @@ try{
  const publicView=JSON.stringify(await(await call('/public/status')).json());assert.ok(!publicView.includes('reader@example.com'));assert.ok(!publicView.includes('screenshotBase64'));
  await call('/internal/monitor-complete',{lease:claim.lease,success:false,error:'Source unavailable'},'control');const state=await(await call('/public/status')).json();assert.equal(state.monitor.state,'error');assert.equal(state.monitor.lastSuccess,null);
  const missingMail=new Control({storage:new Store},{ADMIN_TOKEN:'admin',CONTROL_TOKEN:'control'});assert.equal((await missingMail.fetch(new Request('https://worker.example/subscribe',{method:'POST',body:JSON.stringify({email:'reader@example.com'})}))).status,503);
+ const testStore=new Store,testApp=new Control({storage:testStore},env),email='test-reader@example.com';
+ const id=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(email)))].map(v=>v.toString(16).padStart(2,'0')).join('');await testStore.put('sub/'+id,{email,confirmedAt:new Date().toISOString(),scopes:['tree']});
+ const assetBase='https://g-jayden.github.io/range-christmas-observatory/mail-assets/101/';
+ const testProduct={...p,newStatus:true,mailAssets:{card:{url:assetBase+'card.png'},original:{url:assetBase+'original.jpg',width:1500,height:1500},proof:{url:assetBase+'proof.png'}}};
+ const testCall=product=>testApp.fetch(new Request('https://worker.example/internal/test-email',{method:'POST',headers:{authorization:'Bearer control','content-type':'application/json'},body:JSON.stringify({email,product,requestId:'verified-image-test-1'})}));
+ const count=sent.length;assert.equal((await testCall(testProduct)).status,200);assert.equal(sent.length,count+1);assert.equal(sent.at(-1).attachment.length,3);assert.ok(sent.at(-1).htmlContent.includes('1500×1500'));assert.ok(sent.at(-1).subject.startsWith('【测试】'));
+ assert.equal((await testCall(testProduct)).status,200);assert.equal(sent.length,count+1,'Explicit test delivery is idempotent');assert.equal(await testStore.get('seen/101'),undefined,'Tests must not modify the real NEW baseline');
+ const invalid=structuredClone(testProduct);invalid.mailAssets.card.url='https://unrelated.example/card.png';assert.equal((await testCall(invalid)).status,500);assert.equal(sent.length,count+1,'Assets outside the published SKU directory cannot be emailed');
  console.log('PASS: Beijing schedule, 3/5/7 validation, missed-run advance, owner authorization, private subscription confirmation, NEW baseline exclusion, real-screenshot requirement, delivery deduplication, public-email exclusion and truthful failure status.');
 }finally{globalThis.fetch=original}

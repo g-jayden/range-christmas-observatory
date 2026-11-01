@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 await fs.mkdir('public',{recursive:true});
-for(const name of ['index.html','dashboard-full.css','dashboard-full.js','catalogue.json','status.json','image-check.html','image-check.js','controls.js','settings.json','service.json','collection-policy.json','collection-ledger.json','monitor-state.json','new-arrivals.json','monitor-proof.json','confirm.html'])await fs.copyFile('web/'+name,'public/'+name);
+for(const name of ['index.html','dashboard-full.css','dashboard-full.js','catalogue.json','status.json','image-check.html','image-check.js','controls.js','settings.json','service.json','collection-policy.json','collection-ledger.json','monitor-state.json','new-arrivals.json','monitor-proof.json','confirm.html','product.html'])await fs.copyFile('web/'+name,'public/'+name);
 for(const page of ['index.html','image-check.html']){
  let html=await fs.readFile('public/'+page,'utf8');
  for(const asset of ['dashboard-full.css','dashboard-full.js','controls.js','image-check.js']){
@@ -10,4 +10,5 @@ for(const page of ['index.html','image-check.html']){
  await fs.writeFile('public/'+page,html);
 }
 try{await fs.cp('web/images','public/images',{recursive:true})}catch(e){if(e.code!=='ENOENT')throw e;}
+try{await fs.cp('web/mail-assets','public/mail-assets',{recursive:true})}catch(e){if(e.code!=='ENOENT')throw e;}
 await fs.writeFile('public/.nojekyll','');console.log('Static cloud website built.');

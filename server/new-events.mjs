@@ -1,3 +1,5 @@
+import fs from 'node:fs/promises';
+import {buildMailAssets} from './mail-assets.mjs';
 import {parseDetails,applyDetails,productInformation} from './details.mjs';
 import {control} from './cloud-client.mjs';
 import {productKey,detailFingerprint,failedAttempt} from './collection-policy.mjs';
@@ -39,7 +41,9 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
 }
 
 export async function finishNewEvents(result,{snapshot,lease,controlCall=control}={}){
- for(const event of result.events||[]){const p=snapshot.products.find(p=>p.sku===event.product.sku);if(p)event.product={...event.product,...p,description:p.productSummary||event.product.description};await controlCall('/internal/event',event);}
+ for(const event of result.events||[]){const p=snapshot.products.find(p=>p.sku===event.product.sku);if(p)event.product={...event.product,...p,description:event.product.mailAssets?event.product.description:(p.productSummary||event.product.description)};if(!event.product.mailAssets){const assets=await buildMailAssets(event.product,event.screenshotBase64);event.screenshotBase64=assets.attachmentBase64;event.product.description=(event.product.productSummary||event.product.description||'')+'。附件前半为完整商品信息卡，后半为同一SKU原站真实截图。保存完整信息卡与官网原图：'+assets.downloadUrl;event.product.screenshotKind=assets.attachmentKind;}}
+ if(process.env.GITHUB_ACTIONS==='true'&&process.env.NOTIFICATION_PHASE!=='deliver'){await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/notification-outbox.private.json',JSON.stringify({result,snapshot:{products:(result.events||[]).map(e=>e.product)},lease}));const {events,...summary}=result;return {...summary,deliveryPending:true};}
+ for(const event of result.events||[])await controlCall('/internal/event',event);
  let delivery;do{delivery=await controlCall('/internal/deliver',{});}while(delivery.morePending);
  await controlCall('/internal/monitor-complete',{lease,success:result.success,error:result.success?undefined:'部分新品截图或详情未通过核验，待下次每日任务处理',scanned:result.scanned,newCount:result.captured});
  const {events,...publicResult}=result;return {...publicResult,delivery};
@@ -49,7 +53,7 @@ export async function captureNewScreenshots(result,{reader,state,policy,now=()=>
  if(!reader.captureVerified)return result;
  const verified=[];
  for(const event of result.events||[])try{
-  event.screenshotBase64=await reader.captureVerified(event.product.sourceUrl);verified.push(event);
+  event.screenshotBase64=await reader.captureVerified(event.product.sourceUrl,{preferredThumbnail:event.product.variantImageUrl});const original=reader.originalsFor?.(event.product.sourceUrl)?.[0];if(original)event.product.originalImageUrl=original.url;verified.push(event);
  }catch(e){const failure=failedAttempt(event.product,e.message,state.failures,policy,now(),':screenshot');result.issues.push({sku:event.product.sku,reason:String(e.message).slice(0,200),retryAt:failure.retryAt});result.success=false;result.deferred++;}
  result.events=verified;result.captured=verified.length;return result;
 }

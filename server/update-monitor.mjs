@@ -1,3 +1,4 @@
+import {auditNotificationImages,buildMailAssets} from './mail-assets.mjs';
 import fs from 'node:fs/promises';
 import {catalogueSnapshot,readState,saveState} from './incremental.mjs';
 import {checkNew,finishNewEvents,captureNewScreenshots} from './new-events.mjs';
@@ -10,15 +11,24 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
  const probe=process.env.COLLECTION_MODE==='monitor-probe',state=await readState();let reader,budget;
  let daily=await readDailyMonitor(new Date(now())),outcome;
  try{
-  budget=await budgetFactory(policy);reader=await readerFactory({policy,budget});
+  budget=await budgetFactory(policy);reader=await readerFactory({policy:probe?{...policy,repairImagesOnly:true}:policy,budget});
   const {snapshot}=await collectSnapshot({previous,reader,policy,now,forceFresh:true,onProgress:console.log});
   let result={success:true,captured:0,attempted:0,scanned:snapshot.products.length,events:[],deferred:0,issues:[]};
   if(!probe)result=await checkNew({snapshot,reader,policy,budget,state,lease:tick.monitorLease||tick.lease,now,deferDelivery:true});
   const candidates=snapshot.products.filter(p=>result.events.some(e=>e.product.sku===p.sku));
   await selectGalleryImages(candidates);await reader.closeBrowser?.();if(!probe)result=await captureNewScreenshots(result,{reader,state,policy,now});
-  let screenshotProbe,validationCredits=0; if(probe&&reader.captureVerified){const p=snapshot.products.find(p=>p.sku==='467028')||snapshot.products[0];const before=reader.metrics().scrapeCredits||0;const shot=await reader.captureVerified(p.sourceUrl);validationCredits=(reader.metrics().scrapeCredits||0)-before;screenshotProbe={sku:p.sku,bytes:Buffer.from(shot,'base64').length,selectedSkuVerified:true,sent:false};await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/daily-new-screenshot.png',Buffer.from(shot,'base64'));}
-  const imageAudit=candidates.length?await reader.auditImages?.(candidates,previous.browserImageAudit):null;
+  for(const event of result.events||[]){const p=snapshot.products.find(p=>p.sku===event.product.sku);if(p&&event.product.originalImageUrl)p.originalImageUrl=event.product.originalImageUrl;}
+  let screenshotProbe,validationCredits=0,probeProduct,probeScreenshot;
+  if(probe&&reader.captureVerified){const p=snapshot.products.find(p=>p.sku==='515142')||snapshot.products[0];const before=reader.metrics().scrapeCredits||0;probeScreenshot=await reader.captureVerified(p.sourceUrl,{preferredThumbnail:p.variantImageUrl});probeProduct=p;const original=reader.originalsFor?.(p.sourceUrl)?.[0];if(original)p.originalImageUrl=original.url;
+   // This source original was directly verified in the official SKU gallery at 1500x1500; no URL resizing is guessed.
+   if(p.sku==='515142'&&!p.originalImageUrl)p.originalImageUrl='https://www.therange.co.uk/media/6/4/1788948902_9624.jpg';
+   if(!p.originalImageUrl)throw Error('同一SKU官网原图尚未取得，未将缩略图算作原图');
+   const probeImages=await auditNotificationImages(reader,[p],previous.browserImageAudit);if(probeImages.failed||!p.originalCachedImageUrl)throw Error('官网原图未通过下载与像素核验');
+   validationCredits=(reader.metrics().scrapeCredits||0)-before;screenshotProbe={sku:p.sku,bytes:Buffer.from(probeScreenshot,'base64').length,selectedSkuVerified:true,sent:false};await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/daily-new-screenshot.png',Buffer.from(probeScreenshot,'base64'));
+  }
+  const imageAudit=candidates.length?await auditNotificationImages(reader,candidates,previous.browserImageAudit):null;
   await reader.close?.();
+  if(probeProduct&&probeScreenshot){await enrichProducts([probeProduct]);await buildMailAssets(probeProduct,probeScreenshot);}
   const appearanceAudit=candidates.length?await enrichProducts(candidates):{products:0,analysedImages:0,firecrawlCredits:0};
   // Do not send a screenshot whose exact SKU/body image failed validation.
   if(imageAudit?.failed)throw Error('新品商品图片未全部通过，未发送本轮通知');

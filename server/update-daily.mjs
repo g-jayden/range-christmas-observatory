@@ -1,3 +1,4 @@
+import {auditNotificationImages} from './mail-assets.mjs';
 import {readDailyMonitor,saveDailyMonitor} from './daily-monitor-state.mjs';
 import {runMonitorDaily} from './update-monitor.mjs';
 import {enrichProducts,selectGalleryImages} from './enrich-appearance.mjs';
@@ -54,8 +55,8 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
   for(const p of next.products)if(p.attributeObservedAt&&p.specifications&&p.detailEvidence?.verifiedProductSection){const info=productInformation(p,p.specifications);p.productSummary=info.summary;p.detailEvidence={...p.detailEvidence,text:info.text};}
   await selectGalleryImages(next.products);
   const imageAudit=preserveImages(previous,next);
-  await reader.closeBrowser?.();if(tick.monitor)notification=await captureNewScreenshots(notification,{reader,state:collection,policy,now});
-  const browserImageAudit=await reader.auditImages?.(next.products,previous.browserImageAudit);
+  await reader.closeBrowser?.();if(tick.monitor)notification=await captureNewScreenshots(notification,{reader,state:collection,policy,now});for(const event of notification.events||[]){const p=next.products.find(p=>p.sku===event.product.sku);if(p&&event.product.originalImageUrl)p.originalImageUrl=event.product.originalImageUrl;}
+  const browserImageAudit=await reader.auditImages?.(next.products,previous.browserImageAudit);if(tick.monitor&&notification.events?.length)await auditNotificationImages(reader,notification.events.map(e=>next.products.find(p=>p.sku===e.product.sku)).filter(Boolean),browserImageAudit);
   await reader.close?.();next.appearanceAudit=await enrichProducts(next.products);if(tick.monitor){notification=await finishNewEvents(notification,{snapshot:next,lease:tick.monitorLease||tick.lease});const m=await readDailyMonitor();await saveDailyMonitor({...m,state:notification.success?'active':'error',lastSuccess:notification.success?next.observedAt:m.lastSuccess,lastError:notification.success?null:'部分新品未通过核验',lastResult:notification});}
   const metrics=reader.metrics?.()||{firecrawlRequests:0,firecrawlCredits:0};
   const report={strategy:'Firecrawl按时计费会话＋商品系列JSON复用',provider:'firecrawl-browser',firecrawlEnabled:true,firecrawlRequests:metrics.firecrawlRequests||0,firecrawlCredits:metrics.firecrawlCredits||0,sourceObservedAt:next.observedAt,catalogueReused:false,native:metrics,details:audit,notifications:notification,paidFallback:false,completedAt:new Date(now()).toISOString()};
