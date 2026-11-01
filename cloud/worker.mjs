@@ -30,11 +30,11 @@ export class Control{
  async send(to,subject,html,attachments=[],idempotencyKey){
   if(!this.env.BREVO_API_KEY||!this.env.MAIL_FROM)throw Object.assign(Error('邮件服务尚未连接，尚未发送邮件。'),{status:503});
   const r=await fetch('https://api.brevo.com/v3/smtp/email',{method:'POST',headers:{'api-key':this.env.BREVO_API_KEY,'content-type':'application/json'},body:JSON.stringify({sender:{email:this.env.MAIL_FROM,name:'圣诞新品观察'},to:[{email:to}],subject,htmlContent:html,...(idempotencyKey?{headers:{idempotencyKey}}:{}),...(attachments.length?{attachment:attachments}:{})}),signal:AbortSignal.timeout(20000)});
-  if(!r.ok)throw Object.assign(Error('邮件服务未接受邮件，请稍后重试。'),{status:502});
+  if(!r.ok){let detail;try{detail=await r.json()}catch{}throw Object.assign(Error('邮件服务未接受邮件，请稍后重试。'),{status:502,providerStatus:r.status,providerCode:String(detail?.code||'unknown'),providerMessage:String(detail?.message||'').slice(0,500)});}
   return (await r.json()).messageId;
  }
  async fetch(req){
-  try{return await this.route(req)}catch(e){return response({error:e.status?e.message:'操作未完成，请稍后重试。'},e.status||500)}
+  try{return await this.route(req)}catch(e){return response({error:e.status?e.message:'操作未完成，请稍后重试。',...(new URL(req.url).pathname.startsWith('/internal/')&&e.providerStatus?{providerStatus:e.providerStatus,providerCode:e.providerCode,providerMessage:e.providerMessage}:{})},e.status||500)}
  }
  async route(req){
   const url=new URL(req.url),route=url.pathname;
