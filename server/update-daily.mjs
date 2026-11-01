@@ -7,7 +7,7 @@ import {createFirecrawlBrowserReader} from './firecrawl-browser.mjs';
 import {openCreditBudget} from './credit-budget.mjs';
 import {loadPolicy,digest,imageMapFingerprint,productKey} from './collection-policy.mjs';
 import {catalogueSnapshot,readState,refreshDetails,preserveImages,saveState,cacheProduct} from './incremental.mjs';
-import {checkNew,finishNewEvents} from './new-events.mjs';
+import {checkNew,finishNewEvents,captureNewScreenshots} from './new-events.mjs';
 import {atomicJson} from './sync.mjs';
 import {scheduleLabel} from './schedule.mjs';
 import {control,apiBase} from './cloud-client.mjs';
@@ -54,7 +54,7 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
   for(const p of next.products)if(p.attributeObservedAt&&p.specifications&&p.detailEvidence?.verifiedProductSection){const info=productInformation(p,p.specifications);p.productSummary=info.summary;p.detailEvidence={...p.detailEvidence,text:info.text};}
   await selectGalleryImages(next.products);
   const imageAudit=preserveImages(previous,next);
-  await reader.closeBrowser?.();
+  await reader.closeBrowser?.();if(tick.monitor)notification=await captureNewScreenshots(notification,{reader,state:collection,policy,now});
   const browserImageAudit=await reader.auditImages?.(next.products,previous.browserImageAudit);
   await reader.close?.();next.appearanceAudit=await enrichProducts(next.products);if(tick.monitor){notification=await finishNewEvents(notification,{snapshot:next,lease:tick.monitorLease||tick.lease});const m=await readDailyMonitor();await saveDailyMonitor({...m,state:notification.success?'active':'error',lastSuccess:notification.success?next.observedAt:m.lastSuccess,lastError:notification.success?null:'部分新品未通过核验',lastResult:notification});}
   const metrics=reader.metrics?.()||{firecrawlRequests:0,firecrawlCredits:0};
