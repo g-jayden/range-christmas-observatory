@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import {catalogueSnapshot,readState,saveState} from './incremental.mjs';
-import {checkNew,finishNewEvents} from './new-events.mjs';
+import {checkNew,finishNewEvents,captureNewScreenshots} from './new-events.mjs';
 import {enrichProducts,selectGalleryImages} from './enrich-appearance.mjs';
 import {readDailyMonitor,saveDailyMonitor} from './daily-monitor-state.mjs';
 import {atomicJson} from './sync.mjs';
@@ -15,14 +15,15 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
   let result={success:true,captured:0,attempted:0,scanned:snapshot.products.length,events:[],deferred:0,issues:[]};
   if(!probe)result=await checkNew({snapshot,reader,policy,budget,state,lease:tick.monitorLease||tick.lease,now,deferDelivery:true});
   const candidates=snapshot.products.filter(p=>result.events.some(e=>e.product.sku===p.sku));
-  await selectGalleryImages(candidates);await reader.closeBrowser?.();
+  await selectGalleryImages(candidates);await reader.closeBrowser?.();if(!probe)result=await captureNewScreenshots(result,{reader,state,policy,now});
+  let screenshotProbe,validationCredits=0; if(probe&&reader.captureVerified){const p=snapshot.products.find(p=>p.sku==='467028')||snapshot.products[0];const before=reader.metrics().scrapeCredits||0;const shot=await reader.captureVerified(p.sourceUrl);validationCredits=(reader.metrics().scrapeCredits||0)-before;screenshotProbe={sku:p.sku,bytes:Buffer.from(shot,'base64').length,selectedSkuVerified:true,sent:false};await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/daily-new-screenshot.png',Buffer.from(shot,'base64'));}
   const imageAudit=candidates.length?await reader.auditImages?.(candidates,previous.browserImageAudit):null;
   await reader.close?.();
   const appearanceAudit=candidates.length?await enrichProducts(candidates):{products:0,analysedImages:0,firecrawlCredits:0};
   // Do not send a screenshot whose exact SKU/body image failed validation.
   if(imageAudit?.failed)throw Error('新品商品图片未全部通过，未发送本轮通知');
   if(!probe)result=await finishNewEvents(result,{snapshot,lease:tick.monitorLease||tick.lease});
-  const native=reader.metrics(),report={success:result.success,mode:probe?'daily-discovery-probe':'daily-new-only',observedAt:snapshot.observedAt,scanned:snapshot.products.length,candidates:result.captured,notification:result,fullDetailSweep:false,fullImageSweep:false,appearanceAudit,native,firecrawlCredits:native.firecrawlCredits};
+  const native=reader.metrics(),report={success:result.success,mode:probe?'daily-discovery-probe':'daily-new-only',observedAt:snapshot.observedAt,scanned:snapshot.products.length,candidates:result.captured,notification:result,fullDetailSweep:false,fullImageSweep:false,screenshotProbe,discoveryCredits:native.firecrawlCredits-validationCredits,validationCredits,appearanceAudit,native,firecrawlCredits:native.firecrawlCredits};
   await budget.settle({credits:native.firecrawlCredits||0,receipt:native.receipt,report});
   await atomicJson('web/monitor-proof.json',report);
   if(!probe){
