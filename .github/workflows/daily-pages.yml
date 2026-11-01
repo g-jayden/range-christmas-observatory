@@ -2,8 +2,9 @@ name: Credit controlled collection and permanent website
 on:
   push:
     branches: [main]
-    paths-ignore: ['web/catalogue.json', 'web/status.json', 'web/settings.json', 'web/collection-ledger.json', 'web/images/**']
+    paths-ignore: ['web/catalogue.json', 'web/status.json', 'web/settings.json', 'web/collection-ledger.json', 'web/images/**', 'web/monitor-state.json', 'web/new-arrivals.json', 'web/monitor-proof.json', 'web/visual-cache.json', 'web/notification-readiness.json']
   schedule:
+    - cron: '0 23 * * *'
     - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
@@ -14,7 +15,7 @@ on:
       mode:
         description: Source collection mode
         type: choice
-        options: [verify-all, catalogue, probe, repair]
+        options: [verify-all, catalogue, probe, repair, monitor-probe]
         default: verify-all
       checkNew:
         description: Check NEW now without changing the regular schedule
@@ -65,12 +66,30 @@ jobs:
       - name: Verify source integrity, SKU matching and credit limits
         if: steps.tick.outputs.publish == 'true' || inputs.mode == 'probe'
         run: npm test
-      - name: Install the browser client
-        if: steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair'
+      - name: Install collection and local image analysis clients
+        if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe'
         run: npm install --no-audit --no-fund
+      - name: Restore reusable local vision model
+        if: steps.tick.outputs.publish == 'true'
+        uses: actions/cache@v6.1.0
+        with:
+          path: runtime/models
+          key: local-clip-vit-base-patch32-q8-v1
+      - name: Persist the daily claim before opening a paid session
+        if: steps.tick.outputs.monitor == 'true'
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add web/monitor-state.json
+          git diff --cached --quiet || git commit -m "Claim this Beijing daily NEW check exactly once"
+          git pull --rebase
+          git push
+      - name: Check private notification readiness without exposing addresses
+        if: steps.tick.outputs.publish == 'true'
+        run: node scripts/mail-readiness.mjs
       - name: Reserve the run budget before opening a paid session
         id: budget
-        if: steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair'
+        if: steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe'
         continue-on-error: true
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
@@ -83,7 +102,7 @@ jobs:
           git pull --rebase
           git push
       - name: Restore resumable free collection state
-        if: (steps.tick.outputs.work == 'true' || inputs.mode == 'repair')
+        if: (steps.tick.outputs.work == 'true' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe')
         uses: actions/cache/restore@v6.1.0
         with:
           path: runtime/collection
@@ -98,7 +117,7 @@ jobs:
         run: node scripts/probe-free-source.mjs
       - name: Collect official source data in a time-billed Firecrawl session
         id: refresh
-        if: steps.tick.outputs.work == 'true' && steps.budget.outcome == 'success'
+        if: (steps.tick.outputs.work == 'true' || inputs.mode == 'monitor-probe') && steps.budget.outcome == 'success'
         continue-on-error: true
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
@@ -123,12 +142,15 @@ jobs:
         with:
           path: runtime/collection
           key: firecrawl-collection-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Apply cached picture reviews and bilingual source materials
+        if: steps.tick.outputs.publish == 'true'
+        run: node scripts/enrich-appearance.mjs
       - name: Preserve data and source status
         if: always() && (steps.tick.outputs.publish == 'true' || inputs.mode == 'probe')
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add web/catalogue.json web/status.json web/settings.json web/collection-ledger.json web/images
+          git add web/catalogue.json web/status.json web/settings.json web/collection-ledger.json web/images web/monitor-state.json web/new-arrivals.json web/monitor-proof.json web/visual-cache.json web/notification-readiness.json
           git diff --cached --quiet || git commit -m "Update free-source catalogue and verification status"
           git pull --rebase
           git push
