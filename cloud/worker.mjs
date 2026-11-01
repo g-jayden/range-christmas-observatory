@@ -11,13 +11,13 @@ function verifyUrl(raw,hosts){const u=new URL(raw);if(u.protocol!=='https:'||!ho
 function mailAssets(p){
  const m=p.mailAssets;if(!m?.card?.url||!m?.original?.url)throw Error('完整信息卡或官网原图尚未生成');
  const allowed=raw=>{const u=new URL(raw);if(u.origin!==SITE||!u.pathname.startsWith('/range-christmas-observatory/mail-assets/'+p.sku+'/'))throw Error('Invalid generated mail asset');return u.href;};
- return [{name:'NEW-'+p.sku+'-完整信息卡.png',url:allowed(m.card.url)},{name:'NEW-'+p.sku+'-官网原图.'+new URL(m.original.url).pathname.split('.').pop(),url:allowed(m.original.url)},...(m.proof?.url?[{name:'NEW-'+p.sku+'-原站商品页.png',url:allowed(m.proof.url)}]:[])];
+ return [{name:'NEW-'+p.sku+'-card.png',url:allowed(m.card.url)},{name:'NEW-'+p.sku+'-original.'+new URL(m.original.url).pathname.split('.').pop(),url:allowed(m.original.url)},...(m.proof?.url?[{name:'NEW-'+p.sku+'-source-page.png',url:allowed(m.proof.url)}]:[])];
 }
 function productMail(p,origin,test=false,unsubscribe=null){
  const m=p.mailAssets,has=m?.card?.url&&m?.original?.url; if(has)mailAssets(p);
  const checked=p.newEvidence?.observedAt||p.observedAt||p.detectedAt;
  const header=test?'测试示例 · 原站NEW标记，不代表今天首次上架':'NEW · '+(p.kind==='skirt'?'圣诞树裙':'圣诞树');
- return `<div style="font:16px/1.8 Arial,sans-serif;max-width:900px;margin:auto;color:#173c32"><p>${esc(header)}</p><h1>${esc(p.variantName)}</h1>${has?`<a href="${esc(m.original.url)}"><img src="${esc(m.original.url)}" alt="官网原始商品照片" style="width:100%;max-width:700px;height:auto"></a>`:`<img src="${origin}/shots/${p.imageAccess}" alt="具体SKU原站截图" style="width:100%;height:auto">`}<p>SKU：${esc(p.sku)}<br>价格：£${Number(p.priceGBP).toFixed(2)}${p.kind==='tree'?'<br>高度：'+esc(p.heightLabel||'未提供'):''}<br>本体颜色：${esc(p.treeColor||'待核验')}<br>${p.kind==='tree'?'分类：'+esc(p.style||'其它树形类别'):'材质：'+esc(p.material||'未提供')}</p><p><a href="${esc(p.sourceUrl)}">查看原站具体SKU购买页</a></p>${has?`<p><a href="${esc(m.card.url)}">保存完整信息卡PNG</a> · <a href="${esc(m.original.url)}">下载官网原图</a></p><p>原图 ${Number(m.original.width)}×${Number(m.original.height)} 像素，原文件未经放大或二次压缩。信息卡与原图也作为独立附件，可长期保存。</p>`:''}<p style="font-size:13px;color:#607168">价格与NEW核验时间：${esc(checked)}；下单时以官网为准。${test?'本测试不改变新品去重基线。':''}</p>${unsubscribe?`<p><a href="${esc(unsubscribe)}">取消订阅</a> · <a href="${HOME}">查看分析网站</a></p>`:`<p><a href="${HOME}">查看分析网站</a></p>`}</div>`;
+ return `<div style="font:16px/1.8 Arial,sans-serif;max-width:900px;margin:auto;color:#173c32"><p>${esc(header)}</p><h1>${esc(p.variantName)}</h1>${has?`<p style="background:#eef4ed;padding:14px">直接保存到手机：长按下方图片，选择“保存图片／存储图像”；也可点邮件底部的图片附件，打开后保存。<br>完整信息卡：NEW-${esc(p.sku)}-card.png<br>官网原图：NEW-${esc(p.sku)}-original.${esc(new URL(m.original.url).pathname.split('.').pop())}</p><h2>完整商品信息卡</h2><img src="${esc(m.card.url)}" alt="完整商品信息卡：长按图片保存到相册" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><h2>官网原图</h2><img src="${esc(m.original.url)}" alt="官网原始商品照片：长按图片保存到相册" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><p>官网原图 ${Number(m.original.width)}×${Number(m.original.height)} 像素，原文件未经放大或二次压缩。完整信息卡和原图均已随邮件附上，保存附件可保留原始文件。</p>`:`<img src="${origin}/shots/${p.imageAccess}" alt="具体SKU原站截图" style="width:100%;height:auto">`}<p>SKU：${esc(p.sku)}<br>价格：£${Number(p.priceGBP).toFixed(2)}${p.kind==='tree'?'<br>高度：'+esc(p.heightLabel||'未提供'):''}<br>本体颜色：${esc(p.treeColor||'待核验')}<br>${p.kind==='tree'?'分类：'+esc(p.style||'其它树形类别'):'材质：'+esc(p.material||'未提供')}</p><p><a href="${esc(p.sourceUrl)}">查看原站具体SKU购买页</a></p><p style="font-size:13px;color:#607168">价格与NEW核验时间：${esc(checked)}；下单时以官网为准。${test?'本测试不改变新品去重基线。':''}</p>${unsubscribe?`<p><a href="${esc(unsubscribe)}">取消订阅</a> · <a href="${HOME}">查看分析网站</a></p>`:`<p><a href="${HOME}">查看分析网站</a></p>`}</div>`;
 }
 export class Control{
  constructor(ctx,env){this.ctx=ctx;this.env=env;this.db=ctx.storage;}
@@ -87,6 +87,7 @@ export class Control{
   }
   if(route.startsWith('/admin/')){
    checkAuth(req,this.env.ADMIN_TOKEN);
+   if(route==='/admin/test-email'&&req.method==='POST')return this.route(new Request(url.origin+'/internal/test-email',{method:'POST',headers:{authorization:'Bearer '+this.env.CONTROL_TOKEN,'content-type':'application/json'},body:await req.text()}));
    if(route==='/admin/schedule'&&req.method==='POST'){
     const body=await req.json(),config={...firstRun(body),revision:token(),effectiveAt:new Date().toISOString()};await this.db.put('config',config);return response({config,message:'云端计划已保存，下一次起按新周期执行。'});
    }
@@ -98,7 +99,7 @@ export class Control{
     if(!sub?.confirmedAt)return response({error:'测试邮箱尚未确认订阅'},409);
     const p=b.product;if(!/^\d{1,12}$/.test(String(p?.sku))||p.newStatus!==true)throw Error('测试商品必须有真实NEW证据');verifyUrl(p.sourceUrl,['therange.co.uk']);
     const assets=mailAssets(p),key=String(b.requestId||'');if(!/^[A-Za-z0-9_-]{4,100}$/.test(key))throw Error('Invalid test request');const prior=await this.db.get('test/'+key);if(prior)return response({accepted:true,alreadySent:true});
-    const messageId=await this.send(email,'【测试】NEW 商品信息与高清下载｜'+p.variantName,productMail(p,url.origin,true),assets,await hash('test/'+key));await this.db.put('test/'+key,{messageId,at:new Date().toISOString()});return response({accepted:true,messageId});
+    const messageId=await this.send(email,'【测试】邮箱直接保存图片｜'+p.variantName,productMail(p,url.origin,true),assets,await hash('test/'+key));await this.db.put('test/'+key,{messageId,at:new Date().toISOString()});return response({accepted:true,messageId});
    }
    if(route==='/internal/mail-status'&&req.method==='GET'){
     const subs=[...(await this.db.list({prefix:'sub/'})).values()];return response({confirmedSubscriptions:subs.filter(s=>s.confirmedAt).length,pendingSubscriptions:subs.filter(s=>!s.confirmedAt).length,pendingScreenshots:(await this.db.list({prefix:'pending/'})).size});
