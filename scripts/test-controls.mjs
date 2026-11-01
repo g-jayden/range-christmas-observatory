@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';import {firstRun,advanceRun,validateSchedule,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';import handler,{Control} from '../cloud/worker.mjs';import {retryingReader} from '../server/retry-reader.mjs';
 const start=new Date('2026-10-30T08:20:00Z');
-assert.equal(nextNewCheck(new Date('2026-10-30T09:00:00Z')),'2026-11-03T23:00:00.000Z');
+assert.equal(nextNewCheck(new Date('2026-10-30T09:00:00Z')),'2026-10-30T23:00:00.000Z');
 assert.equal(nextNewCheck(new Date('2026-11-03T22:59:00Z')),'2026-11-03T23:00:00.000Z');
-assert.equal(nextNewCheck(new Date('2026-11-03T23:00:00Z')),'2026-11-10T23:00:00.000Z');
-assert.equal(advanceNewCheck('2026-11-03T23:00:00Z',new Date('2026-11-03T23:07:00Z')),'2026-11-10T23:00:00.000Z');
+assert.equal(nextNewCheck(new Date('2026-11-03T23:00:00Z')),'2026-11-04T23:00:00.000Z');
+assert.equal(advanceNewCheck('2026-11-03T23:00:00Z',new Date('2026-11-03T23:07:00Z')),'2026-11-04T23:00:00.000Z');
 assert.equal(firstRun({},start).nextRunAt,'2026-11-05T16:00:00.000Z');
 assert.equal(validateSchedule({intervalDays:'',time:'19:25'}).time,'00:00');
 assert.equal(firstRun({intervalDays:3,time:'23:59'},start).nextRunAt,'2026-11-02T15:59:00.000Z');
@@ -26,7 +26,7 @@ try{
  assert.equal((await(await call('/public/status')).json()).config.time,'04:17');
  await call('/internal/seed',{records:[{sku:'100',everNew:true},{sku:'101',everNew:false}]},'control');
  let attempts=0;const flaky=retryingReader(async()=>{if(++attempts<3)throw Object.assign(Error('internal proxy error'),{status:502});return 'ok'},{delayMs:0});assert.equal(await flaky('test'),'ok');assert.equal(attempts,3);
- const regular=await(await call('/internal/claim',{},'control')).json();assert.equal(regular.monitor,false,'The old 15-minute timer must not scan source products before the next Wednesday07:00 time');
+ const regular=await(await call('/internal/claim',{},'control')).json();assert.equal(regular.monitor,false,'The old 15-minute timer must not scan source products before the next daily07:00 time');
  const claim=await(await call('/internal/claim',{forceMonitor:true},'control')).json();assert.equal(claim.monitor,true);
  const rows=[{sku:'100',newStatus:true,sourceUrl:'https://www.therange.co.uk/p/test/#100'},{sku:'101',newStatus:true,sourceUrl:'https://www.therange.co.uk/p/test/#101'}];
  const plan=await(await call('/internal/monitor-plan',{lease:claim.lease,products:rows},'control')).json();assert.deepEqual(plan.candidates.map(p=>p.sku),['101']);

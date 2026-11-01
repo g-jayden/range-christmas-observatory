@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import {categories,collectStableCategory,mergeSnapshot,atomicJson} from './sync.mjs';
 import {digest,productKey,detailFingerprint,verified,seedFailures,planDetails,failedAttempt,imageMapFingerprint} from './collection-policy.mjs';
 import {parseDetails,applyDetails} from './details.mjs';
-const detailFields=['heightLabel','heightCm','heightValues','treeColor','colorValues','material','skirtDiameterCm','skirtBaseDiameterCm','skirtTopDiameterCm','specifications','style','features','detailEvidence','attributeObservedAt','images','descriptionHash','productSummary','detailInputFingerprint','detailStatus','detailCheckedAt'];
+const detailFields=['appearanceSource','sourceColour','sourceMaterial','heightLabel','heightCm','heightValues','treeColor','colorValues','material','skirtDiameterCm','skirtBaseDiameterCm','skirtTopDiameterCm','specifications','style','features','detailEvidence','attributeObservedAt','images','descriptionHash','productSummary','detailInputFingerprint','detailStatus','detailCheckedAt'];
 export async function readState(dir='runtime/collection'){
  let state;try{state=JSON.parse(await fs.readFile(dir+'/details.json','utf8'))}catch{state={version:1,details:{},failures:{}}}
  state.details||={};state.failures||={};return state;
@@ -21,6 +21,7 @@ export function restoreProducts(snapshot,state,policy){
  return restored;
 }
 export async function catalogueSnapshot({previous,reader,policy,dir='runtime/collection',now=()=>Date.now(),onProgress=()=>{},forceFresh=false,onSessionReady=async()=>{}}){
+ const arrivals=await fs.readFile('web/new-arrivals.json','utf8').then(JSON.parse).catch(()=>({history:[]}));const history={...(previous.firstObservedHistory||{}),...Object.fromEntries((arrivals.history||[]).map(p=>[p.sku,p]))};previous={...previous,firstObservedHistory:history,products:previous.products.map(p=>history[p.sku]?.firstNewObservedAt?{...p,...history[p.sku]}:p)};
  const scope=digest({retailer:policy.retailerId,catalogue:policy.catalogueId,categories,filters:{in_stock_f:['true']},version:1});let cached;
  try{cached=JSON.parse(await fs.readFile(dir+'/catalogue.json','utf8'))}catch{}
  const observed=Date.parse(cached?.observedAt),age=now()-observed;

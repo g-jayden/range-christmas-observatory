@@ -118,6 +118,20 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    }finally{release(page)}
   })();families.set(canonical,promise);return promise;
  }
+ async function enhancedCapture(url){
+  guard();if(fallbackReserved>=fallbackLimit)throw budgetError('新品截图已达到本轮付费上限');fallbackReserved++;metrics.scrapeRequests++;
+  const expected=new URL(url).hash.slice(1).replace(/^0+(?=\d)/,'');let charged=false;
+  const script='(async()=>{const sku='+JSON.stringify(expected)+';if(typeof initJson!=="function")throw Error("Official product initializer missing");if(typeof g_variantArr==="undefined"||!g_variantArr.length){const data=await(await fetch("?json",{credentials:"include",cache:"no-store"})).json();initJson(data)}const v=g_variantArr.find(v=>String(v.sku)===sku);if(!v)throw Error("SKU not present");selectAttrFilterByVariant(v);const wait=async()=>{for(let n=0;n<30;n++){const selected=(document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"").replace(/^0+(?=\\d)/,"");const images=Array.from(document.querySelectorAll("#variant_container img")).filter(i=>i.complete&&i.naturalWidth>=64&&i.naturalHeight>=64);if(selected===sku&&images.length){document.querySelector("#variant_container").scrollIntoView();return {sku:selected,images:images.length}}await new Promise(r=>setTimeout(r,300))}throw Error("Selected SKU or real product image not ready")};return await wait()})()';
+  try{
+   const response=await api('scrape','POST',{url,formats:['rawHtml',{type:'screenshot',fullPage:false}],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},blockAds:false,parsers:[],timeout:90000,actions:[{type:'executeJavascript',script}]});
+   const cost=response.data?.metadata?.creditsUsed;scrapeCredits+=Number.isFinite(cost)?cost:1;charged=true;if(!Number.isFinite(cost))scrapeBillingVerified=false;
+   let proof=response.data?.actions?.javascriptReturns?.[0]?.value;if(typeof proof==='string')proof=JSON.parse(proof);
+   if(response.data?.metadata?.statusCode!==200||proof?.sku!==expected||!proof.images||!response.data.screenshot)throw Error('Enhanced selected-SKU screenshot evidence failed');
+   const target=new URL(response.data.screenshot);if(target.protocol!=='https:')throw Error('Screenshot must use HTTPS');
+   const image=await fetcher(target.href,{signal:AbortSignal.timeout(30000)});if(!image.ok||!image.headers.get('content-type')?.startsWith('image/'))throw Error('Screenshot image unavailable');
+   const bytes=Buffer.from(await image.arrayBuffer());if(bytes.length<2000||bytes.length>5000000)throw Error('Screenshot image size invalid');metrics.screenshots++;return bytes.toString('base64');
+  }catch(e){if(!charged){scrapeCredits++;scrapeBillingVerified=false;}throw e;}
+ }
  async function capture(url,family){
   const expected=new URL(url).hash.slice(1).replace(/^0+(?=\d)/,''),page=await take();try{
    await navigate(page,url);
@@ -132,7 +146,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    }
    await page.waitForFunction(sku=>(document.querySelector('#product-dyn-code')?.textContent||'').trim().replace(/^[PM]/i,'').replace(/^0+(?=\d)/,'')===sku,expected,{timeout:10000});
    const image=family.evidence.offers.find(o=>o.sku===expected)?.image;
-   if(image)await page.waitForFunction(url=>Array.from(document.images).some(i=>i.complete&&i.naturalWidth>0&&(i.currentSrc===url||i.src===url)),image,{timeout:12000});
+   if(image)await page.waitForFunction(url=>Array.from(document.images).some(i=>i.complete&&i.naturalWidth>=64&&i.naturalHeight>=64&&(i.currentSrc===url||i.src===url)),image,{timeout:12000});
    const section=page.locator('#variant_container');await section.scrollIntoViewIfNeeded();const bytes=await section.screenshot({type:'png',timeout:20000});metrics.screenshots++;return bytes.toString('base64');
   }finally{release(page)}
  }
@@ -144,7 +158,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    const family=await familyFor(url),sku=u.hash.slice(1).replace(/^0+(?=\d)/,''),variant=family.variants.find(v=>String(v.sku).replace(/^0+(?=\d)/,'')===sku);
    if(!variant)throw Error('官网商品JSON没有请求的具体SKU：'+sku);
    const data={sourceVariant:variant,familyEvidence:family.evidence,metadata:{statusCode:200,sourceURL:url,provider:'firecrawl-browser'}};
-   if(options.formats?.some(f=>f==='screenshot'||f?.type==='screenshot'))data.screenshotBase64=await capture(url,family);
+   if(options.formats?.some(f=>f==='screenshot'||f?.type==='screenshot'))data.screenshotBase64=await capture(url,family).catch(()=>enhancedCapture(url));
    return {success:true,data};
   })();active.set(identifier,promise);try{return await promise}finally{active.delete(identifier)}
  }

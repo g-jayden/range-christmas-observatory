@@ -13,7 +13,7 @@ export class Control{
  async config(){return await this.db.get('config')||firstRun();}
  async monitorState(){
   const m=await this.db.get('monitor')||{};
-  if(m.scheduleVersion!=='weekly-wed-0700'){delete m.intervalMinutes;Object.assign(m,{scheduleVersion:'weekly-wed-0700',schedule:'每周三北京时间07:00检查一次新品，完成后推送',weekday:3,time:'07:00',timezone:'Asia/Shanghai',nextRunAt:nextNewCheck(),state:m.lastSuccess?'active':'not-started'});await this.db.put('monitor',m)}
+  if(m.scheduleVersion!=='daily-0700-v1'){delete m.intervalMinutes;Object.assign(m,{scheduleVersion:'daily-0700-v1',schedule:'每天北京时间07:00检查，有新款才推送',time:'07:00',timezone:'Asia/Shanghai',nextRunAt:nextNewCheck(),state:m.lastSuccess?'active':'not-started'});await this.db.put('monitor',m)}
   return m;
  }
  async send(to,subject,html,attachments=[],idempotencyKey){

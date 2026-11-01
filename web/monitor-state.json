@@ -1,0 +1,1 @@
+{"scheduleVersion":"daily-0700-v1","schedule":"每天北京时间07:00检查，有新款才发送邮件","time":"07:00","timezone":"Asia/Shanghai","nextRunAt":"2026-11-01T23:00:00.000Z","state":"active","lastAttemptAt":null,"lastSuccess":null,"lastError":null}

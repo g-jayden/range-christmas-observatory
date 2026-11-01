@@ -1,10 +1,13 @@
+import {readDailyMonitor,saveDailyMonitor} from './daily-monitor-state.mjs';
+import {runMonitorDaily} from './update-monitor.mjs';
+import {enrichProducts,selectGalleryImages} from './enrich-appearance.mjs';
 import fs from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {createFirecrawlBrowserReader} from './firecrawl-browser.mjs';
 import {openCreditBudget} from './credit-budget.mjs';
 import {loadPolicy,digest,imageMapFingerprint,productKey} from './collection-policy.mjs';
 import {catalogueSnapshot,readState,refreshDetails,preserveImages,saveState,cacheProduct} from './incremental.mjs';
-import {checkNew} from './new-events.mjs';
+import {checkNew,finishNewEvents} from './new-events.mjs';
 import {atomicJson} from './sync.mjs';
 import {scheduleLabel} from './schedule.mjs';
 import {control,apiBase} from './cloud-client.mjs';
@@ -15,6 +18,7 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
  const previousStatus=await fs.readFile('web/status.json','utf8').then(JSON.parse).catch(()=>({}));
  const engine='firecrawl-browser';
  let tick;try{tick=JSON.parse(await fs.readFile('runtime/tick.json','utf8'))}catch{tick={full:true,monitor:false,lease:null}}
+ if(tick.full===false||process.env.COLLECTION_MODE==='monitor-probe')return runMonitorDaily({previous,policy,readerFactory,budgetFactory,now,tick});
  let config;try{config=JSON.parse(await fs.readFile('web/settings.json','utf8'))}catch{config={intervalDays:7,time:'00:00'}}
  if(tick.config)config=tick.config;
  const state={schedule:scheduleLabel(config),timezone:'Asia/Shanghai',nextCheckAt:config.nextRunAt||null,startedAt:new Date(now()).toISOString(),lastSuccess:previous.observedAt||null,revision:previous.revision,running:true,mode:'firecrawl-browser',lastError:null,provider:'firecrawl-browser',firecrawlRequests:0,firecrawlCredits:0};
@@ -36,7 +40,7 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
   if(difficult.length){await reader.prepareFamilies?.(difficult);for(const p of difficult)if(reader.familyReady?.(p.sourceUrl))delete collection.failures[productKey(p,policy)];}
   const first=preflight&&next.products.find(p=>p.sku===preflight.sku);if(first){applyDetails(first,preflight);first.detailCheckedAt=preflight.observedAt;cacheProduct(first,collection,policy)}
   let notification={success:true,attempted:0,captured:0,deferred:0};
-  if(tick.monitor)notification=await checkNew({snapshot:next,reader,policy,budget,state:collection,lease:tick.monitorLease||tick.lease,now});
+  if(tick.monitor)notification=await checkNew({snapshot:next,reader,policy,budget,state:collection,lease:tick.monitorLease||tick.lease,now,deferDelivery:true});
   const detailEnabled=tick.full!==false&&process.env.COLLECTION_MODE!=='catalogue';
   let audit=await refreshDetails({previous,snapshot:next,reader,policy,budget,state:collection,now,enabled:detailEnabled});
   if(first){audit.checked++;audit.succeeded++;}
@@ -48,10 +52,12 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
    audit={...delta,checked:audit.checked+delta.checked,succeeded:audit.succeeded+delta.succeeded,issues:[...new Map([...audit.issues,...delta.issues].filter(x=>present.has(x.sku)).map(x=>[x.sku,x])).values()],mode:'all-SKU-pages-attempted',reused:delta.reused,catalogueReconciledBeforePublish:true};
   }
   for(const p of next.products)if(p.attributeObservedAt&&p.specifications&&p.detailEvidence?.verifiedProductSection){const info=productInformation(p,p.specifications);p.productSummary=info.summary;p.detailEvidence={...p.detailEvidence,text:info.text};}
+  await selectGalleryImages(next.products);
   const imageAudit=preserveImages(previous,next);
   await reader.closeBrowser?.();
   const browserImageAudit=await reader.auditImages?.(next.products,previous.browserImageAudit);
-  await reader.close?.();const metrics=reader.metrics?.()||{firecrawlRequests:0,firecrawlCredits:0};
+  await reader.close?.();next.appearanceAudit=await enrichProducts(next.products);if(tick.monitor){notification=await finishNewEvents(notification,{snapshot:next,lease:tick.monitorLease||tick.lease});const m=await readDailyMonitor();await saveDailyMonitor({...m,state:notification.success?'active':'error',lastSuccess:notification.success?next.observedAt:m.lastSuccess,lastError:notification.success?null:'部分新品未通过核验',lastResult:notification});}
+  const metrics=reader.metrics?.()||{firecrawlRequests:0,firecrawlCredits:0};
   const report={strategy:'Firecrawl按时计费会话＋商品系列JSON复用',provider:'firecrawl-browser',firecrawlEnabled:true,firecrawlRequests:metrics.firecrawlRequests||0,firecrawlCredits:metrics.firecrawlCredits||0,sourceObservedAt:next.observedAt,catalogueReused:false,native:metrics,details:audit,notifications:notification,paidFallback:false,completedAt:new Date(now()).toISOString()};
   if(browserImageAudit){next.browserImageAudit=browserImageAudit;state.browserImageAudit=browserImageAudit;}
   next.detailsAudit=audit;next.collectionAudit=report;next.imageAudit=imageAudit;

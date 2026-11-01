@@ -3,12 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node scripts/test-sync.mjs && node scripts/test-details.mjs && node scripts/test-update-retention.mjs && node scripts/test-controls.mjs && node scripts/test-free-collection.mjs && node scripts/test-credit-collection.mjs",
+    "test": "node scripts/test-sync.mjs && node scripts/test-details.mjs && node scripts/test-update-retention.mjs && node scripts/test-controls.mjs && node scripts/test-free-collection.mjs && node scripts/test-credit-collection.mjs && node scripts/test-appearance-daily.mjs && node scripts/test-daily-cost-isolation.mjs",
     "build": "node scripts/build-static.mjs",
     "update": "node server/update-daily.mjs",
     "probe:free": "node scripts/probe-free-source.mjs"
   },
   "dependencies": {
+    "@huggingface/transformers": "3.8.1",
     "playwright": "1.64.1"
   }
 }
