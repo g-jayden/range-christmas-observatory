@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
       - name: Verify and apply the reviewed release
         env:
-          EXPECTED_SHA256: cc9e27943ddf5bfae7018b2586cf4cad6b5bb132ba9f467462395adabb521219
+          EXPECTED_SHA256: a4a7d4060e72786579b82b9ef4958773e1e04051218e14a23df06f6057df75bd
         run: |
           python3 - <<'PYCODE'
           import hashlib,os,pathlib,json,base64,zipfile,io
