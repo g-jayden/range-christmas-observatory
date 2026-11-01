@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 await fs.mkdir('public',{recursive:true});
+for(const name of ['catalogue.json','status.json','settings.json','service.json','collection-policy.json','collection-ledger.json','monitor-state.json','new-arrivals.json','monitor-proof.json'])JSON.parse(await fs.readFile('web/'+name,'utf8'));
 for(const name of ['index.html','dashboard-full.css','dashboard-full.js','catalogue.json','status.json','image-check.html','image-check.js','controls.js','settings.json','service.json','collection-policy.json','collection-ledger.json','monitor-state.json','new-arrivals.json','monitor-proof.json','confirm.html','product.html'])await fs.copyFile('web/'+name,'public/'+name);
 for(const page of ['index.html','image-check.html']){
  let html=await fs.readFile('public/'+page,'utf8');
