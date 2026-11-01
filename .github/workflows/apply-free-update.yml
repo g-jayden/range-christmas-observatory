@@ -1,36 +1,41 @@
-name: Apply zero-credit collector release
+name: Apply reviewed daily and visual analysis release
 on:
   push:
     branches: [main]
-    paths: ['source-update.zip', '.github/workflows/apply-free-update.yml']
+    paths: ['source-release.json', '.github/workflows/apply-free-update.yml']
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: range-source-and-pages-production
+  cancel-in-progress: false
 jobs:
   apply:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
-      - name: Verify and apply the prepared source release
+      - name: Verify and apply the reviewed release
         env:
-          EXPECTED_SHA256: a78154ad39eedc61d51b50ad69c2a2476727333a7b82f07f367cf174fe9bb12d
+          EXPECTED_SHA256: 3c451f092fb4bc9270a86bd4b9b21a02579217ce01923fd1bf80017aa134dfe5
         run: |
-          python3 - <<'PY'
-          import hashlib,os,pathlib,zipfile
-          p=pathlib.Path('source-update.zip')
+          python3 - <<'PYCODE'
+          import hashlib,os,pathlib,json,base64,zipfile,io
+          p=pathlib.Path('source-release.json')
           assert hashlib.sha256(p.read_bytes()).hexdigest()==os.environ['EXPECTED_SHA256']
-          with zipfile.ZipFile(p) as z:
+          release=json.loads(p.read_text());data=base64.b64decode(release['base64Zip'],validate=True)
+          assert hashlib.sha256(data).hexdigest()==release['sha256']
+          with zipfile.ZipFile(io.BytesIO(data)) as z:
+              assert sorted(z.namelist())==sorted(release['files'])
               for name in z.namelist():
                   q=pathlib.PurePosixPath(name)
                   assert not q.is_absolute() and '..' not in q.parts and '.git' not in q.parts
-                  assert q.parts[0] in {'web','server','scripts','cloud','.github','test','package.json','README.txt','.gitignore'}
-              for name in z.namelist():
-                  if pathlib.PurePosixPath(name).parts[0] != '.github':
-                      z.extract(name,'.')
-          p.unlink()
-          PY
+                  assert q.parts[0] in {'web','server','scripts','cloud','package.json','package-lock.json','README.txt'}
+                  assert z.getinfo(name).file_size<3000000
+              z.extractall('.')
+          PYCODE
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add -A
-          git commit -m "Replace paid scraping with official-source browser collection"
+          git add server scripts cloud web package.json package-lock.json README.txt
+          git diff --cached --quiet || git commit -m "Add daily quiet NEW alerts and reviewed body colour, seven-shape and bilingual material analysis"
+          git pull --rebase
           git push
