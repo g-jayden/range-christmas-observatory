@@ -22,19 +22,21 @@ export function parseSource(result){
  if(!Array.isArray(d.products)||!Number.isInteger(d.totalResults)||d.products.some(p=>typeof p.newIn!=='boolean'||p.inStock!==true||p.sponsored!==false||!/^\d{1,12}$/.test(String(p.sku))||!Number.isInteger(p.price)))throw new SourceError('Source catalogue has invalid product fields');
  return d;
 }
-export function apiUrl(categoryId,offset=0,filters={in_stock_f:['true']},facets=false){const u=new URL('https://search-lon.therange.co.uk/api/productlist');for(const [k,v] of Object.entries({categoryId,offset,limit:120,sort:'relevance',filters:JSON.stringify(filters),facets,includePriceFacet:facets}))u.searchParams.set(k,String(v));return u.href;}
+export function apiUrl(categoryId,offset=0,filters={in_stock_f:['true']},facets=false){const u=new URL('https://search-lon.therange.co.uk/api/productlist');for(const [k,v] of Object.entries({categoryId,offset,limit:120,sort:'price_lth',filters:JSON.stringify(filters),facets,includePriceFacet:facets}))u.searchParams.set(k,String(v));return u.href;}
 export function createReader(){throw Error('逐页Firecrawl抓取已禁用；请使用按时计费的Firecrawl浏览器会话。')}
 export async function collectCategory(id,reader){
- let expected;const products=[],batches=[];
- for(let offset=0;expected===undefined||offset<expected;offset+=120){
+ let expected;const raw=[],batches=[],map=new Map();
+ // Price is an official deterministic order; overlap absorbs small index movements at page boundaries.
+ for(let offset=0;expected===undefined||offset<expected;offset+=100){
   const url=apiUrl(id,offset),d=await reader(url);if(expected===undefined)expected=d.totalResults;
   if(d.totalResults!==expected)throw new SourceError('Category count changed while paginating; snapshot not committed');
-  products.push(...d.products);batches.push({url,offset,count:d.products.length,total:d.totalResults,observedAt:stamp()});
+  raw.push(...d.products);batches.push({url,offset,count:d.products.length,total:d.totalResults,observedAt:stamp()});
   if(!d.products.length&&offset<expected)throw new SourceError('Empty page before declared category total');
+  for(const p of d.products){const old=map.get(String(p.sku));if(old&&['price','newIn','inStock','variantImageUrl'].some(k=>old[k]!==p[k]))throw new SourceError('Category live SKU values changed at an overlapping page boundary');map.set(String(p.sku),p);}
  }
- const unique=new Set(products.map(p=>String(p.sku))).size;
- if(products.length!==expected||unique!==expected)throw new SourceError('Category totals/records/unique SKUs do not reconcile');
- return {products,audit:{expected,observed:products.length,unique,complete:true,records:products.map(p=>String(p.sku)),batches}};
+ const products=[...map.values()],unique=map.size;
+ if(unique!==expected)throw new SourceError('Category totals/records/unique SKUs do not reconcile: '+JSON.stringify({category:id,expected,rawRecords:raw.length,unique,missing:expected-unique,pages:batches.map(b=>({offset:b.offset,count:b.count}))}));
+ return {products,audit:{expected,observed:unique,unique,rawRecords:raw.length,overlapRecords:raw.length-unique,sort:'price_lth',pagination:'120 results / 100 offset; SKU deduplicated overlap',complete:true,records:products.map(p=>String(p.sku)),batches}};
 }
 export async function collectStableCategory(id,reader){let error;for(let attempt=0;attempt<3;attempt++){try{return await collectCategory(id,reader)}catch(e){error=e;if(e.status||!/^Category|^Empty page/.test(e.message))throw e;}}throw error;}
 const negative=/pot grown|keeleco|lorry with christmas tree|crochet a christmas tree|10yds natural hessian|olive tree|inflatable christmas santa|christmas street lamp|boxwood topiary/i;
