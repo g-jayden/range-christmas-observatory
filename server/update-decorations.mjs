@@ -1,3 +1,4 @@
+import {collectPartitionedCategory} from './catalogue-partitions.mjs';
 import fs from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {readDecorations,mergeDecorations,DECORATION_SOURCE,updateDecorationDetails,enrichDecorations,publishDecorations} from './decorations.mjs';
@@ -6,7 +7,7 @@ import {createFirecrawlBrowserReader} from './firecrawl-browser.mjs';
 import {loadPolicy} from './collection-policy.mjs';
 import {openCreditBudget} from './credit-budget.mjs';
 import {control,apiBase} from './cloud-client.mjs';
-export async function collectDecorationDirectory(reader,previous){return mergeDecorations(previous,await collectStableCategory(DECORATION_SOURCE.id,reader));}
+export async function collectDecorationDirectory(reader,previous){return mergeDecorations(previous,await collectPartitionedCategory(DECORATION_SOURCE.id,reader));}
 export async function seedDecorationBaseline(snapshot,controlCall=control){
  if(!apiBase&&controlCall===control)return;
  await controlCall('/internal/extend-baseline',{scope:'christmas-decorations-v1',records:snapshot.products.map(p=>({sku:p.sku,everNew:p.everNew||p.newStatus})),observedAt:snapshot.observedAt});

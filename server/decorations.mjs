@@ -24,7 +24,7 @@ export function mergeDecorations(previous,listing,observedAt=new Date().toISOStr
  return {...previous,version:1,products,history,observedAt,source:{...DECORATION_SOURCE,...listing.audit},ready:false,revision:digest({at:observedAt,products:products.map(p=>[p.sku,p.priceGBP,p.newStatus,p.listingVariantImageUrl])})};
 }
 export async function loadDecorationDetails(products){
- const buckets=new Map();for(const p of products){const bucket=p.sku.slice(-2).padStart(2,'0');if(!buckets.has(bucket))buckets.set(bucket,await fs.readFile('web/decoration-details/'+bucket+'.json','utf8').then(JSON.parse).catch(()=>({})));const saved=buckets.get(bucket)[p.sku];if(saved?.detailInputFingerprint===p.detailInputFingerprint){for(const key of ['detailsReady','detailEvidence','attributeObservedAt','specifications','sourceDescription','dimensions','material','colorValues','treeColor','paletteEvidence','sourceColour','sourceMaterial','appearanceSource','images','originalImages','originalImageUrl','department','departmentIds','classificationEvidence'])if(saved[key]!==undefined)p[key]=saved[key];p.detailsReady=true;}}
+ const buckets=new Map();for(const p of products){const bucket=p.sku.slice(-2).padStart(2,'0');if(!buckets.has(bucket))buckets.set(bucket,await fs.readFile('web/decoration-details/'+bucket+'.json','utf8').then(JSON.parse).catch(()=>({})));const saved=buckets.get(bucket)[p.sku];if(saved?.detailInputFingerprint===p.detailInputFingerprint&&!(p.detailEvidence?.verifiedProductSection&&Date.parse(p.attributeObservedAt)>=Date.parse(saved.attributeObservedAt))){for(const key of ['detailsReady','detailEvidence','attributeObservedAt','specifications','sourceDescription','dimensions','material','colorValues','treeColor','paletteEvidence','sourceColour','sourceMaterial','appearanceSource','images','originalImages','originalImageUrl','department','departmentIds','classificationEvidence'])if(saved[key]!==undefined)p[key]=saved[key];p.detailsReady=true;}}
  return buckets;
 }
 export async function saveDecorationDetails(products){
@@ -36,9 +36,9 @@ export function compactDecoration(p){
  const keys=['sku','kind','department','departmentIds','variantName','name','brand','priceGBP','originalPrice','currency','sourceUrl','variantImageUrl','imageUrl','cachedImageUrl','imageCacheEvidence','newStatus','newEvidence','firstObservedAt','firstNewObservedAt','arrivalEvidence','everNew','observedAt','attributeObservedAt','detailInputFingerprint','detailsReady','dimensions','material','colorValues','treeColor','paletteEvidence','classificationEvidence','originalImageUrl','originalImageEvidence','mailAssets'];
  const out=Object.fromEntries(keys.filter(k=>p[k]!==undefined).map(k=>[k,p[k]]));out.detailsUrl=detailUrl(p);return out;
 }
-export async function updateDecorationDetails(snapshot,reader,{maxFamilies=Infinity}={}){
+export async function updateDecorationDetails(snapshot,reader,{maxFamilies=Infinity,refreshAll=false}={}){
  await loadDecorationDetails(snapshot.products);
- const selected=snapshot.products.filter(p=>!p.detailsReady),families=[...new Set(selected.map(p=>p.sourceUrl.split('#')[0].replace(/\/$/,'')))].slice(0,maxFamilies),wanted=new Set(families),issues=[];
+ const selected=snapshot.products.filter(p=>refreshAll||!p.detailsReady),families=[...new Set(selected.map(p=>p.sourceUrl.split('#')[0].replace(/\/$/,'')))].slice(0,maxFamilies),wanted=new Set(families),issues=[];
  const queue=selected.filter(p=>wanted.has(p.sourceUrl.split('#')[0].replace(/\/$/,'')));
  // One enhanced request reads up to 200 complete families, not one paid request per SKU.
  const grouped=new Map();for(const p of queue){const key=p.sourceUrl.split('#')[0].replace(/\/$/,'');if(!grouped.has(key))grouped.set(key,[]);grouped.get(key).push(p);}
@@ -58,7 +58,7 @@ export function sourceColours(p){
 }
 export async function enrichDecorations(products,{infer=true}={}){
  const cache=await fs.readFile('web/decoration-visual-cache.json','utf8').then(JSON.parse).catch(()=>({version:1,entries:{}}));let inferred=0,description=0;
- for(const p of products){const source=sourceColours(p),hash=p.imageCacheEvidence?.sha256;let visual=hash&&cache.entries[hash];
+ for(const p of products){if(p.specifications){p.material=materialFacts(p.specifications,p.sourceDescription||'').label;p.dimensions=productDimensions(p.specifications,p.sourceDescription||'');}const cls=classifyDecoration(p);p.department=cls.id;p.departmentIds=[...new Set([cls.id,...(p.departmentIds||[])])];p.classificationEvidence=cls;const source=sourceColours(p),hash=p.imageCacheEvidence?.sha256;let visual=hash&&cache.entries[hash];
   if(source.reliable&&!source.conflict){p.colorValues=source.specified;description++;}
   else if(source.named.length&&!source.conflict&&!/assorted|mixed|multi/i.test(source.raw)){p.colorValues=source.named;description++;}
   else if(hash&&p.cachedImageUrl&&infer){if(!visual){const {analyseImage}=await import('./visual-model.mjs');visual=cache.entries[hash]=await analyseImage({...p,kind:'decoration'},'web/'+p.cachedImageUrl);inferred++;}p.colorValues=visual.colors;}
@@ -70,7 +70,10 @@ export async function enrichDecorations(products,{infer=true}={}){
  await atomicJson('web/decoration-visual-cache.json',cache);return {products:products.length,sourceDescription:description,locallyInferred:inferred,firecrawlCredits:0};
 }
 export async function publishDecorations(snapshot){
+ await loadDecorationDetails(snapshot.products);
  await saveDecorationDetails(snapshot.products);
  const products=snapshot.products.map(compactDecoration);snapshot.stats=Object.fromEntries(decorationDepartments.map(d=>[d.id,{count:products.filter(p=>p.departmentIds.includes(d.id)).length,newCount:products.filter(p=>p.departmentIds.includes(d.id)&&(p.newStatus||p.firstNewObservedAt)).length}]));
  snapshot.products=products;snapshot.revision=digest({at:snapshot.observedAt,products});await atomicJson('web/decorations.json',snapshot);
 }
+
+export function notificationSnapshot(trees,decorations){const map=new Map(trees.products.map(p=>[p.sku,p]));for(const p of decorations?.products||[]){const prior=map.get(p.sku);if(prior){prior.departmentIds=p.departmentIds;prior.department=p.department;}else map.set(p.sku,p);}return {...trees,products:[...map.values()]};}

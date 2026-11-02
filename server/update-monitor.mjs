@@ -1,3 +1,5 @@
+import {readDecorations,enrichDecorations,publishDecorations,notificationSnapshot} from './decorations.mjs';
+import {collectDecorationDirectory} from './update-decorations.mjs';
 import {auditNotificationImages,buildMailAssets} from './mail-assets.mjs';
 import fs from 'node:fs/promises';
 import {catalogueSnapshot,readState,saveState} from './incremental.mjs';
@@ -12,7 +14,8 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
  let daily=await readDailyMonitor(new Date(now())),outcome;
  try{
   budget=await budgetFactory(policy);reader=await readerFactory({policy:probe?{...policy,repairImagesOnly:true}:policy,budget});
-  const {snapshot}=await collectSnapshot({previous,reader,policy,now,forceFresh:true,onProgress:console.log});
+  const gathered=await collectSnapshot({previous,reader,policy,now,forceFresh:true,onProgress:console.log});
+  const previousDecorations=await readDecorations();let decorations=!probe&&previousDecorations.baselineReady?await collectDecorationDirectory(reader,previousDecorations):null;const snapshot=notificationSnapshot(gathered.snapshot,decorations);
   let result={success:true,captured:0,attempted:0,scanned:snapshot.products.length,events:[],deferred:0,issues:[]};
   if(!probe)result=await checkNew({snapshot,reader,policy,budget,state,lease:tick.monitorLease||tick.lease,now,deferDelivery:true});
   const candidates=snapshot.products.filter(p=>result.events.some(e=>e.product.sku===p.sku));
@@ -29,9 +32,10 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
   const imageAudit=candidates.length?await auditNotificationImages(reader,candidates,previous.browserImageAudit):null;
   await reader.close?.();
   if(probeProduct&&probeScreenshot){await enrichProducts([probeProduct]);await buildMailAssets(probeProduct,probeScreenshot);}
-  const appearanceAudit=candidates.length?await enrichProducts(candidates):{products:0,analysedImages:0,firecrawlCredits:0};
+  const appearanceAudit=candidates.length?await enrichProducts(candidates.filter(p=>p.kind!=='decoration')):{products:0,analysedImages:0,firecrawlCredits:0};
   // Do not send a screenshot whose exact SKU/body image failed validation.
   if(imageAudit?.failed)throw Error('新品商品图片未全部通过，未发送本轮通知');
+  if(!probe&&decorations){await enrichDecorations(candidates.filter(p=>p.kind==='decoration'));decorations.ready=previousDecorations.ready;await publishDecorations(decorations);}
   if(!probe)result=await finishNewEvents(result,{snapshot,lease:tick.monitorLease||tick.lease});
   const native=reader.metrics(),report={success:result.success,mode:probe?'daily-discovery-probe':'daily-new-only',observedAt:snapshot.observedAt,scanned:snapshot.products.length,candidates:result.captured,notification:result,fullDetailSweep:false,fullImageSweep:false,screenshotProbe,discoveryCredits:native.firecrawlCredits-validationCredits,validationCredits,appearanceAudit,native,firecrawlCredits:native.firecrawlCredits};
   await budget.settle({credits:native.firecrawlCredits||0,receipt:native.receipt,report});

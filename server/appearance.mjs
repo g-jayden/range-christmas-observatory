@@ -46,7 +46,7 @@ export function applyAppearance(p,visual={}){
  const colours=[...new Set(visual.colors||[])].filter(x=>PALETTE_ORDER.includes(x));
  p.colorValues=colours.length?colours:normaliseColors(p.sourceColour);p.treeColor=p.colorValues.length?p.colorValues.join(' / '):'颜色待核验';
  p.style=p.kind==='tree'?treeStyle(p,visual):p.style;
- if(p.kind==='skirt')p.material=p.appearanceSource?.materials?.label||materialFacts(p.specifications||{},'').label;
+ if(['tree','skirt'].includes(p.kind))p.material=p.appearanceSource?.materials?.label||materialFacts(p.specifications||{},'').label;
  p.paletteEvidence={method:visual.method||'visual-model-and-description',version:APPEARANCE_VERSION,imageHash:p.imageCacheEvidence?.sha256,sourceColour:p.sourceColour,colors:p.colorValues,bodyOnly:true,reviewed:visual.reviewed===true,confidence:visual.confidence??null,note:visual.note||null};
  if(p.kind==='tree')p.styleEvidence={method:'description-and-product-image',descriptionHash:p.appearanceSource?.descriptionHash,imageHash:p.imageCacheEvidence?.sha256,category:p.style,sevenCategories:true};
  return p;

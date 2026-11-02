@@ -1,3 +1,5 @@
+import {readDecorations,updateDecorationDetails,enrichDecorations,publishDecorations,notificationSnapshot} from './decorations.mjs';
+import {collectDecorationDirectory} from './update-decorations.mjs';
 import {auditNotificationImages} from './mail-assets.mjs';
 import {readDailyMonitor,saveDailyMonitor} from './daily-monitor-state.mjs';
 import {runMonitorDaily} from './update-monitor.mjs';
@@ -15,7 +17,7 @@ import {control,apiBase} from './cloud-client.mjs';
 import {recordSourceOutcome} from './source-health.mjs';
 import {productInformation,parseDetails,applyDetails} from './details.mjs';
 export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budgetFactory=openCreditBudget,now=()=>Date.now()}={}){
- const previous=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),policy=await loadPolicy();
+ const previous=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),policy={...await loadPolicy(),familyBatchSize:400,familyBatchConcurrency:8,imageBodyBatchSize:500,imageHashBatchSize:1000,maxFallbackScrapesPerRun:56};
  const previousStatus=await fs.readFile('web/status.json','utf8').then(JSON.parse).catch(()=>({}));
  const engine='firecrawl-browser';
  let tick;try{tick=JSON.parse(await fs.readFile('runtime/tick.json','utf8'))}catch{tick={full:true,monitor:false,lease:null}}
@@ -35,13 +37,13 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
    preflight=parseDetails(await reader.raw(url,{formats:['rawHtml','markdown']}),p.sku,url);
    console.log('同一会话具体SKU已核验 '+p.sku);
   }});
-  let next=gathered.snapshot;catalogueReady=true;
+  let next=gathered.snapshot;catalogueReady=true;const previousDecorations=await readDecorations();let decorations=previousDecorations.baselineReady?await collectDecorationDirectory(reader,previousDecorations):null;
   const oldBySku=new Map(previous.products.map(p=>[p.sku,p])),previousIssues=new Set((previous.detailsAudit?.issues||[]).map(p=>p.sku));
   const difficult=next.products.filter(p=>oldBySku.get(p.sku)?.detailEvidence?.sourceTransport==='enhanced-batch'||previousIssues.has(p.sku)||(policy.enhancedFamilyIds||[]).some(id=>p.productPath?.endsWith('/'+id)));
   if(difficult.length){await reader.prepareFamilies?.(difficult);for(const p of difficult)if(reader.familyReady?.(p.sourceUrl))delete collection.failures[productKey(p,policy)];}
   const first=preflight&&next.products.find(p=>p.sku===preflight.sku);if(first){applyDetails(first,preflight);first.detailCheckedAt=preflight.observedAt;cacheProduct(first,collection,policy)}
   let notification={success:true,attempted:0,captured:0,deferred:0};
-  if(tick.monitor)notification=await checkNew({snapshot:next,reader,policy,budget,state:collection,lease:tick.monitorLease||tick.lease,now,deferDelivery:true});
+  if(tick.monitor)notification=await checkNew({snapshot:notificationSnapshot(next,decorations),reader,policy,budget,state:collection,lease:tick.monitorLease||tick.lease,now,deferDelivery:true});
   const detailEnabled=tick.full!==false&&process.env.COLLECTION_MODE!=='catalogue';
   let audit=await refreshDetails({previous,snapshot:next,reader,policy,budget,state:collection,now,enabled:detailEnabled});
   if(first){audit.checked++;audit.succeeded++;}
@@ -55,9 +57,9 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
   for(const p of next.products)if(p.attributeObservedAt&&p.specifications&&p.detailEvidence?.verifiedProductSection){const info=productInformation(p,p.specifications);p.productSummary=info.summary;p.detailEvidence={...p.detailEvidence,text:info.text};}
   await selectGalleryImages(next.products);
   const imageAudit=preserveImages(previous,next);
-  await reader.closeBrowser?.();if(tick.monitor)notification=await captureNewScreenshots(notification,{reader,state:collection,policy,now});for(const event of notification.events||[]){const p=next.products.find(p=>p.sku===event.product.sku);if(p&&event.product.originalImageUrl)p.originalImageUrl=event.product.originalImageUrl;}
-  const browserImageAudit=await reader.auditImages?.(next.products,previous.browserImageAudit);if(tick.monitor&&notification.events?.length)await auditNotificationImages(reader,notification.events.map(e=>next.products.find(p=>p.sku===e.product.sku)).filter(Boolean),browserImageAudit);
-  await reader.close?.();next.appearanceAudit=await enrichProducts(next.products);if(tick.monitor){notification=await finishNewEvents(notification,{snapshot:next,lease:tick.monitorLease||tick.lease});const m=await readDailyMonitor();await saveDailyMonitor({...m,state:notification.success?(notification.deliveryPending?'delivery-pending':'active'):'error',lastSuccess:notification.success?next.observedAt:m.lastSuccess,lastError:notification.success?null:'部分新品未通过核验',lastResult:notification});}
+  await reader.closeBrowser?.();if(decorations)decorations.detailAudit=await updateDecorationDetails(decorations,reader,{refreshAll:true});if(tick.monitor)notification=await captureNewScreenshots(notification,{reader,state:collection,policy,now});for(const event of notification.events||[]){const p=notificationSnapshot(next,decorations).products.find(p=>p.sku===event.product.sku);if(p&&event.product.originalImageUrl)p.originalImageUrl=event.product.originalImageUrl;}
+  const browserImageAudit=await reader.auditImages?.(notificationSnapshot(next,decorations).products,{entries:{...previous.browserImageAudit?.entries,...previousDecorations.browserImageAudit?.entries}});if(tick.monitor&&notification.events?.length)await auditNotificationImages(reader,notification.events.map(e=>notificationSnapshot(next,decorations).products.find(p=>p.sku===e.product.sku)).filter(Boolean),browserImageAudit);
+  await reader.close?.();next.appearanceAudit=await enrichProducts(next.products);if(decorations){decorations.appearanceAudit=await enrichDecorations(decorations.products);decorations.browserImageAudit=browserImageAudit;decorations.ready=decorations.detailAudit.verified===decorations.products.length&&browserImageAudit?.failed===0;await publishDecorations(decorations);}if(tick.monitor){notification=await finishNewEvents(notification,{snapshot:notificationSnapshot(next,decorations),lease:tick.monitorLease||tick.lease});const m=await readDailyMonitor();await saveDailyMonitor({...m,state:notification.success?(notification.deliveryPending?'delivery-pending':'active'):'error',lastSuccess:notification.success?next.observedAt:m.lastSuccess,lastError:notification.success?null:'部分新品未通过核验',lastResult:notification});}
   const metrics=reader.metrics?.()||{firecrawlRequests:0,firecrawlCredits:0};
   const report={strategy:'Firecrawl按时计费会话＋商品系列JSON复用',provider:'firecrawl-browser',firecrawlEnabled:true,firecrawlRequests:metrics.firecrawlRequests||0,firecrawlCredits:metrics.firecrawlCredits||0,sourceObservedAt:next.observedAt,catalogueReused:false,native:metrics,details:audit,notifications:notification,paidFallback:false,completedAt:new Date(now()).toISOString()};
   if(browserImageAudit){next.browserImageAudit=browserImageAudit;state.browserImageAudit=browserImageAudit;}

@@ -185,7 +185,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    const old=previous.entries?.[url];let valid=false;if(old?.ok&&old.width>=64&&old.height>=64&&/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(old.cachedImageUrl||'')){try{valid=createHash('sha256').update(await fs.readFile('web/'+old.cachedImageUrl)).digest('hex')===old.hash;}catch{}}
    if(valid){validPrior[url]={hash:old.hash,cachedImageUrl:old.cachedImageUrl,etag:old.etag,lastModified:old.lastModified,width:old.width,height:old.height,bytes:old.bytes,mime:old.mime};if(policy.repairImagesOnly)results.push({...old,observedAt:old.observedAt||previous.observedAt,retained:true});else known.push(url);}else newUrls.push(url);
   }
-  const tasks=[];for(let offset=0;offset<known.length;offset+=400)tasks.push({urls:known.slice(offset,offset+400),hashOnly:true});
+  const tasks=[];const hashBatch=policy.imageHashBatchSize||400;for(let offset=0;offset<known.length;offset+=hashBatch)tasks.push({urls:known.slice(offset,offset+hashBatch),hashOnly:true});
   for(let offset=0;offset<newUrls.length;){const size=policy.imageBatchProbe&&offset===0?3:Math.min(500,options.bodyBatchSize||policy.imageBodyBatchSize||200);tasks.push({urls:newUrls.slice(offset,offset+size),hashOnly:false});offset+=size;}
   await fs.mkdir('web/images/source',{recursive:true});let rechecked=0,changed=0;
   for(let taskIndex=0;taskIndex<tasks.length;taskIndex++){
