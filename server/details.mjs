@@ -51,7 +51,7 @@ export function productInformation(product,specs){
 }
 export function applyDetails(p,d){
  const s=d.specs,t=d.featuresText,lower=t.toLowerCase();
- if(p.kind==='decoration'){p.sourceDescription=t;p.dimensions=productDimensions(s,t);p.detailsReady=true;}
+ if(p.kind==='decoration'){p.sourceDescription=t;p.dimensions=productDimensions(s,t);p.detailsReady=true;delete p.detailIssue;delete p.detailError;}
  p.originalImages=d.originalImages||[];p.originalImageUrl=p.originalImages.find(g=>g.thumbnail===p.variantImageUrl)?.url||p.originalImages[0]?.url||null;
  p.appearanceSource=descriptionFacts(p,s,t);p.sourceColour=s.Colour||s.Color||null;p.sourceMaterial=s.Material||s['Material Composition']||null;
  const info=productInformation(p,s);
