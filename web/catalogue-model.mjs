@@ -48,6 +48,7 @@ export function classifyDecoration(p){
   if(id==='spray'&&/\b(?:snow spray|spray (?:paint|snow)|bauble|candle|tinsel)\b/i.test(title))continue;
   if(id==='swag'&&!/\bswag/i.test(title)&&/\b(?:bauble|glass|crystal|tree (?:ornament|decoration))\b/i.test(title))continue;
   if(['standing','outdoor'].includes(id)&&!(/\bstanding\b|stand[ -]?up/i.test(title)&&id==='standing'))continue;
+  if(id==='tree-decorations'&&re.test(title)&&/\bfree[ -]?standing\b/i.test(description))return {id:'standing',method:'explicit-standing-description',matched:title};
   if(re.test(title))return {id,method:'product-title',matched:title};
  }
  const official=[['standing',/standing decorations?|christmas figures?/i],['scenes',/christmas scenes?.{0,8}models?/i],['tree-decorations',/tree decorations?/i],['inflatable',/inflatable christmas decorations?/i],['outdoor',/christmas outdoor decorations?/i],['wall',/christmas wall decorations?/i],['wreath',/christmas wreaths?/i],['garland',/christmas garlands?/i],['swag',/christmas swags?|christmas drops?/i],['candle-holder',/christmas candle holders?/i],['spray',/christmas (?:sprays?|picks?|branches|bushes)/i],['ornaments',/christmas ornaments?/i]];
@@ -69,8 +70,11 @@ export function productDimensions(specs={},description=''){
   const re=new RegExp('\\b'+key+'\\s*(?:[:=]|of|is)?\\s*([0-9.]+\\s*(?:cm|mm|metres?|meters?|ft|feet|inches?|m)\\b)','i');const match=description.match(re);if(match){const n=toCentimetres(match[1]);if(n>0){values[key]=n;evidence[key]={value:match[0],source:'SKU description'};}}
  }
  if(!Object.keys(values).length){const match=String(specs.Dimensions||specs.Size||description).match(/\b([\d.]+)\s*[x×*]\s*([\d.]+)(?:\s*[x×*]\s*([\d.]+))?\s*(cm|mm|m|inches?|ft)\b/i);if(match){const n=Math.max(...match.slice(1,4).filter(Boolean).map(v=>toCentimetres(v+match[4])));if(n>0){values.Max=n;evidence.Max={value:match[0],source:specs.Dimensions||specs.Size?'SKU size specification':'SKU description',axisOrderUnknown:true};}}}
+ const rawSize=String(specs.Size||specs.Dimensions||specs['Bed Size']||specs['Clothing Size']||'').trim();
+ if(!Object.keys(values).length&&rawSize&&!/\b(?:lead|cable)\b/i.test(rawSize)){const measures=[...rawSize.matchAll(/([\d.]+)\s*(cm|mm|metres?|meters?|ft|feet|inches?|in|m)\b/ig)].map(m=>toCentimetres(m[1]+m[2])).filter(n=>n>0);if(measures.length){values.Max=Math.max(...measures);evidence.Max={value:rawSize,source:'SKU size specification',axisOrderUnknown:true};}}
  const axes=Object.entries(values).map(([key,cm])=>({key,cm,label:fieldLabel(key)})),max=axes.length?Math.max(...axes.map(a=>a.cm)):null;
- return {values,axes,maxCm:max,evidence,label:axes.length?axes.map(a=>a.label+' '+a.cm+'cm').join(' × '):'尺寸未注明 · Size not specified'};
+ const names={'One Size':'均码','Small':'小号','Medium':'中号','Large':'大号','Single':'单人床','Double':'双人床','King':'加大床','Super King':'特大床','Adults':'成人','L/XL':'大号／加大号'};const categoryLabel=!axes.length&&rawSize?(names[rawSize]||'原站尺寸')+' · '+rawSize:null;
+ return {values,axes,maxCm:max,evidence,sourceSize:rawSize||null,categoryLabel,label:axes.length?axes.map(a=>a.label+' '+a.cm+'cm').join(' × '):categoryLabel||'尺寸未注明 · Size not specified'};
 }
 
 export function decorationMemberships(p,primary=classifyDecoration(p).id){const text=(p.detailEvidence?.breadcrumbs||[]).join(' '),ids=[primary];for(const [id,re]of [['outdoor',/outdoor|garden|lawn/i],['tree-decorations',/tree decorations/i],['wall',/wall decorations/i],['scenes',/scenes.{0,4}models/i],['inflatable',/inflatable/i]])if(re.test(text)||id==='outdoor'&&re.test(p.variantName+' '+(p.specifications?.['Indoor/Outdoor']||'')))ids.push(id);return [...new Set(ids)];}

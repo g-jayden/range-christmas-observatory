@@ -15,7 +15,7 @@ function chart(title,items,note,multi=false){let end=0;const plotted=items.lengt
 const priceBand=p=>p.priceGBP<5?'低于£5 · Under £5':p.priceGBP<10?'£5–9.99':p.priceGBP<25?'£10–24.99':p.priceGBP<50?'£25–49.99':p.priceGBP<100?'£50–99.99':p.priceGBP<200?'£100–199.99':'£200及以上 · £200+';
 const sizeOf=p=>p.dimensions||productDimensions(p.specifications||{});
 function selectedSize(p){const k=E('sizeAxis')?.value||'Max';if(scope==='tree')return p.heightCm||sizeOf(p).values.Height;if(scope==='skirt')return p.skirtDiameterCm||p.skirtBaseDiameterCm||sizeOf(p).values.Diameter;return k==='Max'?sizeOf(p).maxCm:sizeOf(p).values[k];}
-const sizeBand=p=>{const n=selectedSize(p);return !(n>0)?'未注明 · Not specified':n<10?'低于10cm · Under 10cm':n<30?'10–29.99cm':n<60?'30–59.99cm':n<100?'60–99.99cm':n<200?'100–199.99cm':'200cm及以上 · 200cm+'};
+const sizeBand=p=>{const n=selectedSize(p);return !(n>0)?sizeOf(p).categoryLabel||'未注明 · Not specified':n<10?'低于10cm · Under 10cm':n<30?'10–29.99cm':n<60?'30–59.99cm':n<100?'60–99.99cm':n<200?'100–199.99cm':'200cm及以上 · 200cm+'};
 function colors(rows){const m=new Map;for(const p of rows)for(const c of new Set(p.colorValues?.length?p.colorValues:['颜色待核验']))m.set(c,(m.get(c)||0)+1);return [...m].map(([c,n])=>({label:colourLabel(c),n,pc:rows.length?n/rows.length*100:0})).sort((a,b)=>b.n-a.n);}
 function renderAudit(rows){const source=['tree','skirt'].includes(scope)?D:C,verified=rows.filter(p=>p.detailsReady||p.detailEvidence?.verifiedProductSection).length;
  E('detailAudit').innerHTML=`<h3>规格与描述证据 · SKU evidence</h3><p>已匹配具体SKU · Verified exact SKU: ${verified}/${rows.length}。未提供的尺寸、材质和无法可靠辨别的颜色单列；不以包装尺寸、灯光或背景颜色替代商品本体数据。Missing source fields remain explicit.</p>`;
