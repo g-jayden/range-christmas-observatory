@@ -54,7 +54,7 @@ export function applyDetails(p,d){
  p.originalImages=d.originalImages||[];p.originalImageUrl=p.originalImages.find(g=>g.thumbnail===p.variantImageUrl)?.url||p.originalImages[0]?.url||null;
  p.appearanceSource=descriptionFacts(p,s,t);p.sourceColour=s.Colour||s.Color||null;p.sourceMaterial=s.Material||s['Material Composition']||null;
  const info=productInformation(p,s);
- p.attributeObservedAt=d.observedAt;p.detailEvidence={url:d.sourceUrl,text:info.text,sourceContentHash:d.contentHash,verifiedProductSection:true,selectedSku:d.sku,observedAt:d.observedAt,verificationMethod:d.verificationMethod||'selected-SKU-DOM',sourceTransport:d.sourceTransport,breadcrumbs:d.breadcrumbs||[],jsonSource:d.jsonSource};p.productSummary=info.summary;p.specifications=info.specifications;p.descriptionHash=d.contentHash;
+ p.attributeObservedAt=d.observedAt;p.detailEvidence={url:d.sourceUrl,text:info.text,sourceContentHash:d.contentHash,verifiedProductSection:true,selectedSku:d.sku,observedAt:d.observedAt,verificationMethod:d.verificationMethod||'selected-SKU-DOM',sourceTransport:d.sourceTransport,breadcrumbs:d.breadcrumbs||[],jsonSource:d.jsonSource};p.productSummary=info.summary;p.specifications=p.kind==='decoration'?s:info.specifications;p.descriptionHash=d.contentHash;
  const originalHeight=s['Christmas Tree Height'],heightCm=cm(s.Height)||cm(originalHeight);p.heightLabel=originalHeight||(heightCm?heightCm.toFixed(1)+'cm':'高度未确认');p.heightCm=heightCm;p.heightValues=originalHeight?[originalHeight]:[];
  p.treeColor=s.Colour||s.Color||'颜色未确认';p.colorValues=p.treeColor==='颜色未确认'?[]:[p.treeColor];p.material=s.Material||'材质未确认';
  p.skirtDiameterCm=cm(s.Diameter);p.skirtBaseDiameterCm=cm(s['Base Diameter']||s['Bottom Diameter']);p.skirtTopDiameterCm=cm(s['Top Diameter']);
@@ -69,7 +69,7 @@ export function applyDetails(p,d){
  p.style=[['potted','圣诞树盆栽'],['popUp','折叠式圣诞树'],['slim','纤细圣诞树'],['snow','雪景款'],['prelit','预亮灯款']].find(([k])=>f[k])?.[1]||'标准／其他装饰待核验';
  if(/\barch\b|\btwig\b|\bbirch\b|\bwooden\b|\bpaper\b|\bcone tree\b|\bpyramid\b/i.test(p.variantName))p.style='其他树形／拱门装饰';
  else if(p.style==='标准／其他装饰待核验'){if(['pinecones','berries','baubles'].some(k=>f[k]))p.style='其他预装饰款';else if(/\bplain green\b|\bundecorated design\b|\bunadorned\b/.test(lower))p.style='标准款（介绍已核验）';}
- if(/placeholder/i.test(p.variantImageUrl||p.imageUrl||'')&&d.image){p.variantImageUrl=d.image;p.imageEvidence={url:d.image,source:d.sourceUrl,field:'selected SKU offer image / og:image',observedAt:d.observedAt}}
+ if((/placeholder/i.test(p.variantImageUrl||p.imageUrl||'')||/kube-media-unpublished/.test(p.variantImageUrl||''))&&d.image&&!/placeholder/i.test(d.image)){p.variantImageUrl=d.image;p.imageEvidence={url:d.image,source:d.sourceUrl,field:'selected SKU offer image / og:image',observedAt:d.observedAt}}
  p.images=[...new Set([p.variantImageUrl,p.imageUrl,...d.images].filter(u=>/^https:\/\//.test(u||'')))];
  return p;
 }

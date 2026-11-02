@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
-import {classifyDecoration,productDimensions,decorationDepartments} from '../web/catalogue-model.mjs';
+import {classifyDecoration,productDimensions,decorationDepartments,decorationMemberships} from '../web/catalogue-model.mjs';
 import {normaliseColors,materialFacts} from './appearance.mjs';
 import {detailFingerprint,digest} from './collection-policy.mjs';
 import {atomicJson,collectStableCategory} from './sync.mjs';
@@ -19,12 +19,12 @@ export function mergeDecorations(previous,listing,observedAt=new Date().toISOStr
   p.listingVariantImageUrl=row.variantImageUrl||row.imageUrl;
   const fingerprint=detailFingerprint(p);if(prior?.detailInputFingerprint!==fingerprint){p.detailsReady=false;delete p.detailEvidence;delete p.specifications;delete p.sourceDescription;p.colorValues=[];p.treeColor='颜色待核验';p.dimensions=productDimensions();p.material='材质未注明 · Material not specified';}
   if((prior?.listingVariantImageUrl||prior?.variantImageUrl)!==p.listingVariantImageUrl){delete p.cachedImageUrl;delete p.imageCacheEvidence;delete p.paletteEvidence;}
-  p.detailInputFingerprint=fingerprint;const cls=classifyDecoration(p);p.department=cls.id;p.departmentIds=[cls.id];p.classificationEvidence=cls;return p;
+  p.detailInputFingerprint=fingerprint;const cls=classifyDecoration(p);p.department=cls.id;p.departmentIds=decorationMemberships(p,cls.id);p.classificationEvidence=cls;return p;
  });
  return {...previous,version:1,products,history,observedAt,source:{...DECORATION_SOURCE,...listing.audit},ready:false,revision:digest({at:observedAt,products:products.map(p=>[p.sku,p.priceGBP,p.newStatus,p.listingVariantImageUrl])})};
 }
 export async function loadDecorationDetails(products){
- const buckets=new Map();for(const p of products){const bucket=p.sku.slice(-2).padStart(2,'0');if(!buckets.has(bucket))buckets.set(bucket,await fs.readFile('web/decoration-details/'+bucket+'.json','utf8').then(JSON.parse).catch(()=>({})));const saved=buckets.get(bucket)[p.sku];if(saved?.detailInputFingerprint===p.detailInputFingerprint&&!(p.detailEvidence?.verifiedProductSection&&Date.parse(p.attributeObservedAt)>=Date.parse(saved.attributeObservedAt))){for(const key of ['detailsReady','detailEvidence','attributeObservedAt','specifications','sourceDescription','dimensions','material','colorValues','treeColor','paletteEvidence','sourceColour','sourceMaterial','appearanceSource','images','originalImages','originalImageUrl','department','departmentIds','classificationEvidence'])if(saved[key]!==undefined)p[key]=saved[key];p.detailsReady=true;}}
+ const buckets=new Map();for(const p of products){const bucket=p.sku.slice(-2).padStart(2,'0');if(!buckets.has(bucket))buckets.set(bucket,await fs.readFile('web/decoration-details/'+bucket+'.json','utf8').then(JSON.parse).catch(()=>({})));const saved=buckets.get(bucket)[p.sku];if(saved?.detailsReady===true&&saved.detailEvidence?.verifiedProductSection&&String(saved.detailEvidence.selectedSku)===p.sku&&saved.detailInputFingerprint===p.detailInputFingerprint&&!(p.detailEvidence?.verifiedProductSection&&Date.parse(p.attributeObservedAt)>=Date.parse(saved.attributeObservedAt))){for(const key of ['detailsReady','detailEvidence','attributeObservedAt','specifications','sourceDescription','dimensions','material','colorValues','treeColor','paletteEvidence','sourceColour','sourceMaterial','appearanceSource','images','originalImages','originalImageUrl','department','departmentIds','classificationEvidence'])if(saved[key]!==undefined)p[key]=saved[key];p.detailsReady=true;}}
  return buckets;
 }
 export async function saveDecorationDetails(products){
@@ -43,7 +43,7 @@ export async function updateDecorationDetails(snapshot,reader,{maxFamilies=Infin
  // One enhanced request reads up to 200 complete families, not one paid request per SKU.
  const grouped=new Map();for(const p of queue){const key=p.sourceUrl.split('#')[0].replace(/\/$/,'');if(!grouped.has(key))grouped.set(key,[]);grouped.get(key).push(p);}
  const urls=[...grouped.keys()];for(let offset=0;offset<urls.length;offset+=100){const batch=urls.slice(offset,offset+100).flatMap(url=>grouped.get(url));await reader.prepareFamilies(batch);
-  for(const p of batch)try{const response=await reader.raw(p.sourceUrl,{formats:['rawHtml','markdown']});const d=parseDetails(response,p.sku,p.sourceUrl);applyDetails(p,d);p.sourceDescription=d.featuresText;p.dimensions=productDimensions(d.specs,d.featuresText);p.detailsReady=true;p.detailInputFingerprint=detailFingerprint(p);p.material=materialFacts(d.specs,d.featuresText).label;const cls=classifyDecoration(p);p.department=cls.id;p.departmentIds=[cls.id];p.classificationEvidence=cls;
+  for(const p of batch)try{const response=await reader.raw(p.sourceUrl,{formats:['rawHtml','markdown']});const d=parseDetails(response,p.sku,p.sourceUrl);applyDetails(p,d);p.sourceDescription=d.featuresText;p.dimensions=productDimensions(d.specs,d.featuresText);p.detailsReady=true;p.detailInputFingerprint=detailFingerprint(p);p.material=materialFacts(d.specs,d.featuresText).label;const cls=classifyDecoration(p);p.department=cls.id;p.departmentIds=decorationMemberships(p,cls.id);p.classificationEvidence=cls;
    if(/\b(?:outdoor|garden|lawn|weatherproof)\b/i.test(p.variantName+' '+(d.specs['Indoor/Outdoor']||''))&&!p.departmentIds.includes('outdoor'))p.departmentIds.push('outdoor');
   }catch(e){issues.push({sku:p.sku,reason:String(e.message).slice(0,200)});p.detailError=String(e.message).slice(0,200);}
   await saveDecorationDetails(snapshot.products.filter(p=>p.detailsReady));console.log(JSON.stringify({phase:'decoration-SKU-details',verified:snapshot.products.filter(p=>p.detailsReady).length,total:snapshot.products.length,families:reader.familyCount?.()}));
@@ -58,7 +58,7 @@ export function sourceColours(p){
 }
 export async function enrichDecorations(products,{infer=true}={}){
  const cache=await fs.readFile('web/decoration-visual-cache.json','utf8').then(JSON.parse).catch(()=>({version:1,entries:{}}));let inferred=0,description=0;
- for(const p of products){if(p.specifications){p.material=materialFacts(p.specifications,p.sourceDescription||'').label;p.dimensions=productDimensions(p.specifications,p.sourceDescription||'');}const cls=classifyDecoration(p);p.department=cls.id;p.departmentIds=[...new Set([cls.id,...(p.departmentIds||[])])];p.classificationEvidence=cls;const source=sourceColours(p),hash=p.imageCacheEvidence?.sha256;let visual=hash&&cache.entries[hash];
+ for(const p of products){if(p.specifications){p.material=materialFacts(p.specifications,p.sourceDescription||'').label;p.dimensions=productDimensions(p.specifications,p.sourceDescription||'');}const cls=classifyDecoration(p);p.department=cls.id;p.departmentIds=decorationMemberships(p,cls.id);p.classificationEvidence=cls;const source=sourceColours(p),hash=p.imageCacheEvidence?.sha256;let visual=hash&&cache.entries[hash];
   if(source.reliable&&!source.conflict){p.colorValues=source.specified;description++;}
   else if(source.named.length&&!source.conflict&&!/assorted|mixed|multi/i.test(source.raw)){p.colorValues=source.named;description++;}
   else if(hash&&p.cachedImageUrl&&infer){if(!visual){const {analyseImage}=await import('./visual-model.mjs');visual=cache.entries[hash]=await analyseImage({...p,kind:'decoration'},'web/'+p.cachedImageUrl);inferred++;}p.colorValues=visual.colors;}

@@ -20,8 +20,10 @@ export function isNew(p){return p.newStatus===true||Boolean(p.firstNewObservedAt
 export function inDepartment(p,id){return p.kind===id||p.department===id||(p.departmentIds||[]).includes(id)}
 export function scopeProducts(products,id,mode='all',now=Date.now()){return products.filter(p=>inDepartment(p,id)&&(mode==='all'||(mode==='new'?isNew(p):isToday(p,now))))}
 export function classifyDecoration(p){
+ const breadcrumb=(p.detailEvidence?.breadcrumbs||[]).join(' ');
  const title=String(p.variantName||p.name||''),description=p.appearanceSource?.descriptionText||p.sourceDescription||'',text=title+' '+description;
  // Product type in its title takes precedence over examples of where it can be used.
+ if(/\bhang(?:ing)?\b/i.test(title)&&/tree decorations/i.test(breadcrumb)&&!/wreath|garland|swag|drop/i.test(title))return {id:'tree-decorations',method:'official-breadcrumb-and-hanging-product',matched:breadcrumb};
  const rules=[
   ['inflatable',/\binflatabl[ea]\b/i],
   ['candle-holder',/\b(?:candle[ -]?(?:holder|stick|stand|bridge)s?|candelabra|tea[ -]?light[ -]?(?:holder|lantern)s?)\b/i],
@@ -38,7 +40,6 @@ export function classifyDecoration(p){
   if(id==='spray'&&/\b(?:snow spray|spray (?:paint|snow)|bauble|candle|tinsel)\b/i.test(title))continue;
   if(re.test(title))return {id,method:'product-title',matched:title};
  }
- const breadcrumb=(p.detailEvidence?.breadcrumbs||[]).join(' ');
  for(const [id,re]of rules)if(re.test(breadcrumb))return {id,method:'official-breadcrumb',matched:breadcrumb};
  // Only explicit descriptions of this object's type, not recommended companion items.
  const lead=text.slice(title.length,title.length+450);
@@ -59,3 +60,5 @@ export function productDimensions(specs={},description=''){
  const axes=Object.entries(values).map(([key,cm])=>({key,cm,label:fieldLabel(key)})),max=axes.length?Math.max(...axes.map(a=>a.cm)):null;
  return {values,axes,maxCm:max,evidence,label:axes.length?axes.map(a=>a.label+' '+a.cm+'cm').join(' × '):'尺寸未注明 · Size not specified'};
 }
+
+export function decorationMemberships(p,primary=classifyDecoration(p).id){const text=(p.detailEvidence?.breadcrumbs||[]).join(' '),ids=[primary];for(const [id,re]of [['outdoor',/outdoor|garden|lawn/i],['tree-decorations',/tree decorations/i],['wall',/wall decorations/i],['scenes',/scenes.{0,4}models/i],['inflatable',/inflatable/i]])if(re.test(text)||id==='outdoor'&&re.test(p.variantName+' '+(p.specifications?.['Indoor/Outdoor']||'')))ids.push(id);return [...new Set(ids)];}
