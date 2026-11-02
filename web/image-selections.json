@@ -78,5 +78,17 @@
     "sourceHero": "https://www.therange.co.uk/media/2/3/1785851742_4549.jpg",
     "selectedImage": "https://www.therange.co.uk/media/8/2/1790229296_3348.jpg",
     "reason": "官网主图为厂商标志或电源／支架配件；改选同一SKU官方图库中的商品图，保留来源。"
+  },
+  "5448867": {
+    "sourceHero": "/img/placeholder.jpg",
+    "selectedImage": "https://www.therange.co.uk/media/9/8/1765523528_11_6749.jpg",
+    "reason": "已核对同一SKU官方图库：白色金属展示架整件主图，排除尺寸示意和局部图。",
+    "reviewedAt": "2026-11-02T19:54:33.285501+00:00"
+  },
+  "6563713": {
+    "sourceHero": "/img/placeholder.jpg",
+    "selectedImage": "https://www.therange.co.uk/media/6/0/1764594114_11_7118.png",
+    "reason": "已核对同一SKU官方图库：红白糖果挂件独立图，排除场景树枝及另一款红绿装饰。",
+    "reviewedAt": "2026-11-02T19:54:33.285501+00:00"
   }
 }

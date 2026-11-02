@@ -70,7 +70,7 @@ export async function refreshDetails({previous,snapshot,reader,policy,budget,sta
 export function preserveImages(previous,next){
  const old=new Map(previous.products.map(p=>[p.sku,p]));let changed=0;
  for(const p of next.products){const before=old.get(p.sku),same=before&&(before.variantImageUrl||before.imageUrl)===(p.variantImageUrl||p.imageUrl);
-  if(!same){changed++;delete p.cachedImageUrl;p.imageStatus='图片地址已更新，浏览器直接加载原站照片'}else{p.imageStatus=before.imageStatus||'沿用原站照片地址';if(before.cachedImageUrl)p.cachedImageUrl=before.cachedImageUrl}
+  if(!same){changed++;delete p.cachedImageUrl;delete p.imageCacheEvidence;delete p.paletteEvidence;p.imageStatus='图片地址已更新，浏览器直接加载原站照片'}else{p.imageStatus=before.imageStatus||'沿用原站照片地址';if(before.cachedImageUrl)p.cachedImageUrl=before.cachedImageUrl}
  }
  return {mode:'source-addresses-and-cache',changed,unchanged:next.products.length-changed,paidImageRequests:0,imageMapFingerprint:imageMapFingerprint(next.products)};
 }

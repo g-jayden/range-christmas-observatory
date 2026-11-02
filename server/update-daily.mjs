@@ -7,7 +7,7 @@ import {enrichProducts,selectGalleryImages} from './enrich-appearance.mjs';
 import fs from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {createFirecrawlBrowserReader} from './firecrawl-browser.mjs';
-import {openCreditBudget} from './credit-budget.mjs';
+import {openCreditBudget,budgetError} from './credit-budget.mjs';
 import {loadPolicy,digest,imageMapFingerprint,productKey,unchangedDetailInput} from './collection-policy.mjs';
 import {catalogueSnapshot,readState,refreshDetails,preserveImages,saveState,cacheProduct,restoreProducts} from './incremental.mjs';
 import {checkNew,finishNewEvents,captureNewScreenshots} from './new-events.mjs';
@@ -71,6 +71,7 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
   next.updatedAt=new Date(now()).toISOString();next.revision=digest({observedAt:next.observedAt,products:next.products,sources:next.sources,excluded:next.excluded});
   const oldStatus=previousStatus;
   if(!browserImageAudit&&oldStatus.browserImageAudit&&imageMapFingerprint(previous.products)===imageMapFingerprint(next.products))state.browserImageAudit={...oldStatus.browserImageAudit,catalogueRevision:next.revision,imageMapReconciled:true};
+  if(detailEnabled&&decorations?.detailAudit?.issues?.some(p=>p.transient||p.deferred))throw budgetError('Partial detail responses are checkpointed; resume only unfinished families');
   if(detailEnabled&&audit.deferred>0)throw Error('本轮具体SKU核验未全部完成，拒绝将局部结果作为全量更新发布');
   if(state.browserImageAudit)state.browserImageAudit.catalogueRevision=next.revision;
   await budget.settle({credits:metrics.firecrawlCredits||0,receipt:metrics.receipt||null,report});

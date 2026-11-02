@@ -9,6 +9,7 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
  try{
   const plan=await controlCall('/internal/monitor-plan',{lease,products:snapshot.products.map(p=>({sku:p.sku,sourceUrl:p.sourceUrl,newStatus:p.newStatus,kind:p.kind,variantName:p.variantName,priceGBP:p.priceGBP,variantImageUrl:p.variantImageUrl,imageUrl:p.imageUrl}))});
   const current=new Map(snapshot.products.map(p=>[p.sku,p]));
+  const pending=plan.candidates.map(p=>current.get(p.sku)).filter(Boolean);if(pending.length)await reader.prepareFamilies?.(pending);
   for(const candidate of plan.candidates){
    const p=current.get(candidate.sku),key=p&&productKey(p,policy)+':screenshot',failure=key&&state.failures[key];
    if(!p||attempted>=policy.maxScreenshotPagesPerRun||budget.remaining()<1||failure?.fingerprint===detailFingerprint(p)&&Date.parse(failure.retryAt)>now()){deferred++;continue;}

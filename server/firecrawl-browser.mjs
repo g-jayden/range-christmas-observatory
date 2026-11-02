@@ -66,10 +66,10 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   })();fallbackCache.set(url,promise);return promise;
  }
 
- async function scriptAction(script){
+ async function scriptAction(script,{needsImages=false}={}){
   guard();if(fallbackReserved>=availableFallback())throw budgetError('批量核验已达到本轮付费请求上限');fallbackReserved++;metrics.scrapeRequests++;
   let charged=false;try{
-   const result=await api('scrape','POST',{url:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776',formats:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,blockAds:false,parsers:[],timeout:90000,actions:[{type:'executeJavascript',script}]});
+   const result=await api('scrape','POST',{url:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776',formats:needsImages?['rawHtml',{type:'screenshot',fullPage:false}]:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,blockAds:false,parsers:[],timeout:90000,actions:[{type:'executeJavascript',script}]});
    const cost=result.data?.metadata?.creditsUsed;scrapeCredits+=Number.isFinite(cost)?cost:1;charged=true;if(!Number.isFinite(cost))scrapeBillingVerified=false;
    if(result.data?.metadata?.statusCode!==200)throw new SourceError('图片批量核验入口失败 HTTP '+result.data?.metadata?.statusCode,result.data?.metadata?.statusCode||0);
    let value=result.data?.actions?.javascriptReturns?.[0]?.value;if(typeof value==='string')value=JSON.parse(value);
@@ -184,7 +184,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   const elapsed=Date.now()-started,good=results.filter(r=>r.bundle?.status===200&&r.bundle?.variants?.length&&r.bundle?.evidence?.productId).length,deferred=results.filter(r=>r.deferred).length;metrics.familyBatchTimings||=[];metrics.familyBatchTimings.push({count:batchUrls.length,elapsedMs:elapsed,good,deferred});
   if(policy.adaptiveFamilies){const processed=results.filter(r=>!r.deferred).length;if(deferred)policy.familyBatchSize=Math.max(100,Math.min(400,Math.ceil(processed*1.05)));else if(elapsed<65000)policy.familyBatchSize=Math.min(400,Math.max(100,batchUrls.length*2));}
   if(results.length!==batchUrls.length||results.some(r=>!batchUrls.includes(r.url)))throw Error('商品系列批量补查地址不一致');
-  for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();b.evidence.sourceTransport='enhanced-batch';families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else {const error=new SourceError('官网商品详情链接异常，未返回可核实的具体SKU规格；本轮目录价格、库存、NEW与图片独立更新',b?.status||0);familyFailures.set(r.url,error);console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}}}
+  for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();b.evidence.sourceTransport='enhanced-batch';families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else {const error=new SourceError('官网商品详情链接异常，未返回可核实的具体SKU规格；本轮目录价格、库存、NEW与图片独立更新',b?.status||0);error.deferred=Boolean(r.deferred);error.transient=r.deferred||b?.status===0||b?.status===429||b?.status>=500;familyFailures.set(r.url,error);console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}}}
  };
  reader.auditImages=async (products,previous={},options={})=>{
   const allUrls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))],results=[],known=[],newUrls=[],validPrior={};
@@ -198,9 +198,9 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   await fs.mkdir('web/images/source',{recursive:true});let rechecked=0,changed=0;
   for(let taskIndex=0;taskIndex<tasks.length;taskIndex++){
    guard();const task=tasks[taskIndex],items=task.urls.map(url=>({url,prior:validPrior[url],hashOnly:task.hashOnly}));metrics.imageBatchRequests=(metrics.imageBatchRequests||0)+1;
-   const batch=await scriptAction('('+readImageBatch.toString()+')('+JSON.stringify(items)+')');
+   const batch=await scriptAction('('+readImageBatch.toString()+')('+JSON.stringify(items)+')',{needsImages:true});
    if(batch.length!==items.length||batch.some(r=>!items.some(i=>i.url===r.url)))throw Error('图片批量核验没有返回全部请求地址');
-   if(taskIndex===0&&batch.filter(r=>!r.ok||r.width<64||r.height<64).length>batch.length*.8)throw Error('图片主通道未通过，停止后续付费批次');
+   if(taskIndex===0&&batch.filter(r=>!r.ok||r.width<64||r.height<64).length>batch.length*.8){console.error(JSON.stringify({phase:'image-batch-failure',count:batch.length,failures:batch.filter(r=>!r.ok||r.width<64||r.height<64).slice(0,3).map(({url,status,error,debug})=>({url,status,error,debug}))}));throw Error('图片主通道未通过，停止后续付费批次');}
    rechecked+=batch.length;const needsBody=[];
    for(const item of batch){
     item.observedAt=new Date(now()).toISOString();if(item.width<64||item.height<64){item.ok=false;item.error='placeholder-too-small'}
