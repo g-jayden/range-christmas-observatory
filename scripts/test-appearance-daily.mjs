@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';import fs from 'node:fs/promises';import {TREE_STYLES,descriptionFacts,applyAppearance,normaliseColors,materialFacts} from '../server/appearance.mjs';import {dailyDue} from '../server/daily-monitor-state.mjs';import {nextNewCheck} from '../server/schedule.mjs';
-assert.equal(TREE_STYLES.length,7);assert.equal(new Set(TREE_STYLES).size,7);
+assert.deepEqual(normaliseColors('Natural Green'),['绿色']);assert.equal(TREE_STYLES.length,7);assert.equal(new Set(TREE_STYLES).size,7);
 assert.deepEqual(normaliseColors('GREEN & White / green'),['绿色','白色']);assert.deepEqual(normaliseColors('Dark Grey'),['深空灰色']);
 const t={kind:'tree',variantName:'Artificial Christmas Tree - Non-Flocked',specifications:{Design:'Non-Flocked'},listingFeatures:{snow:true}};t.appearanceSource=descriptionFacts(t,t.specifications,'An unlit traditional artificial Christmas tree. Lights not included.');applyAppearance(t,{colors:['绿色'],form:'standard'});assert.equal(t.style,'标准款');assert(!t.appearanceSource.flags.prelit);assert(!t.appearanceSource.flags.snow);
 const other={kind:'tree',variantName:'Standing paper Christmas tree'};other.appearanceSource=descriptionFacts(other,{},'');applyAppearance(other,{form:'other',colors:['黑色']});assert.equal(other.style,'其它树形类别');

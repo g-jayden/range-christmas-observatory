@@ -1,4 +1,4 @@
-import {DEPARTMENTS,DEPARTMENT_MAP} from '../web/catalogue-model.mjs';
+import {DEPARTMENTS,DEPARTMENT_MAP,colourLabel,STYLE_EN} from '../web/catalogue-model.mjs';
 import {firstRun,advanceRun,scheduleLabel,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';
 const SITE='https://g-jayden.github.io';
 const HOME=SITE+'/range-christmas-observatory/';
@@ -17,10 +17,13 @@ function mailAssets(p){
  return [{name:'NEW-'+p.sku+'-card.png',url:allowed(m.card.url)},{name:'NEW-'+p.sku+'-original.'+new URL(m.original.url).pathname.split('.').pop(),url:allowed(m.original.url)},...(m.proof?.url?[{name:'NEW-'+p.sku+'-source-page.png',url:allowed(m.proof.url)}]:[])];
 }
 function productMail(p,origin,test=false,unsubscribe=null){
- const m=p.mailAssets,has=m?.card?.url&&m?.original?.url; if(has)mailAssets(p);
+ const m=p.mailAssets,has=m?.card?.url&&m?.original?.url;if(has)mailAssets(p);
  const checked=p.newEvidence?.observedAt||p.observedAt||p.detectedAt;
- const header=test?'测试示例 · 原站NEW标记，不代表今天首次上架':'NEW · '+(p.kind==='decoration'?(DEPARTMENT_MAP[p.department]?.label||'圣诞装饰品 · Christmas Decorations'):p.kind==='skirt'?'圣诞树裙 · Tree Skirts':'圣诞树 · Christmas Trees');
- return `<div style="font:16px/1.8 Arial,sans-serif;max-width:900px;margin:auto;color:#173c32"><p>${esc(header)}</p><h1>${esc(p.variantName)}</h1>${has?`<p style="background:#eef4ed;padding:14px">直接保存到手机：长按下方图片，选择“保存图片／存储图像”；也可点邮件底部的图片附件，打开后保存。<br>完整信息卡：NEW-${esc(p.sku)}-card.png<br>官网原图：NEW-${esc(p.sku)}-original.${esc(new URL(m.original.url).pathname.split('.').pop())}</p><h2>完整商品信息卡</h2><img src="${esc(m.card.url)}" alt="完整商品信息卡：长按图片保存到相册" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><h2>官网原图</h2><img src="${esc(m.original.url)}" alt="官网原始商品照片：长按图片保存到相册" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><p>官网原图 ${Number(m.original.width)}×${Number(m.original.height)} 像素，原文件未经放大或二次压缩。完整信息卡和原图均已随邮件附上，保存附件可保留原始文件。</p>`:`<img src="${origin}/shots/${p.imageAccess}" alt="具体SKU原站截图" style="width:100%;height:auto">`}<p>SKU：${esc(p.sku)}<br>价格：£${Number(p.priceGBP).toFixed(2)}${p.kind==='tree'?'<br>高度：'+esc(p.heightLabel||'未提供'):''}<br>本体颜色：${esc(p.treeColor||'待核验')}<br>${p.kind==='tree'?'分类：'+esc(p.style||'其它树形类别'):'材质：'+esc(p.material||'未提供')}</p><p><a href="${esc(p.sourceUrl)}">查看原站具体SKU购买页</a></p><p style="font-size:13px;color:#607168">价格与NEW核验时间：${esc(checked)}；下单时以官网为准。${test?'本测试不改变新品去重基线。':''}</p>${unsubscribe?`<p><a href="${esc(unsubscribe)}">取消订阅</a> · <a href="${HOME}">查看分析网站</a></p>`:`<p><a href="${HOME}">查看分析网站</a></p>`}</div>`;
+ const header=test?'测试示例 · Test example; source NEW, not a first discovery today':'NEW · '+(DEPARTMENT_MAP[p.kind==='decoration'?p.department:p.kind]?.label||'圣诞装饰品 · Christmas Decorations');
+ const ext=has?new URL(m.original.url).pathname.split('.').pop():null;
+ const attributes=[['SKU',p.sku],['价格 · Price','£'+Number(p.priceGBP).toFixed(2)],['尺寸 · Size',p.kind==='tree'?p.heightLabel:p.dimensions?.label||p.skirtDiameterCm&&p.skirtDiameterCm+'cm'||'原站未注明 · Not specified'],['本体颜色 · Body colours',(p.colorValues||[]).map(colourLabel).join(' / ')||p.treeColor||'待核验 · Unconfirmed'],['材质 · Materials',p.material||'原站未注明 · Not specified']];
+ if(p.kind==='tree')attributes.push(['分类 · Shape',p.style+' · '+(STYLE_EN[p.style]||'Other')]);
+ return `<div style="font:16px/1.8 Arial,sans-serif;max-width:900px;margin:auto;color:#173c32"><p>${esc(header)}</p><h1>${esc(p.variantName)}</h1>${has?`<p style="background:#eef4ed;padding:14px">直接保存到手机：长按下方图片选择“保存图片／存储图像”，或打开邮件底部的图片附件保存。<br>Long-press an image to save it, or open the image attachments below.<br>完整信息卡 · Product card: NEW-${esc(p.sku)}-card.png<br>官网原图 · Source original: NEW-${esc(p.sku)}-original.${esc(ext)}</p><h2>完整商品信息卡 · Full product card</h2><img src="${esc(m.card.url)}" alt="完整商品信息卡 · Full product card; long-press to save" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><h2>官网原图 · Original product photo</h2><img src="${esc(m.original.url)}" alt="官网原图 · Original source photo; long-press to save" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><p>官网原图 ${Number(m.original.width)}×${Number(m.original.height)} 像素，原文件未经放大或二次压缩；保存附件可保留原始文件。<br>Original source bytes, with no enlargement or recompression. Save the attachment to retain the original file.</p>`:`<img src="${origin}/shots/${p.imageAccess}" alt="具体SKU原站截图 · Exact SKU source screenshot" style="width:100%;height:auto">`}<p>${attributes.map(([label,value])=>esc(label)+'：'+esc(value)).join('<br>')}</p><p><a href="${esc(p.sourceUrl)}">查看原站具体SKU购买页 · View exact SKU product page</a></p><p style="font-size:13px;color:#607168">价格与NEW核验 · Price / NEW checked: ${esc(checked)}。下单时以官网为准 · Confirm live details before purchase.${test?' 本测试不改变新品基线 · This test does not change the NEW baseline.':''}</p><p>${unsubscribe?`<a href="${esc(unsubscribe)}">取消订阅 · Unsubscribe</a> · `:''}<a href="${HOME}">查看分析网站 · View analysis</a></p></div>`;
 }
 export class Control{
  constructor(ctx,env){this.ctx=ctx;this.env=env;this.db=ctx.storage;}
@@ -60,8 +63,8 @@ export class Control{
   }
   if(['/confirm','/unsubscribe'].includes(route)&&req.method==='GET'){
    const raw=url.searchParams.get('token')||'';if(raw.length>160)return response({error:'无效链接'},400);
-   const label=route==='/confirm'?'确认订阅新品邮件':'确认取消新品邮件';
-   return new Response(`<!doctype html><html lang="zh-CN"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${label}</title><body style="font:18px/1.8 system-ui;padding:30px;max-width:650px;margin:auto"><h1>${label}</h1><p>圣诞树与树裙新品观察。邮件包含新品商品页截图和购买链接。</p><form method="post"><input type="hidden" name="token" value="${esc(raw)}"><button style="font:inherit;padding:12px">${label}</button></form><p><a href="${HOME}">返回产品分析网站</a></p></body></html>`,{headers:{'content-type':'text/html;charset=utf-8','cache-control':'no-store','referrer-policy':'no-referrer'}});
+   const label=route==='/confirm'?'确认订阅新品邮件 · Confirm subscription':'确认取消新品邮件 · Confirm unsubscribe';
+   return new Response(`<!doctype html><html lang="zh-CN"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${label}</title><body style="font:18px/1.8 system-ui;padding:30px;max-width:650px;margin:auto"><h1>${label}</h1><p>订阅所选圣诞品类。每天北京时间07:00检查，有新品才发送信息卡、原图与购买链接。<br>Selected Christmas departments; checked daily at 07:00 Beijing time. Email only for newly discovered NEW products, with product cards and original photos.</p><form method="post"><input type="hidden" name="token" value="${esc(raw)}"><button style="font:inherit;padding:12px">${label}</button></form><p><a href="${HOME}">返回产品分析网站 · View analysis</a></p></body></html>`,{headers:{'content-type':'text/html;charset=utf-8','cache-control':'no-store','referrer-policy':'no-referrer'}});
   }
   if(['/confirm','/unsubscribe'].includes(route)&&req.method==='POST'){
    const form=await req.formData(),key=await hash(String(form.get('token')||'')),record=await this.db.get('token/'+key);
@@ -69,7 +72,7 @@ export class Control{
    const sub=await this.db.get('sub/'+record.id);if(!sub)return response({error:'订阅不存在'},400);
    if(route==='/confirm'){sub.confirmedAt=new Date().toISOString();await this.db.put('sub/'+record.id,sub);await this.db.delete('token/'+key)}
    else{await this.db.delete('sub/'+record.id);await this.db.delete('token/'+key)}
-   return new Response(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><p>${route==='/confirm'?'订阅已确认。只推送订阅后新发现的NEW，不补发已有基线商品。':'已取消订阅。'}</p><a href="${HOME}">返回网站</a>`,{headers:{'content-type':'text/html;charset=utf-8','cache-control':'no-store'}});
+   return new Response(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><p>${route==='/confirm'?'订阅已确认 · Subscription confirmed. 只推送订阅后新发现的NEW，不补发已有基线商品 · Existing baseline products are excluded.':'已取消订阅 · Unsubscribed.'}</p><a href="${HOME}">返回网站 · View analysis</a>`,{headers:{'content-type':'text/html;charset=utf-8','cache-control':'no-store'}});
   }
   if(req.method==='POST'&&route==='/unsubscribe-by-email'){
    const b=await req.json(),email=String(b.email||'').trim().toLowerCase();if(!validEmail(email))return response({error:'请输入一个有效邮箱地址。'},400);
@@ -87,7 +90,7 @@ export class Control{
    if(rate.count>=5||old&&Date.now()-old.requestedAt<60000)return response({error:'申请过于频繁，请稍后重试。'},429);
    rate.count++;await this.db.put(limitKey,rate);
    const confirm=token(),unsub=token(),now=Date.now(),scopes=allowedScopes.filter(x=>(body.scopes||['tree','skirt']).includes(x));if(!scopes.length)return response({error:'至少选择一个产品范围。'},400);
-   await this.send(email,'请确认：圣诞新品邮件订阅',`<h2>确认接收圣诞新品</h2><p>发现新的NEW商品后，我们会发送原站商品页截图与具体SKU购买链接。</p><p><a href="${HOME}confirm.html#token=${encodeURIComponent(confirm)}">确认订阅</a></p><p>如果不是你申请，请忽略此邮件。确认链接24小时内有效。</p>`);
+   await this.send(email,'请确认 · Confirm Christmas NEW subscription',`<h2>确认接收圣诞新品 · Confirm subscription</h2><p>每天北京时间07:00检查所选品类，有新品才发邮件，包含完整信息卡、官网原图与具体SKU购买链接。<br>Selected departments are checked daily at 07:00 Beijing time. New discoveries include product cards, original source photos and exact SKU links.</p><p>订阅范围 · Departments: ${scopes.map(id=>esc(DEPARTMENT_MAP[id].label)).join(' / ')}</p><p><a href="${HOME}confirm.html#token=${encodeURIComponent(confirm)}">确认订阅 · Confirm subscription</a></p><p>如果不是你申请，请忽略此邮件。确认链接24小时内有效。<br>Ignore this email if you did not request it. Link expires in 24 hours.</p>`);
    await this.db.put('sub/'+id,{email,scopes,requestedAt:now,confirmedAt:null,unsubscribe:unsub});
    await this.db.put('token/'+await hash(confirm),{id,action:'/confirm',expires:now+86400000});
    await this.db.put('token/'+await hash(unsub),{id,action:'/unsubscribe',expires:now+3660*86400000});
