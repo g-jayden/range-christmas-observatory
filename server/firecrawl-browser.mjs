@@ -6,7 +6,11 @@ import {budgetError} from './credit-budget.mjs';
 
 async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000}){
  const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch{return {status:0}}};
- const [data,html]=await Promise.all([initial?{status:200,value:initial}:read(jsonUrl,true),providedHtml?{status:200,value:providedHtml}:read(url,false)]);
+ let [data,html]=await Promise.all([initial?{status:200,value:initial}:read(jsonUrl,true),providedHtml?{status:200,value:providedHtml}:read(url,false)]);
+ // Retry only the failed half once, inside this already-paid batch. Never
+ // throw away a successful JSON or HTML response or repeat a completed family.
+ const transient=r=>r.status===0||r.status===429||r.status>=500;
+ [data,html]=await Promise.all([transient(data)?read(jsonUrl,true):data,transient(html)?read(url,false):html]);
  if(data.status!==200||html.status!==200)return {status:data.status!==200?data.status:html.status,jsonStatus:data.status,htmlStatus:html.status,jsonBody:data.value,html:html.value};
  const body=data.value,doc=new DOMParser().parseFromString(html.value,'text/html'),plain=html=>new DOMParser().parseFromString(String(html||''),'text/html').body.textContent.replace(/\s+/g,' ').trim();
  const description=doc.querySelector('#product-description')?.cloneNode(true);description?.querySelectorAll('a,script,style,#product-dyn-variant-desc').forEach(e=>e.remove());
@@ -182,7 +186,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   const script='(async()=>{const read='+readFamilyBundle.toString()+';const urls='+JSON.stringify(batchUrls)+';let cursor=0;const results=[],end=Date.now()+50000;await Promise.all(Array.from({length:'+String(policy.familyBatchConcurrency||4)+'},async()=>{while(cursor<urls.length&&Date.now()<end){const url=urls[cursor++];try{results.push({url,bundle:await read({url,jsonUrl:url+"?json",timeoutMs:'+String(policy.familyFetchTimeoutMs||10000)+'})})}catch(e){results.push({url,error:e.message})}}}));while(cursor<urls.length)results.push({url:urls[cursor++],deferred:true,error:"bounded batch time limit"});return results})()';
   const started=Date.now(),results=await scriptAction(script);
   const elapsed=Date.now()-started,good=results.filter(r=>r.bundle?.status===200&&r.bundle?.variants?.length&&r.bundle?.evidence?.productId).length,deferred=results.filter(r=>r.deferred).length;metrics.familyBatchTimings||=[];metrics.familyBatchTimings.push({count:batchUrls.length,elapsedMs:elapsed,good,deferred});
-  if(policy.adaptiveFamilies){if(deferred||elapsed>45000)policy.familyBatchSize=Math.max(25,Math.floor(batchUrls.length/2));else if(good>=batchUrls.length*.9&&elapsed<22000)policy.familyBatchSize=Math.min(400,batchUrls.length*2);}
+  if(policy.adaptiveFamilies){if(deferred||elapsed>45000)policy.familyBatchSize=Math.max(25,Math.floor(batchUrls.length/2));else if(good>=batchUrls.length*.85&&elapsed<40000)policy.familyBatchSize=Math.min(400,batchUrls.length*2);}
   if(results.length!==batchUrls.length||results.some(r=>!batchUrls.includes(r.url)))throw Error('商品系列批量补查地址不一致');
   for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();b.evidence.sourceTransport='enhanced-batch';families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else {const error=new SourceError('官网商品详情链接异常，未返回可核实的具体SKU规格；本轮目录价格、库存、NEW与图片独立更新',b?.status||0);familyFailures.set(r.url,error);console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}}}
  };

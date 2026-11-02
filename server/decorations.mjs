@@ -33,22 +33,22 @@ export async function saveDecorationDetails(products){
 }
 export const detailUrl=p=>'decoration-details/'+p.sku.slice(-2).padStart(2,'0')+'.json';
 export function compactDecoration(p){
- const keys=['sku','kind','department','departmentIds','variantName','name','brand','priceGBP','originalPrice','currency','sourceUrl','variantImageUrl','imageUrl','cachedImageUrl','imageCacheEvidence','newStatus','newEvidence','firstObservedAt','firstNewObservedAt','arrivalEvidence','everNew','observedAt','attributeObservedAt','detailInputFingerprint','detailsReady','dimensions','material','colorValues','treeColor','paletteEvidence','classificationEvidence','originalImageUrl','originalImageEvidence','mailAssets'];
+ const keys=['sku','kind','department','departmentIds','variantName','name','brand','priceGBP','originalPrice','currency','sourceUrl','listingVariantImageUrl','variantImageUrl','imageUrl','cachedImageUrl','imageCacheEvidence','newStatus','newEvidence','firstObservedAt','firstNewObservedAt','arrivalEvidence','everNew','observedAt','attributeObservedAt','detailInputFingerprint','detailsReady','dimensions','material','colorValues','treeColor','paletteEvidence','classificationEvidence','originalImageUrl','originalImageEvidence','mailAssets'];
  const out=Object.fromEntries(keys.filter(k=>p[k]!==undefined).map(k=>[k,p[k]]));out.detailsReady=Boolean(p.detailEvidence?.verifiedProductSection&&String(p.detailEvidence.selectedSku)===p.sku&&p.attributeObservedAt);out.detailsUrl=detailUrl(p);return out;
 }
 export async function updateDecorationDetails(snapshot,reader,{maxFamilies=Infinity,refreshAll=false}={}){
  await loadDecorationDetails(snapshot.products);
- const selected=snapshot.products.filter(p=>refreshAll||!p.detailsReady),families=[...new Set(selected.map(p=>p.sourceUrl.split('#')[0].replace(/\/$/,'')))].slice(0,maxFamilies),wanted=new Set(families),issues=[];
+ const selected=snapshot.products.filter(p=>refreshAll||!p.detailsReady),families=[...new Set(selected.map(p=>p.sourceUrl.split('#')[0].replace(/\/$/,'')))].slice(0,maxFamilies),wanted=new Set(families),issues=[];let refreshed=0;
  const queue=selected.filter(p=>wanted.has(p.sourceUrl.split('#')[0].replace(/\/$/,'')));
  // One enhanced request reads up to 200 complete families, not one paid request per SKU.
  const grouped=new Map();for(const p of queue){const key=p.sourceUrl.split('#')[0].replace(/\/$/,'');if(!grouped.has(key))grouped.set(key,[]);grouped.get(key).push(p);}
  const urls=[...grouped.keys()];for(let offset=0;offset<urls.length;){const size=reader.recommendedFamilyBatchSize?.()||100;const chosen=urls.slice(offset,offset+size);offset+=chosen.length;const batch=chosen.flatMap(url=>grouped.get(url));await reader.prepareFamilies(batch);
   for(const p of batch)try{const response=await reader.raw(p.sourceUrl,{formats:['rawHtml','markdown']});const d=parseDetails(response,p.sku,p.sourceUrl);applyDetails(p,d);p.sourceDescription=d.featuresText;p.dimensions=productDimensions(d.specs,d.featuresText);p.detailsReady=true;p.detailInputFingerprint=detailFingerprint(p);p.material=materialFacts(d.specs,d.featuresText).label;const cls=classifyDecoration(p);p.department=cls.id;p.departmentIds=decorationMemberships(p,cls.id);p.classificationEvidence=cls;
-   if(/\b(?:outdoor|garden|lawn|weatherproof)\b/i.test(p.variantName+' '+(d.specs['Indoor/Outdoor']||''))&&!p.departmentIds.includes('outdoor'))p.departmentIds.push('outdoor');
+   if(/\b(?:outdoor|garden|lawn|weatherproof)\b/i.test(p.variantName+' '+(d.specs['Indoor/Outdoor']||''))&&!p.departmentIds.includes('outdoor'))p.departmentIds.push('outdoor');delete p.detailError;refreshed++;
   }catch(e){issues.push({sku:p.sku,reason:String(e.message).slice(0,200)});p.detailError=String(e.message).slice(0,200);}
   await saveDecorationDetails(snapshot.products.filter(p=>p.detailsReady));console.log(JSON.stringify({phase:'decoration-SKU-details',verified:snapshot.products.filter(p=>p.detailsReady).length,total:snapshot.products.length,families:reader.familyCount?.()}));
  }
- return {verified:snapshot.products.filter(p=>p.detailsReady).length,total:snapshot.products.length,issues};
+ return {verified:snapshot.products.filter(p=>p.detailsReady).length,total:snapshot.products.length,requested:queue.length,refreshed,issues};
 }
 export function sourceColours(p){
  const raw=p.sourceColour||p.specifications?.Colour||p.specifications?.Color||'',title=p.variantName||'',named=normaliseColors(title),specified=normaliseColors(raw);
@@ -83,5 +83,9 @@ export async function publishDecorations(snapshot){
  const products=snapshot.products.map(compactDecoration);snapshot.stats=Object.fromEntries(decorationDepartments.map(d=>[d.id,{count:products.filter(p=>p.departmentIds.includes(d.id)).length,newCount:products.filter(p=>p.departmentIds.includes(d.id)&&(p.newStatus||p.firstNewObservedAt)).length}]));
  snapshot.products=products;snapshot.revision=digest({at:snapshot.observedAt,products});await atomicJson('web/decorations.json',snapshot);
 }
+export async function publishDecorationStatus(snapshot,native={}){
+ const verified=snapshot.products.filter(p=>p.detailsReady).length;
+ await atomicJson('web/decorations-status.json',{state:snapshot.ready?'active':'needs-review',observedAt:snapshot.observedAt,revision:snapshot.revision,products:snapshot.products.length,verified,imageFailures:snapshot.browserImageAudit?.failed??null,native});
+}
 
-export function notificationSnapshot(trees,decorations){const map=new Map(trees.products.map(p=>[p.sku,p]));for(const p of decorations?.products||[]){const prior=map.get(p.sku);if(prior){prior.departmentIds=p.departmentIds;prior.department=p.department;}else map.set(p.sku,p);}return {...trees,products:[...map.values()]};}
+export function notificationSnapshot(trees,decorations){const map=new Map(trees.products.map(p=>[p.sku,p]));for(const p of decorations?.products||[]){const prior=map.get(p.sku);if(prior){prior.departmentIds=p.departmentIds;prior.department=p.department;}else map.set(p.sku,p);}return {...trees,observedAt:Date.parse(decorations?.observedAt)>Date.parse(trees.observedAt)?decorations.observedAt:trees.observedAt,products:[...map.values()]};}

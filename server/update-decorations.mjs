@@ -13,7 +13,7 @@ export async function seedDecorationBaseline(snapshot,controlCall=control){
  await controlCall('/internal/extend-baseline',{scope:'christmas-decorations-v1',records:snapshot.products.map(p=>({sku:p.sku,everNew:p.everNew||p.newStatus})),observedAt:snapshot.observedAt});
 }
 export async function runDecorationUpdate({readerFactory=createFirecrawlBrowserReader,budgetFactory=openCreditBudget}={}){
- const policy={...await loadPolicy(),familyBatchSize:100,familyBatchConcurrency:8,familyFetchTimeoutMs:8000,adaptiveFamilies:true,maxFallbackScrapesPerRun:56,imageBodyBatchSize:500,imageCheckpoint:'web/decoration-image-checkpoint.json'},previous=await readDecorations();let reader,budget,snapshot;
+ const policy={...await loadPolicy(),familyBatchSize:100,familyBatchConcurrency:16,familyFetchTimeoutMs:8000,adaptiveFamilies:true,maxFallbackScrapesPerRun:56,imageBodyBatchSize:500,imageCheckpoint:'web/decoration-image-checkpoint.json'},previous=await readDecorations();let reader,budget,snapshot;
  try{
   budget=await budgetFactory(policy);reader=await readerFactory({policy,budget});
   policy.repairImagesOnly=!previous.ready;const checkpoint=await fs.readFile('web/decoration-image-checkpoint.json','utf8').then(JSON.parse).catch(()=>({entries:{}}));
@@ -26,7 +26,7 @@ export async function runDecorationUpdate({readerFactory=createFirecrawlBrowserR
   await reader.close();const native=reader.metrics();
   await budget.settle({credits:native.firecrawlCredits,receipt:native.receipt,report:{mode:'christmas-decorations',native,detailAudit,products:snapshot.products.length}});
   snapshot.appearanceAudit=await enrichDecorations(snapshot.products);snapshot.browserImageAudit=browserImageAudit;snapshot.detailAudit=detailAudit;snapshot.collectionAudit={native,completedAt:new Date().toISOString(),directoryRequestsReusedAcrossTwelveCategories:true};
-  snapshot.ready=detailAudit.verified===snapshot.products.length&&browserImageAudit.failed===0;
+  snapshot.ready=detailAudit.verified===snapshot.products.length&&detailAudit.issues.length===0&&browserImageAudit.failed===0;
   // An incomplete first scan is reviewable but cannot seed NEW or pretend all fields passed.
   if(!previous.baselineReady&&snapshot.ready){await seedDecorationBaseline(snapshot);snapshot.baselineReady=true;}
   await publishDecorations(snapshot);

@@ -19,6 +19,13 @@ export function isToday(p,now=Date.now()){return p.arrivalEvidence==='observed-a
 export function isNew(p){return p.newStatus===true||Boolean(p.firstNewObservedAt&&p.arrivalEvidence==='observed-after-baseline')}
 export function inDepartment(p,id){return p.kind===id||p.department===id||(p.departmentIds||[]).includes(id)}
 export function scopeProducts(products,id,mode='all',now=Date.now()){return products.filter(p=>inDepartment(p,id)&&(mode==='all'||(mode==='new'?isNew(p):isToday(p,now))))}
+export function availableProducts(source,arrivals={}){
+ const rows=new Map((source?.products||[]).map(p=>[p.sku,p]));
+ const sourceAt=Date.parse(source?.observedAt)||0,arrivalAt=Date.parse(arrivals.observedAt)||0;
+ const live=arrivalAt>=sourceAt&&Array.isArray(arrivals.availableSkus)?new Set(arrivals.availableSkus):null;
+ for(const p of arrivals.products||[]){const prior=rows.get(p.sku);if(prior)rows.set(p.sku,Date.parse(p.observedAt)>Date.parse(prior.observedAt)?{...prior,...p}:{...p,...prior});else if(live?.has(p.sku)||arrivalAt>=sourceAt)rows.set(p.sku,p);}
+ return [...rows.values()].filter(p=>!live||live.has(p.sku));
+}
 export function classifyDecoration(p){
  const breadcrumb=(p.detailEvidence?.breadcrumbs||[]).join(' ');
  const title=String(p.variantName||p.name||''),description=p.appearanceSource?.descriptionText||p.sourceDescription||'',text=title+' '+description;

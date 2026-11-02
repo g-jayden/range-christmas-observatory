@@ -1,4 +1,4 @@
-import {readDecorations,enrichDecorations,publishDecorations,notificationSnapshot} from './decorations.mjs';
+import {readDecorations,loadDecorationDetails,enrichDecorations,publishDecorations,publishDecorationStatus,notificationSnapshot} from './decorations.mjs';
 import {collectDecorationDirectory} from './update-decorations.mjs';
 import {auditNotificationImages,buildMailAssets} from './mail-assets.mjs';
 import fs from 'node:fs/promises';
@@ -35,7 +35,7 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
   const appearanceAudit=candidates.length?await enrichProducts(candidates.filter(p=>p.kind!=='decoration')):{products:0,analysedImages:0,firecrawlCredits:0};
   // Do not send a screenshot whose exact SKU/body image failed validation.
   if(imageAudit?.failed)throw Error('新品商品图片未全部通过，未发送本轮通知');
-  if(!probe&&decorations){await enrichDecorations(candidates.filter(p=>p.kind==='decoration'));decorations.ready=previousDecorations.ready;await publishDecorations(decorations);}
+  if(!probe&&decorations){await enrichDecorations(candidates.filter(p=>p.kind==='decoration'));await loadDecorationDetails(decorations.products);decorations.ready=decorations.products.every(p=>p.detailsReady);await publishDecorations(decorations);await publishDecorationStatus(decorations,reader.metrics());}
   if(!probe)result=await finishNewEvents(result,{snapshot,lease:tick.monitorLease||tick.lease});
   const native=reader.metrics(),report={success:result.success,mode:probe?'daily-discovery-probe':'daily-new-only',observedAt:snapshot.observedAt,scanned:snapshot.products.length,candidates:result.captured,notification:result,fullDetailSweep:false,fullImageSweep:false,screenshotProbe,discoveryCredits:native.firecrawlCredits-validationCredits,validationCredits,appearanceAudit,native,firecrawlCredits:native.firecrawlCredits};
   await budget.settle({credits:native.firecrawlCredits||0,receipt:native.receipt,report});
@@ -46,7 +46,7 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
    const rows=new Map((old.products||[]).map(p=>[p.sku,p]));for(const p of additions)rows.set(p.sku,p);
    // Preserve daily first-NEW observations independently of full-refresh timing.
    const history=[...new Map([...(old.history||[]),...snapshot.products.filter(p=>p.firstNewObservedAt&&p.arrivalEvidence==='observed-after-baseline').map(p=>({sku:p.sku,firstNewObservedAt:p.firstNewObservedAt,firstObservedAt:p.firstObservedAt,everNew:true,arrivalEvidence:p.arrivalEvidence}))].map(p=>[p.sku,p])).values()];
-   await atomicJson('web/new-arrivals.json',{version:1,observedAt:snapshot.observedAt,products:[...rows.values()],history,browserImageAudit:imageAudit||old.browserImageAudit,revision:digest({at:snapshot.observedAt,history}),sourceCheckSuccess:result.success});
+   const availableSkus=snapshot.products.map(p=>p.sku);await atomicJson('web/new-arrivals.json',{version:2,observedAt:snapshot.observedAt,availableSkus,products:[...rows.values()],history,browserImageAudit:imageAudit||old.browserImageAudit,revision:digest({at:snapshot.observedAt,history,availableSkus}),sourceCheckSuccess:result.success});
    daily={...daily,state:result.success?(result.deliveryPending?'delivery-pending':'active'):'error',lastSuccess:result.success?snapshot.observedAt:daily.lastSuccess,lastError:result.success?null:'部分新品证据未通过核验，待下次每日任务处理',lastResult:report};await saveDailyMonitor(daily);
   }
   await saveState(state);console.log(JSON.stringify(report));outcome={success:result.success,catalogueReady:true,state:daily};
