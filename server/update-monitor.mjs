@@ -43,7 +43,7 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
    // Preserve daily first-NEW observations independently of full-refresh timing.
    const history=[...new Map([...(old.history||[]),...snapshot.products.filter(p=>p.firstNewObservedAt&&p.arrivalEvidence==='observed-after-baseline').map(p=>({sku:p.sku,firstNewObservedAt:p.firstNewObservedAt,firstObservedAt:p.firstObservedAt,everNew:true,arrivalEvidence:p.arrivalEvidence}))].map(p=>[p.sku,p])).values()];
    await atomicJson('web/new-arrivals.json',{version:1,observedAt:snapshot.observedAt,products:[...rows.values()],history,browserImageAudit:imageAudit||old.browserImageAudit,revision:digest({at:snapshot.observedAt,history}),sourceCheckSuccess:result.success});
-   daily={...daily,state:result.success?'active':'error',lastSuccess:result.success?snapshot.observedAt:daily.lastSuccess,lastError:result.success?null:'部分新品证据未通过核验，待下次每日任务处理',lastResult:report};await saveDailyMonitor(daily);
+   daily={...daily,state:result.success?(result.deliveryPending?'delivery-pending':'active'):'error',lastSuccess:result.success?snapshot.observedAt:daily.lastSuccess,lastError:result.success?null:'部分新品证据未通过核验，待下次每日任务处理',lastResult:report};await saveDailyMonitor(daily);
   }
   await saveState(state);console.log(JSON.stringify(report));outcome={success:result.success,catalogueReady:true,state:daily};
  }catch(e){

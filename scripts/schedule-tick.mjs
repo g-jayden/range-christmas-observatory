@@ -9,9 +9,10 @@ const previousStatus=await fs.readFile('web/status.json','utf8').then(JSON.parse
 const blocked=event==='schedule'&&sourceCircuitOpen(previousStatus.sourceHealth,process.env.COLLECTION_PROVIDER||'firecrawl-browser');
 if(!config.nextRunAt)config=firstRun(config);
 let daily=await readDailyMonitor();await saveDailyMonitor(daily);
+const cloudState=apiBase&&!blocked?await control('/public/status'):null,pendingDelivery=Number(cloudState?.monitor?.pendingDeliveries||0)>0;
 if(event!=='push'&&!['probe','repair','monitor-probe'].includes(mode)&&!blocked){
  if(apiBase){
-  const savedConfig=config;const state=await control('/public/status');config=state.config;
+  const savedConfig=config;const state=cloudState;config=state.config;
   if(!state.baselineReady){const d=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));await control('/internal/seed',{config:savedConfig,records:d.products.map(p=>({sku:p.sku,everNew:Boolean(p.everNew||p.newStatus)}))});config=(await control('/public/status')).config;}
   const wantsDaily=dailyDue(daily)||process.env.FORCE_MONITOR==='true';
   if(wantsDaily||Date.now()>=Date.parse(config.nextRunAt)){
@@ -22,7 +23,7 @@ if(event!=='push'&&!['probe','repair','monitor-probe'].includes(mode)&&!blocked)
  }else full=Date.now()>=Date.parse(config.nextRunAt);
  if(event==='workflow_dispatch'&&process.env.MANUAL_REFRESH!=='false')full=true;
 }
-const work=full||monitor,publish=mode!=='probe'&&(work||event==='push'||event==='workflow_dispatch');
+const work=full||monitor,publish=mode!=='probe'&&(work||pendingDelivery||event==='push'||event==='workflow_dispatch');
 await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/tick.json',JSON.stringify({config,full,monitor,lease,fullLease,monitorLease:monitor?lease:null,daily}));
-if(process.env.GITHUB_OUTPUT)await fs.appendFile(process.env.GITHUB_OUTPUT,`full=${full}\nmonitor=${monitor}\nwork=${work}\npublish=${publish}\nfull_lease=${fullLease||''}\n`);
-console.log(JSON.stringify({schedule:scheduleLabel(config),full,monitor,work,publish,sourceCircuitOpen:blocked,provider:'firecrawl-browser',sourceRequestsMade:false}));
+if(process.env.GITHUB_OUTPUT)await fs.appendFile(process.env.GITHUB_OUTPUT,`full=${full}\nmonitor=${monitor}\ndelivery=${pendingDelivery||monitor}\nwork=${work}\npublish=${publish}\nfull_lease=${fullLease||''}\n`);
+console.log(JSON.stringify({schedule:scheduleLabel(config),full,monitor,work,publish,pendingDelivery,sourceCircuitOpen:blocked,provider:'firecrawl-browser',sourceRequestsMade:false}));

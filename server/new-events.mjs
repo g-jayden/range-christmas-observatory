@@ -42,10 +42,12 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
 
 export async function finishNewEvents(result,{snapshot,lease,controlCall=control}={}){
  for(const event of result.events||[]){const p=snapshot.products.find(p=>p.sku===event.product.sku);if(p)event.product={...event.product,...p,description:event.product.mailAssets?event.product.description:(p.productSummary||event.product.description)};if(!event.product.mailAssets){const assets=await buildMailAssets(event.product,event.screenshotBase64);event.screenshotBase64=assets.attachmentBase64;event.product.description=(event.product.productSummary||event.product.description||'')+'。附件前半为完整商品信息卡，后半为同一SKU原站真实截图。保存完整信息卡与官网原图：'+assets.downloadUrl;event.product.screenshotKind=assets.attachmentKind;}}
- if(process.env.GITHUB_ACTIONS==='true'&&process.env.NOTIFICATION_PHASE!=='deliver'){await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/notification-outbox.private.json',JSON.stringify({result,snapshot:{products:(result.events||[]).map(e=>e.product)},lease}));const {events,...summary}=result;return {...summary,deliveryPending:true};}
- for(const event of result.events||[])await controlCall('/internal/event',event);
- let delivery;do{delivery=await controlCall('/internal/deliver',{});}while(delivery.morePending);
- await controlCall('/internal/monitor-complete',{lease,success:result.success,error:result.success?undefined:'部分新品截图或详情未通过核验，待下次每日任务处理',scanned:result.scanned,newCount:result.captured});
+ // Persist verified events in the private cloud queue before Pages publication.
+ // A runner or deploy failure must not lose a paid capture or require another scrape.
+ if(!result.queuePersisted){for(const event of result.events||[])await controlCall('/internal/event',event);result.queuePersisted=true;}
+ if(!result.monitorCompleted){await controlCall('/internal/monitor-complete',{lease,success:result.success,error:result.success?undefined:'部分新品截图或详情未通过核验',scanned:result.scanned,newCount:result.captured});result.monitorCompleted=true;}
+ if(process.env.GITHUB_ACTIONS==='true'&&process.env.NOTIFICATION_PHASE!=='deliver'){await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/notification-outbox.private.json',JSON.stringify({result,snapshot:{products:(result.events||[]).map(e=>e.product)},lease}));const {events,...summary}=result;return {...summary,deliveryPending:(result.events||[]).length>0};}
+ let delivery;for(let batch=0;batch<100;batch++){delivery=await controlCall('/internal/deliver',{});if(!delivery.morePending)break;}if(delivery.morePending)throw Error('仍有待发邮件，已保留云端队列');
  const {events,...publicResult}=result;return {...publicResult,delivery};
 }
 
