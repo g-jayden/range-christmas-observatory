@@ -4,7 +4,7 @@ const SHAPES=[['potted','a small Christmas tree supplied in a plant pot'],['popu
 let engine;
 async function classifier(){if(!engine)engine=(async()=>{const {pipeline,env}=await import('@huggingface/transformers');env.cacheDir=path.resolve('runtime/models');return pipeline('zero-shot-image-classification','Xenova/clip-vit-base-patch32',{dtype:'q8',device:'cpu'})})();return engine;}
 export async function analyseImage(p,imageFile){
- const model=await classifier(),noun=p.kind==='skirt'?'Christmas tree skirt or tree collar':'artificial Christmas tree';
+ const model=await classifier(),noun=p.kind==='skirt'?'Christmas tree skirt or tree collar':p.kind==='decoration'?'Christmas decorative product, excluding background, furniture and tree':'artificial Christmas tree';
  const choices=COLORS.map(([color])=>`a ${color} ${noun}`),scores=await model(imageFile,choices);
  const top=scores[0],match=COLORS[choices.indexOf(top.label)];
  let form,shapeScores=[];if(p.kind==='tree'){shapeScores=await model(imageFile,SHAPES.map(x=>x[1]));form=SHAPES.find(x=>x[1]===shapeScores[0].label)?.[0];}

@@ -1,0 +1,59 @@
+name: Initialize complete Christmas decoration catalogue
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/decorations-bootstrap.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: range-source-and-pages-production
+  cancel-in-progress: false
+jobs:
+  decorations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm install --no-audit --no-fund
+      - run: npm test
+      - uses: actions/cache@v6.1.0
+        with:
+          path: |
+            runtime/models
+            runtime/fonts
+          key: local-clip-vit-base-patch32-q8-v1
+      - name: Reserve the existing bounded project budget
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: |
+          node scripts/release-unused-reservations.mjs
+          node scripts/reserve-credits.mjs
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add web/collection-ledger.json
+          git diff --cached --quiet || git commit -m "Reserve bounded Christmas decorations initialization"
+          git pull --rebase
+          git push
+      - name: Collect one shared directory and batch all family evidence
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: node server/update-decorations.mjs
+      - name: Preserve collected evidence even if a bounded batch needs attention
+        if: always()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add web
+          git diff --cached --quiet || git commit -m "Save shared decoration catalogue and actual credit receipt"
+          git pull --rebase
+          git push

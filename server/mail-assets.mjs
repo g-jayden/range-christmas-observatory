@@ -1,3 +1,4 @@
+import {DEPARTMENT_MAP} from '../web/catalogue-model.mjs';
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';
 const HOME='https://g-jayden.github.io/range-christmas-observatory/';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
@@ -15,11 +16,11 @@ export async function buildMailAssets(p,pdpBase64=null){
  if(!meta.width||!meta.height||meta.width<64||meta.height<64)throw Error('Real original photo not available');
  const displayW=Math.min(meta.width,1800),displayH=Math.round(meta.height*displayW/meta.width),W=Math.max(960,displayW+100),left=(W-displayW)/2;
  const titleSize=Math.round(W*.039),bodySize=Math.round(W*.029),margin=50;let y=margin+titleSize;
- const text=[];for(const line of lines((p.kind==='tree'?'圣诞树：':'圣诞树裙：')+p.variantName,W-100,titleSize)){text.push(`<text x="50" y="${y}" font-size="${titleSize}" font-weight="bold">${esc(line)}</text>`);y+=titleSize*1.48;}
+ const text=[];for(const line of lines((p.kind==='tree'?'圣诞树 · Christmas Tree：':p.kind==='skirt'?'圣诞树裙 · Tree Skirt：':(DEPARTMENT_MAP[p.department]?.label||'圣诞装饰品 · Christmas Decoration')+'：')+p.variantName,W-100,titleSize)){text.push(`<text x="50" y="${y}" font-size="${titleSize}" font-weight="bold">${esc(line)}</text>`);y+=titleSize*1.48;}
  const imageY=Math.round(y+15);y=imageY+displayH+bodySize*1.5;
- const info=[`SKU：${p.sku}`,`价格：£${Number(p.priceGBP).toFixed(2)}`,...(p.kind==='tree'?[`高度：${p.heightLabel||'高度未确认'}`]:[]),`本体颜色：${p.treeColor}`,...(p.kind==='tree'?[`分类：${p.style}`]:[`材质：${p.material}`])];
+ const info=[`SKU：${p.sku}`,`价格 · Price：£${Number(p.priceGBP).toFixed(2)}`,...(p.kind==='tree'?[`高度：${p.heightLabel||'高度未确认'}`]:[]),`本体颜色 · Body colours：${p.treeColor}`,...(p.kind==='tree'?[`分类：${p.style}`]:[...(p.kind==='decoration'?[`尺寸 · Size：${p.dimensions?.label||'未注明 / Not specified'}`]:[]),`材质 · Material：${p.material}`])];
  for(const item of info)for(const line of lines(item,W-100,bodySize)){text.push(`<text x="50" y="${y}" font-size="${bodySize}">${esc(line)}</text>`);y+=bodySize*1.7;}
- y+=25;const noteSize=Math.round(bodySize*.65),notes=[`官网原图：${meta.width} × ${meta.height} 像素；原文件未经放大或二次压缩`,`价格／NEW 核验：${p.newEvidence?.observedAt||p.observedAt?new Date(p.newEvidence?.observedAt||p.observedAt).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'}):'见商品证据'}（北京时间）`,'完整信息卡与官网原图，可使用邮件中的下载按钮分别保存。'];
+ y+=25;const noteSize=Math.round(bodySize*.65),notes=[`官网原图：${meta.width} × ${meta.height} 像素；原文件未经放大或二次压缩`,`价格／NEW 核验：${p.newEvidence?.observedAt||p.observedAt?new Date(p.newEvidence?.observedAt||p.observedAt).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'}):'见商品证据'}（北京时间）`,'完整信息卡与官网原图已作为邮件图片附件，可直接保存到相册。'];
  for(const item of notes)for(const line of lines(item,W-100,noteSize)){text.push(`<text x="50" y="${y}" font-size="${noteSize}" fill="#5c6b63">${esc(line)}</text>`);y+=noteSize*1.6;}
  const H=Math.ceil(y+40),imageUri='data:'+({'jpeg':'image/jpeg',png:'image/png',webp:'image/webp',avif:'image/avif'}[meta.format]||'image/jpeg')+';base64,'+original.toString('base64');
  const svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}"><rect width="100%" height="100%" fill="white"/><g font-family="Noto Sans CJK SC" fill="#173c32">${text.join('')}</g><image x="${left}" y="${imageY}" width="${displayW}" height="${displayH}" xlink:href="${imageUri}"/></svg>`;

@@ -14,7 +14,7 @@ async function readFamilyBundle({url,jsonUrl,initial,providedHtml}){
  let product;for(const el of doc.querySelectorAll('script[type="application/ld+json"]')){try{const d=sourceJson(el.textContent);if(d['@type']==='Product')product=d}catch{}}
  let gtm,gtmId;for(const el of doc.querySelectorAll('script:not([src])')){const match=el.textContent.match(/(?:var\s+)?gtm_product_data\s*=\s*(\[[\s\S]*?\])\s*;/);if(match){gtmId=match[1].match(/["']prod_id["']\s*:\s*["']?(\d+)/)?.[1];try{gtm=sourceJson(match[1])}catch{}}}
  const offers=product?.offers?.offers||[product?.offers];
- const evidence={url,jsonUrl,productId:doc.querySelector('#product_id')?.value||gtm?.[0]?.prod_id||gtmId||null,title:doc.title,features:Array.from(doc.querySelectorAll('#product-dyn-features-ul li')).map(e=>plain(e.textContent)),information:description?plain(description.textContent):'',offers:offers.filter(Boolean).map(o=>({sku:String(o.sku),image:o.image?.url||null})),gallery:Array.from(doc.querySelectorAll('img[data-variant]')).map(e=>({url:e.getAttribute('src'),variants:(e.getAttribute('data-variant')||'').split(',').filter(Boolean)}))};
+ const evidence={url,jsonUrl,breadcrumbs:Array.from(doc.querySelectorAll('[itemtype$=\"BreadcrumbList\"] [itemprop=\"name\"],.breadcrumb a,.breadcrumbs a,#breadcrumb a')).map(e=>plain(e.textContent)),productId:doc.querySelector('#product_id')?.value||gtm?.[0]?.prod_id||gtmId||null,title:doc.title,features:Array.from(doc.querySelectorAll('#product-dyn-features-ul li')).map(e=>plain(e.textContent)),information:description?plain(description.textContent):'',offers:offers.filter(Boolean).map(o=>({sku:String(o.sku),image:o.image?.url||null})),gallery:Array.from(doc.querySelectorAll('img[data-variant]')).map(e=>({url:e.getAttribute('src'),variants:(e.getAttribute('data-variant')||'').split(',').filter(Boolean)}))};
  const originalGallery=Array.from(doc.querySelectorAll('#product-gallery .rsImg')).map(e=>({url:e.getAttribute('href')||e.getAttribute('data-rsBigImg')||e.getAttribute('src'),thumbnail:e.querySelector('img[data-variant]')?.getAttribute('src')||e.getAttribute('data-rsTmb'),variants:(e.querySelector('img[data-variant]')?.getAttribute('data-variant')||e.getAttribute('data-variant')||'').split(',').filter(Boolean)})).filter(g=>g.url&&/\/media\//.test(g.url));
  const rawGallery=product?.image?.url||product?.image||[];evidence.originalGallery=originalGallery;evidence.structuredOriginalImages=(Array.isArray(rawGallery)?rawGallery:[rawGallery]).map(x=>typeof x==='string'?x:x?.url).filter(Boolean);
  const variants=Array.isArray(body.variant_arr)?body.variant_arr.map(v=>({code:v.code,prod_id:v.prod_id,sku:v.sku,id:v.id,attributes:v.attributes,attributes_supplementary:{'Model Number':v.attributes_supplementary?.['Model Number']},product_specification:v.product_specification||[],features:v.features||[],desc_override:v.desc_override,descriptionText:plain(v.description_html)})):[];
@@ -50,9 +50,10 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   const result=await response.json();if(!response.ok||result.success===false)throw new SourceError('Firecrawl '+method+' 请求未成功 HTTP '+response.status,response.status);
   return result;
  }
+ function availableFallback(){return sessionClosed&&Number.isFinite(browserReceipt?.creditsBilled)?Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-browserReceipt.creditsBilled)):fallbackLimit;}
  async function scrapeRaw(url){
   guard();if(fallbackCache.has(url))return fallbackCache.get(url);
-  if(fallbackReserved>=fallbackLimit)throw budgetError('受阻地址的定额抓取已达本轮上限，未启动更多付费请求');
+  if(fallbackReserved>=availableFallback())throw budgetError('受阻地址的定额抓取已达本轮上限，未启动更多付费请求');
   fallbackReserved++;metrics.scrapeRequests++;
   const promise=(async()=>{
    let charged=false;try{
@@ -66,7 +67,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  }
 
  async function scriptAction(script){
-  guard();if(fallbackReserved>=fallbackLimit)throw budgetError('批量核验已达到本轮付费请求上限');fallbackReserved++;metrics.scrapeRequests++;
+  guard();if(fallbackReserved>=availableFallback())throw budgetError('批量核验已达到本轮付费请求上限');fallbackReserved++;metrics.scrapeRequests++;
   let charged=false;try{
    const result=await api('scrape','POST',{url:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776',formats:['rawHtml',{type:'screenshot',fullPage:false}],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,blockAds:false,parsers:[],timeout:90000,actions:[{type:'executeJavascript',script}]});
    const cost=result.data?.metadata?.creditsUsed;scrapeCredits+=Number.isFinite(cost)?cost:1;charged=true;if(!Number.isFinite(cost))scrapeBillingVerified=false;
@@ -121,7 +122,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   })();families.set(canonical,promise);return promise;
  }
  async function enhancedCapture(url,options={}){
-  guard();if(fallbackReserved>=fallbackLimit)throw budgetError('新品截图已达到本轮付费上限');fallbackReserved++;metrics.scrapeRequests++;
+  guard();if(fallbackReserved>=availableFallback())throw budgetError('新品截图已达到本轮付费上限');fallbackReserved++;metrics.scrapeRequests++;
   const expected=new URL(url).hash.slice(1).replace(/^0+(?=\d)/,'');let charged=false;
   const script='(async()=>{const preferred='+JSON.stringify(options.preferredThumbnail||null)+';const sku='+JSON.stringify(expected)+';if(typeof initJson!=="function")throw Error("Official product initializer missing");if(typeof g_variantArr==="undefined"||!g_variantArr.length){const data=await(await fetch("?json",{credentials:"include",cache:"no-store"})).json();initJson(data)}const v=g_variantArr.find(v=>String(v.sku)===sku);if(!v)throw Error("SKU not present");if((document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"")!==sku)selectAttrFilterByVariant(v);if(preferred){const thumb=Array.from(document.querySelectorAll("#product-gallery .rsThumb img")).find(i=>i.src===preferred);thumb?.parentElement?.click();}const wait=async()=>{for(let n=0;n<30;n++){const selected=(document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"").replace(/^0+(?=\\d)/,"");const images=Array.from(document.querySelectorAll("#variant_container img")).filter(i=>i.complete&&i.naturalWidth>=64&&i.naturalHeight>=64);if(selected===sku&&images.length){document.querySelector("#variant_container").scrollIntoView();const root=document.querySelector("#product-gallery .rsOverflow"),box=root?.getBoundingClientRect();const originals=Array.from(document.querySelectorAll("#product-gallery .rsMainSlideImage")).filter(i=>i.complete&&i.naturalWidth>=64&&i.naturalHeight>=64).map(i=>{const r=i.getBoundingClientRect();const area=box?Math.max(0,Math.min(r.right,box.right)-Math.max(r.left,box.left))*Math.max(0,Math.min(r.bottom,box.bottom)-Math.max(r.top,box.top)):0;return {url:i.currentSrc||i.src,width:i.naturalWidth,height:i.naturalHeight,visibleArea:area,selectedSku:selected}}).filter(i=>i.visibleArea>0).sort((a,b)=>b.visibleArea-a.visibleArea);return {sku:selected,images:images.length,originals}}await new Promise(r=>setTimeout(r,300))}throw Error("Selected SKU or real product image not ready")};return await wait()})()';
   try{
@@ -167,11 +168,12 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  }
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;
  reader.captureVerified=enhancedCapture;reader.originalsFor=url=>captureOriginals.get(sourceUrl(url))||[];
+ reader.familyCount=()=>families.size;
  reader.familyReady=input=>{const u=new URL(sourceUrl(input));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return families.has(u.href)};
  reader.prepareFamilies=async products=>{
-  const urls=[...new Set(products.map(p=>{const u=new URL(sourceUrl(p.sourceUrl));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return u.href}))];
-  if(!urls.length)return;for(let offset=0;offset<urls.length;offset+=100){const batchUrls=urls.slice(offset,offset+100);
-  const script='(async()=>{const read='+readFamilyBundle.toString()+';const urls='+JSON.stringify(batchUrls)+';let cursor=0;const results=[];await Promise.all(Array.from({length:4},async()=>{while(cursor<urls.length){const url=urls[cursor++];try{results.push({url,bundle:await read({url,jsonUrl:url+"?json"})})}catch(e){results.push({url,error:e.message})}}}));return results})()';
+  const urls=[...new Set(products.map(p=>{const u=new URL(sourceUrl(p.sourceUrl));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return u.href}))].filter(url=>!families.has(url)&&!familyFailures.has(url));
+  if(!urls.length)return;const batchSize=policy.familyBatchSize||100;for(let offset=0;offset<urls.length;offset+=batchSize){const batchUrls=urls.slice(offset,offset+batchSize);
+  const script='(async()=>{const read='+readFamilyBundle.toString()+';const urls='+JSON.stringify(batchUrls)+';let cursor=0;const results=[];await Promise.all(Array.from({length:'+String(policy.familyBatchConcurrency||4)+'},async()=>{while(cursor<urls.length){const url=urls[cursor++];try{results.push({url,bundle:await read({url,jsonUrl:url+"?json"})})}catch(e){results.push({url,error:e.message})}}}));return results})()';
   const results=await scriptAction(script);
   if(results.length!==batchUrls.length||results.some(r=>!batchUrls.includes(r.url)))throw Error('商品系列批量补查地址不一致');
   for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();b.evidence.sourceTransport='enhanced-batch';families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else {const error=new SourceError('官网商品详情链接异常，未返回可核实的具体SKU规格；本轮目录价格、库存、NEW与图片独立更新',b?.status||0);familyFailures.set(r.url,error);console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}}}
@@ -184,7 +186,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    if(valid){validPrior[url]={hash:old.hash,cachedImageUrl:old.cachedImageUrl,etag:old.etag,lastModified:old.lastModified,width:old.width,height:old.height,bytes:old.bytes,mime:old.mime};if(policy.repairImagesOnly)results.push({...old,observedAt:old.observedAt||previous.observedAt,retained:true});else known.push(url);}else newUrls.push(url);
   }
   const tasks=[];for(let offset=0;offset<known.length;offset+=400)tasks.push({urls:known.slice(offset,offset+400),hashOnly:true});
-  for(let offset=0;offset<newUrls.length;){const size=policy.imageBatchProbe&&offset===0?3:Math.min(200,options.bodyBatchSize||200);tasks.push({urls:newUrls.slice(offset,offset+size),hashOnly:false});offset+=size;}
+  for(let offset=0;offset<newUrls.length;){const size=policy.imageBatchProbe&&offset===0?3:Math.min(500,options.bodyBatchSize||policy.imageBodyBatchSize||200);tasks.push({urls:newUrls.slice(offset,offset+size),hashOnly:false});offset+=size;}
   await fs.mkdir('web/images/source',{recursive:true});let rechecked=0,changed=0;
   for(let taskIndex=0;taskIndex<tasks.length;taskIndex++){
    guard();const task=tasks[taskIndex],items=task.urls.map(url=>({url,prior:validPrior[url],hashOnly:task.hashOnly}));metrics.imageBatchRequests=(metrics.imageBatchRequests||0)+1;
@@ -203,6 +205,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
     results.push(item);
    }
    for(let offset=0;offset<needsBody.length;offset+=200)tasks.push({urls:needsBody.slice(offset,offset+200),hashOnly:false});
+   if(policy.imageCheckpoint)await fs.writeFile(policy.imageCheckpoint,JSON.stringify({entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString()}));
    console.log(JSON.stringify({phase:'image-verification',checked:results.length,total:allUrls.length,changed}));
   }
   const byUrl=new Map(results.map(r=>[r.url,r]));for(const p of products){const r=byUrl.get(p.variantImageUrl||p.imageUrl);if(r?.ok){p.cachedImageUrl=r.cachedImageUrl;p.imageCacheEvidence={sourceUrl:r.url,sha256:r.hash,observedAt:r.observedAt};}}
@@ -214,7 +217,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   if(!session||sessionClosed)return;sessionClosed=true;
   try{if(session.id)browserReceipt=await api('interact/'+encodeURIComponent(session.id),'DELETE');}
   catch{metrics.closeReceiptUnavailable=true;}
-  finally{await browser?.close().catch(()=>{});browserEndedAt=now();deadline=0;}
+  finally{await browser?.close().catch(()=>{});browserEndedAt=now();deadline=0;metrics.fallbackLimit=availableFallback();}
  };
  reader.close=async()=>{
   if(closed)return;closed=true;for(const waiter of waiting.splice(0))waiter.reject(budgetError('浏览器会话已关闭'));

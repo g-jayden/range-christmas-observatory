@@ -1,8 +1,11 @@
+import {DEPARTMENTS,DEPARTMENT_MAP} from '../web/catalogue-model.mjs';
 import {firstRun,advanceRun,scheduleLabel,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';
 const SITE='https://g-jayden.github.io';
 const HOME=SITE+'/range-christmas-observatory/';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const hash=async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))].map(v=>v.toString(16).padStart(2,'0')).join('');
+const allowedScopes=DEPARTMENTS.map(d=>d.id);
+const accepts=(sub,p)=>sub.scopes.some(scope=>scope===p.kind||(p.departmentIds||[p.department]).includes(scope));
 const token=()=>crypto.randomUUID()+crypto.randomUUID();
 const validEmail=s=>typeof s==='string'&&s.length<=254&&/^[^\s@<>;,]+@[^\s@<>;,]+\.[^\s@<>;,]+$/.test(s);
 function response(value,status=200){return Response.json(value,{status,headers:{'cache-control':'no-store'}})}
@@ -16,7 +19,7 @@ function mailAssets(p){
 function productMail(p,origin,test=false,unsubscribe=null){
  const m=p.mailAssets,has=m?.card?.url&&m?.original?.url; if(has)mailAssets(p);
  const checked=p.newEvidence?.observedAt||p.observedAt||p.detectedAt;
- const header=test?'测试示例 · 原站NEW标记，不代表今天首次上架':'NEW · '+(p.kind==='skirt'?'圣诞树裙':'圣诞树');
+ const header=test?'测试示例 · 原站NEW标记，不代表今天首次上架':'NEW · '+(p.kind==='decoration'?(DEPARTMENT_MAP[p.department]?.label||'圣诞装饰品 · Christmas Decorations'):p.kind==='skirt'?'圣诞树裙 · Tree Skirts':'圣诞树 · Christmas Trees');
  return `<div style="font:16px/1.8 Arial,sans-serif;max-width:900px;margin:auto;color:#173c32"><p>${esc(header)}</p><h1>${esc(p.variantName)}</h1>${has?`<p style="background:#eef4ed;padding:14px">直接保存到手机：长按下方图片，选择“保存图片／存储图像”；也可点邮件底部的图片附件，打开后保存。<br>完整信息卡：NEW-${esc(p.sku)}-card.png<br>官网原图：NEW-${esc(p.sku)}-original.${esc(new URL(m.original.url).pathname.split('.').pop())}</p><h2>完整商品信息卡</h2><img src="${esc(m.card.url)}" alt="完整商品信息卡：长按图片保存到相册" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><h2>官网原图</h2><img src="${esc(m.original.url)}" alt="官网原始商品照片：长按图片保存到相册" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><p>官网原图 ${Number(m.original.width)}×${Number(m.original.height)} 像素，原文件未经放大或二次压缩。完整信息卡和原图均已随邮件附上，保存附件可保留原始文件。</p>`:`<img src="${origin}/shots/${p.imageAccess}" alt="具体SKU原站截图" style="width:100%;height:auto">`}<p>SKU：${esc(p.sku)}<br>价格：£${Number(p.priceGBP).toFixed(2)}${p.kind==='tree'?'<br>高度：'+esc(p.heightLabel||'未提供'):''}<br>本体颜色：${esc(p.treeColor||'待核验')}<br>${p.kind==='tree'?'分类：'+esc(p.style||'其它树形类别'):'材质：'+esc(p.material||'未提供')}</p><p><a href="${esc(p.sourceUrl)}">查看原站具体SKU购买页</a></p><p style="font-size:13px;color:#607168">价格与NEW核验时间：${esc(checked)}；下单时以官网为准。${test?'本测试不改变新品去重基线。':''}</p>${unsubscribe?`<p><a href="${esc(unsubscribe)}">取消订阅</a> · <a href="${HOME}">查看分析网站</a></p>`:`<p><a href="${HOME}">查看分析网站</a></p>`}</div>`;
 }
 export class Control{
@@ -29,7 +32,7 @@ export class Control{
  }
  async deliveryStatus(){
   const events=await this.db.list({prefix:'event/'}),subs=await this.db.list({prefix:'sub/'});let pendingDeliveries=0;
-  for(const p of events.values())for(const [key,sub]of subs)if(sub.confirmedAt&&Date.parse(sub.confirmedAt)<=Date.parse(p.detectedAt)&&sub.scopes.includes(p.kind)&&!await this.db.get('delivered/'+p.sku+'/'+key.slice(4)))pendingDeliveries++;
+  for(const p of events.values())for(const [key,sub]of subs)if(sub.confirmedAt&&Date.parse(sub.confirmedAt)<=Date.parse(p.detectedAt)&&accepts(sub,p)&&!await this.db.get('delivered/'+p.sku+'/'+key.slice(4)))pendingDeliveries++;
   return {pendingDeliveries,lastDelivery:await this.db.get('last-delivery')||null};
  }
  async send(to,subject,html,attachments=[],idempotencyKey){
@@ -83,7 +86,7 @@ export class Control{
    const hour=Math.floor(Date.now()/3600000),rate=await this.db.get(limitKey)||{hour,count:0};if(rate.hour!==hour){rate.hour=hour;rate.count=0}
    if(rate.count>=5||old&&Date.now()-old.requestedAt<60000)return response({error:'申请过于频繁，请稍后重试。'},429);
    rate.count++;await this.db.put(limitKey,rate);
-   const confirm=token(),unsub=token(),now=Date.now(),scopes=['tree','skirt'].filter(x=>(body.scopes||['tree','skirt']).includes(x));if(!scopes.length)return response({error:'至少选择一个产品范围。'},400);
+   const confirm=token(),unsub=token(),now=Date.now(),scopes=allowedScopes.filter(x=>(body.scopes||['tree','skirt']).includes(x));if(!scopes.length)return response({error:'至少选择一个产品范围。'},400);
    await this.send(email,'请确认：圣诞新品邮件订阅',`<h2>确认接收圣诞新品</h2><p>发现新的NEW商品后，我们会发送原站商品页截图与具体SKU购买链接。</p><p><a href="${HOME}confirm.html#token=${encodeURIComponent(confirm)}">确认订阅</a></p><p>如果不是你申请，请忽略此邮件。确认链接24小时内有效。</p>`);
    await this.db.put('sub/'+id,{email,scopes,requestedAt:now,confirmedAt:null,unsubscribe:unsub});
    await this.db.put('token/'+await hash(confirm),{id,action:'/confirm',expires:now+86400000});
@@ -95,6 +98,11 @@ export class Control{
    if(route==='/admin/notification-status'&&req.method==='GET')return response({...await this.deliveryStatus(),pending:[...(await this.db.list({prefix:'pending/'})).values()].map(p=>({sku:p.sku,kind:p.kind,name:p.variantName,firstDetectedAt:p.firstDetectedAt}))});
    if(['/admin/recover-event','/admin/deliver'].includes(route)&&req.method==='POST')return this.route(new Request(url.origin+route.replace('/admin/','/internal/'),{method:'POST',headers:{authorization:'Bearer '+this.env.CONTROL_TOKEN,'content-type':'application/json'},body:await req.text()}));
    if(route==='/admin/test-email'&&req.method==='POST')return this.route(new Request(url.origin+'/internal/test-email',{method:'POST',headers:{authorization:'Bearer '+this.env.CONTROL_TOKEN,'content-type':'application/json'},body:await req.text()}));
+   if(route==='/admin/subscription-scopes'&&req.method==='POST'){
+    const b=await req.json(),email=String(b.email||'').toLowerCase().trim(),id=await hash(email),sub=await this.db.get('sub/'+id);
+    if(!sub?.confirmedAt)return response({error:'邮箱尚未确认订阅'},409);
+    const scopes=allowedScopes.filter(s=>(b.scopes||[]).includes(s));if(!scopes.length)throw Error('Invalid subscription scope');sub.scopes=scopes;await this.db.put('sub/'+id,sub);return response({updated:true,scopes});
+   }
    if(route==='/admin/schedule'&&req.method==='POST'){
     const body=await req.json(),config={...firstRun(body),revision:token(),effectiveAt:new Date().toISOString()};await this.db.put('config',config);return response({config,message:'云端计划已保存，下一次起按新周期执行。'});
    }
@@ -118,8 +126,15 @@ export class Control{
     for(const p of b.records){if(!/^\d{1,12}$/.test(String(p.sku)))throw Error('Invalid SKU');if(p.everNew)values['seen/'+p.sku]=true}
     // Only the first authenticated seed may migrate subscriptions with existing consent.
     const subscriptions=b.confirmedSubscriptions||[];if(!Array.isArray(subscriptions)||subscriptions.length>10000)throw Error('Invalid subscription migration');
-    for(const sub of subscriptions){const email=String(sub.email||'').trim().toLowerCase(),confirmed=Date.parse(sub.confirmedAt),scopes=['tree','skirt'].filter(kind=>(sub.scopes||[]).includes(kind));if(!validEmail(email)||!Number.isFinite(confirmed)||confirmed>Date.now()||!scopes.length)throw Error('Unverified subscription migration');const id=await hash(email),unsubscribe=token();values['sub/'+id]={email,scopes,requestedAt:confirmed,confirmedAt:new Date(confirmed).toISOString(),unsubscribe};values['token/'+await hash(unsubscribe)]={id,action:'/unsubscribe',expires:Date.now()+3660*86400000};}
+    for(const sub of subscriptions){const email=String(sub.email||'').trim().toLowerCase(),confirmed=Date.parse(sub.confirmedAt),scopes=allowedScopes.filter(kind=>(sub.scopes||[]).includes(kind));if(!validEmail(email)||!Number.isFinite(confirmed)||confirmed>Date.now()||!scopes.length)throw Error('Unverified subscription migration');const id=await hash(email),unsubscribe=token();values['sub/'+id]={email,scopes,requestedAt:confirmed,confirmedAt:new Date(confirmed).toISOString(),unsubscribe};values['token/'+await hash(unsubscribe)]={id,action:'/unsubscribe',expires:Date.now()+3660*86400000};}
     const entries=Object.entries(values);for(let i=0;i<entries.length;i+=100)await this.db.put(Object.fromEntries(entries.slice(i,i+100)));await this.db.put('seeded',new Date().toISOString());return response({seeded:true,changed:true});
+   }
+   if(route==='/internal/extend-baseline'&&req.method==='POST'){
+    const b=await req.json();if(b.scope!=='christmas-decorations-v1'||!Array.isArray(b.records)||b.records.length>30000)throw Error('Invalid scoped baseline');
+    if(await this.db.get('baseline/'+b.scope))return response({seeded:true,changed:false});
+    const records=b.records;if(records.some(p=>!/^\d{1,12}$/.test(String(p.sku))))throw Error('Invalid baseline SKU');
+    for(const p of records)if(p.everNew&&!await this.db.get('pending/'+p.sku)&&!await this.db.get('event/'+p.sku))await this.db.put('seen/'+p.sku,true);
+    await this.db.put('baseline/'+b.scope,{observedAt:b.observedAt,products:records.length});return response({seeded:true,changed:true,products:records.length});
    }
    if(route==='/internal/claim'&&req.method==='POST'){
     const options=await req.json(),config=await this.config(),monitorState=await this.monitorState(),now=Date.now(),lease=token(),initialized=await this.db.get('seeded');
@@ -138,7 +153,7 @@ export class Control{
    }
    if(route==='/internal/monitor-plan'&&req.method==='POST'){
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
-    if(!Array.isArray(b.products)||b.products.length>10000)throw Error('Invalid scan');
+    if(!Array.isArray(b.products)||b.products.length>30000)throw Error('Invalid scan');
     for(const p of b.products){if(!/^\d{1,12}$/.test(p.sku))throw Error('Invalid SKU');verifyUrl(p.sourceUrl,['therange.co.uk']);if(p.newStatus&&!await this.db.get('seen/'+p.sku)&&!await this.db.get('pending/'+p.sku))await this.db.put('pending/'+p.sku,{...p,firstDetectedAt:new Date().toISOString()})}
     return response({candidates:[...(await this.db.list({prefix:'pending/'})).values()]});
    }
@@ -168,7 +183,7 @@ export class Control{
      const created=Date.parse(p.detectedAt);if(Date.now()-created>14*86400000){await this.db.delete(eventKey);await this.db.delete('image-access/'+p.imageAccess);for(let i=0;i<p.screenshotParts;i++)await this.db.delete('shot/'+p.sku+'/'+i);continue}
      let content;
      for(const [subKey,sub] of subs){
-      if(!sub.confirmedAt||Date.parse(sub.confirmedAt)>created||!sub.scopes.includes(p.kind))continue;
+      if(!sub.confirmedAt||Date.parse(sub.confirmedAt)>created||!accepts(sub,p))continue;
       const delivered='delivered/'+p.sku+'/'+subKey.slice(4);if(await this.db.get(delivered))continue;
       if(!content){const chunks=[];for(let i=0;i<p.screenshotParts;i++)chunks.push(await this.db.get('shot/'+p.sku+'/'+i));content=chunks.join('')}
       const unsubscribe=url.origin+'/unsubscribe?token='+encodeURIComponent(sub.unsubscribe);
