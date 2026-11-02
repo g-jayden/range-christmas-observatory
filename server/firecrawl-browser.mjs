@@ -4,8 +4,8 @@ import {SourceError,parseSource} from './sync.mjs';
 import {sourceUrl} from './free-source.mjs';
 import {budgetError} from './credit-budget.mjs';
 
-async function readFamilyBundle({url,jsonUrl,initial,providedHtml}){
- const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(20000)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch{return {status:0}}};
+async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000}){
+ const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch{return {status:0}}};
  const [data,html]=await Promise.all([initial?{status:200,value:initial}:read(jsonUrl,true),providedHtml?{status:200,value:providedHtml}:read(url,false)]);
  if(data.status!==200||html.status!==200)return {status:data.status!==200?data.status:html.status,jsonStatus:data.status,htmlStatus:html.status,jsonBody:data.value,html:html.value};
  const body=data.value,doc=new DOMParser().parseFromString(html.value,'text/html'),plain=html=>new DOMParser().parseFromString(String(html||''),'text/html').body.textContent.replace(/\s+/g,' ').trim();
@@ -158,7 +158,12 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   const url=sourceUrl(input),u=new URL(url),catalogue=u.pathname==='/api/productlist';
   const identifier=JSON.stringify({url,formats:options.formats||[]});if(active.has(identifier))return active.get(identifier);
   const promise=(async()=>{
-   if(catalogue){const page=await take();try{let body;try{body=await jsonPage(page,url)}catch(e){if([400,404].includes(e.status))throw e;body=JSON.parse(await scrapeRaw(url));}return {success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200,sourceURL:url,provider:'firecrawl-browser'}}}}finally{release(page)}}
+   if(catalogue){const page=await take();try{let body;metrics.catalogueRequests=(metrics.catalogueRequests||0)+1;
+    try{if(page.url().startsWith('https://search-lon.therange.co.uk/')){
+     let result;for(let retry=0;retry<2;retry++){result=await page.evaluate(async target=>{try{const r=await fetch(target,{credentials:'include',cache:'no-store',signal:AbortSignal.timeout(25000)});const text=await r.text();let value;try{value=JSON.parse(text)}catch{}return {status:r.status,value,retryAfter:r.headers.get('retry-after')}}catch(e){return {status:0,error:e.message}}},url);if(result.status===200&&result.value)break;if(retry===0)await new Promise(resolve=>setTimeout(resolve,Math.min(6000,Math.max(1500,Number(result.retryAfter||0)*1000))));}
+     if(result.status!==200||!result.value)throw new SourceError('Catalogue JSON request failed HTTP '+result.status,result.status);body=result.value;
+    }else body=await jsonPage(page,url);}catch(e){if([400,404].includes(e.status))throw e;console.error(JSON.stringify({phase:'catalogue-fallback',source:url,status:e.status,error:e.message}));body=JSON.parse(await scrapeRaw(url));}
+    return {success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200,sourceURL:url,provider:'firecrawl-browser'}}}}finally{release(page)}}
    const family=await familyFor(url),sku=u.hash.slice(1).replace(/^0+(?=\d)/,''),variant=family.variants.find(v=>String(v.sku).replace(/^0+(?=\d)/,'')===sku);
    if(!variant)throw Error('官网商品JSON没有请求的具体SKU：'+sku);
    const data={sourceVariant:variant,familyEvidence:family.evidence,metadata:{statusCode:200,sourceURL:url,provider:'firecrawl-browser'}};
@@ -173,7 +178,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  reader.prepareFamilies=async products=>{
   const urls=[...new Set(products.map(p=>{const u=new URL(sourceUrl(p.sourceUrl));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return u.href}))].filter(url=>!families.has(url)&&!familyFailures.has(url));
   if(!urls.length)return;const batchSize=policy.familyBatchSize||100;for(let offset=0;offset<urls.length;offset+=batchSize){const batchUrls=urls.slice(offset,offset+batchSize);
-  const script='(async()=>{const read='+readFamilyBundle.toString()+';const urls='+JSON.stringify(batchUrls)+';let cursor=0;const results=[];await Promise.all(Array.from({length:'+String(policy.familyBatchConcurrency||4)+'},async()=>{while(cursor<urls.length){const url=urls[cursor++];try{results.push({url,bundle:await read({url,jsonUrl:url+"?json"})})}catch(e){results.push({url,error:e.message})}}}));return results})()';
+  const script='(async()=>{const read='+readFamilyBundle.toString()+';const urls='+JSON.stringify(batchUrls)+';let cursor=0;const results=[],end=Date.now()+50000;await Promise.all(Array.from({length:'+String(policy.familyBatchConcurrency||4)+'},async()=>{while(cursor<urls.length&&Date.now()<end){const url=urls[cursor++];try{results.push({url,bundle:await read({url,jsonUrl:url+"?json",timeoutMs:'+String(policy.familyFetchTimeoutMs||10000)+'})})}catch(e){results.push({url,error:e.message})}}}));while(cursor<urls.length)results.push({url:urls[cursor++],deferred:true,error:"bounded batch time limit"});return results})()';
   const results=await scriptAction(script);
   if(results.length!==batchUrls.length||results.some(r=>!batchUrls.includes(r.url)))throw Error('商品系列批量补查地址不一致');
   for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();b.evidence.sourceTransport='enhanced-batch';families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else {const error=new SourceError('官网商品详情链接异常，未返回可核实的具体SKU规格；本轮目录价格、库存、NEW与图片独立更新',b?.status||0);familyFailures.set(r.url,error);console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}}}

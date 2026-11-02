@@ -42,7 +42,7 @@ export async function updateDecorationDetails(snapshot,reader,{maxFamilies=Infin
  const queue=selected.filter(p=>wanted.has(p.sourceUrl.split('#')[0].replace(/\/$/,'')));
  // One enhanced request reads up to 200 complete families, not one paid request per SKU.
  const grouped=new Map();for(const p of queue){const key=p.sourceUrl.split('#')[0].replace(/\/$/,'');if(!grouped.has(key))grouped.set(key,[]);grouped.get(key).push(p);}
- const urls=[...grouped.keys()];for(let offset=0;offset<urls.length;offset+=400){const batch=urls.slice(offset,offset+400).flatMap(url=>grouped.get(url));await reader.prepareFamilies(batch);
+ const urls=[...grouped.keys()];for(let offset=0;offset<urls.length;offset+=100){const batch=urls.slice(offset,offset+100).flatMap(url=>grouped.get(url));await reader.prepareFamilies(batch);
   for(const p of batch)try{const response=await reader.raw(p.sourceUrl,{formats:['rawHtml','markdown']});const d=parseDetails(response,p.sku,p.sourceUrl);applyDetails(p,d);p.sourceDescription=d.featuresText;p.dimensions=productDimensions(d.specs,d.featuresText);p.detailsReady=true;p.detailInputFingerprint=detailFingerprint(p);p.material=materialFacts(d.specs,d.featuresText).label;const cls=classifyDecoration(p);p.department=cls.id;p.departmentIds=[cls.id];p.classificationEvidence=cls;
    if(/\b(?:outdoor|garden|lawn|weatherproof)\b/i.test(p.variantName+' '+(d.specs['Indoor/Outdoor']||''))&&!p.departmentIds.includes('outdoor'))p.departmentIds.push('outdoor');
   }catch(e){issues.push({sku:p.sku,reason:String(e.message).slice(0,200)});p.detailError=String(e.message).slice(0,200);}

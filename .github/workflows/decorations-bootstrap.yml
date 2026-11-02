@@ -1,5 +1,5 @@
 name: Initialize complete Christmas decoration catalogue
-# Coverage v2: bounded official facet partitions avoid unstable equal-price paging.
+# Coverage v3: reuse native directory connections; bounded official facet partitions avoid unstable equal-price paging.
 on:
   push:
     branches: [main]

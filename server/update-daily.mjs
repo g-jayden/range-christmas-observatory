@@ -17,7 +17,7 @@ import {control,apiBase} from './cloud-client.mjs';
 import {recordSourceOutcome} from './source-health.mjs';
 import {productInformation,parseDetails,applyDetails} from './details.mjs';
 export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budgetFactory=openCreditBudget,now=()=>Date.now()}={}){
- const previous=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),policy={...await loadPolicy(),familyBatchSize:400,familyBatchConcurrency:8,imageBodyBatchSize:500,imageHashBatchSize:1000,maxFallbackScrapesPerRun:56};
+ const previous=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),policy={...await loadPolicy(),familyBatchSize:100,familyBatchConcurrency:8,familyFetchTimeoutMs:8000,imageBodyBatchSize:500,imageHashBatchSize:1000,maxFallbackScrapesPerRun:56};
  const previousStatus=await fs.readFile('web/status.json','utf8').then(JSON.parse).catch(()=>({}));
  const engine='firecrawl-browser';
  let tick;try{tick=JSON.parse(await fs.readFile('runtime/tick.json','utf8'))}catch{tick={full:true,monitor:false,lease:null}}

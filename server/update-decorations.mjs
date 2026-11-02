@@ -13,7 +13,7 @@ export async function seedDecorationBaseline(snapshot,controlCall=control){
  await controlCall('/internal/extend-baseline',{scope:'christmas-decorations-v1',records:snapshot.products.map(p=>({sku:p.sku,everNew:p.everNew||p.newStatus})),observedAt:snapshot.observedAt});
 }
 export async function runDecorationUpdate({readerFactory=createFirecrawlBrowserReader,budgetFactory=openCreditBudget}={}){
- const policy={...await loadPolicy(),familyBatchSize:400,familyBatchConcurrency:8,maxFallbackScrapesPerRun:56,imageBodyBatchSize:500,imageCheckpoint:'web/decoration-image-checkpoint.json'},previous=await readDecorations();let reader,budget,snapshot;
+ const policy={...await loadPolicy(),familyBatchSize:100,familyBatchConcurrency:8,familyFetchTimeoutMs:8000,maxFallbackScrapesPerRun:56,imageBodyBatchSize:500,imageCheckpoint:'web/decoration-image-checkpoint.json'},previous=await readDecorations();let reader,budget,snapshot;
  try{
   budget=await budgetFactory(policy);reader=await readerFactory({policy,budget});
   policy.repairImagesOnly=!previous.ready;const checkpoint=await fs.readFile('web/decoration-image-checkpoint.json','utf8').then(JSON.parse).catch(()=>({entries:{}}));
