@@ -4,7 +4,7 @@ import {classifyDecoration,productDimensions,decorationDepartments,decorationMem
 import {normaliseColors,materialFacts} from './appearance.mjs';
 import {detailFingerprint,digest} from './collection-policy.mjs';
 import {atomicJson,collectStableCategory} from './sync.mjs';
-import {parseDetails,applyDetails} from './details.mjs';
+import {parseDetails,applyDetails,validProductImage} from './details.mjs';
 export const DECORATION_SOURCE={id:'94578',url:'https://www.therange.co.uk/christmas/christmas-decorations/?sort=relevance&in_stock_f=true&page=1'};
 export const emptyDecorations=()=>({version:1,products:[],history:{},ready:false,baselineReady:false,observedAt:null});
 export async function readDecorations(){return fs.readFile('web/decorations.json','utf8').then(JSON.parse).catch(()=>emptyDecorations())}
@@ -25,6 +25,7 @@ export function mergeDecorations(previous,listing,observedAt=new Date().toISOStr
 }
 export async function loadDecorationDetails(products){
  const buckets=new Map();for(const p of products){const bucket=p.sku.slice(-2).padStart(2,'0');if(!buckets.has(bucket))buckets.set(bucket,await fs.readFile('web/decoration-details/'+bucket+'.json','utf8').then(JSON.parse).catch(()=>({})));const saved=buckets.get(bucket)[p.sku];if(saved?.detailsReady===true&&saved.detailEvidence?.verifiedProductSection&&String(saved.detailEvidence.selectedSku)===p.sku&&saved.detailInputFingerprint===p.detailInputFingerprint&&!(p.detailEvidence?.verifiedProductSection&&Date.parse(p.attributeObservedAt)>=Date.parse(saved.attributeObservedAt))){for(const key of ['detailsReady','detailEvidence','attributeObservedAt','specifications','sourceDescription','dimensions','material','colorValues','treeColor','paletteEvidence','sourceColour','sourceMaterial','appearanceSource','images','originalImages','originalImageUrl','department','departmentIds','classificationEvidence','variantImageUrl','cachedImageUrl','imageCacheEvidence','imageSelectionEvidence','sourceListingImageUrl'])if(saved[key]!==undefined)p[key]=saved[key];p.detailsReady=true;}}
+ for(const p of products)if(!validProductImage(p.variantImageUrl)&&validProductImage(p.listingVariantImageUrl)){p.variantImageUrl=p.listingVariantImageUrl;if(p.imageCacheEvidence?.sourceUrl!==p.variantImageUrl){delete p.cachedImageUrl;delete p.imageCacheEvidence;}}
  return buckets;
 }
 export async function saveDecorationDetails(products){
@@ -80,7 +81,7 @@ export async function enrichDecorations(products,{infer=true}={}){
 }
 export async function publishDecorations(snapshot){
  await loadDecorationDetails(snapshot.products);
- for(const p of snapshot.products){const cls=classifyDecoration(p);p.department=cls.id;p.departmentIds=decorationMemberships(p,cls.id);p.classificationEvidence=cls;}
+ for(const p of snapshot.products){p.images=(p.images||[]).filter(validProductImage);const cls=classifyDecoration(p);p.department=cls.id;p.departmentIds=decorationMemberships(p,cls.id);p.classificationEvidence=cls;}
  await saveDecorationDetails(snapshot.products);
  const products=snapshot.products.map(compactDecoration);snapshot.stats=Object.fromEntries(decorationDepartments.map(d=>[d.id,{count:products.filter(p=>p.departmentIds.includes(d.id)).length,newCount:products.filter(p=>p.departmentIds.includes(d.id)&&(p.newStatus||p.firstNewObservedAt)).length}]));
  snapshot.products=products;snapshot.revision=digest({at:snapshot.observedAt,products});await atomicJson('web/decorations.json',snapshot);

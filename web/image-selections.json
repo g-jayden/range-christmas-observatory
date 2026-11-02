@@ -90,5 +90,11 @@
     "selectedImage": "https://www.therange.co.uk/media/6/0/1764594114_11_7118.png",
     "reason": "已核对同一SKU官方图库：红白糖果挂件独立图，排除场景树枝及另一款红绿装饰。",
     "reviewedAt": "2026-11-02T19:54:33.285501+00:00"
+  },
+  "1184952": {
+    "sourceHero": "https://www.therange.co.uk/media/",
+    "selectedImage": "https://www.therange.co.uk/media/4/7/1790213416_3606.jpg",
+    "reason": "已核对同一SKU官方图库：选择整件金色星形灯饰，排除暖色墙面背景。官网报价主图字段为空目录地址，不作为照片。",
+    "reviewedAt": "2026-11-02T20:00:52.907161+00:00"
   }
 }

@@ -1,10 +1,10 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {descriptionFacts,applyAppearance,normaliseColors,materialFacts,APPEARANCE_VERSION,TREE_STYLES} from './appearance.mjs';
-import {productInformation} from './details.mjs';
+import {productInformation,validProductImage} from './details.mjs';
 export async function selectGalleryImages(products){
  const selections=await fs.readFile('web/image-selections.json','utf8').then(JSON.parse).catch(()=>({}));
- for(const p of products){const pick=selections[p.sku];if(pick&&(p.variantImageUrl===pick.sourceHero||p.variantImageUrl===pick.selectedImage)&&(p.images||[]).includes(pick.selectedImage)){
+ for(const p of products){const pick=selections[p.sku];if(pick&&(p.variantImageUrl===pick.sourceHero||p.variantImageUrl===pick.selectedImage||!validProductImage(p.variantImageUrl)&&!validProductImage(pick.sourceHero))&&(p.images||[]).includes(pick.selectedImage)){
   p.originalImageUrl=p.originalImages?.find(g=>g.thumbnail===pick.selectedImage)?.url||null;p.sourceHeroImageUrl=pick.sourceHero;p.variantImageUrl=pick.selectedImage;p.imageSelectionEvidence={...pick,sourceUrl:p.sourceUrl,method:'same-SKU-official-gallery-reviewed'};
  }}
 }

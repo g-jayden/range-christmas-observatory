@@ -1,4 +1,5 @@
 import {productDimensions} from '../web/catalogue-model.mjs';
+export function validProductImage(raw){try{const u=new URL(raw);return u.protocol==='https:'&&/\/media\/.+\.(?:jpe?g|png|webp|gif|avif)$/i.test(u.pathname);}catch{return false}}
 import {descriptionFacts} from './appearance.mjs';
 import {createHash} from 'node:crypto';
 const decode=s=>String(s).replaceAll('&amp;','&').replaceAll('&quot;','"').replaceAll('&#39;',"'");
@@ -69,8 +70,8 @@ export function applyDetails(p,d){
  p.style=[['potted','圣诞树盆栽'],['popUp','折叠式圣诞树'],['slim','纤细圣诞树'],['snow','雪景款'],['prelit','预亮灯款']].find(([k])=>f[k])?.[1]||'标准／其他装饰待核验';
  if(/\barch\b|\btwig\b|\bbirch\b|\bwooden\b|\bpaper\b|\bcone tree\b|\bpyramid\b/i.test(p.variantName))p.style='其他树形／拱门装饰';
  else if(p.style==='标准／其他装饰待核验'){if(['pinecones','berries','baubles'].some(k=>f[k]))p.style='其他预装饰款';else if(/\bplain green\b|\bundecorated design\b|\bunadorned\b/.test(lower))p.style='标准款（介绍已核验）';}
- if((/placeholder/i.test(p.variantImageUrl||p.imageUrl||'')||/kube-media-unpublished/.test(p.variantImageUrl||''))&&d.image&&!/placeholder/i.test(d.image)){p.variantImageUrl=d.image;p.imageEvidence={url:d.image,source:d.sourceUrl,field:'selected SKU offer image / og:image',observedAt:d.observedAt}}
- if(p.kind==='decoration'&&d.image&&!/placeholder/i.test(d.image)&&/^https:\/\//.test(d.image)&&d.image!==p.variantImageUrl){p.sourceListingImageUrl=p.variantImageUrl;p.variantImageUrl=d.image;p.imageSelectionEvidence={method:'exact-SKU-offer-image',sourceUrl:d.sourceUrl,observedAt:d.observedAt};}
+ if((/placeholder/i.test(p.variantImageUrl||p.imageUrl||'')||/kube-media-unpublished/.test(p.variantImageUrl||''))&&validProductImage(d.image)){p.variantImageUrl=d.image;p.imageEvidence={url:d.image,source:d.sourceUrl,field:'selected SKU offer image / og:image',observedAt:d.observedAt}}
+ if(p.kind==='decoration'&&validProductImage(d.image)&&/^https:\/\//.test(d.image)&&d.image!==p.variantImageUrl){p.sourceListingImageUrl=p.variantImageUrl;p.variantImageUrl=d.image;p.imageSelectionEvidence={method:'exact-SKU-offer-image',sourceUrl:d.sourceUrl,observedAt:d.observedAt};}
  p.images=[...new Set([p.variantImageUrl,p.imageUrl,...d.images].filter(u=>/^https:\/\//.test(u||'')))];
  return p;
 }

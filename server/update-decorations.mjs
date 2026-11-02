@@ -18,13 +18,15 @@ export async function runDecorationUpdate({readerFactory=createFirecrawlBrowserR
  try{
   budget=await budgetFactory(policy);reader=await readerFactory({policy,budget});
   policy.repairImagesOnly=!previous.ready;const checkpoint=await fs.readFile('web/decoration-image-checkpoint.json','utf8').then(JSON.parse).catch(()=>({entries:{}}));
+  let imageProbe;const probeProducts=[...new Map(previous.products.filter(p=>/^https:\/\/www\.therange\.co\.uk\/media\/.+\.(?:jpe?g|png|webp|gif|avif)(?:\?|$)/i.test(p.variantImageUrl||'')).map(p=>[p.variantImageUrl,p])).values()].slice(0,3);
+  if(probeProducts.length){const checkpointPath=policy.imageCheckpoint;policy.imageCheckpoint=null;try{imageProbe=await reader.auditImages(probeProducts,{entries:{...previous.browserImageAudit?.entries,...checkpoint.entries}},{bodyBatchSize:3});}finally{policy.imageCheckpoint=checkpointPath;}await atomicJson(checkpointPath,{entries:{...checkpoint.entries,...imageProbe.entries}});console.log(JSON.stringify({phase:'image-channel-preflight',loaded:imageProbe.loaded,failed:imageProbe.failed}));policy.imageBatchProbe=false;}
   snapshot=await collectDecorationDirectory(reader,previous);console.log(JSON.stringify({phase:'decoration-directory',unique:snapshot.products.length,expected:snapshot.source.expected}));
   // The native browser is only needed for the complete shared root directory.
   // Release its billable clock before batched product-family and photo requests.
   await reader.closeBrowser();
   const detailAudit=await updateDecorationDetails(snapshot,reader);
   await selectGalleryImages(snapshot.products);
-  const browserImageAudit=await reader.auditImages(snapshot.products,{...previous.browserImageAudit,entries:{...previous.browserImageAudit?.entries,...checkpoint.entries}},{bodyBatchSize:500});
+  const browserImageAudit=await reader.auditImages(snapshot.products,{...previous.browserImageAudit,entries:{...previous.browserImageAudit?.entries,...checkpoint.entries,...imageProbe?.entries}},{bodyBatchSize:500});
   await reader.close();const native=reader.metrics();
   await budget.settle({credits:native.firecrawlCredits,receipt:native.receipt,report:{mode:'christmas-decorations',native,detailAudit,products:snapshot.products.length}});
   const deferredAppearance=process.env.DECORATION_DEFER_APPEARANCE==='1';snapshot.appearanceAudit=await enrichDecorations(snapshot.products,{infer:!deferredAppearance});snapshot.appearanceReady=!deferredAppearance;snapshot.browserImageAudit=browserImageAudit;snapshot.detailAudit=detailAudit;snapshot.collectionAudit={native,completedAt:new Date().toISOString(),directoryRequestsReusedAcrossTwelveCategories:true};
