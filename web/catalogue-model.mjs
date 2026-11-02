@@ -29,6 +29,7 @@ export function availableProducts(source,arrivals={}){
 export function classifyDecoration(p){
  const breadcrumb=(p.detailEvidence?.breadcrumbs||[]).join(' ');
  const title=String(p.variantName||p.name||''),description=p.appearanceSource?.descriptionText||p.sourceDescription||'',text=title+' '+description;
+ if(/\btree (?:skirt|collar)\b|tree stand cover/i.test(title))return {id:'ornaments',method:'tree-base-decoration',matched:title};
  // Product type in its title takes precedence over examples of where it can be used.
  if(/\bhang(?:ing)?\b/i.test(title)&&/tree decorations/i.test(breadcrumb)&&!/wreath|garland|swag|drop/i.test(title))return {id:'tree-decorations',method:'official-breadcrumb-and-hanging-product',matched:breadcrumb};
  const rules=[
@@ -39,15 +40,19 @@ export function classifyDecoration(p){
   ['spray',/\b(?:picks?|sprays?|stems?|branches|branch|bush(?:es)?|sprigs?)\b/i],
   ['scenes',/\b(?:nativity|village|scene|diorama|miniature (?:house|church|shop|model)|snow[ -]?globes?|water[ -]?spinner|model (?:train|house|church))\b/i],
   ['wall',/\b(?:wall[ -]?(?:art|decor|decoration|hanging|sticker|mounted)|window (?:sticker|cling|decal)|door (?:sign|plaque)|hanging (?:sign|plaque)|window and wall)\b/i],
-  ['tree-decorations',/\b(?:baubles?|tree (?:decoration|ornament|topper|pendant)|hanging (?:ornament|decoration)|tinsel|christmas tree (?:bow|ribbon|star)|shatterproof)\b/i],
+  ['tree-decorations',/\b(?:baubles?|tree (?:decorations?|ornaments?|toppers?|pendants?)|hanging (?:ornaments?|decorations?)|tinsel|christmas tree (?:bows?|ribbons?|stars?)|shatterproof)\b/i],
   ['standing',/\b(?:standing|stand[ -]?up|nutcracker|gonks?|gnomes?|santa|snowman|penguin|reindeer|polar bear|figurine|figure|elf|elves|soldier)\b/i],
   ['outdoor',/\b(?:outdoor|garden|lawn|pathway|porch|weather[ -]?proof)\b/i]
  ];
  for(const [id,re]of rules){
   if(id==='spray'&&/\b(?:snow spray|spray (?:paint|snow)|bauble|candle|tinsel)\b/i.test(title))continue;
+  if(id==='swag'&&!/\bswag/i.test(title)&&/\b(?:bauble|glass|crystal|tree (?:ornament|decoration))\b/i.test(title))continue;
+  if(['standing','outdoor'].includes(id)&&!(/\bstanding\b|stand[ -]?up/i.test(title)&&id==='standing'))continue;
   if(re.test(title))return {id,method:'product-title',matched:title};
  }
- for(const [id,re]of rules)if(re.test(breadcrumb))return {id,method:'official-breadcrumb',matched:breadcrumb};
+ const official=[['standing',/standing decorations?|christmas figures?/i],['scenes',/christmas scenes?.{0,8}models?/i],['tree-decorations',/tree decorations?/i],['inflatable',/inflatable christmas decorations?/i],['outdoor',/christmas outdoor decorations?/i],['wall',/christmas wall decorations?/i],['wreath',/christmas wreaths?/i],['garland',/christmas garlands?/i],['swag',/christmas swags?|christmas drops?/i],['candle-holder',/christmas candle holders?/i],['spray',/christmas (?:sprays?|picks?|branches|bushes)/i],['ornaments',/christmas ornaments?/i]];
+ for(const crumb of [...(p.detailEvidence?.breadcrumbs||[])].reverse())for(const [id,re]of official)if(re.test(crumb))return {id,method:'official-breadcrumb',matched:crumb};
+ for(const [id,re]of rules)if(['standing','outdoor'].includes(id)&&re.test(title)&&!(id==='standing'&&/\bhang(?:ing)?\b/i.test(title)))return {id,method:'product-title',matched:title};
  // Only explicit descriptions of this object's type, not recommended companion items.
  const lead=text.slice(title.length,title.length+450);
  for(const [id,re]of rules)if(re.test(lead)&&/\b(?:this|the|our)\s+(?:[\w-]+\s+){0,5}(?:wreath|garland|swag|pick|spray|candle holder|inflatable|scene|figurine)\b/i.test(lead))return {id,method:'product-description',matched:lead};

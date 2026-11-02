@@ -80,6 +80,7 @@ export async function enrichDecorations(products,{infer=true}={}){
 }
 export async function publishDecorations(snapshot){
  await loadDecorationDetails(snapshot.products);
+ for(const p of snapshot.products){const cls=classifyDecoration(p);p.department=cls.id;p.departmentIds=decorationMemberships(p,cls.id);p.classificationEvidence=cls;}
  await saveDecorationDetails(snapshot.products);
  const products=snapshot.products.map(compactDecoration);snapshot.stats=Object.fromEntries(decorationDepartments.map(d=>[d.id,{count:products.filter(p=>p.departmentIds.includes(d.id)).length,newCount:products.filter(p=>p.departmentIds.includes(d.id)&&(p.newStatus||p.firstNewObservedAt)).length}]));
  snapshot.products=products;snapshot.revision=digest({at:snapshot.observedAt,products});await atomicJson('web/decorations.json',snapshot);
