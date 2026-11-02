@@ -30,6 +30,9 @@ export function classifyDecoration(p){
  const breadcrumb=(p.detailEvidence?.breadcrumbs||[]).join(' ');
  const title=String(p.variantName||p.name||''),description=p.appearanceSource?.descriptionText||p.sourceDescription||'',text=title+' '+description;
  if(/\btree (?:skirt|collar)\b|tree stand cover/i.test(title))return {id:'ornaments',method:'tree-base-decoration',matched:title};
+ // Printed characters do not change the type of homeware, clothing or gift wrap.
+ if(/\b(?:duvet|bedding|pillowcases?|tablecloth|placemats?|napkins?|tea towels?|mugs?|tumblers?|earrings?|wrapping paper|gift wrap|pyjamas|socks|advent calendars?)\b/i.test(title)||/\bcushions?(?:\s+covers?)?\b/i.test(title)&&!/\bcushion garland\b/i.test(title))return {id:'ornaments',method:'homeware-or-accessory-product-type',matched:title};
+ if(/\b(?:ornament display stand|display easel)\b/i.test(title))return {id:'standing',method:'standing-display-product-type',matched:title};
  // Product type in its title takes precedence over examples of where it can be used.
  if(/\bhang(?:ing)?\b/i.test(title)&&/tree decorations/i.test(breadcrumb)&&!/wreath|garland|swag|drop/i.test(title))return {id:'tree-decorations',method:'official-breadcrumb-and-hanging-product',matched:breadcrumb};
  const rules=[
@@ -47,10 +50,12 @@ export function classifyDecoration(p){
  for(const [id,re]of rules){
   if(id==='spray'&&/\b(?:snow spray|spray (?:paint|snow)|bauble|candle|tinsel)\b/i.test(title))continue;
   if(id==='swag'&&!/\bswag/i.test(title)&&/\b(?:bauble|glass|crystal|tree (?:ornament|decoration))\b/i.test(title))continue;
+  if(id==='scenes'&&/\b(?:baubles?|tree (?:decorations?|ornaments?))\b/i.test(title))continue;
   if(['standing','outdoor'].includes(id)&&!(/\bstanding\b|stand[ -]?up/i.test(title)&&id==='standing'))continue;
   if(id==='tree-decorations'&&re.test(title)&&/\bfree[ -]?standing\b/i.test(description))return {id:'standing',method:'explicit-standing-description',matched:title};
   if(re.test(title))return {id,method:'product-title',matched:title};
  }
+ if(/\bfree[ -]?standing\b/i.test(description)&&/\b(?:ornaments?|decorations?|figures?|figurines?|display|santa|snowman|reindeer|gnome|gonk|nutcracker)\b/i.test(title))return {id:'standing',method:'explicit-standing-description',matched:title};
  const official=[['standing',/standing decorations?|christmas figures?/i],['scenes',/christmas scenes?.{0,8}models?/i],['tree-decorations',/tree decorations?/i],['inflatable',/inflatable christmas decorations?/i],['outdoor',/christmas outdoor decorations?/i],['wall',/christmas wall decorations?/i],['wreath',/christmas wreaths?/i],['garland',/christmas garlands?/i],['swag',/christmas swags?|christmas drops?/i],['candle-holder',/christmas candle holders?/i],['spray',/christmas (?:sprays?|picks?|branches|bushes)/i],['ornaments',/christmas ornaments?/i]];
  for(const crumb of [...(p.detailEvidence?.breadcrumbs||[])].reverse())for(const [id,re]of official)if(re.test(crumb))return {id,method:'official-breadcrumb',matched:crumb};
  for(const [id,re]of rules)if(['standing','outdoor'].includes(id)&&re.test(title)&&!(id==='standing'&&/\bhang(?:ing)?\b/i.test(title)))return {id,method:'product-title',matched:title};
