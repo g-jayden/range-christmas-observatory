@@ -174,19 +174,22 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;
  reader.captureVerified=enhancedCapture;reader.originalsFor=url=>captureOriginals.get(sourceUrl(url))||[];
  reader.familyCount=()=>families.size;
+ reader.recommendedFamilyBatchSize=()=>policy.familyBatchSize||100;
  reader.familyReady=input=>{const u=new URL(sourceUrl(input));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return families.has(u.href)};
  reader.prepareFamilies=async products=>{
   const urls=[...new Set(products.map(p=>{const u=new URL(sourceUrl(p.sourceUrl));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return u.href}))].filter(url=>!families.has(url)&&!familyFailures.has(url));
   if(!urls.length)return;const batchSize=policy.familyBatchSize||100;for(let offset=0;offset<urls.length;offset+=batchSize){const batchUrls=urls.slice(offset,offset+batchSize);
   const script='(async()=>{const read='+readFamilyBundle.toString()+';const urls='+JSON.stringify(batchUrls)+';let cursor=0;const results=[],end=Date.now()+50000;await Promise.all(Array.from({length:'+String(policy.familyBatchConcurrency||4)+'},async()=>{while(cursor<urls.length&&Date.now()<end){const url=urls[cursor++];try{results.push({url,bundle:await read({url,jsonUrl:url+"?json",timeoutMs:'+String(policy.familyFetchTimeoutMs||10000)+'})})}catch(e){results.push({url,error:e.message})}}}));while(cursor<urls.length)results.push({url:urls[cursor++],deferred:true,error:"bounded batch time limit"});return results})()';
-  const results=await scriptAction(script);
+  const started=Date.now(),results=await scriptAction(script);
+  const elapsed=Date.now()-started,good=results.filter(r=>r.bundle?.status===200&&r.bundle?.variants?.length&&r.bundle?.evidence?.productId).length,deferred=results.filter(r=>r.deferred).length;metrics.familyBatchTimings||=[];metrics.familyBatchTimings.push({count:batchUrls.length,elapsedMs:elapsed,good,deferred});
+  if(policy.adaptiveFamilies){if(deferred||elapsed>45000)policy.familyBatchSize=Math.max(25,Math.floor(batchUrls.length/2));else if(good>=batchUrls.length*.9&&elapsed<22000)policy.familyBatchSize=Math.min(400,batchUrls.length*2);}
   if(results.length!==batchUrls.length||results.some(r=>!batchUrls.includes(r.url)))throw Error('商品系列批量补查地址不一致');
   for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();b.evidence.sourceTransport='enhanced-batch';families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else {const error=new SourceError('官网商品详情链接异常，未返回可核实的具体SKU规格；本轮目录价格、库存、NEW与图片独立更新',b?.status||0);familyFailures.set(r.url,error);console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}}}
  };
  reader.auditImages=async (products,previous={},options={})=>{
   const allUrls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))],results=[],known=[],newUrls=[],validPrior={};
   for(const url of allUrls){
-   const u=new URL(url);if(u.protocol!=='https:'||!['www.therange.co.uk','kube-media-unpublished.rstore.com'].includes(u.hostname)||!u.pathname.startsWith('/media/'))throw Error('商品图片来源未通过核验');
+   let u;try{u=new URL(url)}catch{}if(!u||u.protocol!=='https:'||!['www.therange.co.uk','kube-media-unpublished.rstore.com'].includes(u.hostname)||!u.pathname.startsWith('/media/')){results.push({url,ok:false,error:/placeholder/i.test(url)?'source-placeholder-no-product-photo':'source-image-URL-not-verified'});continue;}
    const old=previous.entries?.[url];let valid=false;if(old?.ok&&old.width>=64&&old.height>=64&&/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(old.cachedImageUrl||'')){try{valid=createHash('sha256').update(await fs.readFile('web/'+old.cachedImageUrl)).digest('hex')===old.hash;}catch{}}
    if(valid){validPrior[url]={hash:old.hash,cachedImageUrl:old.cachedImageUrl,etag:old.etag,lastModified:old.lastModified,width:old.width,height:old.height,bytes:old.bytes,mime:old.mime};if(policy.repairImagesOnly)results.push({...old,observedAt:old.observedAt||previous.observedAt,retained:true});else known.push(url);}else newUrls.push(url);
   }

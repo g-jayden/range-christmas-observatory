@@ -1,5 +1,5 @@
 name: Initialize complete Christmas decoration catalogue
-# Coverage v4: verified-cache-only restore and source-published image hosts; reuse native directory connections; bounded official facet partitions avoid unstable equal-price paging.
+# Coverage v5: compact flags never establish verification; verified-cache-only restore and source-published image hosts; reuse native directory connections; bounded official facet partitions avoid unstable equal-price paging.
 on:
   push:
     branches: [main]
