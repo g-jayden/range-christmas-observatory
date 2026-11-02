@@ -31,7 +31,7 @@ export function classifyDecoration(p){
  const title=String(p.variantName||p.name||''),productTitle=title.split(/\s[-–]\s/)[0],description=p.appearanceSource?.descriptionText||p.sourceDescription||'',text=title+' '+description;
  if(/\btree (?:skirt|collar)\b|tree stand cover/i.test(title))return {id:'ornaments',method:'tree-base-decoration',matched:title};
  // Printed characters do not change the type of homeware, clothing or gift wrap.
- if(/\b(?:duvet|bedding|pillowcases?|tablecloth|placemats?|napkins?|tea towels?|mugs?|tumblers?|earrings?|wrapping paper|gift wrap|pyjamas|socks|advent calendars?)\b/i.test(productTitle)||/\bcushions?(?:\s+covers?)?\b/i.test(productTitle)&&!/\bcushion garland\b/i.test(productTitle))return {id:'ornaments',method:'homeware-or-accessory-product-type',matched:title};
+ if(/\b(?:duvet|bedding|pillowcases?|tablecloth|placemats?|napkins?|tea towels?|mugs?|tumblers?|pens?|pencils?|earrings?|wrapping paper|gift wrap|pyjamas|socks|advent calendars?)\b/i.test(productTitle)||/\bcushions?(?:\s+covers?)?\b/i.test(productTitle)&&!/\bcushion garland\b/i.test(productTitle))return {id:'ornaments',method:'homeware-or-accessory-product-type',matched:title};
  if(/\b(?:ornament display stand|display easel)\b/i.test(title))return {id:'standing',method:'standing-display-product-type',matched:title};
  // Product type in its title takes precedence over examples of where it can be used.
  if(/\bhang(?:ing)?\b/i.test(title)&&/tree decorations/i.test(breadcrumb)&&!/wreath|garland|swag|drop/i.test(title))return {id:'tree-decorations',method:'official-breadcrumb-and-hanging-product',matched:breadcrumb};
