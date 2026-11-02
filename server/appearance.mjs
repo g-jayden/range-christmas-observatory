@@ -20,7 +20,7 @@ export function materialFacts(specs={},text=''){
  if(fabricSpecific)found=found.filter(x=>x.en!=='Fabric');if(has('Paulownia Wood')||has('Mango Wood'))found=found.filter(x=>x.en!=='Wood');if(['Iron','Steel','Aluminium'].some(has))found=found.filter(x=>x.en!=='Metal');if(['PVC','PE','PET','Polypropylene'].some(has))found=found.filter(x=>x.en!=='Plastic');if(['Rattan','Willow','Seagrass'].some(has))found=found.filter(x=>x.en!=='Wicker');
  if(has('Acrylic')&&!/\b(?:yarn|knit|fibre|fiber|textile|fabric|wool|cotton)\b/i.test(direct))found=found.map(x=>x.en==='Acrylic'?{en:'Acrylic',zh:'亚克力'}:x);
  if(has('Faux Leather'))found=found.filter(x=>x.en!=='Leather');if(has('Faux Silk'))found=found.filter(x=>x.en!=='Silk');if(has('Paraffin'))found=found.filter(x=>x.en!=='Wax');
- const unknown=direct.split(/[,;|]+/).map(s=>s.trim()).filter(s=>s&&!materialTerms.some(([, ,re])=>re.test(s)));
+ const unknown=direct.split(/[,;|]+/).map(s=>s.trim()).filter(s=>s&&!/^[\d.\s%/+:()\-]+$/.test(s)&&!materialTerms.some(([, ,re])=>re.test(s)));
  const labels=[...found.map(x=>`${x.zh}（${x.en}）`),...unknown.map(s=>`原站材质标注（${s}；composition unspecified）`)];
  return {components:found,unmappedSourceTerms:unknown,label:labels.length?labels.join(' / '):'材质未确认（Not specified）',sourceField:direct||null,descriptionExcerpt:relevant.slice(0,3).join(' ').slice(0,600)};
 }
