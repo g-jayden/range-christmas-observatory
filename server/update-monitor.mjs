@@ -25,7 +25,7 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
   await selectGalleryImages(candidates);await reader.closeBrowser?.();if(!probe)result=await captureNewScreenshots(result,{reader,state,policy,now});
   for(const event of result.events||[]){const p=snapshot.products.find(p=>p.sku===event.product.sku);if(p&&event.product.originalImageUrl)p.originalImageUrl=event.product.originalImageUrl;}
   let screenshotProbe,validationCredits=0,probeProduct,probeScreenshot;
-  if(probe&&reader.captureVerified){const p=snapshot.products.find(p=>p.sku==='515142')||snapshot.products[0];const before=reader.metrics().scrapeCredits||0;probeScreenshot=await reader.captureVerified(p.sourceUrl,{preferredThumbnail:p.variantImageUrl});probeProduct=p;const original=reader.originalsFor?.(p.sourceUrl)?.[0];if(original)p.originalImageUrl=original.url;
+  if(probe&&reader.captureVerified){const p=snapshot.products.find(p=>p.kind==='decoration'&&p.newStatus&&/\/m\d+\//.test(p.sourceUrl||''))||snapshot.products.find(p=>p.sku==='515142')||snapshot.products[0];const before=reader.metrics().scrapeCredits||0;probeScreenshot=await reader.captureVerified(p.sourceUrl,{preferredThumbnail:p.variantImageUrl});probeProduct=p;const original=reader.originalsFor?.(p.sourceUrl)?.[0];if(original)p.originalImageUrl=original.url;
    // This source original was directly verified in the official SKU gallery at 1500x1500; no URL resizing is guessed.
    if(p.sku==='515142'&&!p.originalImageUrl)p.originalImageUrl='https://www.therange.co.uk/media/6/4/1788948902_9624.jpg';
    if(!p.originalImageUrl)throw Error('同一SKU官网原图尚未取得，未将缩略图算作原图');
