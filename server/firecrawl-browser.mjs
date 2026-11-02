@@ -22,7 +22,7 @@ async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=2000
 }
 
 async function readImageBatch(items){
-    let cursor=0;const results=[];await Promise.all(Array.from({length:8},async()=>{while(cursor<items.length){const {url,prior,hashOnly}=items[cursor++];let debug;try{
+    let cursor=0;const results=[],deadline=Date.now()+45000;await Promise.all(Array.from({length:8},async()=>{while(cursor<items.length&&Date.now()<deadline){const {url,prior,hashOnly}=items[cursor++];let debug;try{
      const headers={accept:'image/avif,image/webp,image/apng,image/*,*/*;q=0.8'};if(prior?.etag)headers['if-none-match']=prior.etag;else if(prior?.lastModified)headers['if-modified-since']=prior.lastModified;
      const response=await fetch(url,{credentials:'include',headers,cache:'no-cache',signal:AbortSignal.timeout(8000)});
      if(response.status===304&&prior?.hash){results.push({...prior,url,ok:true,revalidated:true});continue;}
@@ -33,7 +33,7 @@ async function readImageBatch(items){
      const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await blob.arrayBuffer()))).map(x=>x.toString(16).padStart(2,'0')).join('');
      const same=prior?.hash===hash&&prior?.cachedImageUrl;let dataBase64;if(!same&&!hashOnly){let binary='';const bytes=new Uint8Array(await blob.arrayBuffer());for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));dataBase64=btoa(binary);}
      results.push({url,ok:width>=64&&height>=64,error:width<64||height<64?'placeholder-too-small':undefined,width,height,hash,bytes:blob.size,mime:blob.type,dataBase64,cachedImageUrl:same?prior.cachedImageUrl:undefined,needsBody:!same&&hashOnly,etag:response.headers.get('etag'),lastModified:response.headers.get('last-modified')});
-    }catch(e){results.push({url,ok:false,debug,error:'image-fetch-or-decode-failed: '+String(e.message).slice(0,120)})}}}));return results;
+    }catch(e){results.push({url,ok:false,debug,error:'image-fetch-or-decode-failed: '+String(e.message).slice(0,120)})}}}));while(cursor<items.length)results.push({url:items[cursor++].url,ok:false,deferred:true,error:"bounded image time limit"});return results;
    }
 
 export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,connect,now=()=>Date.now()}={}){
@@ -195,14 +195,15 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   }
   const tasks=[];const hashBatch=policy.imageHashBatchSize||400;for(let offset=0;offset<known.length;offset+=hashBatch)tasks.push({urls:known.slice(offset,offset+hashBatch),hashOnly:true});
   for(let offset=0;offset<newUrls.length;){const size=policy.imageBatchProbe&&offset===0?3:Math.min(500,options.bodyBatchSize||policy.imageBodyBatchSize||200);tasks.push({urls:newUrls.slice(offset,offset+size),hashOnly:false});offset+=size;}
-  await fs.mkdir('web/images/source',{recursive:true});let rechecked=0,changed=0;
+  await fs.mkdir('web/images/source',{recursive:true});let rechecked=0,changed=0;const retryUrls=new Set(),retried=new Set();
   for(let taskIndex=0;taskIndex<tasks.length;taskIndex++){
    guard();const task=tasks[taskIndex],items=task.urls.map(url=>({url,prior:validPrior[url],hashOnly:task.hashOnly}));metrics.imageBatchRequests=(metrics.imageBatchRequests||0)+1;
    const batch=await scriptAction('('+readImageBatch.toString()+')('+JSON.stringify(items)+')',{needsImages:true});
    if(batch.length!==items.length||batch.some(r=>!items.some(i=>i.url===r.url)))throw Error('图片批量核验没有返回全部请求地址');
-   if(taskIndex===0&&batch.filter(r=>!r.ok||r.width<64||r.height<64).length>batch.length*.8){console.error(JSON.stringify({phase:'image-batch-failure',count:batch.length,failures:batch.filter(r=>!r.ok||r.width<64||r.height<64).slice(0,3).map(({url,status,error,debug})=>({url,status,error,debug}))}));throw Error('图片主通道未通过，停止后续付费批次');}
-   rechecked+=batch.length;const needsBody=[];
+   if(taskIndex===0&&batch.filter(r=>!r.deferred&&(!r.ok||r.width<64||r.height<64)).length>batch.filter(r=>!r.deferred).length*.8){console.error(JSON.stringify({phase:'image-batch-failure',count:batch.length,failures:batch.filter(r=>!r.ok||r.width<64||r.height<64).slice(0,3).map(({url,status,error,debug})=>({url,status,error,debug}))}));throw Error('图片主通道未通过，停止后续付费批次');}
+   rechecked+=batch.filter(r=>!r.deferred).length;const needsBody=[],deferred=[];
    for(const item of batch){
+    if(item.deferred){deferred.push(item.url);continue;}if(!item.ok&&!retried.has(item.url)&&(item.status===0||item.status===429||item.status>=500||!item.debug&&/fetch-or-decode/.test(item.error||''))){retried.add(item.url);retryUrls.add(item.url);continue;}
     item.observedAt=new Date(now()).toISOString();if(item.width<64||item.height<64){item.ok=false;item.error='placeholder-too-small'}
     if(item.ok&&item.needsBody){needsBody.push(item.url);changed++;continue;}
     if(item.ok)try{
@@ -212,13 +213,15 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
     }catch(e){delete item.dataBase64;item.ok=false;item.error=e.message;}
     results.push(item);
    }
+   for(let offset=0;offset<deferred.length;offset+=150)tasks.push({urls:deferred.slice(offset,offset+150),hashOnly:task.hashOnly});
+   if(taskIndex===tasks.length-1&&retryUrls.size){const retries=[...retryUrls];retryUrls.clear();for(let offset=0;offset<retries.length;offset+=200)tasks.push({urls:retries.slice(offset,offset+200),hashOnly:false});}
    for(let offset=0;offset<needsBody.length;offset+=200)tasks.push({urls:needsBody.slice(offset,offset+200),hashOnly:false});
    if(policy.imageCheckpoint)await fs.writeFile(policy.imageCheckpoint,JSON.stringify({entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString()}));
    console.log(JSON.stringify({phase:'image-verification',checked:results.length,total:allUrls.length,changed}));
   }
   const byUrl=new Map(results.map(r=>[r.url,r]));for(const p of products){const r=byUrl.get(p.variantImageUrl||p.imageUrl);if(r?.ok){p.cachedImageUrl=r.cachedImageUrl;p.imageCacheEvidence={sourceUrl:r.url,sha256:r.hash,observedAt:r.observedAt};}}
   metrics.sourceImageChecks+=rechecked;const loaded=results.filter(r=>r.ok).length;
-  return {mode:'live-enhanced-batches-and-original-image-cache',checked:results.length,rechecked,retained:policy.repairImagesOnly?allUrls.length-newUrls.length:0,changed,loaded,failed:results.length-loaded,failures:results.filter(r=>!r.ok),entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString(),perImageScrapeRequests:0,batchScrapeRequests:metrics.imageBatchRequests||0};
+  return {mode:'live-enhanced-batches-and-original-image-cache',checked:results.length,rechecked,retained:results.filter(r=>r.ok&&r.retained).length,changed,loaded,failed:results.length-loaded,failures:results.filter(r=>!r.ok),entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString(),perImageScrapeRequests:0,batchScrapeRequests:metrics.imageBatchRequests||0};
  };
  reader.metrics=()=>({...metrics,scrapeCredits,sessionSeconds:created?Math.ceil(((browserEndedAt||now())-created)/1000):0});
  reader.closeBrowser=async()=>{
