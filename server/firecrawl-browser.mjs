@@ -24,15 +24,20 @@ async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=2000
 async function readImageBatch(items){
     let cursor=0;const results=[],deadline=Date.now()+45000;await Promise.all(Array.from({length:8},async()=>{while(cursor<items.length&&Date.now()<deadline){const {url,prior,hashOnly}=items[cursor++];let debug;try{
      const headers={accept:'image/avif,image/webp,image/apng,image/*,*/*;q=0.8'};if(prior?.etag)headers['if-none-match']=prior.etag;else if(prior?.lastModified)headers['if-modified-since']=prior.lastModified;
-     const response=await fetch(url,{credentials:'include',headers,cache:'no-cache',signal:AbortSignal.timeout(8000)});
-     if(response.status===304&&prior?.hash){results.push({...prior,url,ok:true,revalidated:true});continue;}
+     const source=new URL(url),unpublished=source.hostname==='kube-media-unpublished.rstore.com',mirror=unpublished?new URL(source.pathname+source.search,'https://www.therange.co.uk').href:null;let retrievedFrom=prior?.retrievedFrom===mirror?mirror:url,response;
+     const download=target=>fetch(target,{credentials:'include',headers,cache:'no-cache',signal:AbortSignal.timeout(8000)});
+     try{response=await download(retrievedFrom)}catch(error){if(!unpublished||retrievedFrom===mirror)throw error;}
+     // Only the identical retailer-published asset path on its verified public CDN.
+     // No changed filenames, generated variants, private credentials or upscaling.
+     if(unpublished&&retrievedFrom!==mirror&&(!response||response.status===403)){retrievedFrom=mirror;response=await download(mirror);}
+     if(response.status===304&&prior?.hash){results.push({...prior,url,retrievedFrom,ok:true,revalidated:true});continue;}
      if(response.status!==200||!response.headers.get('content-type')?.startsWith('image/')){results.push({url,ok:false,status:response.status,error:response.status===403?'access-blocked':'not-an-image'});continue;}
      const blob=await response.blob();debug={mime:blob.type,size:blob.size,magic:Array.from(new Uint8Array(await blob.slice(0,16).arrayBuffer()))};let width,height;
      try{const bitmap=await createImageBitmap(blob);width=bitmap.width;height=bitmap.height;bitmap.close();}
      catch{const objectUrl=URL.createObjectURL(blob);try{const image=new Image();image.src=objectUrl;await image.decode();width=image.naturalWidth;height=image.naturalHeight;}finally{URL.revokeObjectURL(objectUrl)}}
      const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await blob.arrayBuffer()))).map(x=>x.toString(16).padStart(2,'0')).join('');
      const same=prior?.hash===hash&&prior?.cachedImageUrl;let dataBase64;if(!same&&!hashOnly){let binary='';const bytes=new Uint8Array(await blob.arrayBuffer());for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));dataBase64=btoa(binary);}
-     results.push({url,ok:width>=64&&height>=64,error:width<64||height<64?'placeholder-too-small':undefined,width,height,hash,bytes:blob.size,mime:blob.type,dataBase64,cachedImageUrl:same?prior.cachedImageUrl:undefined,needsBody:!same&&hashOnly,etag:response.headers.get('etag'),lastModified:response.headers.get('last-modified')});
+     results.push({url,retrievedFrom,sourceAssetPath:source.pathname,ok:width>=64&&height>=64,error:width<64||height<64?'placeholder-too-small':undefined,width,height,hash,bytes:blob.size,mime:blob.type,dataBase64,cachedImageUrl:same?prior.cachedImageUrl:undefined,needsBody:!same&&hashOnly,etag:response.headers.get('etag'),lastModified:response.headers.get('last-modified')});
     }catch(e){results.push({url,ok:false,debug,error:'image-fetch-or-decode-failed: '+String(e.message).slice(0,120)})}}}));while(cursor<items.length)results.push({url:items[cursor++].url,ok:false,deferred:true,error:"bounded image time limit"});return results;
    }
 
@@ -191,7 +196,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   for(const url of allUrls){
    let u;try{u=new URL(url)}catch{}if(!u||u.protocol!=='https:'||!['www.therange.co.uk','kube-media-unpublished.rstore.com'].includes(u.hostname)||!u.pathname.startsWith('/media/')){results.push({url,ok:false,error:/placeholder/i.test(url)?'source-placeholder-no-product-photo':'source-image-URL-not-verified'});continue;}
    const old=previous.entries?.[url];let valid=false;if(old?.ok&&old.width>=64&&old.height>=64&&/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(old.cachedImageUrl||'')){try{valid=createHash('sha256').update(await fs.readFile('web/'+old.cachedImageUrl)).digest('hex')===old.hash;}catch{}}
-   if(valid){validPrior[url]={hash:old.hash,cachedImageUrl:old.cachedImageUrl,etag:old.etag,lastModified:old.lastModified,width:old.width,height:old.height,bytes:old.bytes,mime:old.mime};if(policy.repairImagesOnly||policy.imageRefreshAfter&&Date.parse(old.observedAt)>=Date.parse(policy.imageRefreshAfter))results.push({...old,observedAt:old.observedAt||previous.observedAt,retained:true});else known.push(url);}else newUrls.push(url);
+   if(valid){validPrior[url]={retrievedFrom:old.retrievedFrom,hash:old.hash,cachedImageUrl:old.cachedImageUrl,etag:old.etag,lastModified:old.lastModified,width:old.width,height:old.height,bytes:old.bytes,mime:old.mime};if(policy.repairImagesOnly||policy.imageRefreshAfter&&Date.parse(old.observedAt)>=Date.parse(policy.imageRefreshAfter))results.push({...old,observedAt:old.observedAt||previous.observedAt,retained:true});else known.push(url);}else newUrls.push(url);
   }
   const tasks=[];const hashBatch=policy.imageHashBatchSize||400;for(let offset=0;offset<known.length;offset+=hashBatch)tasks.push({urls:known.slice(offset,offset+hashBatch),hashOnly:true});
   for(let offset=0;offset<newUrls.length;){const size=policy.imageBatchProbe&&offset===0?3:Math.min(500,options.bodyBatchSize||policy.imageBodyBatchSize||200);tasks.push({urls:newUrls.slice(offset,offset+size),hashOnly:false});offset+=size;}
