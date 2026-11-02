@@ -33,4 +33,4 @@ for m in t:
  const result=await control('/internal/recover-event',{product:p,screenshotBase64:(await fs.readFile(dir+'/proof.png')).toString('base64'),screenshotVerifiedAt:p.detailEvidence.observedAt});
  console.log(JSON.stringify({recoveredSku:p.sku,recorded:Boolean(result.recorded),alreadyRecorded:Boolean(result.alreadyRecorded),firecrawlCredits:0}));changed=true;
 }
-if(changed){await fs.writeFile('web/catalogue.json',JSON.stringify(catalogue));}
+if(changed){await fs.writeFile('web/catalogue.json',JSON.stringify(catalogue));await fs.writeFile('web/notification-recovery.json',JSON.stringify({version:1,products:[],completed:requests.map(p=>({...p,restoredAt:new Date().toISOString()}))}));}

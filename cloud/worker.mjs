@@ -183,7 +183,7 @@ export class Control{
     }
     const delivery={accepted,at:new Date().toISOString()};if(accepted)await this.db.put('last-delivery',delivery);
     const status=await this.deliveryStatus(),monitor=await this.monitorState();
-    if(!status.pendingDeliveries&&monitor.state==='delivery-pending')await this.db.put('monitor',{...monitor,state:'active',lastDelivery:delivery,pendingDeliveries:0});
+    if(!status.pendingDeliveries&&(accepted||monitor.state==='delivery-pending'||monitor.state==='not-started'&&status.lastDelivery))await this.db.put('monitor',{...monitor,state:'active',lastDelivery:accepted?delivery:status.lastDelivery,pendingDeliveries:0,nextRunAt:Date.parse(monitor.nextRunAt)<=Date.now()?nextNewCheck():monitor.nextRunAt});
     return response({accepted,morePending:false,...status});
    }
   }

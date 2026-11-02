@@ -37,6 +37,7 @@ try{
  await fs.rm('runtime',{recursive:true});assert.equal((await request('/internal/deliver',{})).status,503);assert.equal(sent,0);assert.equal((await app.deliveryStatus()).pendingDeliveries,1);
  published=true;const delivered=await controlCall('/internal/deliver',{});assert.equal(delivered.accepted,1);assert.equal(delivered.pendingDeliveries,0);assert.equal((await app.monitorState()).state,'active');
  assert.equal((await controlCall('/internal/deliver',{})).accepted,0);assert.equal(sent,1,'Recovered mail is delivered only once without a source reader');
+ const legacy=await app.monitorState();await db.put('monitor',{...legacy,state:'not-started',nextRunAt:'2026-01-01T23:00:00Z'});await controlCall('/internal/deliver',{});assert.equal((await app.monitorState()).state,'active');assert(Date.parse((await app.monitorState()).nextRunAt)>Date.now());
  const missing={...p,sku:'523226',detailEvidence:{selectedSku:'523226',verifiedProductSection:true}};
  assert.equal((await request('/admin/recover-event',{product:missing,screenshotBase64:'aW1hZ2U='},'admin')).status,409,'Recovery cannot inject unobserved NEW products');
  const pending={...p,sku:'523227',sourceUrl:'https://www.therange.co.uk/p/skirt/#523227',detailEvidence:{selectedSku:'523227',verifiedProductSection:true},mailAssets:{card:{url:prefix.replace('523225','523227')+'card.png'},original:{url:prefix.replace('523225','523227')+'original.jpg'},proof:{url:prefix.replace('523225','523227')+'proof.png'}}};
