@@ -21,6 +21,11 @@ on:
         description: Check NEW now without changing the regular schedule
         type: boolean
         default: false
+      repairScope:
+        description: Evidence to repair without re-reading the catalogue
+        type: choice
+        options: [trees-and-skirts, decorations]
+        default: trees-and-skirts
       runner:
         description: Standard free public-repository runner
         type: choice
@@ -134,7 +139,8 @@ jobs:
         continue-on-error: true
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
-        run: node server/repair-snapshot.mjs
+          REPAIR_SCOPE: ${{ inputs.repairScope }}
+        run: node scripts/run-repair.mjs
       - name: Complete the selected interval
         if: always() && steps.tick.outputs.full == 'true' && steps.refresh.outcome != 'skipped'
         env:
