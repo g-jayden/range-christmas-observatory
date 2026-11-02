@@ -1,10 +1,11 @@
 import {selectGalleryImages} from '../server/enrich-appearance.mjs';
-import {readDecorations,loadDecorationDetails,enrichDecorations,publishDecorations,publishDecorationStatus,decorationReadiness} from '../server/decorations.mjs';
+import {readDecorations,loadDecorationDetails,enrichDecorations,publishDecorations,publishDecorationStatus,decorationReadiness,restoreDecorationImageEvidence} from '../server/decorations.mjs';
 import {seedDecorationBaseline} from '../server/update-decorations.mjs';
 const snapshot=await readDecorations();
 if(!snapshot.products.length)throw Error('No source catalogue has been collected');
 await loadDecorationDetails(snapshot.products);
 await selectGalleryImages(snapshot.products);
+await restoreDecorationImageEvidence(snapshot);
 snapshot.appearanceAudit=await enrichDecorations(snapshot.products);
 snapshot.appearanceReady=true;
 decorationReadiness(snapshot);

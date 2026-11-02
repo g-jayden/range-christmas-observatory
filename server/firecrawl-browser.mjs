@@ -198,7 +198,9 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   await fs.mkdir('web/images/source',{recursive:true});let rechecked=0,changed=0;const retryUrls=new Set(),retried=new Set();
   for(let taskIndex=0;taskIndex<tasks.length;taskIndex++){
    guard();const task=tasks[taskIndex],items=task.urls.map(url=>({url,prior:validPrior[url],hashOnly:task.hashOnly}));metrics.imageBatchRequests=(metrics.imageBatchRequests||0)+1;
-   const batch=await scriptAction('('+readImageBatch.toString()+')('+JSON.stringify(items)+')',{needsImages:true});
+   let batch;try{batch=await scriptAction('('+readImageBatch.toString()+')('+JSON.stringify(items)+')',{needsImages:true});}catch(error){
+    if([408,500,502,503,504].includes(error.status)&&(task.attempt||0)<2){const size=Math.max(1,Math.ceil(task.urls.length/2));for(let n=0;n<task.urls.length;n+=size)tasks.push({...task,urls:task.urls.slice(n,n+size),attempt:(task.attempt||0)+1});console.log(JSON.stringify({phase:'image-transport-bounded-retry',status:error.status,urls:task.urls.length,attempt:(task.attempt||0)+1}));continue;}throw error;
+   }
    if(batch.length!==items.length||batch.some(r=>!items.some(i=>i.url===r.url)))throw Error('图片批量核验没有返回全部请求地址');
    if(taskIndex===0&&batch.filter(r=>!r.deferred&&(!r.ok||r.width<64||r.height<64)).length>batch.filter(r=>!r.deferred).length*.8){console.error(JSON.stringify({phase:'image-batch-failure',count:batch.length,failures:batch.filter(r=>!r.ok||r.width<64||r.height<64).slice(0,3).map(({url,status,error,debug})=>({url,status,error,debug}))}));throw Error('图片主通道未通过，停止后续付费批次');}
    rechecked+=batch.filter(r=>!r.deferred).length;const needsBody=[],deferred=[];

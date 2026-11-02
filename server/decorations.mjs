@@ -105,5 +105,11 @@ export function decorationReadiness(snapshot){
  snapshot.collectionReady=Boolean(snapshot.source?.complete&&snapshot.source.expected===ps.length&&snapshot.browserImageAudit?.failed===0&&ps.every(p=>p.cachedImageUrl&&p.imageCacheEvidence?.sha256));
  snapshot.sourceReady=snapshot.collectionReady&&verified===ps.length;snapshot.ready=snapshot.sourceReady&&snapshot.appearanceReady===true;snapshot.operationalReady=snapshot.collectionReady&&snapshot.appearanceReady===true;return snapshot.coverage;
 }
+export async function restoreDecorationImageEvidence(snapshot){
+ const checkpoint=await fs.readFile('web/decoration-image-checkpoint.json','utf8').then(JSON.parse).catch(()=>({entries:{}})),prior={...snapshot.browserImageAudit?.entries,...checkpoint.entries},valid=new Map();
+ for(const p of snapshot.products){const url=p.variantImageUrl||p.imageUrl;if(!valid.has(url)){const e=prior[url];let ok=false;if(e?.ok&&e.width>=64&&e.height>=64&&/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(e.cachedImageUrl||''))try{ok=createHash('sha256').update(await fs.readFile('web/'+e.cachedImageUrl)).digest('hex')===e.hash}catch{}valid.set(url,ok?e:null);}const e=valid.get(url);if(e){p.cachedImageUrl=e.cachedImageUrl;p.imageCacheEvidence={sourceUrl:url,sha256:e.hash,observedAt:e.observedAt};}else {delete p.cachedImageUrl;delete p.imageCacheEvidence;}}
+ const entries=Object.fromEntries([...valid].filter(([,e])=>e)),failed=[...valid].filter(([,e])=>!e).length;
+ snapshot.browserImageAudit={...snapshot.browserImageAudit,mode:'verified-saved-source-image-evidence',entries,checked:valid.size,loaded:valid.size-failed,failed,currentMissingImages:failed};return snapshot.browserImageAudit;
+}
 
 export function notificationSnapshot(trees,decorations){const map=new Map(trees.products.map(p=>[p.sku,p]));for(const p of decorations?.products||[]){const prior=map.get(p.sku);if(prior){prior.departmentIds=p.departmentIds;prior.department=p.department;}else map.set(p.sku,p);}return {...trees,observedAt:Date.parse(decorations?.observedAt)>Date.parse(trees.observedAt)?decorations.observedAt:trees.observedAt,products:[...map.values()]};}
