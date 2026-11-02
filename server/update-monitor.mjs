@@ -15,7 +15,7 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
  try{
   budget=await budgetFactory(policy);reader=await readerFactory({policy:probe?{...policy,repairImagesOnly:true}:policy,budget});
   const gathered=await collectSnapshot({previous,reader,policy,now,forceFresh:true,onProgress:console.log});
-  const previousDecorations=await readDecorations();let decorations=!probe&&previousDecorations.baselineReady?await collectDecorationDirectory(reader,previousDecorations):null;const snapshot=notificationSnapshot(gathered.snapshot,decorations);
+  const previousDecorations=await readDecorations();let decorations=previousDecorations.baselineReady?await collectDecorationDirectory(reader,previousDecorations):null;const snapshot=notificationSnapshot(gathered.snapshot,decorations);
   let result={success:true,captured:0,attempted:0,scanned:snapshot.products.length,events:[],deferred:0,issues:[]};
   if(!probe)result=await checkNew({snapshot,reader,policy,budget,state,lease:tick.monitorLease||tick.lease,now,deferDelivery:true});
   const candidates=snapshot.products.filter(p=>result.events.some(e=>e.product.sku===p.sku));

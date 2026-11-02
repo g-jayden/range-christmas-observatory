@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';import {firstRun,advanceRun,validateSchedule,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';import handler,{Control} from '../cloud/worker.mjs';import {retryingReader} from '../server/retry-reader.mjs';
+import assert from 'node:assert/strict';import {firstRun,advanceRun,validateSchedule,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';import handler,{Control} from '../cloud/worker.mjs';import {retryingReader} from '../server/retry-reader.mjs';import {DEPARTMENTS} from '../web/catalogue-model.mjs';
 const start=new Date('2026-10-30T08:20:00Z');
 assert.equal(nextNewCheck(new Date('2026-10-30T09:00:00Z')),'2026-10-30T23:00:00.000Z');
 assert.equal(nextNewCheck(new Date('2026-11-03T22:59:00Z')),'2026-11-03T23:00:00.000Z');
@@ -59,5 +59,12 @@ try{
  const deniedAdmin=await testApp.fetch(new Request('https://worker.example/admin/test-email',{method:'POST',body:'{}'}));assert.equal(deniedAdmin.status,401);
  const adminDuplicate=await testApp.fetch(new Request('https://worker.example/admin/test-email',{method:'POST',headers:{authorization:'Bearer admin','content-type':'application/json'},body:JSON.stringify({email,product:testProduct,requestId:'verified-image-test-1'})}));assert.equal(adminDuplicate.status,200);assert.equal(sent.length,count+1,'Owner test reuses the same recipient verification and deduplication');
  const invalid=structuredClone(testProduct);invalid.mailAssets.card.url='https://unrelated.example/card.png';assert.equal((await testCall(invalid)).status,500);assert.equal(sent.length,count+1,'Assets outside the published SKU directory cannot be emailed');
+ const categoryStorage=new Store,categoryApp=new Control({storage:categoryStorage},env);const categoryCall=(route,body)=>categoryApp.fetch(new Request('https://worker.example/internal/'+route,{method:'POST',headers:{authorization:'Bearer control','content-type':'application/json'},body:JSON.stringify(body)}));
+ await categoryCall('seed',{records:[],confirmedSubscriptions:[{email:'category-reader@example.com',scopes:DEPARTMENTS.map(d=>d.id),confirmedAt:'2026-11-01T00:00:00Z'}]});
+ await categoryCall('extend-baseline',{scope:'christmas-decorations-v1',records:[{sku:'90000',everNew:true}],observedAt:new Date().toISOString()});
+ const categoryClaim=await(await categoryCall('claim',{forceMonitor:true})).json();const categoryProducts=DEPARTMENTS.slice(2).map((d,i)=>({sku:String(90001+i),kind:'decoration',department:d.id,departmentIds:[d.id,'ornaments'],newStatus:true,variantName:d.label,priceGBP:9.99,sourceUrl:'https://www.therange.co.uk/p/test/#'+(90001+i)}));
+ const categoryPlan=await(await categoryCall('monitor-plan',{lease:categoryClaim.lease,products:[{sku:'90000',newStatus:true,sourceUrl:'https://www.therange.co.uk/p/test/#90000'},...categoryProducts]})).json();assert.equal(categoryPlan.candidates.length,12,'All baseline products are excluded and every new department is planned');
+ for(const product of categoryProducts)assert.equal((await categoryCall('event',{lease:categoryClaim.lease,product,screenshotBase64:Buffer.from('verified-test-image').toString('base64'),screenshotVerifiedAt:new Date().toISOString()})).status,200);
+ const beforeCategories=sent.length;for(let i=0;i<3;i++)await categoryCall('deliver',{});assert.equal(sent.length-beforeCategories,12,'Each new department reaches the confirmed reader, without duplicate emails for overlapping memberships');
  console.log('PASS: Beijing schedule, 3/5/7 validation, missed-run advance, owner authorization, private subscription confirmation, NEW baseline exclusion, real-screenshot requirement, delivery deduplication, public-email exclusion and truthful failure status.');
 }finally{globalThis.fetch=original}
