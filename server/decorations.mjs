@@ -52,10 +52,10 @@ export async function updateDecorationDetails(snapshot,reader,{maxFamilies=Infin
  return {verified:snapshot.products.filter(p=>p.detailsReady).length,total:snapshot.products.length,requested:queue.length,refreshed,issues};
 }
 export function sourceColours(p){
- const raw=p.sourceColour||p.specifications?.Colour||p.specifications?.Color||'',title=p.variantName||'',named=normaliseColors(title),specified=normaliseColors(raw);
+ const raw=p.sourceColour||p.specifications?.Colour||p.specifications?.Color||'',title=p.variantName||'',suffix=title.split(/\s[-–]\s/).slice(1).join(' - '),colourText=normaliseColors(suffix).length?suffix:title.split(/\b(?:with|holding|wearing)\b/i)[0],named=normaliseColors(colourText),specified=normaliseColors(raw);
  if(/\bclear|transparent\b/i.test(raw+' '+title))specified.push('透明色');if(/\bbronze\b/i.test(raw+' '+title))specified.push('古铜色');
  const reliable=specified.length&&!/multi|assorted|various|mixed/i.test(raw);
- return {raw,named,specified:[...new Set(specified)],reliable:Boolean(reliable),conflict:Boolean(named.length&&reliable&&!named.every(c=>specified.includes(c)))};
+ return {raw,named,explicitTitleColours:Boolean(named.length&&(normaliseColors(suffix).length||/\band\b|[&/,]/i.test(colourText))&&!/\b(?:LED|lights?)\b/i.test(colourText)),specified:[...new Set(specified)],reliable:Boolean(reliable),conflict:Boolean(named.length&&reliable&&!named.every(c=>specified.includes(c)))};
 }
 export async function enrichDecorations(products,{infer=true}={}){
  const cache=await fs.readFile('web/decoration-visual-cache.json','utf8').then(JSON.parse).catch(()=>({version:1,entries:{}}));
@@ -70,12 +70,12 @@ export async function enrichDecorations(products,{infer=true}={}){
   if(hash&&!cache.entries[hash]){const known=oldCache.entries['tree:'+hash]||oldCache.entries['skirt:'+hash];if(known)cache.entries[hash]=known;}
   if(review?.imageHash===hash&&cache.entries[hash])p.colorValues=cache.entries[hash].colors;
   else if(source.reliable&&!source.conflict){p.colorValues=source.specified;description++;}
-  else if(source.named.length&&!source.conflict&&!/assorted|mixed|multi/i.test(source.raw)){p.colorValues=source.named;description++;}
+  else if(source.named.length&&!source.conflict&&(!/assorted|mixed|multi/i.test(source.raw)||source.explicitTitleColours)){p.colorValues=source.named;description++;}
   else if(hash&&p.cachedImageUrl&&infer){if(!cache.entries[hash])pending.set(hash,p);p.colorValues=cache.entries[hash]?.colors;}
   else p.colorValues=source.specified.length?source.specified:source.named;
  }
  const queue=[...pending].sort((a,b)=>(a[1].department||'').localeCompare(b[1].department||''));for(let offset=0;offset<queue.length;offset+=8){const batch=queue.slice(offset,offset+8),{analyseDecorationImages}=await import('./visual-model.mjs');const visuals=await analyseDecorationImages(batch.map(([,p])=>p),batch.map(([,p])=>'web/'+p.cachedImageUrl));for(let i=0;i<batch.length;i++)cache.entries[batch[i][0]]=visuals[i];inferred+=batch.length;if(offset%128===0){await atomicJson('web/decoration-visual-cache.json',cache);console.log(JSON.stringify({phase:'local-decoration-colours',analysed:inferred,total:queue.length,firecrawlCredits:0}));}}
- for(const p of products){const source=sources.get(p.sku),hash=p.imageCacheEvidence?.sha256,visual=hash&&cache.entries[hash];if(!p.colorValues?.length&&visual)p.colorValues=visual.colors;p.colorValues=[...new Set(p.colorValues||[])];p.treeColor=p.colorValues.join(' / ')||'颜色待核验';p.paletteEvidence={method:hash&&manual.products[p.sku]?.imageHash===hash?'source-image-human-reviewed':source.reliable&&!source.conflict?'SKU-colour-specification-and-description':visual?'local-image-model-and-description':'SKU-title-and-description',imageHash:hash,sourceColour:source.raw,bodyOnly:true,colors:p.colorValues,confidence:visual?.confidence||null,sourceConflict:source.conflict};}
+ for(const p of products){const source=sources.get(p.sku),hash=p.imageCacheEvidence?.sha256,visual=hash&&cache.entries[hash];if(!p.colorValues?.length&&visual)p.colorValues=visual.colors;p.colorValues=[...new Set(p.colorValues||[])];p.treeColor=p.colorValues.join(' / ')||'颜色待核验';p.paletteEvidence={method:hash&&manual.products[p.sku]?.imageHash===hash?'source-image-human-reviewed':source.reliable&&!source.conflict?'SKU-colour-specification-and-description':source.named.length&&!source.conflict&&(!/assorted|mixed|multi/i.test(source.raw)||source.explicitTitleColours)?'SKU-title-and-description':visual?'local-image-model-and-description':'SKU-title-and-description',imageHash:hash,sourceColour:source.raw,bodyOnly:true,colors:p.colorValues,confidence:visual?.confidence||null,sourceConflict:source.conflict};}
  await atomicJson('web/decoration-visual-cache.json',cache);return {products:products.length,sourceDescription:description,locallyInferred:inferred,reviewed,firecrawlCredits:0};
 }
 export async function publishDecorations(snapshot){
