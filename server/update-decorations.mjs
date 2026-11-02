@@ -25,13 +25,13 @@ export async function runDecorationUpdate({readerFactory=createFirecrawlBrowserR
   const browserImageAudit=await reader.auditImages(snapshot.products,{...previous.browserImageAudit,entries:{...previous.browserImageAudit?.entries,...checkpoint.entries}},{bodyBatchSize:500});
   await reader.close();const native=reader.metrics();
   await budget.settle({credits:native.firecrawlCredits,receipt:native.receipt,report:{mode:'christmas-decorations',native,detailAudit,products:snapshot.products.length}});
-  snapshot.appearanceAudit=await enrichDecorations(snapshot.products);snapshot.browserImageAudit=browserImageAudit;snapshot.detailAudit=detailAudit;snapshot.collectionAudit={native,completedAt:new Date().toISOString(),directoryRequestsReusedAcrossTwelveCategories:true};
-  snapshot.ready=detailAudit.verified===snapshot.products.length&&detailAudit.issues.length===0&&browserImageAudit.failed===0;
+  const deferredAppearance=process.env.DECORATION_DEFER_APPEARANCE==='1';snapshot.appearanceAudit=await enrichDecorations(snapshot.products,{infer:!deferredAppearance});snapshot.appearanceReady=!deferredAppearance;snapshot.browserImageAudit=browserImageAudit;snapshot.detailAudit=detailAudit;snapshot.collectionAudit={native,completedAt:new Date().toISOString(),directoryRequestsReusedAcrossTwelveCategories:true};
+  snapshot.sourceReady=detailAudit.verified===snapshot.products.length&&detailAudit.issues.length===0&&browserImageAudit.failed===0;snapshot.ready=snapshot.sourceReady&&snapshot.appearanceReady;
   // An incomplete first scan is reviewable but cannot seed NEW or pretend all fields passed.
   if(!previous.baselineReady&&snapshot.ready){await seedDecorationBaseline(snapshot);snapshot.baselineReady=true;}
   await publishDecorations(snapshot);
   await atomicJson('web/decorations-status.json',{state:snapshot.ready?'active':'needs-review',observedAt:snapshot.observedAt,products:snapshot.products.length,verified:detailAudit.verified,imageFailures:browserImageAudit.failed,native});
-  console.log(JSON.stringify({success:snapshot.ready,products:snapshot.products.length,detailAudit,native}));return {success:snapshot.ready};
+  console.log(JSON.stringify({success:snapshot.sourceReady,ready:snapshot.ready,products:snapshot.products.length,detailAudit,native}));return {success:snapshot.sourceReady};
  }catch(e){await reader?.close?.().catch(()=>{});const native=reader?.metrics?.()||{};await budget?.settle({credits:native.firecrawlCredits||0,receipt:native.receipt,report:{mode:'christmas-decorations',success:false,error:e.message,native}});
   if(snapshot){snapshot.ready=false;snapshot.collectionAudit={native,error:e.message};await publishDecorations(snapshot);}
   await atomicJson('web/decorations-status.json',{state:'error',error:String(e.message),at:new Date().toISOString(),native});throw e;
