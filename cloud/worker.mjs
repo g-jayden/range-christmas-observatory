@@ -117,8 +117,8 @@ export class Control{
       const delivered='delivered/'+sku+'/'+subKey.slice(4),key='correction/'+sku+'/'+subKey.slice(4)+'/'+p.pendingReviewCorrection;
       if(!sub.confirmedAt||!accepts(sub,p)||!await this.db.get(delivered)||await this.db.get(key))continue;
       for(const asset of mailAssets(p)){const ready=await fetch(asset.url,{method:'HEAD',signal:AbortSignal.timeout(10000)});if(!ready.ok||!ready.headers.get('content-type')?.startsWith('image/'))return response({error:'更正附件尚未可访问，已保留恢复记录'},503);}
-      const html='<p>颜色数据更正 · Colour correction：已按同一SKU的官网原图和描述修正本体颜色，请以本封附件为准。这不是再次上新的通知。<br>Use the corrected product card attached to this email. This is a correction, not a new discovery.</p>'+productMail(p,url.origin,false,url.origin+'/unsubscribe?token='+encodeURIComponent(sub.unsubscribe));
-      const id=await this.send(sub.email,'【颜色更正 · Correction】'+p.variantName,html,mailAssets(p),await hash(key));await this.db.put(key,{acceptedAt:new Date().toISOString(),providerId:id});correctionsSent++;
+      const html='<p>商品数据更正 · Product data correction：已按同一SKU的官网原图和描述修正颜色或材质，请以本封附件为准。这不是再次上新的通知。<br>Use the corrected product card attached to this email. This is a correction, not a new discovery.</p>'+productMail(p,url.origin,false,url.origin+'/unsubscribe?token='+encodeURIComponent(sub.unsubscribe));
+      const id=await this.send(sub.email,'【数据更正 · Correction】'+p.variantName,html,mailAssets(p),await hash(key));await this.db.put(key,{acceptedAt:new Date().toISOString(),providerId:id});correctionsSent++;
       if(correctionsSent>=8)return response({updated:true,correctionsSent,morePending:true});
      }
      delete p.pendingReviewCorrection;await this.db.put('event/'+sku,p);
