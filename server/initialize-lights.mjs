@@ -16,9 +16,14 @@ const policy={...await loadPolicy(),repairImagesOnly:true,imageCheckpoint:'web/l
 const budget=await openCreditBudget(policy),reader=await createFirecrawlBrowserReader({policy,budget});let lights,error,settled=false;
 try{
  const previous=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),previousDecorations=await readDecorations(),previousLights=await readLights();
+ await loadDecorationDetails(previousDecorations.products);
+ lights=await collectLightDirectory(reader,previousLights,[previousDecorations,previous]);
+ console.log(JSON.stringify({phase:'lighting-root-complete',products:lights.products.length}));
  const trees=(await catalogueSnapshot({previous,reader,policy,forceFresh:true})).snapshot;preserveImages(previous,trees);
+ console.log(JSON.stringify({phase:'tree-and-skirt-prices-complete',products:trees.products.length}));
  const decorations=await collectDecorationDirectory(reader,previousDecorations);await loadDecorationDetails(decorations.products);
- lights=await collectLightDirectory(reader,previousLights,[decorations,trees]);await reader.closeBrowser();
+ console.log(JSON.stringify({phase:'decoration-prices-complete',products:decorations.products.length}));
+ await reader.closeBrowser();
  lights.detailAudit=await updateLightingDetails(lights,reader,{shared:[decorations,trees]});await selectGalleryImages(lights.products);
  const prior={entries:{...previous.browserImageAudit?.entries,...previousDecorations.browserImageAudit?.entries,...previousLights.browserImageAudit?.entries}};
  // No re-fetch or image analysis for unchanged photographs, across every scope.
