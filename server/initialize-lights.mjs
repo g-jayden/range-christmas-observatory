@@ -26,7 +26,7 @@ try{
  trees.browserImageAudit=imageAudit;decorations.browserImageAudit=imageAudit;lights.browserImageAudit=imageAudit;
  await reader.close();const native=reader.metrics();await budget.settle({credits:native.firecrawlCredits,receipt:native.receipt,report:{mode:'lights-initialization-and-all-source-prices',native,products:lights.products.length,detailAudit:lights.detailAudit}});settled=true;
  await publishLights(lights,native);if(!lights.operationalReady)throw Error('Lighting catalogue incomplete: '+JSON.stringify(lights.coverage));
- if(!previousLights.baselineReady&&apiBase){await control('/internal/extend-baseline',{scope:'christmas-lights-v1',records:lights.products.map(p=>({sku:p.sku,everNew:p.everNew||p.newStatus})),observedAt:lights.observedAt});}
+ if(!previousLights.baselineReady&&apiBase){await control('/internal/extend-baseline',{scope:'christmas-lights-v1',records:lights.products.map(p=>({sku:p.sku,everNew:p.arrivalEvidence==='initial-baseline'&&Boolean(p.everNew||p.newStatus)})),observedAt:lights.observedAt});}
  lights.baselineReady=true;await publishLights(lights,native);
  trees.revision=digest({at:trees.observedAt,products:trees.products});await atomicJson('web/catalogue.json',trees);const status=JSON.parse(await fs.readFile('web/status.json','utf8'));await atomicJson('web/status.json',{...status,revision:trees.revision,stats:trees.stats,lastSuccess:trees.observedAt,firecrawlCredits:native.firecrawlCredits});
  await publishDecorations(decorations);await publishDecorationStatus(decorations,{});
