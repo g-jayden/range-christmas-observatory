@@ -5,7 +5,8 @@ export const DEPARTMENTS=[
  ['spray','圣诞单枝','Christmas Sprays / Picks / Branches / Bushes'],['candle-holder','圣诞烛台','Christmas Candle Holders'],
  ['swag','圣诞壁挂','Christmas Swags / Drops'],['scenes','圣诞场景与模型','Christmas Scenes & Models'],
  ['tree-decorations','圣诞树装饰','Tree Decorations'],['inflatable','充气圣诞装饰品','Inflatable Christmas Decorations'],
- ['outdoor','圣诞户外装饰品','Christmas Outdoor Decorations'],['wall','圣诞墙饰','Christmas Wall Decorations']
+ ['outdoor','圣诞户外装饰品','Christmas Outdoor Decorations'],['wall','圣诞墙饰','Christmas Wall Decorations'],
+ ['presents','礼品包','Christmas Presents']
 ].map(([id,zh,en])=>({id,zh,en,label:zh+' · '+en}));
 export const DEPARTMENT_MAP=Object.fromEntries(DEPARTMENTS.map(d=>[d.id,d]));
 export const decorationDepartments=DEPARTMENTS.filter(d=>!['tree','skirt'].includes(d.id));
@@ -33,6 +34,13 @@ export function classifyDecoration(p){
  if(/\btree (?:skirt|collar)\b|tree stand cover/i.test(title))return {id:'ornaments',method:'tree-base-decoration',matched:title};
  // Printed characters do not change the type of homeware, clothing or gift wrap.
  if(/\b(?:duvet|bedding|pillowcases?|tablecloth|placemats?|napkins?|tea towels?|mugs?|tumblers?|pens?|pencils?|earrings?|wrapping paper|gift wrap|pyjamas|socks|advent calendars?)\b/i.test(productTitle)||/\bcushions?(?:\s+covers?)?\b/i.test(productTitle)&&!/\bcushion garland\b/i.test(productTitle))return {id:'ornaments',method:'homeware-or-accessory-product-type',matched:title};
+ const presentBody=title.split(/\b(?:with|holding|carrying|wearing|in (?:a )?gift[ -]?box(?:es)?)\b/i)[0];
+ const packaging=/\b(?:gift[ -]?(?:bags?|sacks?|tags?|wrap(?:ping)?|accessor(?:y|ies))|present sacks?|present bows?)\b/i.test(presentBody);
+ const packagingSource=/christmas gift wrap/i.test(breadcrumb)||/gift box packaging|(?:packaged|presented|supplied) in (?:a )?gift box/i.test(description);
+ const otherObject=/\b(?:tree (?:skirt|collar)|picks?|sprays?|stems?|branches|wreaths?|garlands?|swags?|sacks?|stockings?|bags?|cushions?|nutcrackers?|mice|mouse|cats?|snow[ -]?globes?|model village|scenes?|diamond art|advent|calendars?|gift shop|christmas eve|list box|book boxes)\b/i.test(presentBody);
+ const presentShape=/\b(?:presents?|parcels?|gift[ -]?box(?:es)?)\b/i.test(presentBody)||/\b(?:gift[ -]?box[ -]?shaped|present[ -]?shaped|shaped (?:like|as) (?:a |an )?(?:wrapped )?(?:present|gift box|parcel))\b/i.test(description);
+ if(packaging||presentShape&&packagingSource&&!otherObject)return {id:'ornaments',method:'gift-packaging-or-accessory',matched:title};
+ if(presentShape&&(!otherObject||/\bemerging out of.{0,100}\b(?:present|gift) box\b/i.test(description)))return {id:'presents',method:'present-shaped-product-title-and-description',matched:title};
  if(/\b(?:ornament display stand|display easel)\b/i.test(title))return {id:'standing',method:'standing-display-product-type',matched:title};
  // Product type in its title takes precedence over examples of where it can be used.
  if(/\bhang(?:ing)?\b/i.test(title)&&/tree decorations/i.test(breadcrumb)&&!/wreath|garland|swag|drop/i.test(title))return {id:'tree-decorations',method:'official-breadcrumb-and-hanging-product',matched:breadcrumb};

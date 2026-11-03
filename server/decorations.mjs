@@ -72,8 +72,10 @@ export async function enrichDecorations(products,{infer=true}={}){
  const pending=new Map(),sources=new Map();let inferred=0,description=0,reviewed=0;
  for(const p of products){
   if(p.specifications){p.material=materialFacts(p.specifications,p.sourceDescription||'').label;p.dimensions=productDimensions(p.specifications,p.sourceDescription||'');}
+  const priorHash=p.imageCacheEvidence?.sha256,priorKey=decorationVisualKey(p,priorHash),priorVisual=cache.entries[priorKey];
   const cls=classifyDecoration(p);p.department=cls.id;p.departmentIds=decorationMemberships(p,cls.id);p.classificationEvidence=cls;
   const source=sourceColours(p),hash=p.imageCacheEvidence?.sha256,key=decorationVisualKey(p,hash);sources.set(p.sku,source);
+  if(hash&&key!==priorKey&&!cache.entries[key]){const known=priorVisual||p.paletteEvidence?.imageHash===hash&&p.paletteEvidence?.bodyOnly&&p.colorValues?.length&&{colors:p.colorValues,confidence:p.paletteEvidence.confidence,method:p.paletteEvidence.method};if(known)cache.entries[key]={...known,classificationReusedFrom:priorKey};}
   const review=manual.products[p.sku];if(hash&&review?.imageHash===hash){cache.entries[key]={...review,reviewed:true,method:'source-image-human-reviewed'};reviewed++;}
   if(hash&&!cache.entries[key]){const old=existing.get(p.sku),known=old?.imageCacheEvidence?.sha256===hash&&oldCache.entries[old.kind+':'+hash];if(known)cache.entries[key]=known;}
   if(hash&&p.cachedImageUrl&&infer&&!cache.entries[key])pending.set(key,p);

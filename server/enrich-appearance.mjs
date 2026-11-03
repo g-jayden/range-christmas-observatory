@@ -4,8 +4,11 @@ import {descriptionFacts,applyAppearance,normaliseColors,materialFacts,APPEARANC
 import {productInformation,validProductImage} from './details.mjs';
 export async function selectGalleryImages(products){
  const selections=await fs.readFile('web/image-selections.json','utf8').then(JSON.parse).catch(()=>({}));
- for(const p of products){const pick=selections[p.sku];if(pick&&(p.variantImageUrl===pick.sourceHero||p.variantImageUrl===pick.selectedImage||!validProductImage(p.variantImageUrl)&&!validProductImage(pick.sourceHero))&&(p.images||[]).includes(pick.selectedImage)){
-  p.originalImageUrl=p.originalImages?.find(g=>g.thumbnail===pick.selectedImage)?.url||null;p.sourceHeroImageUrl=pick.sourceHero;p.variantImageUrl=pick.selectedImage;p.imageSelectionEvidence={...pick,sourceUrl:p.sourceUrl,method:'same-SKU-official-gallery-reviewed'};
+ for(const p of products){const pick=selections[p.sku];if(pick&&(p.variantImageUrl===pick.sourceHero||p.variantImageUrl===pick.selectedImage||p.variantImageUrl===pick.originalImageUrl||!validProductImage(p.variantImageUrl)&&!validProductImage(pick.sourceHero))&&(p.images||[]).includes(pick.selectedImage)){
+  const original=validProductImage(pick.originalImageUrl)?pick.originalImageUrl:p.originalImages?.find(g=>g.thumbnail===pick.selectedImage)?.url||null;
+  p.originalImageUrl=original;p.sourceHeroImageUrl=pick.sourceHero;p.variantImageUrl=pick.originalImageUrl&&original?original:pick.selectedImage;p.imageSelectionEvidence={...pick,sourceUrl:p.sourceUrl,method:'same-SKU-official-gallery-reviewed'};
+  if(pick.originalImageUrl&&original&&!p.originalImages?.some(g=>g.url===original))p.originalImages=[...(p.originalImages||[]),{thumbnail:pick.selectedImage,url:original,width:pick.width||null,height:pick.height||null,selectedSku:p.sku,verifiedBy:'normal-browser-visible-SKU'}];
+  if(p.imageCacheEvidence?.sourceUrl!==p.variantImageUrl){delete p.cachedImageUrl;delete p.imageCacheEvidence;delete p.paletteEvidence;}
  }}
 }
 export async function enrichProducts(products,{infer=true}={}){
