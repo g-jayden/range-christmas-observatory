@@ -187,6 +187,9 @@ jobs:
       - name: Apply cached picture reviews and bilingual source materials
         if: steps.tick.outputs.publish == 'true'
         run: node scripts/enrich-appearance.mjs
+      - name: Finalize saved lighting baseline without source requests
+        if: steps.tick.outputs.publish == 'true'
+        run: node scripts/finalize-lights.mjs
       - name: Preserve data and source status
         if: always() && (steps.tick.outputs.publish == 'true' || inputs.mode == 'probe')
         run: |
