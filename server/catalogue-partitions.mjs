@@ -49,6 +49,18 @@ export async function collectPartitionedCategory(id,reader){
   const currentBrands=root.facets?.find(f=>f.id==='brand_f')?.options;if(!currentBrands)throw new SourceError('Final official brand counts unavailable');
   all.clear();for(const part of results.values())for(const p of part.values())insert(all,p);
   if(all.size===target)break;
+  // Some live SKUs do not occur in any advertised brand facet. The unfiltered
+  // official catalogue is an independent coverage path, not another brand retry.
+  const rootRows=new Map(),beforeRootPages=all.size;
+  const includeRoot=rows=>{for(const p of rows){rootRows.set(String(p.sku),p);all.set(String(p.sku),p);}};
+  includeRoot(root.products);
+  if(all.size!==target)for(const sort of ['price_lth','price_htl']){
+   for(let offset=sort==='price_lth'?80:0;offset<target;offset+=80){const page=await fetchPage({in_stock_f:['true']},offset,sort);includeRoot(page.products);if(all.size===target||rootRows.size===target)break;}
+   if(all.size===target||rootRows.size===target)break;
+  }
+  if(rootRows.size===target){all.clear();for(const [sku,p]of rootRows)all.set(sku,p);}
+  reconciliations.push({method:'unfiltered-root-SKU-coverage',before:beforeRootPages,after:all.size,expected:target,rootPageSkus:rootRows.size});
+  if(all.size===target)break;
   if(round===2)throw new SourceError('Root total and brand-partition union do not reconcile after bounded changed-group checks: '+all.size+'/'+target+' category '+id);
   // Facet option counts include records excluded by the product-list API.
   // Only a real filtered product response supplies its exact denominator.
