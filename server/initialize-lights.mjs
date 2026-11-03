@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import {readLights,collectLightDirectory,updateLightingDetails,publishLights} from './lights.mjs';
+import {readLights,collectLightDirectory,updateLightingDetails,recoverLightingImages,inheritLightingArrivals,publishLights} from './lights.mjs';
 import {readDecorations,loadDecorationDetails,publishDecorations,publishDecorationStatus} from './decorations.mjs';
 import {collectDecorationDirectory} from './update-decorations.mjs';
 import {catalogueSnapshot,preserveImages} from './incremental.mjs';
@@ -23,8 +23,13 @@ try{
  console.log(JSON.stringify({phase:'tree-and-skirt-prices-complete',products:trees.products.length}));
  const decorations=await collectDecorationDirectory(reader,previousDecorations);await loadDecorationDetails(decorations.products);
  console.log(JSON.stringify({phase:'decoration-prices-complete',products:decorations.products.length}));
+ // Save independently verified prices immediately. A lighting detail outage
+ // must not discard a complete price observation for the existing departments.
+ trees.revision=digest({at:trees.observedAt,products:trees.products});await atomicJson('web/catalogue.json',trees);const status=JSON.parse(await fs.readFile('web/status.json','utf8'));await atomicJson('web/status.json',{...status,revision:trees.revision,stats:trees.stats,lastSuccess:trees.observedAt});
+ await publishDecorations(decorations);await publishDecorationStatus(decorations,{});
+ inheritLightingArrivals(lights,[decorations,trees]);
  await reader.closeBrowser();
- lights.detailAudit=await updateLightingDetails(lights,reader,{shared:[decorations,trees]});await selectGalleryImages(lights.products);
+ lights.detailAudit=await updateLightingDetails(lights,reader,{shared:[decorations,trees],retryFailed:true});lights.imageRecovery=await recoverLightingImages(lights.products,reader);await selectGalleryImages(lights.products);
  const prior={entries:{...previous.browserImageAudit?.entries,...previousDecorations.browserImageAudit?.entries,...previousLights.browserImageAudit?.entries}};
  // No re-fetch or image analysis for unchanged photographs, across every scope.
  const all=[...trees.products,...decorations.products,...lights.products];const imageAudit=await reader.auditImages(all,prior,{bodyBatchSize:250});
@@ -33,7 +38,7 @@ try{
  await publishLights(lights,native);if(!lights.operationalReady)throw Error('Lighting catalogue incomplete: '+JSON.stringify(lights.coverage));
  if(!previousLights.baselineReady&&apiBase){await control('/internal/extend-baseline',{scope:'christmas-lights-v1',records:lights.products.map(p=>({sku:p.sku,everNew:p.arrivalEvidence==='initial-baseline'&&Boolean(p.everNew||p.newStatus)})),observedAt:lights.observedAt});}
  lights.baselineReady=true;await publishLights(lights,native);
- trees.revision=digest({at:trees.observedAt,products:trees.products});await atomicJson('web/catalogue.json',trees);const status=JSON.parse(await fs.readFile('web/status.json','utf8'));await atomicJson('web/status.json',{...status,revision:trees.revision,stats:trees.stats,lastSuccess:trees.observedAt,firecrawlCredits:native.firecrawlCredits});
+ trees.revision=digest({at:trees.observedAt,products:trees.products});await atomicJson('web/catalogue.json',trees);await atomicJson('web/status.json',{...status,revision:trees.revision,stats:trees.stats,lastSuccess:trees.observedAt,firecrawlCredits:native.firecrawlCredits});
  await publishDecorations(decorations);await publishDecorationStatus(decorations,{});
  const sets=[trees,decorations,lights],bySku=new Map();for(const s of sets)for(const p of s.products)bySku.set(p.sku,p);
  const proof={success:true,observedAt:lights.observedAt,sources:lights.sources,lightingCoverage:lights.coverage,allPrices:{uniqueSkus:bySku.size,reduced:[...bySku.values()].filter(p=>Number.isInteger(p.originalPrice)&&p.originalPrice>Math.round(p.priceGBP*100)).length,fields:['price','originalPrice','promoText'],inferredDiscounts:false},native,emailsSent:0,initialBaselineExcluded:true};await atomicJson('web/lights-initialization-proof.json',proof);console.log(JSON.stringify(proof));
