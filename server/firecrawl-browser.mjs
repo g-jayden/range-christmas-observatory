@@ -7,7 +7,7 @@ import {budgetError} from './credit-budget.mjs';
 async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000}){
  const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch(error){return {status:0,error:String(error.message).slice(0,180)}}};
  const [data,html]=await Promise.all([initial?{status:200,value:initial}:read(jsonUrl,true),providedHtml?{status:200,value:providedHtml}:read(url,false)]);
- if(data.status!==200||html.status!==200)return {status:data.status!==200?data.status:html.status,jsonStatus:data.status,htmlStatus:html.status,jsonError:data.error,htmlError:html.error,jsonBody:data.value,html:html.value};
+ if(data.status!==200||html.status!==200)return {status:html.status===404?404:data.status!==200?data.status:html.status,jsonStatus:data.status,htmlStatus:html.status,jsonError:data.error,htmlError:html.error,jsonBody:data.value,html:html.value};
  const body=data.value,doc=new DOMParser().parseFromString(html.value,'text/html'),plain=html=>new DOMParser().parseFromString(String(html||''),'text/html').body.textContent.replace(/\s+/g,' ').trim();
  const description=doc.querySelector('#product-description')?.cloneNode(true);description?.querySelectorAll('a,script,style,#product-dyn-variant-desc').forEach(e=>e.remove());
  const sourceJson=text=>JSON.parse(text.replace(/[\u0000-\u001f]/g,' '));

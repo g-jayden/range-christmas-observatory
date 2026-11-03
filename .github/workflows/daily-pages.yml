@@ -25,7 +25,7 @@ on:
       repairScope:
         description: Evidence to repair without re-reading the catalogue
         type: choice
-        options: [trees-and-skirts, decorations]
+        options: [trees-and-skirts, decorations, lights]
         default: trees-and-skirts
       runner:
         description: Standard free public-repository runner
