@@ -14,7 +14,7 @@ class Store{
 }
 const db=new Store,app=new Control({storage:db},{CONTROL_TOKEN:'control',ADMIN_TOKEN:'admin',BREVO_API_KEY:'test',MAIL_FROM:'sender@example.com'});
 const cwd=process.cwd(),dir=await fs.mkdtemp(path.join(os.tmpdir(),'range-delivery-recovery-')),original=globalThis.fetch,oldActions=process.env.GITHUB_ACTIONS;
-let published=false,sent=0,invocationFetches=0,limitInvocationFetches=false;
+let published=false,sent=0,invocationFetches=0,limitInvocationFetches=false,reviewManifest;
 async function request(route,body,secret='control'){
  return app.fetch(new Request('https://worker.example'+route,{method:body===undefined?'GET':'POST',headers:{authorization:'Bearer '+secret,'content-type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)}));
 }
@@ -24,6 +24,7 @@ try{
  globalThis.fetch=async(url,opts)=>{
   invocationFetches++;if(limitInvocationFetches)assert(invocationFetches<=45,'A native-attachment delivery must fit the free Worker subrequest budget');
   if(opts.method==='HEAD')return new Response(null,{status:published?200:404,headers:{'content-type':'image/png'}});
+  if(String(url).endsWith('/manifest.json'))return Response.json(reviewManifest);
   assert.equal(url,'https://api.brevo.com/v3/smtp/email');const mail=JSON.parse(opts.body);assert.equal(mail.attachment.length,3);sent++;return Response.json({messageId:'receipt-'+sent},{status:201});
  };
  await db.put('sub/reader',{email:'reader@example.com',scopes:['skirt'],confirmedAt:new Date(Date.now()-60000).toISOString()});
@@ -38,6 +39,9 @@ try{
  await fs.rm('runtime',{recursive:true});assert.equal((await request('/internal/deliver',{})).status,503);assert.equal(sent,0);assert.equal((await app.deliveryStatus()).pendingDeliveries,1);
  published=true;const delivered=await controlCall('/internal/deliver',{});assert.equal(delivered.accepted,1);assert.equal(delivered.pendingDeliveries,0);assert.equal((await app.monitorState()).state,'active');
  assert.equal((await controlCall('/internal/deliver',{})).accepted,0);assert.equal(sent,1,'Recovered mail is delivered only once without a source reader');
+ reviewManifest={...p.mailAssets,sku:p.sku,sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,colors:['褐色','白色'],material:'棉（Cotton）',cardVersion:'bilingual-card-v2',original:{...p.mailAssets.original,sha256:'a'.repeat(64)}};
+ const corrected=await request('/admin/review-event',{sku:p.sku,sendCorrection:true},'admin');assert.equal(corrected.status,200);assert.equal((await corrected.json()).correctionsSent,1);assert.deepEqual((await db.get('event/'+p.sku)).colorValues,['褐色','白色']);
+ const repeated=await request('/admin/review-event',{sku:p.sku,sendCorrection:true},'admin');assert.equal((await repeated.json()).correctionsSent,0);assert.equal(sent,2,'A correction has a separate stable delivery receipt and is not sent twice');
  const legacy=await app.monitorState();await db.put('monitor',{...legacy,state:'not-started',nextRunAt:'2026-01-01T23:00:00Z'});await controlCall('/internal/deliver',{});assert.equal((await app.monitorState()).state,'active');assert(Date.parse((await app.monitorState()).nextRunAt)>Date.now());
  const missing={...p,sku:'523226',detailEvidence:{selectedSku:'523226',verifiedProductSection:true}};
  assert.equal((await request('/admin/recover-event',{product:missing,screenshotBase64:'aW1hZ2U='},'admin')).status,409,'Recovery cannot inject unobserved NEW products');
@@ -51,7 +55,8 @@ try{
  await batchControl('/internal/seed',{records:observed.map(p=>({sku:p.sku,everNew:true}))});const batchClaim=await batchControl('/internal/claim',{forceMonitor:true});
  const many=[...observed,...Array.from({length:10000},(_,i)=>({sku:String(700000+i),newStatus:false}))];
  const batched=await checkNew({snapshot:{products:many},reader:{raw:()=>{throw Error('Unchanged baseline must not read a product page')}},policy:{maxScreenshotPagesPerRun:1000},budget:{remaining:()=>10000},state:{details:{},failures:{}},lease:batchClaim.lease,controlCall:batchControl,deferDelivery:true});
- assert.deepEqual(sizes,[500,500,205]);assert.equal(batched.scanned,11205);assert.equal(batched.captured,0);assert.equal(batched.success,true);assert.equal(sent,1,'A large unchanged catalogue neither floods email nor sends an oversized full-catalogue planning request');
+ assert.deepEqual(sizes,[500,500,205]);assert.equal(batched.scanned,11205);assert.equal(batched.captured,0);assert.equal(batched.success,true);assert.equal(sent,2,'A large unchanged catalogue neither floods email nor sends an oversized full-catalogue planning request');
+ const absent=await checkNew({snapshot:{products:[]},reader:{raw:()=>{throw Error('An out-of-stock pending product must not request its page')}},policy:{maxScreenshotPagesPerRun:1000},budget:{remaining:()=>1000},state:{details:{},failures:{}},lease:batchClaim.lease,controlCall:async route=>route==='/internal/monitor-plan'?{candidates:[{sku:'518124'}]}:{},deferDelivery:true});assert.equal(absent.success,true);assert.equal(absent.deferred,0);assert.deepEqual(absent.unavailableSkus,['518124']);
  await batchDb.put('sub/native-reader',{email:'native-reader@example.com',scopes:['wreath'],confirmedAt:new Date(Date.now()-60000).toISOString()});
  const nativeProducts=Array.from({length:18},(_,i)=>{const sku=String(880000+i),base='https://g-jayden.github.io/range-christmas-observatory/mail-assets/'+sku+'/';return {sku,newStatus:true,kind:'decoration',department:'wreath',departmentIds:['wreath'],variantName:'Verified wreath '+sku,priceGBP:9.99,sourceUrl:'https://www.therange.co.uk/p/test/#'+sku,mailAssets:{card:{url:base+'card.png'},original:{url:base+'original.jpg'},proof:{url:base+'proof.png'}}}});
  await batchControl('/internal/monitor-plan',{lease:batchClaim.lease,products:nativeProducts});for(const product of nativeProducts)await batchControl('/internal/event',{lease:batchClaim.lease,product,screenshotBase64:'aW1hZ2U='});

@@ -8,7 +8,7 @@ import {productKey,detailFingerprint,failedAttempt} from './collection-policy.mj
 import {cacheProduct,saveState} from './incremental.mjs';
 export async function deliverVerifiedEvents(controlCall=control){let delivery,accepted=0;for(let batch=0;batch<100;batch++){delivery=await controlCall('/internal/deliver',{});accepted+=Number(delivery.accepted||0);if(!delivery.morePending)return {...delivery,accepted};}throw Error('仍有待发邮件，已保留云端队列');}
 export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='runtime/collection',controlCall=control,fetcher=fetch,now=()=>Date.now(),deferDelivery=false}){
- let captured=0,attempted=0,deferred=0;const issues=[],events=[];
+ let captured=0,attempted=0,deferred=0;const issues=[],events=[],unavailableSkus=[];
  try{
   // The cloud only needs current NEW observations; it already retains pending
   // captures. Bound each payload as departments and retailers grow.
@@ -18,7 +18,8 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
   const pending=plan.candidates.map(p=>current.get(p.sku)).filter(Boolean);if(pending.length)await reader.prepareFamilies?.(pending);
   for(const candidate of plan.candidates){
    const p=current.get(candidate.sku),key=p&&productKey(p,policy)+':screenshot',failure=key&&state.failures[key];
-   if(!p||attempted>=policy.maxScreenshotPagesPerRun||budget.remaining()<1||failure?.fingerprint===detailFingerprint(p)&&Date.parse(failure.retryAt)>now()){deferred++;continue;}
+   if(!p){unavailableSkus.push(candidate.sku);continue;}
+   if(attempted>=policy.maxScreenshotPagesPerRun||budget.remaining()<1||failure?.fingerprint===detailFingerprint(p)&&Date.parse(failure.retryAt)>now()){deferred++;continue;}
    if(/[\u0000-\u001f]/.test(p.sourceUrl)){deferred++;continue;}
    attempted++;
    try{
@@ -35,9 +36,9 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
     if([401,402,429].includes(e.status)){deferred+=plan.candidates.length-attempted;break;}
    }
   }
-  if(deferDelivery)return {success:issues.length===0&&deferred===0,attempted,captured,deferred,issues,scanned:snapshot.products.length,events};
+  if(deferDelivery)return {success:issues.length===0&&deferred===0,attempted,captured,deferred,issues,unavailableSkus,scanned:snapshot.products.length,events};
   const delivery=await deliverVerifiedEvents(controlCall);
-  await controlCall('/internal/monitor-complete',{lease,success:true,scanned:snapshot.products.length,newCount:captured});
+  await controlCall('/internal/monitor-complete',{lease,success:true,scanned:snapshot.products.length,newCount:captured,unavailableSkus});
   await saveState(state,dir);
   return {success:true,attempted,captured,deferred,issues,scanned:snapshot.products.length};
  }catch(e){
@@ -52,7 +53,7 @@ export async function finishNewEvents(result,{snapshot,lease,controlCall=control
  // Persist verified events in the private cloud queue before Pages publication.
  // A runner or deploy failure must not lose a paid capture or require another scrape.
  if(!result.queuePersisted){for(const event of result.events||[])await controlCall('/internal/event',event);result.queuePersisted=true;}
- if(!result.monitorCompleted){await controlCall('/internal/monitor-complete',{lease,success:result.success,error:result.success?undefined:'部分新品截图或详情未通过核验',scanned:result.scanned,newCount:result.captured});result.monitorCompleted=true;}
+ if(!result.monitorCompleted){await controlCall('/internal/monitor-complete',{lease,success:result.success,error:result.success?undefined:'部分新品截图或详情未通过核验',scanned:result.scanned,newCount:result.captured,unavailableSkus:result.unavailableSkus||[]});result.monitorCompleted=true;}
  if(process.env.GITHUB_ACTIONS==='true'&&process.env.NOTIFICATION_PHASE!=='deliver'){await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/notification-outbox.private.json',JSON.stringify({result,snapshot:{products:(result.events||[]).map(e=>e.product)},lease}));const {events,...summary}=result;return {...summary,deliveryPending:(result.events||[]).length>0};}
  const delivery=await deliverVerifiedEvents(controlCall);
  const {events,...publicResult}=result;return {...publicResult,delivery};

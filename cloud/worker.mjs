@@ -48,14 +48,14 @@ export class Control{
   return (await r.json()).messageId;
  }
  async fetch(req){
-  try{return await this.route(req)}catch(e){return response({error:e.status?e.message:'操作未完成，请稍后重试。',...(new URL(req.url).pathname.startsWith('/internal/')&&e.providerStatus?{providerStatus:e.providerStatus,providerCode:e.providerCode,providerMessage:e.providerMessage}:{})},e.status||500)}
+  try{return await this.route(req)}catch(e){const privateRoute=/^\/(internal|admin)\//.test(new URL(req.url).pathname);return response({error:e.status?e.message:'操作未完成，请稍后重试。',...(privateRoute&&e.providerStatus?{providerStatus:e.providerStatus,providerCode:e.providerCode,providerMessage:e.providerMessage}:{}),...(privateRoute&&e.assetStatus?{assetStatus:e.assetStatus,assetName:e.assetName,assetContentType:e.assetContentType}:{})},e.status||500)}
  }
  async route(req){
   const url=new URL(req.url),route=url.pathname;
   if(route==='/public/status'&&req.method==='GET'){
    const config=await this.config(),monitor=await this.monitorState(),clock=await this.db.get('dispatch-clock');
    const dispatchClock={enabled:Boolean(this.env.GITHUB_DISPATCH_TOKEN),lastAttemptAt:clock?.lastAttemptAt||null,lastAcceptedAt:clock?.lastAcceptedAt||null,lastStatus:clock?.lastStatus||null,attempts:clock?.attempts||0};
-   return response({config,schedule:scheduleLabel(config),dispatchClock,baselineReady:Boolean(await this.db.get('seeded')),monitor:{...monitor,...await this.deliveryStatus(),pendingScreenshots:(await this.db.list({prefix:'pending/'})).size},mailReady:Boolean(this.env.BREVO_API_KEY&&this.env.MAIL_FROM),recent:await this.db.get('recent')||[]});
+   const pending=[...(await this.db.list({prefix:'pending/'})).values()];return response({config,schedule:scheduleLabel(config),dispatchClock,baselineReady:Boolean(await this.db.get('seeded')),monitor:{...monitor,...await this.deliveryStatus(),pendingScreenshots:pending.filter(p=>!p.unavailableSince).length,pendingUnavailable:pending.filter(p=>p.unavailableSince).length},mailReady:Boolean(this.env.BREVO_API_KEY&&this.env.MAIL_FROM),recent:await this.db.get('recent')||[]});
   }
   if(route.startsWith('/shots/')&&req.method==='GET'){
    const access=route.slice(7);if(!/^[a-f\d]{64}$/.test(access))return response({error:'Not found'},404);
@@ -100,7 +100,37 @@ export class Control{
   }
   if(route.startsWith('/admin/')){
    checkAuth(req,this.env.ADMIN_TOKEN);
-   if(route==='/admin/notification-status'&&req.method==='GET')return response({...await this.deliveryStatus(),pending:[...(await this.db.list({prefix:'pending/'})).values()].map(p=>({sku:p.sku,kind:p.kind,name:p.variantName,sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,variantImageUrl:p.variantImageUrl,firstDetectedAt:p.firstDetectedAt}))});
+   if(route==='/admin/review-event'&&req.method==='POST'){
+    const b=await req.json(),sku=String(b.sku||'');if(!/^\d{1,12}$/.test(sku))throw Error('Invalid review SKU');
+    const p=await this.db.get('event/'+sku);if(!p)return response({error:'只能更新已有真实新品的已发布信息卡'},409);
+    const r=await fetch(HOME+'mail-assets/'+sku+'/manifest.json',{signal:AbortSignal.timeout(10000)});if(!r.ok)return response({error:'核验后的信息卡尚未发布'},503);
+    const m=await r.json();if(m.sku!==sku||m.sourceUrl!==p.sourceUrl||m.priceGBP!==p.priceGBP||!Array.isArray(m.colors)||!m.original?.sha256)throw Error('Reviewed manifest does not match observed SKU');
+    mailAssets({...p,mailAssets:m});
+    const version=await hash(JSON.stringify([m.colors,m.material,m.style,m.cardVersion,m.original.sha256]));
+    const changed=JSON.stringify(p.colorValues)!==JSON.stringify(m.colors)||p.material!==m.material;
+    if(changed)p.pendingReviewCorrection=version;
+    Object.assign(p,{colorValues:m.colors,treeColor:m.colors.join(' / '),material:m.material,style:m.style,heightLabel:m.height,mailAssets:m});await this.db.put('event/'+sku,p);
+    let correctionsSent=0;
+    if(b.sendCorrection===true&&p.pendingReviewCorrection){
+     const subs=await this.db.list({prefix:'sub/'});
+     for(const [subKey,sub]of subs){
+      const delivered='delivered/'+sku+'/'+subKey.slice(4),key='correction/'+sku+'/'+subKey.slice(4)+'/'+p.pendingReviewCorrection;
+      if(!sub.confirmedAt||!accepts(sub,p)||!await this.db.get(delivered)||await this.db.get(key))continue;
+      for(const asset of mailAssets(p)){const ready=await fetch(asset.url,{method:'HEAD',signal:AbortSignal.timeout(10000)});if(!ready.ok||!ready.headers.get('content-type')?.startsWith('image/'))return response({error:'更正附件尚未可访问，已保留恢复记录'},503);}
+      const html='<p>颜色数据更正 · Colour correction：已按同一SKU的官网原图和描述修正本体颜色，请以本封附件为准。这不是再次上新的通知。<br>Use the corrected product card attached to this email. This is a correction, not a new discovery.</p>'+productMail(p,url.origin,false,url.origin+'/unsubscribe?token='+encodeURIComponent(sub.unsubscribe));
+      const id=await this.send(sub.email,'【颜色更正 · Correction】'+p.variantName,html,mailAssets(p),await hash(key));await this.db.put(key,{acceptedAt:new Date().toISOString(),providerId:id});correctionsSent++;
+      if(correctionsSent>=8)return response({updated:true,correctionsSent,morePending:true});
+     }
+     delete p.pendingReviewCorrection;await this.db.put('event/'+sku,p);
+    }
+    return response({updated:true,changed,correctionsSent,firecrawlCredits:0});
+   }
+   if(route==='/admin/notification-status'&&req.method==='GET')return response({...await this.deliveryStatus(),pending:[...(await this.db.list({prefix:'pending/'})).values()].map(p=>({sku:p.sku,kind:p.kind,name:p.variantName,sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,variantImageUrl:p.variantImageUrl,firstDetectedAt:p.firstDetectedAt,unavailableSince:p.unavailableSince||null}))});
+   if(route==='/admin/defer-unavailable'&&req.method==='POST'){
+    const b=await req.json();if(!Array.isArray(b.skus)||b.skus.length>100||!Number.isFinite(Date.parse(b.observedAt)))throw Error('Invalid source availability review');
+    for(const sku of b.skus){const p=await this.db.get('pending/'+sku);if(p)await this.db.put('pending/'+sku,{...p,unavailableSince:b.observedAt});}
+    const pending=[...(await this.db.list({prefix:'pending/'})).values()],m=await this.monitorState();if(!pending.some(p=>!p.unavailableSince)){await this.db.put('monitor',{...m,state:(await this.deliveryStatus()).pendingDeliveries?'delivery-pending':'active',lastError:null,lastSuccess:m.checkedAt});}return response({deferredUnavailable:b.skus.length,firecrawlCredits:0});
+   }
    if(['/admin/recover-event','/admin/deliver'].includes(route)&&req.method==='POST')return this.route(new Request(url.origin+route.replace('/admin/','/internal/'),{method:'POST',headers:{authorization:'Bearer '+this.env.CONTROL_TOKEN,'content-type':'application/json'},body:await req.text()}));
    if(route==='/admin/test-email'&&req.method==='POST')return this.route(new Request(url.origin+'/internal/test-email',{method:'POST',headers:{authorization:'Bearer '+this.env.CONTROL_TOKEN,'content-type':'application/json'},body:await req.text()}));
    if(route==='/admin/subscription-scopes'&&req.method==='POST'){
@@ -160,7 +190,7 @@ export class Control{
    if(route==='/internal/monitor-plan'&&req.method==='POST'){
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
     if(!Array.isArray(b.products)||b.products.length>30000)throw Error('Invalid scan');
-    for(const p of b.products){if(!/^\d{1,12}$/.test(p.sku))throw Error('Invalid SKU');verifyUrl(p.sourceUrl,['therange.co.uk']);if(p.newStatus&&!await this.db.get('seen/'+p.sku)&&!await this.db.get('pending/'+p.sku))await this.db.put('pending/'+p.sku,{...p,firstDetectedAt:new Date().toISOString()})}
+    for(const p of b.products){if(!/^\d{1,12}$/.test(p.sku))throw Error('Invalid SKU');verifyUrl(p.sourceUrl,['therange.co.uk']);if(p.newStatus&&!await this.db.get('seen/'+p.sku)){const pending=await this.db.get('pending/'+p.sku);if(!pending)await this.db.put('pending/'+p.sku,{...p,firstDetectedAt:new Date().toISOString()});else if(pending.unavailableSince){delete pending.unavailableSince;await this.db.put('pending/'+p.sku,pending);}}}
     return response({candidates:[...(await this.db.list({prefix:'pending/'})).values()]});
    }
    if(['/internal/event','/internal/recover-event'].includes(route)&&req.method==='POST'){
@@ -181,6 +211,7 @@ export class Control{
    if(route==='/internal/monitor-complete'&&req.method==='POST'){
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
     const previous=await this.monitorState();
+    for(const sku of b.unavailableSkus||[]){const p=await this.db.get('pending/'+sku);if(p)await this.db.put('pending/'+sku,{...p,unavailableSince:new Date().toISOString()});}
     const delivery=await this.deliveryStatus();await this.db.put('monitor',{...previous,...delivery,state:b.success?(delivery.pendingDeliveries?'delivery-pending':'active'):'error',nextRunAt:advanceNewCheck(previous.nextRunAt),checkedAt:new Date().toISOString(),lastSuccess:b.success?new Date().toISOString():previous.lastSuccess||null,lastError:b.success?null:String(b.error||'源站检查未完成').slice(0,200),scanned:b.scanned||0,newCount:b.newCount||0});await this.db.delete('lease/monitor');return response({saved:true});
    }
    if(route==='/internal/deliver'&&req.method==='POST'){
@@ -196,7 +227,7 @@ export class Control{
       const html=productMail(p,url.origin,false,unsubscribe);
       if(p.mailAssets?.card&&p.mailAssets?.original)for(const asset of mailAssets(p)){
        const ready=await fetch(asset.url,{method:'HEAD',signal:AbortSignal.timeout(10000)});
-       if(!ready.ok||!ready.headers.get('content-type')?.startsWith('image/'))throw Object.assign(Error('新品高清附件尚未发布；待发记录已保留，将仅重试投递。'),{status:503});
+       if(!ready.ok||!ready.headers.get('content-type')?.startsWith('image/'))throw Object.assign(Error('新品高清附件尚未发布；待发记录已保留，将仅重试投递。'),{status:503,assetStatus:ready.status,assetName:asset.name,assetContentType:ready.headers.get('content-type')});
       }
       const id=await this.send(sub.email,'NEW｜'+p.variantName,html,(p.mailAssets?.card&&p.mailAssets?.original)?mailAssets(p):[{name:'NEW-'+p.sku+'.png',content}],await hash(p.sku+'/'+subKey));
       // Three attachment HEADs plus one Brevo call per message. Eight messages
