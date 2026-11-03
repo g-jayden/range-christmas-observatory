@@ -4,6 +4,7 @@
   "main": "worker.mjs",
   "compatibility_date": "2026-10-30",
   "workers_dev": true,
+  "triggers": {"crons": ["0 23 * * *", "*/5 * * * *"]},
   "durable_objects": {"bindings": [{"name": "CONTROL", "class_name": "Control"}]},
   "migrations": [{"tag": "v1", "new_sqlite_classes": ["Control"]}],
   "observability": {"enabled": false}

@@ -1,5 +1,6 @@
 import {DEPARTMENTS,DEPARTMENT_MAP,colourLabel,STYLE_EN} from '../web/catalogue-model.mjs';
 import {firstRun,advanceRun,scheduleLabel,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';
+import {dispatchDue} from './dispatch-clock.mjs';
 const SITE='https://g-jayden.github.io';
 const HOME=SITE+'/range-christmas-observatory/';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -52,8 +53,9 @@ export class Control{
  async route(req){
   const url=new URL(req.url),route=url.pathname;
   if(route==='/public/status'&&req.method==='GET'){
-   const config=await this.config(),monitor=await this.monitorState();
-   return response({config,schedule:scheduleLabel(config),baselineReady:Boolean(await this.db.get('seeded')),monitor:{...monitor,...await this.deliveryStatus(),pendingScreenshots:(await this.db.list({prefix:'pending/'})).size},mailReady:Boolean(this.env.BREVO_API_KEY&&this.env.MAIL_FROM),recent:await this.db.get('recent')||[]});
+   const config=await this.config(),monitor=await this.monitorState(),clock=await this.db.get('dispatch-clock');
+   const dispatchClock={enabled:Boolean(this.env.GITHUB_DISPATCH_TOKEN),lastAttemptAt:clock?.lastAttemptAt||null,lastAcceptedAt:clock?.lastAcceptedAt||null,lastStatus:clock?.lastStatus||null,attempts:clock?.attempts||0};
+   return response({config,schedule:scheduleLabel(config),dispatchClock,baselineReady:Boolean(await this.db.get('seeded')),monitor:{...monitor,...await this.deliveryStatus(),pendingScreenshots:(await this.db.list({prefix:'pending/'})).size},mailReady:Boolean(this.env.BREVO_API_KEY&&this.env.MAIL_FROM),recent:await this.db.get('recent')||[]});
   }
   if(route.startsWith('/shots/')&&req.method==='GET'){
    const access=route.slice(7);if(!/^[a-f\d]{64}$/.test(access))return response({error:'Not found'},404);
@@ -112,6 +114,7 @@ export class Control{
   }
   if(route.startsWith('/internal/')){
    checkAuth(req,this.env.CONTROL_TOKEN);
+   if(route==='/internal/clock-tick'&&req.method==='POST')return response(await dispatchDue({storage:this.db,env:this.env,config:await this.config(),monitor:await this.monitorState(),fullLease:await this.db.get('lease/full'),monitorLease:await this.db.get('lease/monitor'),initialized:Boolean(await this.db.get('seeded'))}));
    if(route==='/internal/test-email'&&req.method==='POST'){
     const b=await req.json(),email=String(b.email||'').trim().toLowerCase(),sub=validEmail(email)&&await this.db.get('sub/'+await hash(email));
     if(!sub?.confirmedAt)return response({error:'测试邮箱尚未确认订阅'},409);
@@ -214,4 +217,7 @@ export default {async fetch(req,env){
  if(req.method==='OPTIONS')return new Response(null,{status:204,headers});
  const size=Number(req.headers.get('content-length')||0);if(size>8000000)return response({error:'Request too large'},413);
  const result=await env.CONTROL.getByName('main').fetch(req),out=new Response(result.body,result);for(const[k,v]of Object.entries(headers))out.headers.set(k,v);return out;
+},async scheduled(event,env,ctx){
+ const request=new Request('https://range-control.internal/internal/clock-tick',{method:'POST',headers:{authorization:'Bearer '+env.CONTROL_TOKEN,'content-type':'application/json'},body:'{}'});
+ ctx.waitUntil(env.CONTROL.getByName('main').fetch(request).then(r=>{if(!r.ok)throw Error('Scheduled control request failed HTTP '+r.status)}));
 }};

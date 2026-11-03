@@ -21,6 +21,13 @@ const storage=new Store,env={ADMIN_TOKEN:'admin',CONTROL_TOKEN:'control',BREVO_A
 const original=globalThis.fetch;globalThis.fetch=async(url,opts)=>{assert.equal(url,'https://api.brevo.com/v3/smtp/email');const message=JSON.parse(opts.body);if(message.headers?.idempotencyKey)assert.match(message.headers.idempotencyKey,/^[a-f0-9]{8}-[a-f0-9]{4}-5[a-f0-9]{3}-8[a-f0-9]{3}-[a-f0-9]{12}$/);sent.push(message);return Response.json({messageId:'test-'+sent.length},{status:201})};
 async function call(path,body,secret){return app.fetch(new Request('https://worker.example'+path,{method:body===undefined?'GET':'POST',headers:{...(secret?{authorization:'Bearer '+secret}:{}),...(body===undefined?{}:{'content-type':'application/json'})},body:body===undefined?undefined:JSON.stringify(body)}))}
 try{
+ assert.equal((await call('/internal/clock-tick',{})).status,401,'The independent clock must require the existing internal credential');
+ assert.equal((await(await call('/internal/clock-tick',{},'control')).json()).enabled,false,'No dispatch credential means no repository action');
+ await storage.put('dispatch-clock',{lastStatus:204,lastAcceptedAt:'2026-11-03T00:00:00Z',attempts:1,credential:'must-never-be-published'});
+ const clockStatus=await(await call('/public/status')).json();assert.equal(clockStatus.dispatchClock.enabled,false);assert.equal(clockStatus.dispatchClock.lastStatus,204);assert.equal(JSON.stringify(clockStatus).includes('must-never-be-published'),false);
+ let scheduledRequest;const scheduledTasks=[];
+ await handler.scheduled({}, {CONTROL_TOKEN:'clock-test-only',CONTROL:{getByName:()=>({fetch:async req=>{scheduledRequest=req;return Response.json({enabled:false})}})}},{waitUntil:p=>scheduledTasks.push(p)});
+ await Promise.all(scheduledTasks);assert.equal(new URL(scheduledRequest.url).pathname,'/internal/clock-tick');assert.equal(scheduledRequest.headers.get('authorization'),'Bearer clock-test-only');assert.equal(sent.length,0,'Clock ticks must not send an email');
  assert.equal((await call('/admin/schedule',{intervalDays:3,time:'04:17'})).status,401);
  assert.equal((await call('/admin/schedule',{intervalDays:3,time:'04:17'},'admin')).status,200);
  assert.equal((await(await call('/public/status')).json()).config.time,'04:17');

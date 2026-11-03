@@ -13,9 +13,12 @@ const materialTerms=[
 export function materialFacts(specs={},text=''){
  const direct=[specs.Material,specs['Material Composition'],specs.Fabric].filter(Boolean).join(', ');
  const sentences=String(text).split(/(?<=[.!?;])\s+|\n/).filter(s=>(/\b(?:made|crafted|constructed|woven|material|fabric|composition|polyester|cotton|faux fur|hessian|velvet|rattan|willow|paulownia|plastic|metal)\b/i.test(s)||/^\s*-\s/.test(s)&&materialTerms.some(([, ,re])=>re.test(s.split(/\b(?:for|on your|your tree|over the)\b/i)[0])))&&!/\b(?:looks? like|wood[ -]effect|rattan[ -]effect|faux wood|faux rattan|not made|does not contain)\b/i.test(s));
- const relevant=sentences.filter(s=>!/\b(?:decorate your tree|tree branches|branch tips|ornaments you|decorations not|tree not included)\b/i.test(s));
+ // A construction clause can continue with a list of depicted shapes. Those
+ // shapes are not extra raw materials (for example glass pinecone baubles).
+ const relevant=sentences.filter(s=>!/\b(?:decorate your tree|tree branches|branch tips|ornaments you|decorations not|tree not included)\b/i.test(s)).map(s=>s.split(/,\s*(?:this|these|it|they|which|each|our)\b|\b(?:such as|designs? (?:include|including)|shapes? (?:include|including))\b/i)[0]);
  const evidence=direct+'\n'+relevant.join('\n');
  let found=materialTerms.filter(([, ,re])=>re.test(evidence)).map(([en,zh])=>({en,zh}));
+ if(!/\bpine[ -]?cones?\b/i.test(direct)&&!/\b(?:made|crafted|constructed|formed)\s+(?:from|of|with)\s+(?:(?:real|natural|dried|genuine|frosted)\s+)*pine[ -]?cones?\b|\b(?:real|natural|dried|genuine)\s+pine[ -]?cones?\b/i.test(relevant.join(' ')))found=found.filter(x=>x.en!=='Pinecone');
  const has=en=>found.some(x=>x.en===en);const fabricSpecific=['Polyester','Cotton','Linen','Jute / Hessian','Faux Fur','Velvet','Felt','Fleece','Plush','Wool','Acrylic','Chenille'].some(has);
  if(fabricSpecific)found=found.filter(x=>x.en!=='Fabric');if(has('Paulownia Wood')||has('Mango Wood'))found=found.filter(x=>x.en!=='Wood');if(['Iron','Steel','Aluminium'].some(has))found=found.filter(x=>x.en!=='Metal');if(['PVC','PE','PET','Polypropylene'].some(has))found=found.filter(x=>x.en!=='Plastic');if(['Rattan','Willow','Seagrass'].some(has))found=found.filter(x=>x.en!=='Wicker');
  if(has('Acrylic')&&!/\b(?:yarn|knit|fibre|fiber|textile|fabric|wool|cotton)\b/i.test(direct))found=found.map(x=>x.en==='Acrylic'?{en:'Acrylic',zh:'亚克力'}:x);
