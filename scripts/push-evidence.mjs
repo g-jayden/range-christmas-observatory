@@ -5,7 +5,16 @@ const head=read('rev-parse','HEAD'),key=[process.env.GITHUB_RUN_ID,process.env.G
 if(!process.env.GITHUB_RUN_ID)throw Error('Evidence publishing is restricted to its GitHub workflow');
 const checkpoint='collection-checkpoints/'+key;
 // This unique ref keeps paid files recoverable even if main changes mid-push.
-git('push','origin','HEAD:refs/heads/'+checkpoint);
+for(let attempt=1;attempt<=3;attempt++){
+ try{git('push','origin','HEAD:refs/heads/'+checkpoint);break;}
+ catch(error){
+  // A lost acknowledgement can follow a successful server-side write.
+  const published=read('ls-remote','origin','refs/heads/'+checkpoint).split(/\s/)[0];
+  if(published===head)break;
+  if(attempt===3)throw error;
+  await new Promise(r=>setTimeout(r,1500));
+ }
+}
 let saved=false;for(let attempt=1;attempt<=4;attempt++){
  try{git('pull','--rebase');git('push');saved=true;break;}
  catch(error){const rebase=read('rev-parse','--git-path','rebase-merge');if(fs.existsSync(rebase))throw Error('Merge requires review; evidence is preserved on '+checkpoint);if(attempt<4)await new Promise(r=>setTimeout(r,1500));}

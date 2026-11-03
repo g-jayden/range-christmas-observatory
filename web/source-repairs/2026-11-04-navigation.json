@@ -1,0 +1,2453 @@
+{
+  "version": 1,
+  "method": "official-page-navigation-and-exact-SKU-JSON",
+  "observedAt": "2026-11-03T23:44:08.474Z",
+  "families": [
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "366478",
+          "prod_id": 1330053,
+          "sku": 366478,
+          "id": 6681033,
+          "attributes": {
+            "Height": "27cm",
+            "Width": "23cm",
+            "Depth": "2cm",
+            "Weight": "60g",
+            "Material": "Polyester",
+            "Occasion": "Christmas",
+            "_swatch": null,
+            "_hex": null
+          },
+          "attributes_supplementary": {},
+          "product_specification": [],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/christmas-reindeer-headband/p366478",
+        "jsonUrl": "https://www.therange.co.uk/p/christmas-reindeer-headband/p366478?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Clothing",
+          "Christmas Accessories & Costumes"
+        ],
+        "productId": "1330053",
+        "title": "Christmas Reindeer Headband",
+        "features": [
+          "Fun and festive",
+          "Perfect for Xmas",
+          "Glitter antlers"
+        ],
+        "information": "Step into the festive season with the charming Christmas Reindeer Headband and prepare to celebrate in style. This whimsical headband is artfully designed to resemble antlers, adorned with a dusting of glitter and festive berries. Whether you're attending parties, participating in gift exchanges, or simply looking to add a touch of fun to your Christmas day ensemble, this headband is the perfect accessory.",
+        "offers": [
+          {
+            "sku": "366478",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/9/4/1715159919_11_5945.jpg",
+            "variants": [
+              "6681033"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/6/1715159926_11_3818.jpg",
+            "variants": [
+              "6681033"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/2/1715159932_11_6574.jpg",
+            "variants": [
+              "6681033"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/4/1715159919_11_5945.jpg",
+            "variants": [
+              "6681033"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/6/1715159926_11_3818.jpg",
+            "variants": [
+              "6681033"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/2/1715159932_11_6574.jpg",
+            "variants": [
+              "6681033"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/9/4/1715159918_11_9943.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/9/4/1715159919_11_5945.jpg",
+            "variants": [
+              "6681033"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/6/1715159925_11_1096.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/1/6/1715159926_11_3818.jpg",
+            "variants": [
+              "6681033"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/2/1715159931_11_8196.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/3/2/1715159932_11_6574.jpg",
+            "variants": [
+              "6681033"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/9/4/1715159919_11_5945.jpg",
+          "https://www.therange.co.uk/media/1/6/1715159926_11_3818.jpg",
+          "https://www.therange.co.uk/media/3/2/1715159932_11_6574.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:26.286Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "366703",
+          "prod_id": 1356546,
+          "sku": 366703,
+          "id": 6732516,
+          "attributes": {
+            "Length": "4m",
+            "Width": "70cm",
+            "Depth": "0.1cm",
+            "Weight": "150g",
+            "Material": "Paper",
+            "Occasion": "Christmas",
+            "_swatch": null,
+            "_hex": null
+          },
+          "attributes_supplementary": {},
+          "product_specification": [],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/gonk-gift-wrap-4m/p366703",
+        "jsonUrl": "https://www.therange.co.uk/p/gonk-gift-wrap-4m/p366703?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Gift Wrap",
+          "Christmas Wrapping Paper"
+        ],
+        "productId": "1356546",
+        "title": "Gonk Gift Wrap 4m",
+        "features": [
+          "Features elegant festive colours",
+          "Two assorted designs",
+          "Cute gonk design"
+        ],
+        "information": "Add a funny finish to your gifts with the Gonk Gift Wrap 4m. This exciting gift wrap features quirky portraits of gonks, giving your presents a special finish. It is available in an assortment of two designs, including icy blue or copper brown colours. This gift wrap boasts a length of 4m, ideal for wrapping as many gifts as you like.",
+        "offers": [
+          {
+            "sku": "366703",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/4/5/1781525668_5873.jpg",
+            "variants": [
+              "6732516"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/8/1754986754_11_3950.jpg",
+            "variants": []
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/1/1754986764_11_2571.jpg",
+            "variants": []
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/5/1754986774_11_9246.jpg",
+            "variants": []
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/8/1781525682_1581.jpg",
+            "variants": [
+              "6732516"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/7/1781525749_7642.jpg",
+            "variants": [
+              "6732516"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/4/5/1781525668_5873.jpg",
+            "variants": [
+              "6732516"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/8/1754986754_11_3950.jpg",
+            "variants": []
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/1/1754986764_11_2571.jpg",
+            "variants": []
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/5/1754986774_11_9246.jpg",
+            "variants": []
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/8/1781525682_1581.jpg",
+            "variants": [
+              "6732516"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/7/1781525749_7642.jpg",
+            "variants": [
+              "6732516"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/4/5/1781525667_2822.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/4/5/1781525668_5873.jpg",
+            "variants": [
+              "6732516"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/8/1754986754_11_5318.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/9/8/1754986754_11_3950.jpg",
+            "variants": []
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/1/1754986763_11_7011.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/9/1/1754986764_11_2571.jpg",
+            "variants": []
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/5/1754986773_11_5213.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/5/5/1754986774_11_9246.jpg",
+            "variants": []
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/8/1781525682_5702.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/1/8/1781525682_1581.jpg",
+            "variants": [
+              "6732516"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/7/1781525749_9856.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/7/7/1781525749_7642.jpg",
+            "variants": [
+              "6732516"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/9/8/1754986754_11_3950.jpg",
+          "https://www.therange.co.uk/media/9/1/1754986764_11_2571.jpg",
+          "https://www.therange.co.uk/media/5/5/1754986774_11_9246.jpg",
+          "https://www.therange.co.uk/media/4/5/1781525668_5873.jpg",
+          "https://www.therange.co.uk/media/1/8/1781525682_1581.jpg",
+          "https://www.therange.co.uk/media/7/7/1781525749_7642.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:26.415Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "515236",
+          "prod_id": 2510089,
+          "sku": 515236,
+          "id": 8719914,
+          "attributes": {
+            "Length": "4m",
+            "Weight": "224g",
+            "Material": "Paper",
+            "Occasion": "Christmas",
+            "_swatch": null,
+            "_hex": null
+          },
+          "attributes_supplementary": {},
+          "product_specification": [],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/festive-picky-bits-gift-wrap/p515236",
+        "jsonUrl": "https://www.therange.co.uk/p/festive-picky-bits-gift-wrap/p515236?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Gift Wrap",
+          "Christmas Wrapping Paper"
+        ],
+        "productId": "2510089",
+        "title": "Festive Picky Bits Gift Wrap",
+        "features": [
+          "Perfect for Christmas gift wrapping",
+          "Bright and traditional festive colour",
+          "Features sweet Xmas pattern"
+        ],
+        "information": "Bring a touch of fun to your Christmas gifting with Festive Picky Bits Gift Wrap. Bursting with quirky designs, this wrap makes every present feel extra special and full of personality. Perfect for those who love adding a playful twist to their festivities, it helps you create memorable moments with each beautifully wrapped gift.",
+        "offers": [
+          {
+            "sku": "515236",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/5/5/1781695488_7042.jpg",
+            "variants": [
+              "8719914"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/4/0/1781695457_4696.jpg",
+            "variants": [
+              "8719914"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/2/1781695467_1354.jpg",
+            "variants": [
+              "8719914"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/3/1781695477_2384.jpg",
+            "variants": [
+              "8719914"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/5/1781695488_7042.jpg",
+            "variants": [
+              "8719914"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/4/0/1781695457_4696.jpg",
+            "variants": [
+              "8719914"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/2/1781695467_1354.jpg",
+            "variants": [
+              "8719914"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/3/1781695477_2384.jpg",
+            "variants": [
+              "8719914"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/5/5/1781695487_3237.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/5/5/1781695488_7042.jpg",
+            "variants": [
+              "8719914"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/4/0/1781695457_3201.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/4/0/1781695457_4696.jpg",
+            "variants": [
+              "8719914"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/2/1781695467_1419.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/5/2/1781695467_1354.jpg",
+            "variants": [
+              "8719914"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/3/1781695476_4022.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/9/3/1781695477_2384.jpg",
+            "variants": [
+              "8719914"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/4/0/1781695457_4696.jpg",
+          "https://www.therange.co.uk/media/5/2/1781695467_1354.jpg",
+          "https://www.therange.co.uk/media/9/3/1781695477_2384.jpg",
+          "https://www.therange.co.uk/media/5/5/1781695488_7042.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:26.420Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "516315",
+          "prod_id": 2739794,
+          "sku": 516315,
+          "id": 8963319,
+          "attributes": {
+            "Length": "4m",
+            "Width": "70cm",
+            "Weight": "246g",
+            "Material Composition": "Kraft Paper and PET Film",
+            "Packaged Size": "70cm x 4cm x 4cm",
+            "Occasion": "Christmas",
+            "_swatch": "Red",
+            "_hex": "#EE384B"
+          },
+          "attributes_supplementary": {},
+          "product_specification": [],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/north-pole-stamp-gift-wrapping-paper/p516315",
+        "jsonUrl": "https://www.therange.co.uk/p/north-pole-stamp-gift-wrapping-paper/p516315?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Gift Wrap",
+          "Christmas Wrapping Paper"
+        ],
+        "productId": "2739794",
+        "title": "North Pole Stamp Gift Wrapping Paper",
+        "features": [
+          "Showcases festive North Pole stamp design",
+          "Bright red colourway",
+          "Elevates your gifting experience"
+        ],
+        "information": "Transform your festive presents into magical surprises with the North Pole Stamp Gift Wrapping Paper. Featuring a charming North Pole stamp design, this wrap brings a touch of classic Christmas nostalgia to every gift. Make your gifts stand out under the tree and create memorable moments for loved ones during the holiday season.",
+        "offers": [
+          {
+            "sku": "516315",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/2/1/1786019414_6839.jpg",
+            "variants": [
+              "8963319"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/1/1786019410_6542.jpg",
+            "variants": [
+              "8963319"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/4/1786019411_1288.jpg",
+            "variants": [
+              "8963319"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/6/9/1786019412_2680.jpg",
+            "variants": [
+              "8963319"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/9/1786019413_8438.jpg",
+            "variants": [
+              "8963319"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/1/1786019414_6839.jpg",
+            "variants": [
+              "8963319"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/1/1786019410_6542.jpg",
+            "variants": [
+              "8963319"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/4/1786019411_1288.jpg",
+            "variants": [
+              "8963319"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/6/9/1786019412_2680.jpg",
+            "variants": [
+              "8963319"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/9/1786019413_8438.jpg",
+            "variants": [
+              "8963319"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/7/6/1786019415_1061.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/2/1/1786019414_6839.jpg",
+            "variants": [
+              "8963319"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/5/1786019410_6938.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/3/1/1786019410_6542.jpg",
+            "variants": [
+              "8963319"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/2/1786019411_7607.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/2/4/1786019411_1288.jpg",
+            "variants": [
+              "8963319"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/5/1786019412_6234.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/6/9/1786019412_2680.jpg",
+            "variants": [
+              "8963319"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/1/1786019413_3549.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/1/9/1786019413_8438.jpg",
+            "variants": [
+              "8963319"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/3/1/1786019410_6542.jpg",
+          "https://www.therange.co.uk/media/2/4/1786019411_1288.jpg",
+          "https://www.therange.co.uk/media/6/9/1786019412_2680.jpg",
+          "https://www.therange.co.uk/media/1/9/1786019413_8438.jpg",
+          "https://www.therange.co.uk/media/2/1/1786019414_6839.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:26.926Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "515240",
+          "prod_id": 2510104,
+          "sku": 515240,
+          "id": 8719929,
+          "attributes": {
+            "Length": "4m",
+            "Weight": "224g",
+            "Material": "Paper",
+            "Occasion": "Christmas",
+            "_swatch": null,
+            "_hex": null
+          },
+          "attributes_supplementary": {},
+          "product_specification": [],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/festive-stripe-gift-wrap-4m/p515240",
+        "jsonUrl": "https://www.therange.co.uk/p/festive-stripe-gift-wrap-4m/p515240?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Gift Wrap",
+          "Christmas Wrapping Paper"
+        ],
+        "productId": "2510104",
+        "title": "Festive Stripe Gift Wrap 4m",
+        "features": [
+          "Showcases vibrant festive stripes",
+          "Ideal for Christmas presents",
+          "Beautiful wreath and tree design"
+        ],
+        "information": "Bring joy to your gift-giving with the Festive Stripe Gift Wrap. Featuring a classic striped design in cheerful seasonal colours, this wrapping paper instantly elevates any present with a touch of festive flair. Perfect for wrapping everything from small surprises to larger gifts, you will find every parcel looking bright and inviting under the tree.",
+        "offers": [
+          {
+            "sku": "515240",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/1/6/1782225928_1962.jpg",
+            "variants": [
+              "8719929"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/3/1782225897_7681.jpg",
+            "variants": [
+              "8719929"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/4/7/1782225907_3814.jpg",
+            "variants": [
+              "8719929"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/8/8/1782225916_6653.jpg",
+            "variants": [
+              "8719929"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/6/1782225928_1962.jpg",
+            "variants": [
+              "8719929"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/3/1782225897_7681.jpg",
+            "variants": [
+              "8719929"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/4/7/1782225907_3814.jpg",
+            "variants": [
+              "8719929"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/8/8/1782225916_6653.jpg",
+            "variants": [
+              "8719929"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/1/6/1782225926_6204.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/1/6/1782225928_1962.jpg",
+            "variants": [
+              "8719929"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/3/1782225897_7532.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/5/3/1782225897_7681.jpg",
+            "variants": [
+              "8719929"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/4/7/1782225907_3326.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/4/7/1782225907_3814.jpg",
+            "variants": [
+              "8719929"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/8/8/1782225916_9838.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/8/8/1782225916_6653.jpg",
+            "variants": [
+              "8719929"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/5/3/1782225897_7681.jpg",
+          "https://www.therange.co.uk/media/4/7/1782225907_3814.jpg",
+          "https://www.therange.co.uk/media/8/8/1782225916_6653.jpg",
+          "https://www.therange.co.uk/media/1/6/1782225928_1962.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:29.932Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "518378",
+          "prod_id": 2776784,
+          "sku": 518378,
+          "id": 9005419,
+          "attributes": {
+            "Pack Size": "1",
+            "Length": "2.7m",
+            "Width": " 6.4cm",
+            "Depth": " 0.1cm",
+            "Weight": "27g",
+            "Material": "Polyester",
+            "Occasion": "Christmas",
+            "_swatch": null,
+            "_hex": null
+          },
+          "attributes_supplementary": {},
+          "product_specification": [
+            "",
+            ""
+          ],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/fun-seasonal-ribbon/p518378",
+        "jsonUrl": "https://www.therange.co.uk/p/fun-seasonal-ribbon/p518378?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Gift Wrap",
+          "Christmas Ribbons & Bows"
+        ],
+        "productId": "2776784",
+        "title": "Fun Seasonal Ribbon",
+        "features": [
+          "Enhances festive gift wrapping",
+          "Perfect for seasonal crafts",
+          "Charming candy cane colourway"
+        ],
+        "information": "Add a splash of festive flair to your creative projects with the Fun Seasonal Ribbon. Designed for those who love to personalise gifts or decorate for special occasions, this vibrant ribbon brings an extra touch of joy to Christmas celebrations. Available in assorted designs, you can transform gift wrapping, party décor or craft projects into eye-catching masterpieces. Let your imagination run wild and enjoy making every occasion memorable.",
+        "offers": [
+          {
+            "sku": "518378",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/8/6/1787559307_6678.jpg",
+            "variants": [
+              "9005419"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/3/1787324722_9123.jpg",
+            "variants": [
+              "9005419"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/0/1787324723_6166.jpg",
+            "variants": [
+              "9005419"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/7/1787324724_1334.jpg",
+            "variants": [
+              "9005419"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/6/1787324725_2159.jpg",
+            "variants": [
+              "9005419"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/8/6/1787559307_6678.jpg",
+            "variants": [
+              "9005419"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/3/1787324722_9123.jpg",
+            "variants": [
+              "9005419"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/0/1787324723_6166.jpg",
+            "variants": [
+              "9005419"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/7/1787324724_1334.jpg",
+            "variants": [
+              "9005419"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/6/1787324725_2159.jpg",
+            "variants": [
+              "9005419"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/8/6/1787559306_3544.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/8/6/1787559307_6678.jpg",
+            "variants": [
+              "9005419"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/4/9/1787324723_5028.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/0/3/1787324722_9123.jpg",
+            "variants": [
+              "9005419"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/6/7/1787324724_1684.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/2/0/1787324723_6166.jpg",
+            "variants": [
+              "9005419"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/6/6/1787324725_9726.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/7/7/1787324724_1334.jpg",
+            "variants": [
+              "9005419"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/2/1787324726_4990.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/5/6/1787324725_2159.jpg",
+            "variants": [
+              "9005419"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/0/3/1787324722_9123.jpg",
+          "https://www.therange.co.uk/media/2/0/1787324723_6166.jpg",
+          "https://www.therange.co.uk/media/7/7/1787324724_1334.jpg",
+          "https://www.therange.co.uk/media/5/6/1787324725_2159.jpg",
+          "https://www.therange.co.uk/media/8/6/1787559307_6678.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:30.186Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "523009",
+          "prod_id": 3426249,
+          "sku": 523009,
+          "id": 9985184,
+          "attributes": {
+            "Length": "4m",
+            "Packaged Size": "71cm x 4.5cm x 4.5cm",
+            "Weight": "235g",
+            "Material": "Paper",
+            "Occasion": "Christmas",
+            "_swatch": "Red",
+            "_hex": "#F42330"
+          },
+          "attributes_supplementary": {},
+          "product_specification": [],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/feline-festive-wrapping-paper/p523009",
+        "jsonUrl": "https://www.therange.co.uk/p/feline-festive-wrapping-paper/p523009?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Gift Wrap",
+          "Christmas Wrapping Paper"
+        ],
+        "productId": "3426249",
+        "title": "Feline Festive Wrapping Paper",
+        "features": [
+          "Showcases charming festive feline designs",
+          "Adds playful flair to holiday gifts",
+          "Ideal for cat enthusiasts and pet lovers"
+        ],
+        "information": "Inject a dose of personality into your gift-giving with the Feline Festive Wrapping Paper. Playful cats in festive attire bring a joyful twist to your holiday presents, making every package as delightful on the outside as what is hidden within. Perfect for cat lovers and anyone who enjoys a bit of whimsy, this cat-themed Christmas wrapping paper ensures your gifts stand out beneath the tree.",
+        "offers": [
+          {
+            "sku": "523009",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/5/8/1788358134_4092.jpg",
+            "variants": [
+              "9985184"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/8/7/1788358135_9660.jpg",
+            "variants": [
+              "9985184"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/7/1788358136_6916.jpg",
+            "variants": [
+              "9985184"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/9/1788358137_7816.jpg",
+            "variants": [
+              "9985184"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/6/7/1788358138_1663.jpg",
+            "variants": [
+              "9985184"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/8/1788358134_4092.jpg",
+            "variants": [
+              "9985184"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/8/7/1788358135_9660.jpg",
+            "variants": [
+              "9985184"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/7/1788358136_6916.jpg",
+            "variants": [
+              "9985184"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/9/1788358137_7816.jpg",
+            "variants": [
+              "9985184"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/6/7/1788358138_1663.jpg",
+            "variants": [
+              "9985184"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/9/7/1788358135_3424.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/5/8/1788358134_4092.jpg",
+            "variants": [
+              "9985184"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/4/9/1788358135_3851.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/8/7/1788358135_9660.jpg",
+            "variants": [
+              "9985184"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/9/1788358136_8175.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/3/7/1788358136_6916.jpg",
+            "variants": [
+              "9985184"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/8/1788358138_5008.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/2/9/1788358137_7816.jpg",
+            "variants": [
+              "9985184"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/6/1/1788358139_7040.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/6/7/1788358138_1663.jpg",
+            "variants": [
+              "9985184"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/5/8/1788358134_4092.jpg",
+          "https://www.therange.co.uk/media/8/7/1788358135_9660.jpg",
+          "https://www.therange.co.uk/media/3/7/1788358136_6916.jpg",
+          "https://www.therange.co.uk/media/2/9/1788358137_7816.jpg",
+          "https://www.therange.co.uk/media/6/7/1788358138_1663.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:32.139Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "516385",
+          "prod_id": 2802179,
+          "sku": 516385,
+          "id": 9032694,
+          "attributes": {
+            "Height": "75cm",
+            "Width": "34cm",
+            "Depth": "6cm",
+            "Weight": "137g",
+            "Material": "Polyester",
+            "Occasion": "Christmas",
+            "_swatch": null,
+            "_hex": null
+          },
+          "attributes_supplementary": {},
+          "product_specification": [
+            "",
+            ""
+          ],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/elf-ears-scarf-hat/p516385",
+        "jsonUrl": "https://www.therange.co.uk/p/elf-ears-scarf-hat/p516385?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Clothing",
+          "Christmas Accessories & Costumes"
+        ],
+        "productId": "2802179",
+        "title": "Elf Ears Scarf Hat",
+        "features": [
+          "Features charming elf ear design",
+          "Doubles as hat and scarf",
+          "Ideal for festive dress up"
+        ],
+        "information": "Step into a world of playful winter style with the Elf Ears Scarf Hat. Designed to bring a touch of magic to your cold-weather wardrobe, this whimsical accessory combines a cosy hat and a scarf with adorable elf ears for a unique look. Perfect for adults who love fun fashion or dressing up for festive occasions, it keeps you snug while adding a cheerful twist to everyday outfits. Enjoy comfort, warmth and a dash of fantasy in one delightful set.",
+        "offers": [
+          {
+            "sku": "516385",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/5/5/1787829755_5390.jpg",
+            "variants": [
+              "9032694"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/6/1787829756_3056.jpg",
+            "variants": [
+              "9032694"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/5/1787829756_9585.jpg",
+            "variants": [
+              "9032694"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/9/1787829757_8855.jpg",
+            "variants": [
+              "9032694"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/5/1787829755_5390.jpg",
+            "variants": [
+              "9032694"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/6/1787829756_3056.jpg",
+            "variants": [
+              "9032694"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/5/1787829756_9585.jpg",
+            "variants": [
+              "9032694"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/9/1787829757_8855.jpg",
+            "variants": [
+              "9032694"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/7/9/1787829755_7344.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/5/5/1787829755_5390.jpg",
+            "variants": [
+              "9032694"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/6/6/1787829756_4253.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/2/6/1787829756_3056.jpg",
+            "variants": [
+              "9032694"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/4/3/1787829757_3075.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/9/5/1787829756_9585.jpg",
+            "variants": [
+              "9032694"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/3/1787829758_3134.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/7/9/1787829757_8855.jpg",
+            "variants": [
+              "9032694"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/5/5/1787829755_5390.jpg",
+          "https://www.therange.co.uk/media/2/6/1787829756_3056.jpg",
+          "https://www.therange.co.uk/media/9/5/1787829756_9585.jpg",
+          "https://www.therange.co.uk/media/7/9/1787829757_8855.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:32.455Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "514888",
+          "prod_id": 2910384,
+          "sku": 514888,
+          "id": 9151444,
+          "attributes": {
+            "Height": "12cm",
+            "Width": "14cm",
+            "Depth": "9.7cm",
+            "Weight": "400g",
+            "Material": "Stoneware",
+            "Microwaveable": "No",
+            "Dishwasher Safe": "No",
+            "Occasion": "Christmas",
+            "_swatch": null,
+            "_hex": null
+          },
+          "attributes_supplementary": {},
+          "product_specification": [],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/jolly-santa-mug/p514888",
+        "jsonUrl": "https://www.therange.co.uk/p/jolly-santa-mug/p514888?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Homeware",
+          "Christmas Dining",
+          "Christmas Tableware & Serveware",
+          "Christmas Glasses & Mugs"
+        ],
+        "productId": "2910384",
+        "title": "Jolly Santa Mug",
+        "features": [
+          "Adds festive cheer to hot drinks",
+          "Ideal for seasonal gifting",
+          "Playful Santa face design with a message"
+        ],
+        "information": "Brighten up your festive mornings with the Jolly Santa Mug, designed to bring cheer to every sip. Crafted from stoneware, this charming mug features a delightful Santa face that instantly adds a touch of Christmas magic to your kitchen. Perfect for enjoying hot chocolate, tea or coffee, it makes a wonderful seasonal treat for yourself or a loved one.",
+        "offers": [
+          {
+            "sku": "514888",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/6/0/1784648921_5241.jpg",
+            "variants": [
+              "9151444"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/6/1784648935_8641.jpg",
+            "variants": [
+              "9151444"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/5/1784648945_2604.jpg",
+            "variants": [
+              "9151444"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/7/1784648955_2852.jpg",
+            "variants": [
+              "9151444"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/6/0/1784648921_5241.jpg",
+            "variants": [
+              "9151444"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/6/1784648935_8641.jpg",
+            "variants": [
+              "9151444"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/5/1784648945_2604.jpg",
+            "variants": [
+              "9151444"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/7/1784648955_2852.jpg",
+            "variants": [
+              "9151444"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/6/0/1784648920_8842.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/6/0/1784648921_5241.jpg",
+            "variants": [
+              "9151444"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/6/1784648935_7053.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/5/6/1784648935_8641.jpg",
+            "variants": [
+              "9151444"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/5/1784648945_1057.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/2/5/1784648945_2604.jpg",
+            "variants": [
+              "9151444"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/7/1784648954_3445.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/1/7/1784648955_2852.jpg",
+            "variants": [
+              "9151444"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/6/0/1784648921_5241.jpg",
+          "https://www.therange.co.uk/media/5/6/1784648935_8641.jpg",
+          "https://www.therange.co.uk/media/2/5/1784648945_2604.jpg",
+          "https://www.therange.co.uk/media/1/7/1784648955_2852.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:34.102Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "517053",
+          "prod_id": 3610359,
+          "sku": 517053,
+          "id": 10255119,
+          "attributes": {
+            "Height": "85cm",
+            "Width": "30cm",
+            "Depth": "1cm",
+            "Weight": "130g",
+            "Material": "Polyester",
+            "Occasion": "Christmas",
+            "_swatch": null,
+            "_hex": null
+          },
+          "attributes_supplementary": {},
+          "product_specification": [
+            "",
+            ""
+          ],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/novelty-elf-hat/p517053",
+        "jsonUrl": "https://www.therange.co.uk/p/novelty-elf-hat/p517053?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Clothing",
+          "Christmas Accessories & Costumes"
+        ],
+        "productId": "3610359",
+        "title": "Novelty Elf Hat",
+        "features": [
+          "Instantly transforms festive outfits",
+          "Adds humour to Christmas celebrations",
+          "Great for themed parties"
+        ],
+        "information": "Step into the festive spirit with the Novelty Elf Hat, designed to bring a touch of whimsy to your Christmas celebrations. Featuring playful details and a cheerful look, this hat adds a fun accent to any seasonal outfit. Whether you are hosting a party or joining friends for a Christmas gathering, you will love the laughter and joy this hat inspires. Perfect for adults looking to complete a Christmas elf costume or simply spread holiday cheer.",
+        "offers": [
+          {
+            "sku": "517053",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/7/3/1787829767_3482.jpg",
+            "variants": [
+              "10255119"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/9/1787829768_1895.jpg",
+            "variants": [
+              "10255119"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/6/1787829769_2190.jpg",
+            "variants": [
+              "10255119"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/8/1787829770_7809.jpg",
+            "variants": [
+              "10255119"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/4/1787829771_4184.jpg",
+            "variants": [
+              "10255119"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/3/1787829767_3482.jpg",
+            "variants": [
+              "10255119"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/9/1787829768_1895.jpg",
+            "variants": [
+              "10255119"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/6/1787829769_2190.jpg",
+            "variants": [
+              "10255119"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/8/1787829770_7809.jpg",
+            "variants": [
+              "10255119"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/4/1787829771_4184.jpg",
+            "variants": [
+              "10255119"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/7/1/1787829767_9715.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/7/3/1787829767_3482.jpg",
+            "variants": [
+              "10255119"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/3/1787829768_7526.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/9/9/1787829768_1895.jpg",
+            "variants": [
+              "10255119"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/1/1787829769_1585.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/2/6/1787829769_2190.jpg",
+            "variants": [
+              "10255119"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/7/1787829770_7357.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/1/8/1787829770_7809.jpg",
+            "variants": [
+              "10255119"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/9/1787829771_8489.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/2/4/1787829771_4184.jpg",
+            "variants": [
+              "10255119"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/7/3/1787829767_3482.jpg",
+          "https://www.therange.co.uk/media/9/9/1787829768_1895.jpg",
+          "https://www.therange.co.uk/media/2/6/1787829769_2190.jpg",
+          "https://www.therange.co.uk/media/1/8/1787829770_7809.jpg",
+          "https://www.therange.co.uk/media/2/4/1787829771_4184.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:34.365Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "514886",
+          "prod_id": 2910374,
+          "sku": 514886,
+          "id": 9151434,
+          "attributes": {
+            "Height": "13cm",
+            "Width": "14.5cm",
+            "Depth": "10cm",
+            "Weight": "420g",
+            "Material": "Dolomite",
+            "Microwaveable": "No",
+            "Dishwasher Safe": "No",
+            "_swatch": null,
+            "_hex": null
+          },
+          "attributes_supplementary": {},
+          "product_specification": [],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/jolly-santa-gravy-jug/p514886",
+        "jsonUrl": "https://www.therange.co.uk/p/jolly-santa-gravy-jug/p514886?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Homeware",
+          "Christmas Dining",
+          "Christmas Tableware & Serveware",
+          "Christmas Serveware"
+        ],
+        "productId": "2910374",
+        "title": "Jolly Santa Gravy Jug",
+        "features": [
+          "Adds festive flair to the dining table",
+          "Ideal for serving gravy or sauces",
+          "Matching Christmas tableware available"
+        ],
+        "information": "Bring festive cheer to your holiday table with the Jolly Santa Gravy Jug. Featuring a charming Santa design, this ceramic jug adds a playful touch to your Christmas dinner. Perfect for pouring gravy or sauces, it is sure to delight guests of all ages. Designed for joyful occasions, it makes serving at family gatherings more memorable.",
+        "offers": [
+          {
+            "sku": "514886",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/0/5/1784648839_1479.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/8/1790089366_9390.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/8/1784648855_2601.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/8/1784648865_8316.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/4/0/1784648880_2791.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/1/1790090672_3670.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/5/1784648839_1479.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/8/1790089366_9390.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/8/1784648855_2601.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/8/1784648865_8316.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/4/0/1784648880_2791.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/1/1790090672_3670.jpg",
+            "variants": [
+              "9151434"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/0/5/1784648838_6329.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/0/5/1784648839_1479.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/8/1790089365_4601.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/5/8/1790089366_9390.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/8/1784648855_2035.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/1/8/1784648855_2601.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/8/1784648865_2675.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/5/8/1784648865_8316.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/4/0/1784648879_9006.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/4/0/1784648880_2791.jpg",
+            "variants": [
+              "9151434"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/1/1790090671_8609.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/7/1/1790090672_3670.jpg",
+            "variants": [
+              "9151434"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/0/5/1784648839_1479.jpg",
+          "https://www.therange.co.uk/media/1/8/1784648855_2601.jpg",
+          "https://www.therange.co.uk/media/5/8/1784648865_8316.jpg",
+          "https://www.therange.co.uk/media/4/0/1784648880_2791.jpg",
+          "https://www.therange.co.uk/media/5/8/1790089366_9390.jpg",
+          "https://www.therange.co.uk/media/7/1/1790090672_3670.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:36.043Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "14877",
+          "prod_id": 341915,
+          "sku": 14877,
+          "id": 469727,
+          "attributes": {
+            "Size": "XL",
+            "Height": "66cm",
+            "Width": "57cm",
+            "Depth": "9cm",
+            "Weight": "120g",
+            "Material": "PVC, Polyester",
+            "Occasion": "Christmas",
+            "_swatch": null,
+            "_hex": null
+          },
+          "attributes_supplementary": {},
+          "product_specification": [],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        },
+        {
+          "code": "14878",
+          "prod_id": 341915,
+          "sku": 14878,
+          "id": 469786,
+          "attributes": {
+            "Size": "L",
+            "Height": "30cm",
+            "Width": "45cm",
+            "Depth": "6.5cm",
+            "Weight": "100g",
+            "Material": "PVC, Polyester",
+            "Occasion": "Christmas",
+            "_swatch": null,
+            "_hex": null
+          },
+          "attributes_supplementary": {},
+          "product_specification": [],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/red-stripe-christmas-decorative-bow/p14877",
+        "jsonUrl": "https://www.therange.co.uk/p/red-stripe-christmas-decorative-bow/p14877?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Gift Wrap",
+          "Christmas Ribbons & Bows"
+        ],
+        "productId": "341915",
+        "title": "Red Stripe Christmas Decorative Bow",
+        "features": [
+          "Subtle stripe design",
+          "Highly versatile",
+          "Bright and bold"
+        ],
+        "information": "Add a traditional Christmas feel to your home decor with this gorgeous Red Stripe Christmas Decorative Bow. Excellent for placing on your tree, hanging on a door, window or wall, this lovely bow is a great way to create a fun, festive atmosphere.",
+        "offers": [
+          {
+            "sku": "undefined",
+            "image": null
+          },
+          {
+            "sku": "14877",
+            "image": "https://www.therange.co.uk/media/7/1/1760691622_11_4614.jpg"
+          },
+          {
+            "sku": "14878",
+            "image": "https://www.therange.co.uk/media/7/1/1760691622_11_4614.jpg"
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/7/1/1760691622_11_4614.jpg",
+            "variants": [
+              "469727",
+              "469786"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/2/1760691635_11_9059.jpg",
+            "variants": [
+              "469727",
+              "469786"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/2/1760691644_11_3927.jpg",
+            "variants": [
+              "469727",
+              "469786"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/7/1760691652_11_9113.jpg",
+            "variants": [
+              "469727",
+              "469786"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/1/1760691622_11_4614.jpg",
+            "variants": [
+              "469727",
+              "469786"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/2/1760691635_11_9059.jpg",
+            "variants": [
+              "469727",
+              "469786"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/2/1760691644_11_3927.jpg",
+            "variants": [
+              "469727",
+              "469786"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/7/1760691652_11_9113.jpg",
+            "variants": [
+              "469727",
+              "469786"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/7/1/1760691622_11_6973.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/7/1/1760691622_11_4614.jpg",
+            "variants": [
+              "469727",
+              "469786"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/2/1760691635_11_9943.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/3/2/1760691635_11_9059.jpg",
+            "variants": [
+              "469727",
+              "469786"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/2/1760691644_11_1256.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/2/2/1760691644_11_3927.jpg",
+            "variants": [
+              "469727",
+              "469786"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/7/1760691652_11_3632.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/5/7/1760691652_11_9113.jpg",
+            "variants": [
+              "469727",
+              "469786"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/7/1/1760691622_11_4614.jpg",
+          "https://www.therange.co.uk/media/3/2/1760691635_11_9059.jpg",
+          "https://www.therange.co.uk/media/2/2/1760691644_11_3927.jpg",
+          "https://www.therange.co.uk/media/5/7/1760691652_11_9113.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:36.766Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "513866",
+          "prod_id": 2475204,
+          "sku": 513866,
+          "id": 8684979,
+          "attributes": {
+            "Height": "13cm",
+            "Width": "18.8cm",
+            "Depth": "7.5cm",
+            "Weight": "480g",
+            "Material": "Porcelain",
+            "Occasion": "Christmas",
+            "_swatch": "White",
+            "_hex": "#DBE0DC"
+          },
+          "attributes_supplementary": {},
+          "product_specification": [
+            "Disclaimer: Never leave a burning candle unattended. Burn candles out of reach of children & pets. Do not move whilst lit or if the wax is molten. Place on a flat, level, heat-resistant surface away from other sources of heat & out of draughts."
+          ],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/decorative-sleigh-tealight-holder/p513866",
+        "jsonUrl": "https://www.therange.co.uk/p/decorative-sleigh-tealight-holder/p513866?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Homeware",
+          "Christmas Candle Holders"
+        ],
+        "productId": "2475204",
+        "title": "Decorative Sleigh Tealight Holder",
+        "features": [
+          "Enhances festive table settings",
+          "Creates a cosy winter ambience",
+          "Ideal for mantelpiece or centrepiece display"
+        ],
+        "information": "Bring a touch of festive magic to your home with the Decorative Sleigh Tealight Holder. Designed to capture the charm of the season, this elegant porcelain sleigh adds warmth and a gentle glow to any space. Perfect for creating a cosy winter centrepiece, it looks delightful on a mantelpiece, dining table or as part of your Christmas table decor. Light your favourite tealight and enjoy the inviting atmosphere it creates throughout your celebrations.",
+        "offers": [
+          {
+            "sku": "513866",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/3/4/1778579133_4284.png",
+            "variants": [
+              "8684979"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/5/1778579151_3390.png",
+            "variants": [
+              "8684979"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/6/3/1778579163_1011.png",
+            "variants": [
+              "8684979"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/9/1778579177_3581.png",
+            "variants": [
+              "8684979"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/3/1778579190_6422.png",
+            "variants": [
+              "8684979"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/4/1778579133_4284.png",
+            "variants": [
+              "8684979"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/5/1778579151_3390.png",
+            "variants": [
+              "8684979"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/6/3/1778579163_1011.png",
+            "variants": [
+              "8684979"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/9/1778579177_3581.png",
+            "variants": [
+              "8684979"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/3/1778579190_6422.png",
+            "variants": [
+              "8684979"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/3/4/1778579130_5788.png",
+            "thumbnail": "https://www.therange.co.uk/media/3/4/1778579133_4284.png",
+            "variants": [
+              "8684979"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/3/5/1778579146_7011.png",
+            "thumbnail": "https://www.therange.co.uk/media/3/5/1778579151_3390.png",
+            "variants": [
+              "8684979"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/6/3/1778579160_7883.png",
+            "thumbnail": "https://www.therange.co.uk/media/6/3/1778579163_1011.png",
+            "variants": [
+              "8684979"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/9/1778579171_9635.png",
+            "thumbnail": "https://www.therange.co.uk/media/0/9/1778579177_3581.png",
+            "variants": [
+              "8684979"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/3/1778579186_8235.png",
+            "thumbnail": "https://www.therange.co.uk/media/1/3/1778579190_6422.png",
+            "variants": [
+              "8684979"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/3/4/1778579133_4284.png",
+          "https://www.therange.co.uk/media/3/5/1778579151_3390.png",
+          "https://www.therange.co.uk/media/6/3/1778579163_1011.png",
+          "https://www.therange.co.uk/media/0/9/1778579177_3581.png",
+          "https://www.therange.co.uk/media/1/3/1778579190_6422.png"
+        ],
+        "observedAt": "2026-11-03T23:43:38.225Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "12581",
+          "prod_id": 341507,
+          "sku": 12581,
+          "id": 469304,
+          "attributes": {
+            "Height": "15cm",
+            "Width": "30cm",
+            "Depth": "20cm",
+            "Weight": "1.2kg",
+            "Material": "MDF",
+            "Occasion": "Christmas",
+            "_swatch": null,
+            "_hex": null
+          },
+          "attributes_supplementary": {},
+          "product_specification": [],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/white-wooden-tile-christmas-eve-box/p12581",
+        "jsonUrl": "https://www.therange.co.uk/p/white-wooden-tile-christmas-eve-box/p12581?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Gift Wrap",
+          "Christmas Eve Boxes"
+        ],
+        "productId": "341507",
+        "title": "White Wooden Tile Christmas Eve Box",
+        "features": [
+          "Great for kids",
+          "Can be re-used every year",
+          "Stylish design"
+        ],
+        "information": "Make the night even more exciting by filling this White Wooden Tile Christmas Eve Box with pyjamas, hot chocolate, cosy socks, Xmas books and more. With 'Christmas' written in trendy, scrabble-like tiles and a sign reading 'special delivery only for' with space to write the name of your little one.",
+        "offers": [
+          {
+            "sku": "12581",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/7/1/1629271940_12_5209.jpg",
+            "variants": [
+              "469304"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/4/1629271948_12_7722.jpg",
+            "variants": [
+              "469304"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/8/1629271960_12_8980.jpg",
+            "variants": [
+              "469304"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/1/1629271940_12_5209.jpg",
+            "variants": [
+              "469304"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/4/1629271948_12_7722.jpg",
+            "variants": [
+              "469304"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/8/1629271960_12_8980.jpg",
+            "variants": [
+              "469304"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/7/1/1629271938_12_3069.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/7/1/1629271940_12_5209.jpg",
+            "variants": [
+              "469304"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/4/1629271946_12_2346.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/0/4/1629271948_12_7722.jpg",
+            "variants": [
+              "469304"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/8/1629271958_12_4514.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/9/8/1629271960_12_8980.jpg",
+            "variants": [
+              "469304"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/7/1/1629271940_12_5209.jpg",
+          "https://www.therange.co.uk/media/0/4/1629271948_12_7722.jpg",
+          "https://www.therange.co.uk/media/9/8/1629271960_12_8980.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:38.523Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "516604",
+          "prod_id": 2620429,
+          "sku": 516604,
+          "id": 8831289,
+          "attributes": {
+            "Height": "43cm",
+            "Width": "16.5cm",
+            "Depth": "22cm",
+            "Weight": "1.2kg",
+            "Material": "Resin",
+            "Decoration Type": "Ornaments",
+            "Occasion": "Christmas",
+            "_swatch": null,
+            "_hex": null
+          },
+          "attributes_supplementary": {},
+          "product_specification": [],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/golden-santa-ornament/p516604",
+        "jsonUrl": "https://www.therange.co.uk/p/golden-santa-ornament/p516604?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Decorations",
+          "Christmas Ornaments"
+        ],
+        "productId": "2620429",
+        "title": "Golden Santa Ornament",
+        "features": [
+          "Enhances festive ambience instantly",
+          "Features an eye-catching golden finish",
+          "Complements other Christmas ornaments"
+        ],
+        "information": "Add a touch of festive sparkle to your holiday decor with this Golden Santa Ornament. Finished in a radiant gold hue, this ornament brings a sense of luxury and charm to your Christmas celebrations. Perfect for a warm and inviting atmosphere.",
+        "offers": [
+          {
+            "sku": "516604",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/2/6/1786522714_8077.jpg",
+            "variants": [
+              "8831289"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/5/1786522713_3193.jpg",
+            "variants": [
+              "8831289"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/9/1786522714_9068.jpg",
+            "variants": [
+              "8831289"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/7/1786522715_9025.jpg",
+            "variants": [
+              "8831289"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/2/6/1786522714_8077.jpg",
+            "variants": [
+              "8831289"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/5/1786522713_3193.jpg",
+            "variants": [
+              "8831289"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/9/1786522714_9068.jpg",
+            "variants": [
+              "8831289"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/7/1786522715_9025.jpg",
+            "variants": [
+              "8831289"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/0/5/1786522714_9436.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/2/6/1786522714_8077.jpg",
+            "variants": [
+              "8831289"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/6/4/1786522713_1085.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/9/5/1786522713_3193.jpg",
+            "variants": [
+              "8831289"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/8/1786522715_8486.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/9/9/1786522714_9068.jpg",
+            "variants": [
+              "8831289"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/9/7/1786522715_5245.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/0/7/1786522715_9025.jpg",
+            "variants": [
+              "8831289"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/9/5/1786522713_3193.jpg",
+          "https://www.therange.co.uk/media/2/6/1786522714_8077.jpg",
+          "https://www.therange.co.uk/media/9/9/1786522714_9068.jpg",
+          "https://www.therange.co.uk/media/0/7/1786522715_9025.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:39.276Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    },
+    {
+      "status": 200,
+      "variants": [
+        {
+          "code": "464290",
+          "prod_id": 1910994,
+          "sku": 464290,
+          "id": 7823884,
+          "attributes": {
+            "Height": "26.5cm",
+            "Width": "28cm",
+            "Depth": "12cm",
+            "Weight": "500g",
+            "Material": "Polyresin",
+            "Occasion": "Christmas",
+            "_swatch": null,
+            "_hex": null
+          },
+          "attributes_supplementary": {},
+          "product_specification": [],
+          "features": [],
+          "desc_override": 0,
+          "descriptionText": ""
+        }
+      ],
+      "evidence": {
+        "url": "https://www.therange.co.uk/p/gold-ornate-deer-bottle-holder/p464290",
+        "jsonUrl": "https://www.therange.co.uk/p/gold-ornate-deer-bottle-holder/p464290?json",
+        "breadcrumbs": [
+          "Home",
+          "Occasions & Themes",
+          "Christmas",
+          "Christmas Homeware",
+          "Christmas Dining",
+          "Christmas Tableware & Serveware",
+          "Christmas Serveware"
+        ],
+        "productId": "1910994",
+        "title": "Gold Ornate Deer Bottle Holder",
+        "features": [
+          "Ideal for tables, sideboards and more",
+          "Adorable deer design",
+          "Stunning golden finish"
+        ],
+        "information": "Elevate your table setting with the Gold Ornate Deer Bottle Holder. Both functional and visually appealing, this holder keeps your bottle in position, making it easy for guests to refill their glasses. Flaunting a golden finish and a deer design, it is sure to be a striking addition to any holiday home.",
+        "offers": [
+          {
+            "sku": "464290",
+            "image": null
+          }
+        ],
+        "gallery": [
+          {
+            "url": "https://www.therange.co.uk/media/7/2/1790065824_5825.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/7/1748432522_11_3747.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/8/1748432535_11_7694.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/0/1748432545_11_5942.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/9/1748432555_11_2806.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/4/1750173368_11_5230.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/2/1790065824_5825.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/7/1748432522_11_3747.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/8/1748432535_11_7694.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/0/1748432545_11_5942.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/9/1748432555_11_2806.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/4/1750173368_11_5230.jpg",
+            "variants": [
+              "7823884"
+            ]
+          }
+        ],
+        "originalGallery": [
+          {
+            "url": "https://www.therange.co.uk/media/7/2/1790065823_3344.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/7/2/1790065824_5825.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/7/1748432521_11_6681.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/0/7/1748432522_11_3747.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/5/8/1748432534_11_1192.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/5/8/1748432535_11_7694.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/1/0/1748432545_11_3253.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/1/0/1748432545_11_5942.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/0/9/1748432555_11_4580.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/0/9/1748432555_11_2806.jpg",
+            "variants": [
+              "7823884"
+            ]
+          },
+          {
+            "url": "https://www.therange.co.uk/media/7/4/1750173367_11_8573.jpg",
+            "thumbnail": "https://www.therange.co.uk/media/7/4/1750173368_11_5230.jpg",
+            "variants": [
+              "7823884"
+            ]
+          }
+        ],
+        "structuredOriginalImages": [
+          "https://www.therange.co.uk/media/0/7/1748432522_11_3747.jpg",
+          "https://www.therange.co.uk/media/5/8/1748432535_11_7694.jpg",
+          "https://www.therange.co.uk/media/1/0/1748432545_11_5942.jpg",
+          "https://www.therange.co.uk/media/0/9/1748432555_11_2806.jpg",
+          "https://www.therange.co.uk/media/7/4/1750173368_11_5230.jpg",
+          "https://www.therange.co.uk/media/7/2/1790065824_5825.jpg"
+        ],
+        "observedAt": "2026-11-03T23:43:40.880Z",
+        "sourceTransport": "official-page-navigation"
+      }
+    }
+  ]
+}
