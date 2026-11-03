@@ -18,7 +18,7 @@ export async function collectPartitionedCategory(id,reader){
   if(expected<=120){if(map.size!==expected)throw new SourceError('Small source partition did not reconcile');return map;}
   // Bounded forward and reverse overlap usually reconciles a medium brand.
   for(const sort of ['price_lth','price_htl']){
-   for(let offset=sort==='price_lth'?80:0;offset<expected;offset+=80){const d=await fetchPage(filters,offset,sort);if(d.totalResults!==expected)throw new SourceError('Partition count changed during observation: category '+id+' '+JSON.stringify(filters)+' '+expected+' -> '+d.totalResults);for(const p of d.products)insert(map,p);}
+   for(let offset=sort==='price_lth'?80:0;offset<expected;offset+=80){const d=await fetchPage(filters,offset,sort);if(d.totalResults!==expected)reconciliations.push({category:id,filters,offset,firstPageTotal:expected,pageTotal:d.totalResults,method:'retain-all-returned-SKUs-and-reconcile-root-union'});for(const p of d.products)insert(map,p);}
    if(map.size===expected)return map;
   }
   if(depth>=3)throw new SourceError('Source partition remains incomplete; refusing omitted SKUs: '+map.size+'/'+expected);
@@ -48,14 +48,15 @@ export async function collectPartitionedCategory(id,reader){
   root=await reader(apiUrl(id,0,{in_stock_f:['true']},true));requests++;target=root.totalResults;
   const currentBrands=root.facets?.find(f=>f.id==='brand_f')?.options;if(!currentBrands)throw new SourceError('Final official brand counts unavailable');
   all.clear();for(const part of results.values())for(const p of part.values())insert(all,p);
-  const counts=new Map();for(const p of all.values())counts.set(p.brand,(counts.get(p.brand)||0)+1);
-  const expected=new Map(currentBrands.map(b=>[b.name,b.count]));
-  const changed=new Set([...new Set([...counts.keys(),...expected.keys()])].filter(name=>(counts.get(name)||0)!==(expected.get(name)||0)));
-  if(all.size===target&&!changed.size)break;
+  if(all.size===target)break;
   if(round===2)throw new SourceError('Root total and brand-partition union do not reconcile after bounded changed-group checks: '+all.size+'/'+target+' category '+id);
-  const known=new Set(groups.flat());for(const brand of changed)if(!known.has(brand)){groups.push([brand]);known.add(brand);}
-  const affected=groups.map((names,index)=>names.some(name=>changed.has(name))?index:null).filter(x=>x!==null);
+  // Facet option counts include records excluded by the product-list API.
+  // Only a real filtered product response supplies its exact denominator.
+  const known=new Set(groups.flat()),affected=[];
+  for(const brand of currentBrands)if(!known.has(brand.name)){groups.push([brand.name]);known.add(brand.name);affected.push(groups.length-1);}
+  for(let index=0;index<groups.length;index++){if(affected.includes(index))continue;const header=await fetchPage({in_stock_f:['true'],brand_f:groups[index]});if(results.get(index)?.size!==header.totalResults)affected.push(index);}
   if(!affected.length)throw new SourceError('Root total and brand-partition union do not reconcile: '+all.size+'/'+target);
+  const changed=new Set(affected.flatMap(index=>groups[index]));
   reconciliations.push({round:round+1,changedBrands:[...changed],expected:target,observed:all.size});await runGroups(affected);
  }
  for(const [index,part]of results)partitions.push({brands:groups[index],count:part.size,complete:true});
