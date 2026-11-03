@@ -1,7 +1,7 @@
 import {DEPARTMENT_MAP,colourLabel,STYLE_EN} from '../web/catalogue-model.mjs';
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';
 const HOME='https://g-jayden.github.io/range-christmas-observatory/';
-export const MAIL_CARD_VERSION='bilingual-card-v2';
+export const MAIL_CARD_VERSION='bilingual-card-v3';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 function lines(text,width,font){const out=[];let line='',used=0;const units=String(text).match(/[A-Za-z0-9]+|[ \t]+|[\s\S]/g)||[];for(const unit of units){const size=[...unit].reduce((n,c)=>n+(/[\u0000-\u00ff]/.test(c)?.55:1),0);if((used+size)*font>width&&line){out.push(line.trimEnd());line='';used=0;}if(!line&&!unit.trim())continue;line+=unit;used+=size;}if(line)out.push(line.trimEnd());return out;}
 async function renderer(){
@@ -33,7 +33,8 @@ export async function buildMailAssets(p,pdpBase64=null){
   combined=await sharp({create:{width:W,height:H+110+ph,channels:3,background:'white'}}).composite([{input:card,left:0,top:0},{input:divider,left:0,top:H},{input:proof,left:Math.floor((W-pw)/2),top:H+110}]).png({compressionLevel:9}).toBuffer();
  }
  await fs.writeFile(dir+'/notification.png',combined);const prefix=HOME+'mail-assets/'+p.sku+'/';
- const manifest={version:1,cardVersion:MAIL_CARD_VERSION,sku:String(p.sku),name:p.variantName,priceGBP:p.priceGBP,colors:p.colorValues,style:p.style,material:p.material,height:p.heightLabel,sourceUrl:p.sourceUrl,observedAt:p.newEvidence?.observedAt||p.observedAt,card:{url:prefix+'card.png',width:W,height:H,bytes:card.length},original:{url:prefix+'original.'+ext,sourceUrl:p.originalImageUrl||p.imageCacheEvidence?.sourceUrl,width:meta.width,height:meta.height,sha256:createHash('sha256').update(original).digest('hex'),bytes:original.length,upscaled:false,recompressed:false},proof:pdpBase64?{url:prefix+'proof.png',kind:'selected-SKU-official-page-screenshot'}:null,notification:{url:prefix+'notification.png',kind:pdpBase64?'information-card-plus-official-page-screenshot':'information-card-only-test',bytes:combined.length}};
+ const cardHash=createHash('sha256').update(card).digest('hex');
+ const manifest={version:1,cardVersion:MAIL_CARD_VERSION,sku:String(p.sku),name:p.variantName,priceGBP:p.priceGBP,colors:p.colorValues,style:p.style,material:p.material,height:p.heightLabel,sourceUrl:p.sourceUrl,observedAt:p.newEvidence?.observedAt||p.observedAt,card:{url:prefix+'card.png?v='+cardHash.slice(0,16),sha256:cardHash,width:W,height:H,bytes:card.length},original:{url:prefix+'original.'+ext,sourceUrl:p.originalImageUrl||p.imageCacheEvidence?.sourceUrl,width:meta.width,height:meta.height,sha256:createHash('sha256').update(original).digest('hex'),bytes:original.length,upscaled:false,recompressed:false},proof:pdpBase64?{url:prefix+'proof.png',kind:'selected-SKU-official-page-screenshot'}:null,notification:{url:prefix+'notification.png',kind:pdpBase64?'information-card-plus-official-page-screenshot':'information-card-only-test',bytes:combined.length}};
  await fs.writeFile(dir+'/manifest.json',JSON.stringify(manifest));p.mailAssets=manifest;
  return {manifest,downloadUrl:HOME+'product.html?sku='+p.sku,attachmentBase64:combined.length<=5000000?combined.toString('base64'):pdpBase64,attachmentKind:combined.length<=5000000?'information-card-plus-official-page-screenshot':'official-page-screenshot-with-card-download-link'};
 }

@@ -218,6 +218,15 @@ export class Control{
     const events=await this.db.list({prefix:'event/'}),subs=await this.db.list({prefix:'sub/'});let accepted=0;
     for(const [eventKey,p] of events){
      const created=Date.parse(p.detectedAt);if(Date.now()-created>14*86400000){await this.db.delete(eventKey);await this.db.delete('image-access/'+p.imageAccess);for(let i=0;i<p.screenshotParts;i++)await this.db.delete('shot/'+p.sku+'/'+i);continue}
+     const needsDelivery=await Promise.all([...subs].map(async([key,sub])=>sub.confirmedAt&&Date.parse(sub.confirmedAt)<=created&&accepts(sub,p)&&!await this.db.get('delivered/'+p.sku+'/'+key.slice(4))));
+     if(!needsDelivery.some(Boolean))continue;
+     // Publication can include a local image review after queueing. Keep the
+     // body and the native attachments aligned without reading the retailer.
+     if(p.mailAssets?.cardVersion&&p.mailAssets.original?.sha256){
+      const r=await fetch(HOME+'mail-assets/'+p.sku+'/manifest.json',{signal:AbortSignal.timeout(10000)});if(!r.ok)throw Object.assign(Error('新品信息卡尚未发布，保留队列等待投递。'),{status:503});
+      const m=await r.json();if(m.sku!==p.sku||m.sourceUrl!==p.sourceUrl||m.priceGBP!==p.priceGBP||m.original?.sha256!==p.mailAssets.original.sha256)throw Object.assign(Error('已发布附件与核验SKU不一致，已保留队列。'),{status:503});
+      mailAssets({...p,mailAssets:m});Object.assign(p,{mailAssets:m,colorValues:m.colors,treeColor:(m.colors||[]).join(' / '),material:m.material,style:m.style,heightLabel:m.height});await this.db.put(eventKey,p);
+     }
      let content;
      for(const [subKey,sub] of subs){
       if(!sub.confirmedAt||Date.parse(sub.confirmedAt)>created||!accepts(sub,p))continue;
@@ -230,7 +239,7 @@ export class Control{
        if(!ready.ok||!ready.headers.get('content-type')?.startsWith('image/'))throw Object.assign(Error('新品高清附件尚未发布；待发记录已保留，将仅重试投递。'),{status:503,assetStatus:ready.status,assetName:asset.name,assetContentType:ready.headers.get('content-type')});
       }
       const id=await this.send(sub.email,'NEW｜'+p.variantName,html,(p.mailAssets?.card&&p.mailAssets?.original)?mailAssets(p):[{name:'NEW-'+p.sku+'.png',content}],await hash(p.sku+'/'+subKey));
-      // Three attachment HEADs plus one Brevo call per message. Eight messages
+      // Manifest + three attachment HEADs + one Brevo call. Eight messages
       // leave room below the free Worker's 50 external-subrequest limit.
       await this.db.put(delivered,{acceptedAt:new Date().toISOString(),providerId:id});accepted++;if(accepted>=8)return response({accepted,morePending:true});
      }
