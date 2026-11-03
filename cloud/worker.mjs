@@ -103,8 +103,8 @@ export class Control{
    if(route==='/admin/review-event'&&req.method==='POST'){
     const b=await req.json(),sku=String(b.sku||'');if(!/^\d{1,12}$/.test(sku))throw Error('Invalid review SKU');
     const p=await this.db.get('event/'+sku);if(!p)return response({error:'只能更新已有真实新品的已发布信息卡'},409);
-    const r=await fetch(HOME+'mail-assets/'+sku+'/manifest.json',{signal:AbortSignal.timeout(10000)});if(!r.ok)return response({error:'核验后的信息卡尚未发布'},503);
-    const m=await r.json();if(m.sku!==sku||m.sourceUrl!==p.sourceUrl||m.priceGBP!==p.priceGBP||!Array.isArray(m.colors)||!m.original?.sha256)throw Error('Reviewed manifest does not match observed SKU');
+    const r=await fetch(HOME+'mail-assets/'+sku+'/manifest.json'+(b.cardVersion?'?review='+encodeURIComponent(b.cardVersion):''),{signal:AbortSignal.timeout(10000)});if(!r.ok)return response({error:'核验后的信息卡尚未发布'},503);
+    const m=await r.json();if(b.cardVersion&&m.cardVersion!==b.cardVersion)return response({error:'更正信息卡版本尚未发布，保留队列等待'},503);if(m.sku!==sku||m.sourceUrl!==p.sourceUrl||m.priceGBP!==p.priceGBP||!Array.isArray(m.colors)||!m.original?.sha256)throw Error('Reviewed manifest does not match observed SKU');
     mailAssets({...p,mailAssets:m});
     const version=await hash(JSON.stringify([m.colors,m.material,m.style,m.cardVersion,m.original.sha256]));
     const changed=JSON.stringify(p.colorValues)!==JSON.stringify(m.colors)||p.material!==m.material;
