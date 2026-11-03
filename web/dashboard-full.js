@@ -1,6 +1,6 @@
 import {DEPARTMENTS,DEPARTMENT_MAP,colourLabel,STYLE_EN,fieldLabel,heightCategoryLabel,beijingDay,isToday,isNew,inDepartment,productDimensions,availableProducts} from './catalogue-model.mjs';
 const E=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),date=v=>v?new Date(v).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'}):'尚未采集 · Not collected';
-const read=async file=>{const r=await fetch(file,{cache:'no-store'});if(!r.ok)throw Error(file+' HTTP '+r.status);return r.json()};
+const read=async file=>{const url=new URL(file,location.href);url.searchParams.set('checked',String(Math.floor(Date.now()/30000)));const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error(file+' HTTP '+r.status);return r.json()};
 let D,A,C=null,scope=null,mode='all',graphic='bar',visible=36,lastDay=beijingDay(),decorPromise;
 try{[D,A]=await Promise.all([window.CATALOGUE||read('catalogue.json'),window.NEW_ARRIVALS||read('new-arrivals.json').catch(()=>({products:[]}))]);}catch(e){E('loadStatus').textContent='目录载入失败 · Catalogue unavailable: '+e.message;throw e;}
 const detailCache=new Map(),palette=['#267658','#b89542','#77a79e','#cf8971','#7b9659','#8199b7','#a37fa1','#9e8970','#516958','#d3aa60','#8e9b9d'];
