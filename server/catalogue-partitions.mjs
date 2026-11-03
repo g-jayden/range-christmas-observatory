@@ -2,11 +2,11 @@ import {apiUrl,SourceError} from './sync.mjs';
 // A large equal-price group is not stably ordered by the retailer. Partition
 // with its real facets, so each final request can be checked independently.
 export async function collectPartitionedCategory(id,reader){
- const root=await reader(apiUrl(id,0,{in_stock_f:['true']},true));
+ let root=await reader(apiUrl(id,0,{in_stock_f:['true']},true));
  if(root.totalResults===0)return {products:[],audit:{expected:0,observed:0,unique:0,complete:true,rootCategoryId:id,requests:1,records:[]}};
  const brands=root.facets?.find(f=>f.id==='brand_f')?.options;
  if(!brands?.length)throw new SourceError('Official brand facet required for complete large-catalogue coverage');
- const target=root.totalResults,all=new Map(),partitions=[],batches=[],facets=root.facets;
+ let target=root.totalResults;const all=new Map(),partitions=[],batches=[],facets=root.facets,reconciliations=[];
  let requests=1;
  const urlFor=(offset,filters,sort='price_lth')=>{const u=new URL(apiUrl(id,offset,filters));u.searchParams.set('sort',sort);return u.href;};
  async function fetchPage(filters,offset=0,sort='price_lth'){
@@ -18,7 +18,7 @@ export async function collectPartitionedCategory(id,reader){
   if(expected<=120){if(map.size!==expected)throw new SourceError('Small source partition did not reconcile');return map;}
   // Bounded forward and reverse overlap usually reconciles a medium brand.
   for(const sort of ['price_lth','price_htl']){
-   for(let offset=sort==='price_lth'?80:0;offset<expected;offset+=80){const d=await fetchPage(filters,offset,sort);if(d.totalResults!==expected)throw new SourceError('Partition count changed during observation');for(const p of d.products)insert(map,p);}
+   for(let offset=sort==='price_lth'?80:0;offset<expected;offset+=80){const d=await fetchPage(filters,offset,sort);if(d.totalResults!==expected)throw new SourceError('Partition count changed during observation: category '+id+' '+JSON.stringify(filters)+' '+expected+' -> '+d.totalResults);for(const p of d.products)insert(map,p);}
    if(map.size===expected)return map;
   }
   if(depth>=3)throw new SourceError('Source partition remains incomplete; refusing omitted SKUs: '+map.size+'/'+expected);
@@ -38,7 +38,26 @@ export async function collectPartitionedCategory(id,reader){
  // Pack small brands into bounded OR groups; large brands get their own plan.
  const groups=[];let small=[],count=0;
  for(const b of brands){if(b.count>100){groups.push([b.name]);continue;}if(count+b.count>100&&small.length){groups.push(small);small=[];count=0;}small.push(b.name);count+=b.count;}if(small.length)groups.push(small);
- let cursor=0;await Promise.all(Array.from({length:4},async()=>{while(cursor<groups.length){const values=groups[cursor++],part=await collect({in_stock_f:['true'],brand_f:values});for(const p of part.values())insert(all,p);partitions.push({brands:values,count:part.size,complete:true});}}));
- if(all.size!==target)throw new SourceError('Root total and brand-partition union do not reconcile: '+all.size+'/'+target);
- return {products:[...all.values()],audit:{expected:target,observed:all.size,unique:all.size,complete:true,method:'official-brand-price-colour-facets-with-checked-partitions',rootCategoryId:id,requests,partitions,batches,records:[...all.keys()]}};
+ const results=new Map();
+ async function checkedGroup(index){const values=groups[index];let failure;for(let attempt=0;attempt<3;attempt++)try{const part=await collect({in_stock_f:['true'],brand_f:values});results.set(index,part);return;}catch(e){failure=e;if(e.status||!/Partition count changed|SKU changed|partition.*reconcile|coverage mismatch/i.test(e.message))throw e;reconciliations.push({brands:values,attempt:attempt+1,reason:e.message});}throw failure;}
+ async function runGroups(indices){let cursor=0;const workers=await Promise.allSettled(Array.from({length:Math.min(4,indices.length)},async()=>{while(cursor<indices.length)await checkedGroup(indices[cursor++]);}));const failed=workers.find(r=>r.status==='rejected');if(failed)throw failed.reason;}
+ await runGroups(groups.map((_,i)=>i));
+ // Only changed brand groups are re-read. A fresh official facet response is
+ // the final denominator; a moving initial count is never silently reused.
+ for(let round=0;round<3;round++){
+  root=await reader(apiUrl(id,0,{in_stock_f:['true']},true));requests++;target=root.totalResults;
+  const currentBrands=root.facets?.find(f=>f.id==='brand_f')?.options;if(!currentBrands)throw new SourceError('Final official brand counts unavailable');
+  all.clear();for(const part of results.values())for(const p of part.values())insert(all,p);
+  const counts=new Map();for(const p of all.values())counts.set(p.brand,(counts.get(p.brand)||0)+1);
+  const expected=new Map(currentBrands.map(b=>[b.name,b.count]));
+  const changed=new Set([...new Set([...counts.keys(),...expected.keys()])].filter(name=>(counts.get(name)||0)!==(expected.get(name)||0)));
+  if(all.size===target&&!changed.size)break;
+  if(round===2)throw new SourceError('Root total and brand-partition union do not reconcile after bounded changed-group checks: '+all.size+'/'+target+' category '+id);
+  const known=new Set(groups.flat());for(const brand of changed)if(!known.has(brand)){groups.push([brand]);known.add(brand);}
+  const affected=groups.map((names,index)=>names.some(name=>changed.has(name))?index:null).filter(x=>x!==null);
+  if(!affected.length)throw new SourceError('Root total and brand-partition union do not reconcile: '+all.size+'/'+target);
+  reconciliations.push({round:round+1,changedBrands:[...changed],expected:target,observed:all.size});await runGroups(affected);
+ }
+ for(const [index,part]of results)partitions.push({brands:groups[index],count:part.size,complete:true});
+ return {products:[...all.values()],audit:{expected:target,observed:all.size,unique:all.size,complete:true,method:'official-brand-price-colour-facets-with-checked-partitions',rootCategoryId:id,requests,partitions,reconciliations,batches,records:[...all.keys()]}};
 }

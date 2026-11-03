@@ -6,6 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {detailFingerprint} from '../server/collection-policy.mjs';
 import {notificationSnapshot} from '../server/decorations.mjs';
+import {collectPartitionedCategory} from '../server/catalogue-partitions.mjs';
 
 assert.equal(ROOT_DEPARTMENTS.length,16);assert.equal(LIGHT_DEPARTMENTS.length,6);assert.equal(DEPARTMENTS.length,22);
 for(const d of LIGHT_DEPARTMENTS){assert.equal(d.parentId,'lights');assert.equal(d.charts,false);assert(isLightingScope(d.id));}
@@ -32,6 +33,10 @@ const analytic=enrichLighting(reuse.products);assert.equal(analytic.imageAnalysi
 const duplicate={...a,department:'presents',departmentIds:['presents'],kind:'decoration'};const combined=notificationSnapshot({products:[],observedAt:'2026-11-02T00:00:00Z'},{products:[duplicate]},next);assert.equal(combined.products.filter(p=>p.sku==='1').length,1);assert(combined.products.find(p=>p.sku==='1').departmentIds.includes('string-lights'));assert.equal(combined.products.find(p=>p.sku==='1').department,'presents');
 const invalid=structuredClone(collected);invalid['string-lights'].products[0]={...invalid['string-lights'].products[0],price:2000};assert.throws(()=>mergeLights(prior,invalid),/changed across/);
 const cleared=structuredClone(collected);for(const part of Object.values(cleared))for(const r of part.products){r.originalPrice=null;r.promoText=null;}const noSale=mergeLights(prior,cleared);for(const p of noSale.products){assert.equal(p.originalPrice,null);assert.equal(sourcePrice(p).reduced,false);assert.equal(p.promoText,null);}
+let drifted=false,stableBrandReads=0;
+const changingRows=Array.from({length:280},(_,i)=>({...row(i+1),brand:i<200?'Changing':'Stable'}));
+const movingSource=async raw=>{const u=new URL(raw),f=JSON.parse(u.searchParams.get('filters')),brands=f.brand_f,offset=Number(u.searchParams.get('offset'));if(brands?.includes('Stable'))stableBrandReads++;if(brands?.includes('Changing')&&offset===80&&!drifted)drifted=true;const rows=changingRows.filter(p=>(!drifted||p.sku!=='200')&&(!brands||brands.includes(p.brand)));return {products:rows.slice(offset,offset+120),totalResults:rows.length,facets:[{id:'brand_f',options:[{name:'Changing',count:drifted?199:200},{name:'Stable',count:80}]}]};};
+const reconciled=await collectPartitionedCategory('94579',movingSource);assert.equal(reconciled.products.length,279);assert.equal(reconciled.audit.expected,279);assert.equal(stableBrandReads,1,'An inventory change must not restart the unchanged source partition');assert(reconciled.audit.reconciliations.length>0);
 const cwd=process.cwd(),tmp=await fs.mkdtemp(path.join(os.tmpdir(),'range-lights-'));
 try{process.chdir(tmp);const snapshot={...initial,products:[{...saved,detailInputFingerprint:detailFingerprint(saved),originalImages:[{url:'https://www.therange.co.uk/media/original.jpg'}]}]};await publishLights(snapshot);assert.equal(snapshot.products[0].sourceDescription,undefined);await loadLightingDetails(snapshot.products);assert.equal(snapshot.products[0].sourceDescription,saved.sourceDescription,'A compact record with the same verification timestamp must restore its full description');assert.equal(snapshot.products[0].originalImages.length,1);await publishLights(snapshot);const shard=JSON.parse(await fs.readFile('web/light-details/01.json','utf8'));assert.equal(shard['1'].sourceDescription,saved.sourceDescription,'Publishing again must retain all previously verified source content');}finally{process.chdir(cwd);await fs.rm(tmp,{recursive:true,force:true});}
 console.log('PASS: official six lighting memberships, complete parent coverage, cross-catalogue evidence reuse, source price precision, initial-baseline exclusion, midnight rollover and one SKU/one notification.');
