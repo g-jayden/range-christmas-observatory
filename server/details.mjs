@@ -31,7 +31,8 @@ export function parseVariantDetails(response,expectedSku,sourceUrl,observedAt=ne
  const features=[...f.features,...(v.features||[])],information=[v.desc_override===1?'':f.information,v.descriptionText||''].filter(Boolean).join('\n');
  const featuresText='## Features\n'+features.map(x=>'- '+x).join('\n')+'\n\n## Information\n'+information;
  const text=featuresText+'\n\n## Specification\n'+Object.entries(specs).map(([k,value])=>'- '+k+': '+value).join('\n');
- const rawImage=f.offers.find(o=>String(o.sku)===String(expectedSku))?.image||f.gallery.find(g=>g.variants.includes(String(v.id)))?.url;
+ const imageCandidates=[f.offers.find(o=>String(o.sku)===String(expectedSku))?.image,...f.gallery.filter(g=>g.variants.includes(String(v.id))).map(g=>g.url)];
+ const rawImage=imageCandidates.find(raw=>{try{return raw&&validProductImage(new URL(decode(raw),f.url).href)}catch{return false}});
  const image=rawImage?new URL(decode(rawImage),f.url).href:null;
  const images=f.gallery.filter(g=>!g.variants.length||g.variants.includes(String(v.id))).map(g=>g.url);
  const originals=(f.originalGallery||[]).filter(g=>g.variants.includes(String(v.id))||g.thumbnail===image);

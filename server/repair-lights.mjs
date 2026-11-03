@@ -3,12 +3,13 @@ import {createFirecrawlBrowserReader} from './firecrawl-browser.mjs';
 import {openCreditBudget} from './credit-budget.mjs';
 import {loadPolicy} from './collection-policy.mjs';
 import {atomicJson} from './sync.mjs';
+import {validProductImage} from './details.mjs';
 // Only saved transient failures; no directory scan, valid PDP or photo sweep.
 export async function repairLights(){
  const snapshot=await readLights();if(!snapshot.source?.complete)throw Error('A complete saved lighting directory is required');
- const selected=snapshot.products.filter(p=>!p.detailsReady&&(p.detailIssue?.transient||p.detailIssue?.deferred));
- const policy={...await loadPolicy(),familyBatchSize:50,familyBatchConcurrency:4},budget=await openCreditBudget(policy),reader=await createFirecrawlBrowserReader({policy,budget});let error,audit;
- try{for(const p of selected)p.detailIssue.retryAfter=null;audit=await updateLightingDetails(snapshot,reader);}
+ const selected=snapshot.products.filter(p=>!p.detailsReady&&(p.detailIssue?.transient||p.detailIssue?.deferred)||p.detailsReady&&!validProductImage(p.variantImageUrl));
+ const policy={...await loadPolicy(),familyBatchSize:50,familyBatchConcurrency:4,repairImagesOnly:true},budget=await openCreditBudget(policy),reader=await createFirecrawlBrowserReader({policy,budget});let error,audit;
+ try{audit=await updateLightingDetails(snapshot,reader,{selectedSkus:selected.map(p=>p.sku)});const photos=selected.filter(p=>validProductImage(p.variantImageUrl)&&p.imageCacheEvidence?.sourceUrl!==p.variantImageUrl);if(photos.length){const images=await reader.auditImages(photos,snapshot.browserImageAudit);snapshot.browserImageAudit={...snapshot.browserImageAudit,entries:{...snapshot.browserImageAudit?.entries,...images.entries},repair:images};}}
  catch(e){error=e;}
  finally{await reader.close();const native=reader.metrics();await budget.settle({credits:native.firecrawlCredits,receipt:native.receipt,report:{mode:'lighting-transient-evidence-repair',directoryRequests:0,selected:selected.length,native,error:error?.message}});snapshot.repairAudit={directoryRequests:0,selected:selected.length,native,error:error?.message};}
  if(audit)snapshot.detailAudit=audit;await publishLights(snapshot,snapshot.repairAudit.native);
