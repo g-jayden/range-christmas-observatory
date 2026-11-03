@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
+import {Script} from 'node:vm';
 import {createFirecrawlBrowserReader} from '../server/firecrawl-browser.mjs';
 import {parseDetails,applyDetails} from '../server/details.mjs';
 import {defaults} from '../server/collection-policy.mjs';
@@ -56,6 +57,10 @@ try{
  let outageCalls=0;const outage=await createFirecrawlBrowserReader({policy:defaults,budget:{limit:60},fetcher:async()=>{outageCalls++;return Response.json({success:false},{status:500})}});await assert.rejects(outage.auditImages([{sku:'outage',variantImageUrl:sourceImage}]),/HTTP 500/);await outage.close();assert.equal(outageCalls,3,'Repeated upstream failures stop after two bounded continuations, never an endless paid loop');
  const badImageReader=await createFirecrawlBrowserReader({policy:defaults,budget:{limit:60},fetcher:async()=>Response.json({success:true,data:{metadata:{statusCode:200,creditsUsed:1},actions:{javascriptReturns:[{value:[{url:sourceImage,ok:true,width:1,height:1,mime:'image/png',hash:imageHash,dataBase64:imageBytes.toString('base64')}]}]}}})});
  await assert.rejects(badImageReader.auditImages([badProduct]),/图片主通道未通过/);await badImageReader.close();assert.equal(badProduct.cachedImageUrl,undefined,'HTTP 200 and a valid image MIME cannot make a 1px placeholder a product photo');assert.equal(badImageReader.metrics().firecrawlCredits,1);
+ const captureUrl='https://www.therange.co.uk/p/capture/p1000/#1000';
+ const screenshotReader=async originals=>createFirecrawlBrowserReader({policy:defaults,budget:{limit:60},fetcher:async(url,opts)=>{if(url.startsWith('https://api.firecrawl.dev/')){const body=JSON.parse(opts.body);new Script(body.actions[0].script);return Response.json({success:true,data:{metadata:{statusCode:200,creditsUsed:1},screenshot:'https://proof.example/selected.png',actions:{javascriptReturns:[{value:{sku:'1000',images:2,originals}}]}}});}return new Response(Buffer.alloc(2501),{headers:{'content-type':'image/png'}});}});
+ const noOriginal=await screenshotReader([]);await assert.rejects(noOriginal.captureVerified(captureUrl),/screenshot evidence failed/);await noOriginal.close();assert.equal(noOriginal.metrics().firecrawlCredits,1,'An unverified original cannot pass just because background gallery images loaded');
+ const withOriginal=await screenshotReader([{url:sourceImage,width:1500,height:1500,selectedSku:'1000'}]);assert.equal(Buffer.from(await withOriginal.captureVerified(captureUrl),'base64').length,2501);await withOriginal.close();assert.equal(withOriginal.originalsFor(captureUrl)[0].selectedSku,'1000');
  if(savedKey===undefined)delete process.env.FIRECRAWL_API_KEY;else process.env.FIRECRAWL_API_KEY=savedKey;
  const policy={...defaults,maxCreditsPerCalendarMonth:70};
  assert.equal((await reserveCredits(policy,{key:'first',accountRemaining:10000})).limit,60);
