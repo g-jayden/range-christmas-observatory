@@ -3,13 +3,14 @@ import {collectDecorationDirectory} from './update-decorations.mjs';
 import {auditNotificationImages,buildMailAssets} from './mail-assets.mjs';
 import fs from 'node:fs/promises';
 import {catalogueSnapshot,readState,saveState,restoreProducts,preserveImages,refreshDetails} from './incremental.mjs';
-import {checkNew,finishNewEvents,captureNewScreenshots} from './new-events.mjs';
+import {checkNew,finishNewEvents,captureNewScreenshots,retainVerifiedNewImages} from './new-events.mjs';
 import {enrichProducts,selectGalleryImages} from './enrich-appearance.mjs';
 import {readDailyMonitor,saveDailyMonitor} from './daily-monitor-state.mjs';
 import {atomicJson} from './sync.mjs';
 import {digest,planDetails} from './collection-policy.mjs';
 import {control} from './cloud-client.mjs';
 export async function runMonitorDaily({previous,policy,readerFactory,budgetFactory,now=()=>Date.now(),tick={},collectSnapshot=catalogueSnapshot,controlCall=control}){
+ policy={...policy,repairImagesOnly:true,imageCheckpoint:'web/daily-image-checkpoint.json'};
  const probe=process.env.COLLECTION_MODE==='monitor-probe',state=await readState();let reader,budget;if(!probe){state.completed=[];state.attempted={};}
  let daily=await readDailyMonitor(new Date(now())),outcome;
  try{
@@ -17,10 +18,13 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
   const gathered=await collectSnapshot({previous,reader,policy,now,forceFresh:true,onProgress:console.log});
   const previousDecorations=await readDecorations();let decorations=previousDecorations.baselineReady?await collectDecorationDirectory(reader,previousDecorations):null;
   restoreProducts(gathered.snapshot,state,policy);preserveImages(previous,gathered.snapshot);if(decorations)await loadDecorationDetails(decorations.products);const snapshot=notificationSnapshot(gathered.snapshot,decorations);await reader.closeBrowser?.();
+  // Fresh listing data must survive a later single-SKU image or mail failure.
+  if(!probe){await atomicJson('web/catalogue.json',gathered.snapshot);if(decorations)await publishDecorations(structuredClone(decorations));}
   let result={success:true,captured:0,attempted:0,scanned:snapshot.products.length,events:[],deferred:0,issues:[]};
   if(!probe)result=await checkNew({snapshot,reader,policy,budget,state,lease:tick.monitorLease||tick.lease,now,deferDelivery:true,controlCall});
   let deltaDetails,decorationDelta,deltaProducts=[];if(!probe){const deltaPolicy={...policy,detailMaxAgeDays:1e9};const plan=planDetails(previous,gathered.snapshot,{policy:deltaPolicy,failures:state.failures,now:now(),completed:new Set(state.completed||[]),attempted:state.attempted||{}});deltaProducts=plan.selected.map(p=>p.product);if(plan.selected.length)await reader.prepareFamilies?.(plan.selected.map(p=>p.product));deltaDetails=await refreshDetails({previous,snapshot:gathered.snapshot,reader,policy:deltaPolicy,budget,state,now});if(decorations)decorationDelta=await updateDecorationDetails(decorations,reader);}
   snapshot.products=notificationSnapshot(gathered.snapshot,decorations).products;
+  if(!probe){await atomicJson('web/catalogue.json',gathered.snapshot);if(decorations)await publishDecorations(structuredClone(decorations));}
   const candidates=snapshot.products.filter(p=>result.events.some(e=>e.product.sku===p.sku));
   await selectGalleryImages(candidates);await reader.closeBrowser?.();if(!probe)result=await captureNewScreenshots(result,{reader,state,policy,now});
   for(const event of result.events||[]){const p=snapshot.products.find(p=>p.sku===event.product.sku);if(p&&event.product.originalImageUrl)p.originalImageUrl=event.product.originalImageUrl;}
@@ -33,12 +37,13 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
    validationCredits=(reader.metrics().scrapeCredits||0)-before;screenshotProbe={sku:p.sku,bytes:Buffer.from(probeScreenshot,'base64').length,selectedSkuVerified:true,sent:false};await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/daily-new-screenshot.png',Buffer.from(probeScreenshot,'base64'));
   }
   await selectGalleryImages(snapshot.products);const candidateIds=new Set(candidates.map(p=>p.sku));const deltaIds=new Set(deltaProducts.map(p=>p.sku));const changedImages=!probe?snapshot.products.filter(p=>!candidateIds.has(p.sku)&&p.variantImageUrl&&(!p.cachedImageUrl||deltaIds.has(p.sku))):[];const changedImageAudit=changedImages.length?await reader.auditImages(changedImages,{entries:{...previous.browserImageAudit?.entries,...previousDecorations.browserImageAudit?.entries}}):null;
-  const imageAudit=candidates.length?await auditNotificationImages(reader,candidates,previous.browserImageAudit):null;
+  const imageAudit=candidates.length?await auditNotificationImages(reader,candidates,{entries:{...previous.browserImageAudit?.entries,...previousDecorations.browserImageAudit?.entries,...changedImageAudit?.entries}}):null;
+  if(!probe&&imageAudit){await atomicJson('web/new-image-audit.json',imageAudit);retainVerifiedNewImages(result,snapshot,imageAudit);}
   await reader.close?.();
   if(probeProduct&&probeScreenshot){await enrichProducts([probeProduct]);await buildMailAssets(probeProduct,probeScreenshot);}
   const changedIds=new Set([...deltaProducts.map(p=>p.sku),...(deltaDetails?.issues||[]).map(p=>p.sku),...changedImages.map(p=>p.sku),...candidates.map(p=>p.sku)]);const analysedProducts=snapshot.products.filter(p=>changedIds.has(p.sku));const appearanceAudit=analysedProducts.length?await enrichProducts(analysedProducts.filter(p=>p.kind!=='decoration')):{products:0,analysedImages:0,firecrawlCredits:0};
-  // Do not send a screenshot whose exact SKU/body image failed validation.
-  if(imageAudit?.failed)throw Error('新品商品图片未全部通过，未发送本轮通知');
+  // A failed native photo remains pending for that SKU; other verified items
+  // may be delivered from their durable screenshots and original image files.
   if(!probe&&decorations){await enrichDecorations(decorations.products);await loadDecorationDetails(decorations.products);decorations.appearanceReady=true;decorations.browserImageAudit={...previousDecorations.browserImageAudit,entries:{...previousDecorations.browserImageAudit?.entries,...changedImageAudit?.entries,...imageAudit?.entries},lastIncrementalAt:snapshot.observedAt,currentMissingImages:decorations.products.filter(p=>!p.cachedImageUrl).length};decorationReadiness(decorations);await publishDecorations(decorations);await publishDecorationStatus(decorations,reader.metrics());}
   if(!probe)result=await finishNewEvents(result,{snapshot,lease:tick.monitorLease||tick.lease,controlCall});
   const native=reader.metrics(),report={success:result.success,mode:probe?'daily-discovery-probe':'daily-new-only',observedAt:snapshot.observedAt,scanned:snapshot.products.length,candidates:result.captured,notification:result,fullDetailSweep:false,fullImageSweep:false,screenshotProbe,discoveryCredits:native.firecrawlCredits-validationCredits,validationCredits,appearanceAudit,deltaDetails,decorationDelta,changedImageAudit,native,firecrawlCredits:native.firecrawlCredits};

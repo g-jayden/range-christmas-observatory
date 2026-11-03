@@ -100,7 +100,7 @@ export class Control{
   }
   if(route.startsWith('/admin/')){
    checkAuth(req,this.env.ADMIN_TOKEN);
-   if(route==='/admin/notification-status'&&req.method==='GET')return response({...await this.deliveryStatus(),pending:[...(await this.db.list({prefix:'pending/'})).values()].map(p=>({sku:p.sku,kind:p.kind,name:p.variantName,firstDetectedAt:p.firstDetectedAt}))});
+   if(route==='/admin/notification-status'&&req.method==='GET')return response({...await this.deliveryStatus(),pending:[...(await this.db.list({prefix:'pending/'})).values()].map(p=>({sku:p.sku,kind:p.kind,name:p.variantName,sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,variantImageUrl:p.variantImageUrl,firstDetectedAt:p.firstDetectedAt}))});
    if(['/admin/recover-event','/admin/deliver'].includes(route)&&req.method==='POST')return this.route(new Request(url.origin+route.replace('/admin/','/internal/'),{method:'POST',headers:{authorization:'Bearer '+this.env.CONTROL_TOKEN,'content-type':'application/json'},body:await req.text()}));
    if(route==='/admin/test-email'&&req.method==='POST')return this.route(new Request(url.origin+'/internal/test-email',{method:'POST',headers:{authorization:'Bearer '+this.env.CONTROL_TOKEN,'content-type':'application/json'},body:await req.text()}));
    if(route==='/admin/subscription-scopes'&&req.method==='POST'){
@@ -114,7 +114,7 @@ export class Control{
   }
   if(route.startsWith('/internal/')){
    checkAuth(req,this.env.CONTROL_TOKEN);
-   if(route==='/internal/clock-tick'&&req.method==='POST')return response(await dispatchDue({storage:this.db,env:this.env,config:await this.config(),monitor:await this.monitorState(),fullLease:await this.db.get('lease/full'),monitorLease:await this.db.get('lease/monitor'),initialized:Boolean(await this.db.get('seeded'))}));
+   if(route==='/internal/clock-tick'&&req.method==='POST')return response(await dispatchDue({storage:this.db,env:this.env,config:await this.config(),monitor:{...await this.monitorState(),...await this.deliveryStatus()},fullLease:await this.db.get('lease/full'),monitorLease:await this.db.get('lease/monitor'),initialized:Boolean(await this.db.get('seeded'))}));
    if(route==='/internal/test-email'&&req.method==='POST'){
     const b=await req.json(),email=String(b.email||'').trim().toLowerCase(),sub=validEmail(email)&&await this.db.get('sub/'+await hash(email));
     if(!sub?.confirmedAt)return response({error:'测试邮箱尚未确认订阅'},409);
@@ -199,7 +199,9 @@ export class Control{
        if(!ready.ok||!ready.headers.get('content-type')?.startsWith('image/'))throw Object.assign(Error('新品高清附件尚未发布；待发记录已保留，将仅重试投递。'),{status:503});
       }
       const id=await this.send(sub.email,'NEW｜'+p.variantName,html,(p.mailAssets?.card&&p.mailAssets?.original)?mailAssets(p):[{name:'NEW-'+p.sku+'.png',content}],await hash(p.sku+'/'+subKey));
-      await this.db.put(delivered,{acceptedAt:new Date().toISOString(),providerId:id});accepted++;if(accepted>=20)return response({accepted,morePending:true});
+      // Three attachment HEADs plus one Brevo call per message. Eight messages
+      // leave room below the free Worker's 50 external-subrequest limit.
+      await this.db.put(delivered,{acceptedAt:new Date().toISOString(),providerId:id});accepted++;if(accepted>=8)return response({accepted,morePending:true});
      }
     }
     const delivery={accepted,at:new Date().toISOString()};if(accepted)await this.db.put('last-delivery',delivery);

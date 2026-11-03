@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
-import {SourceError,parseSource} from './sync.mjs';
+import {SourceError,parseSource,atomicJson} from './sync.mjs';
 import {sourceUrl} from './free-source.mjs';
 import {budgetError} from './credit-budget.mjs';
 
@@ -192,6 +192,8 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();b.evidence.sourceTransport='enhanced-batch';families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else {const error=new SourceError('官网商品详情链接异常，未返回可核实的具体SKU规格；本轮目录价格、库存、NEW与图片独立更新',b?.status||0);error.deferred=Boolean(r.deferred);error.transient=r.deferred||b?.status===0||b?.status===429||b?.status>=500;error.sourceResponse={url:r.url,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,jsonError:b?.jsonError,htmlError:b?.htmlError,observedAt:new Date(now()).toISOString()};familyFailures.set(r.url,error);console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,jsonError:b?.jsonError,htmlError:b?.htmlError,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}}}
  };
  reader.auditImages=async (products,previous={},options={})=>{
+  const checkpoint=policy.imageCheckpoint?await fs.readFile(policy.imageCheckpoint,'utf8').then(JSON.parse).catch(()=>({})):{};
+  previous={...previous,entries:{...checkpoint.entries,...previous.entries}};
   const allUrls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))],results=[],known=[],newUrls=[],validPrior={};
   for(const url of allUrls){
    let u;try{u=new URL(url)}catch{}if(!u||u.protocol!=='https:'||!['www.therange.co.uk','kube-media-unpublished.rstore.com'].includes(u.hostname)||!u.pathname.startsWith('/media/')){results.push({url,ok:false,error:/placeholder/i.test(url)?'source-placeholder-no-product-photo':'source-image-URL-not-verified'});continue;}
@@ -223,7 +225,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    for(let offset=0;offset<deferred.length;offset+=150)tasks.push({urls:deferred.slice(offset,offset+150),hashOnly:task.hashOnly});
    if(taskIndex===tasks.length-1&&retryUrls.size){const retries=[...retryUrls];retryUrls.clear();for(let offset=0;offset<retries.length;offset+=200)tasks.push({urls:retries.slice(offset,offset+200),hashOnly:false});}
    for(let offset=0;offset<needsBody.length;offset+=200)tasks.push({urls:needsBody.slice(offset,offset+200),hashOnly:false});
-   if(policy.imageCheckpoint)await fs.writeFile(policy.imageCheckpoint,JSON.stringify({entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString()}));
+   if(policy.imageCheckpoint)await atomicJson(policy.imageCheckpoint,{entries:{...checkpoint.entries,...previous.entries,...Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r]))},failures:results.filter(r=>!r.ok),observedAt:new Date(now()).toISOString()});
    console.log(JSON.stringify({phase:'image-verification',checked:results.length,total:allUrls.length,changed}));
   }
   const byUrl=new Map(results.map(r=>[r.url,r]));for(const p of products){const r=byUrl.get(p.variantImageUrl||p.imageUrl);if(r?.ok){p.cachedImageUrl=r.cachedImageUrl;p.imageCacheEvidence={sourceUrl:r.url,sha256:r.hash,observedAt:r.observedAt};}}
