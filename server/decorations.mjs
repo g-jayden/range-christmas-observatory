@@ -16,6 +16,7 @@ export function mergeDecorations(previous,listing,observedAt=new Date().toISOStr
   if(row.newIn&&!h.everNew){h.firstNewObservedAt=previous.baselineReady?observedAt:null;h.arrivalEvidence=previous.baselineReady?'observed-after-baseline':'initial-baseline';}
   h.everNew=Boolean(h.everNew||row.newIn);h.arrivalEvidence||=previous.baselineReady?'observed-after-baseline':'initial-baseline';history[sku]=h;
   const p={...prior,...row,sku,kind:'decoration',priceGBP:row.price/100,currency:'GBP',sourceUrl:'https://www.therange.co.uk/'+row.variantPath.replace('#','/#'),newStatus:row.newIn,newEvidence:{kind:'website_flag',field:'newIn',value:row.newIn,observedAt},observedAt,...h};
+  p.originalPrice=Number.isInteger(row.originalPrice)?row.originalPrice:null;p.promoText=row.promoText||null;
   p.listingVariantImageUrl=row.variantImageUrl||row.imageUrl;
   const fingerprint=detailFingerprint(p);if(prior?.detailInputFingerprint!==fingerprint){p.detailsReady=false;delete p.detailIssue;delete p.detailEvidence;delete p.specifications;delete p.sourceDescription;p.colorValues=[];p.treeColor='颜色待核验';p.dimensions=productDimensions();p.material='材质未注明 · Material not specified';}
   if((prior?.listingVariantImageUrl||prior?.variantImageUrl)!==p.listingVariantImageUrl){delete p.cachedImageUrl;delete p.imageCacheEvidence;delete p.paletteEvidence;}
@@ -34,7 +35,7 @@ export async function saveDecorationDetails(products){
 }
 export const detailUrl=p=>'decoration-details/'+p.sku.slice(-2).padStart(2,'0')+'.json';
 export function compactDecoration(p){
- const keys=['sku','kind','department','departmentIds','variantName','name','brand','priceGBP','originalPrice','currency','sourceUrl','listingVariantImageUrl','variantImageUrl','imageUrl','cachedImageUrl','imageCacheEvidence','newStatus','newEvidence','firstObservedAt','firstNewObservedAt','arrivalEvidence','everNew','observedAt','attributeObservedAt','detailInputFingerprint','detailsReady','detailIssue','dimensions','material','colorValues','treeColor','paletteEvidence','classificationEvidence','originalImageUrl','originalImageEvidence','mailAssets'];
+ const keys=['sku','kind','department','departmentIds','variantName','name','brand','priceGBP','originalPrice','promoText','currency','sourceUrl','listingVariantImageUrl','variantImageUrl','imageUrl','cachedImageUrl','imageCacheEvidence','newStatus','newEvidence','firstObservedAt','firstNewObservedAt','arrivalEvidence','everNew','observedAt','attributeObservedAt','detailInputFingerprint','detailsReady','detailIssue','dimensions','material','colorValues','treeColor','paletteEvidence','classificationEvidence','originalImageUrl','originalImageEvidence','mailAssets'];
  const out=Object.fromEntries(keys.filter(k=>p[k]!==undefined).map(k=>[k,p[k]]));out.detailsReady=Boolean(p.detailEvidence?.verifiedProductSection&&String(p.detailEvidence.selectedSku)===p.sku&&p.attributeObservedAt);out.detailsUrl=detailUrl(p);return out;
 }
 export async function updateDecorationDetails(snapshot,reader,{maxFamilies=Infinity,refreshAll=false,refreshAfter=null}={}){
@@ -114,4 +115,4 @@ export async function restoreDecorationImageEvidence(snapshot){
  snapshot.browserImageAudit={...snapshot.browserImageAudit,mode:'verified-saved-source-image-evidence',entries,checked:valid.size,loaded:valid.size-failed,failed,currentMissingImages:failed};return snapshot.browserImageAudit;
 }
 
-export function notificationSnapshot(trees,decorations){const map=new Map(trees.products.map(p=>[p.sku,p]));for(const p of decorations?.products||[]){const prior=map.get(p.sku);if(prior){prior.departmentIds=p.departmentIds;prior.department=p.department;}else map.set(p.sku,p);}return {...trees,observedAt:Date.parse(decorations?.observedAt)>Date.parse(trees.observedAt)?decorations.observedAt:trees.observedAt,products:[...map.values()]};}
+export function notificationSnapshot(trees,...catalogues){const map=new Map(trees.products.map(p=>[p.sku,p]));let observedAt=trees.observedAt;for(const c of catalogues){if(Date.parse(c?.observedAt)>Date.parse(observedAt))observedAt=c.observedAt;for(const p of c?.products||[]){const prior=map.get(p.sku);if(prior){prior.departmentIds=[...new Set([...(prior.departmentIds||[]),...(p.departmentIds||[])])];prior.department||=p.department;}else map.set(p.sku,p);}}return {...trees,observedAt,products:[...map.values()]};}

@@ -16,7 +16,7 @@ on:
       mode:
         description: Source collection mode
         type: choice
-        options: [verify-all, catalogue, probe, repair, monitor-probe]
+        options: [verify-all, catalogue, probe, repair, monitor-probe, lights-init]
         default: verify-all
       checkNew:
         description: Check NEW now without changing the regular schedule
@@ -87,13 +87,13 @@ jobs:
           FORCE_MONITOR: ${{ inputs.checkNew && 'true' || 'false' }}
         run: node scripts/schedule-tick.mjs
       - name: Load image files only for a real collection or publication
-        if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe'
+        if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'lights-init'
         run: git sparse-checkout disable
       - name: Verify source integrity, SKU matching and credit limits
         if: steps.tick.outputs.publish == 'true' || inputs.mode == 'probe'
         run: npm test
       - name: Install collection and local image analysis clients
-        if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe'
+        if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'lights-init'
         run: npm install --no-audit --no-fund
       - name: Restore reusable local vision model
         if: steps.tick.outputs.publish == 'true'
@@ -117,7 +117,7 @@ jobs:
         run: node scripts/mail-readiness.mjs
       - name: Reserve the run budget before opening a paid session
         id: budget
-        if: steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe'
+        if: steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'lights-init'
         continue-on-error: true
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
@@ -131,7 +131,7 @@ jobs:
           git pull --rebase
           git push
       - name: Restore resumable free collection state
-        if: (steps.tick.outputs.work == 'true' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe')
+        if: (steps.tick.outputs.work == 'true' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'lights-init')
         uses: actions/cache/restore@v6.1.0
         with:
           path: runtime/collection
@@ -151,6 +151,13 @@ jobs:
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
         run: node server/update-daily.mjs
+      - name: Initialize six lighting scopes and refresh all source price markers
+        id: lights
+        if: inputs.mode == 'lights-init' && steps.budget.outcome == 'success'
+        continue-on-error: true
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: node server/initialize-lights.mjs
       - name: Repair remaining SKU evidence and verify original images
         id: repair
         if: inputs.mode == 'repair' && steps.budget.outcome == 'success'
@@ -216,7 +223,7 @@ jobs:
           git diff --cached --quiet || git commit -m "Record durable NEW delivery result"
           node scripts/push-evidence.mjs
       - name: Save the real source and credit proof
-        if: always() && (inputs.mode == 'probe' || inputs.mode == 'monitor-probe')
+        if: always() && (inputs.mode == 'probe' || inputs.mode == 'monitor-probe' || inputs.mode == 'lights-init')
         uses: actions/upload-artifact@v7.0.2
         with:
           name: free-source-proof
@@ -225,5 +232,5 @@ jobs:
             runtime/daily-new-screenshot.png
           retention-days: 3
       - name: Report unsuccessful source collection
-        if: steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure' || steps.repair.outcome == 'failure'
+        if: steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure' || steps.repair.outcome == 'failure' || steps.lights.outcome == 'failure'
         run: exit 1

@@ -1,4 +1,4 @@
-import {DEPARTMENTS,DEPARTMENT_MAP,colourLabel,STYLE_EN} from '../web/catalogue-model.mjs';
+import {DEPARTMENTS,DEPARTMENT_MAP,colourLabel,STYLE_EN,sourcePrice} from '../web/catalogue-model.mjs';
 import {firstRun,advanceRun,scheduleLabel,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';
 import {dispatchDue} from './dispatch-clock.mjs';
 const SITE='https://g-jayden.github.io';
@@ -22,7 +22,8 @@ function productMail(p,origin,test=false,unsubscribe=null){
  const checked=p.newEvidence?.observedAt||p.observedAt||p.detectedAt;
  const header=test?'测试示例 · Test example; source NEW, not a first discovery today':'NEW · '+(DEPARTMENT_MAP[p.kind==='decoration'?p.department:p.kind]?.label||'圣诞装饰品 · Christmas Decorations');
  const ext=has?new URL(m.original.url).pathname.split('.').pop():null;
- const attributes=[['SKU',p.sku],['价格 · Price','£'+Number(p.priceGBP).toFixed(2)],['尺寸 · Size',p.kind==='tree'?p.heightLabel:p.dimensions?.label||p.skirtDiameterCm&&p.skirtDiameterCm+'cm'||'原站未注明 · Not specified'],['本体颜色 · Body colours',(p.colorValues||[]).map(colourLabel).join(' / ')||p.treeColor||'待核验 · Unconfirmed'],['材质 · Materials',p.material||'原站未注明 · Not specified']];
+ const price=sourcePrice(p);
+ const attributes=[['SKU',p.sku],['价格 · Price','£'+Number(p.priceGBP).toFixed(2)],...(price.reduced?[['原站划线原价 · Source original price','£'+(price.originalPence/100).toFixed(2)]]:[]),...(price.promoText?[['原站促销 · Source offer',price.promoText]]:[]),['尺寸 · Size',p.kind==='tree'?p.heightLabel:p.dimensions?.label||p.skirtDiameterCm&&p.skirtDiameterCm+'cm'||'原站未注明 · Not specified'],['本体颜色 · Body colours',(p.colorValues||[]).map(colourLabel).join(' / ')||p.treeColor||'待核验 · Unconfirmed'],['材质 · Materials',p.material||'原站未注明 · Not specified']];
  if(p.kind==='tree')attributes.push(['分类 · Shape',p.style+' · '+(STYLE_EN[p.style]||'Other')]);
  return `<div style="font:16px/1.8 Arial,sans-serif;max-width:900px;margin:auto;color:#173c32"><p>${esc(header)}</p><h1>${esc(p.variantName)}</h1>${has?`<p style="background:#eef4ed;padding:14px">直接保存到手机：长按下方图片选择“保存图片／存储图像”，或打开邮件底部的图片附件保存。<br>Long-press an image to save it, or open the image attachments below.<br>完整信息卡 · Product card: NEW-${esc(p.sku)}-card.png<br>官网原图 · Source original: NEW-${esc(p.sku)}-original.${esc(ext)}</p><h2>完整商品信息卡 · Full product card</h2><img src="${esc(m.card.url)}" alt="完整商品信息卡 · Full product card; long-press to save" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><h2>官网原图 · Original product photo</h2><img src="${esc(m.original.url)}" alt="官网原图 · Original source photo; long-press to save" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><p>官网原图 ${Number(m.original.width)}×${Number(m.original.height)} 像素，原文件未经放大或二次压缩；保存附件可保留原始文件。<br>Original source bytes, with no enlargement or recompression. Save the attachment to retain the original file.</p>`:`<img src="${origin}/shots/${p.imageAccess}" alt="具体SKU原站截图 · Exact SKU source screenshot" style="width:100%;height:auto">`}<p>${attributes.map(([label,value])=>esc(label)+'：'+esc(value)).join('<br>')}</p><p><a href="${esc(p.sourceUrl)}">查看原站具体SKU购买页 · View exact SKU product page</a></p><p style="font-size:13px;color:#607168">价格与NEW核验 · Price / NEW checked: ${esc(checked)}。下单时以官网为准 · Confirm live details before purchase.${test?' 本测试不改变新品基线 · This test does not change the NEW baseline.':''}</p><p>${unsubscribe?`<a href="${esc(unsubscribe)}">取消订阅 · Unsubscribe</a> · `:''}<a href="${HOME}">查看分析网站 · View analysis</a></p></div>`;
 }
@@ -166,7 +167,7 @@ export class Control{
     const entries=Object.entries(values);for(let i=0;i<entries.length;i+=100)await this.db.put(Object.fromEntries(entries.slice(i,i+100)));await this.db.put('seeded',new Date().toISOString());return response({seeded:true,changed:true});
    }
    if(route==='/internal/extend-baseline'&&req.method==='POST'){
-    const b=await req.json();if(b.scope!=='christmas-decorations-v1'||!Array.isArray(b.records)||b.records.length>30000)throw Error('Invalid scoped baseline');
+    const b=await req.json();if(!['christmas-decorations-v1','christmas-lights-v1'].includes(b.scope)||!Array.isArray(b.records)||b.records.length>30000)throw Error('Invalid scoped baseline');
     if(await this.db.get('baseline/'+b.scope))return response({seeded:true,changed:false});
     const records=b.records;if(records.some(p=>!/^\d{1,12}$/.test(String(p.sku))))throw Error('Invalid baseline SKU');
     for(const p of records)if(p.everNew&&!await this.db.get('pending/'+p.sku)&&!await this.db.get('event/'+p.sku))await this.db.put('seen/'+p.sku,true);

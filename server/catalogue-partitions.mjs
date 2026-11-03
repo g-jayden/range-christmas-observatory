@@ -3,6 +3,7 @@ import {apiUrl,SourceError} from './sync.mjs';
 // with its real facets, so each final request can be checked independently.
 export async function collectPartitionedCategory(id,reader){
  const root=await reader(apiUrl(id,0,{in_stock_f:['true']},true));
+ if(root.totalResults===0)return {products:[],audit:{expected:0,observed:0,unique:0,complete:true,rootCategoryId:id,requests:1,records:[]}};
  const brands=root.facets?.find(f=>f.id==='brand_f')?.options;
  if(!brands?.length)throw new SourceError('Official brand facet required for complete large-catalogue coverage');
  const target=root.totalResults,all=new Map(),partitions=[],batches=[],facets=root.facets;

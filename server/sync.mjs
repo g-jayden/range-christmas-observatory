@@ -70,6 +70,7 @@ export function mergeSnapshot(previous,collected,now=stamp()){
   // Keep a separately verified PDP image when the source listing still uses its placeholder.
   if(/placeholder/i.test(out.variantImageUrl||out.imageUrl||'')&&prior?.imageEvidence){out.variantImageUrl=prior.variantImageUrl;out.imageEvidence=prior.imageEvidence;out.imageStatus='PDP override retained; recheck pending';}
   out.rawSourceUrl=out.sourceUrl;const sourceAddress=new URL(out.sourceUrl.replace(/[\u0000-\u001f]/g,c=>encodeURIComponent(c)));sourceAddress.pathname=correctKnownProductPath(sourceAddress.pathname);out.sourceUrl=sourceAddress.href;
+  out.originalPrice=Number.isInteger(p.originalPrice)?p.originalPrice:null;out.promoText=p.promoText||null;
   out.features=retainedFeatures;out.listingFeatures=features;out.listingVariantImageUrl=p.variantImageUrl;
   out.currentDetailFingerprint=detailFingerprint(out);
   if(!out.detailEvidence&&out.arrivalEvidence==='observed-after-baseline'&&!(out.heightValues?.length||out.colorValues?.length))out.attributeObservedAt=null;

@@ -14,5 +14,5 @@ for(const page of ['index.html','image-check.html']){
 }
 try{await fs.cp('web/images','public/images',{recursive:true})}catch(e){if(e.code!=='ENOENT')throw e;}
 try{await fs.cp('web/mail-assets','public/mail-assets',{recursive:true})}catch(e){if(e.code!=='ENOENT')throw e;}
-for(const name of ['decorations.json','decorations-status.json','decoration-details'])try{const source='web/'+name;const st=await fs.stat(source);if(st.isDirectory())await fs.cp(source,'public/'+name,{recursive:true});else await fs.copyFile(source,'public/'+name)}catch(e){if(e.code!=='ENOENT')throw e;}
+for(const name of ['decorations.json','decorations-status.json','decoration-details','lights.json','lights-status.json','light-details'])try{const source='web/'+name;const st=await fs.stat(source);if(st.isDirectory())await fs.cp(source,'public/'+name,{recursive:true});else await fs.copyFile(source,'public/'+name)}catch(e){if(e.code!=='ENOENT')throw e;}
 await fs.writeFile('public/.nojekyll','');console.log('Static cloud website built.');

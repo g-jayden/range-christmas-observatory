@@ -6,10 +6,26 @@ export const DEPARTMENTS=[
  ['swag','圣诞壁挂','Christmas Swags / Drops'],['scenes','圣诞场景与模型','Christmas Scenes & Models'],
  ['tree-decorations','圣诞树装饰','Tree Decorations'],['inflatable','充气圣诞装饰品','Inflatable Christmas Decorations'],
  ['outdoor','圣诞户外装饰品','Christmas Outdoor Decorations'],['wall','圣诞墙饰','Christmas Wall Decorations'],
- ['presents','礼品包','Christmas Presents']
-].map(([id,zh,en])=>({id,zh,en,label:zh+' · '+en}));
+ ['presents','礼品包','Christmas Presents'],
+ ['lights','圣诞灯饰','Christmas Lights'],
+ ['string-lights','圣诞彩灯','Christmas String Lighting','lights'],
+ ['indoor-lights','室内圣诞灯饰','Indoor Christmas Lights','lights'],
+ ['outdoor-lights','户外圣诞灯饰','Outdoor Christmas Lights','lights'],
+ ['christmas-lanterns','圣诞灯笼','Christmas Lanterns','lights'],
+ ['acrylic-lights','亚克力圣诞灯','Acrylic Christmas Lights','lights'],
+ ['christmas-tree-lights','圣诞树彩灯','Christmas Tree Lights','lights']
+].map(([id,zh,en,parentId])=>({id,zh,en,label:zh+' · '+en,...(parentId?{parentId}:{}),...((id==='lights'||parentId==='lights')?{charts:false}:{} )}));
 export const DEPARTMENT_MAP=Object.fromEntries(DEPARTMENTS.map(d=>[d.id,d]));
-export const decorationDepartments=DEPARTMENTS.filter(d=>!['tree','skirt'].includes(d.id));
+export const ROOT_DEPARTMENTS=DEPARTMENTS.filter(d=>!d.parentId);
+export const LIGHT_DEPARTMENTS=DEPARTMENTS.filter(d=>d.parentId==='lights');
+export const isLightingScope=id=>id==='lights'||DEPARTMENT_MAP[id]?.parentId==='lights';
+export const decorationDepartments=DEPARTMENTS.filter(d=>!['tree','skirt'].includes(d.id)&&!isLightingScope(d.id));
+// Prices come from the retailer's integer-pence fields, never historical changes.
+export function sourcePrice(p){
+ const current=Number.isFinite(p.priceGBP)?Math.round(p.priceGBP*100):Number.isInteger(p.price)?p.price:null;
+ const original=Number.isInteger(p.originalPrice)?p.originalPrice:null;
+ return {currentPence:current,originalPence:original,reduced:current!==null&&original!==null&&original>current,promoText:typeof p.promoText==='string'?p.promoText:null};
+}
 export const COLOUR_EN={'绿色':'Green','白色':'White / Cream','黑色':'Black','深空灰色':'Dark Charcoal Grey','灰色':'Grey','粉色':'Pink','红色':'Red / Burgundy','褐色':'Brown / Beige','金色':'Gold','银色':'Silver','蓝色':'Blue / Navy','青色':'Teal / Turquoise','紫色':'Purple','橙色':'Orange','黄色':'Yellow','透明色':'Clear','古铜色':'Bronze','铜色':'Copper','多色':'Multicolour','颜色待核验':'Colour unconfirmed','颜色未确认':'Colour unconfirmed'};
 export const colourLabel=c=>c+' · '+(COLOUR_EN[c]||c);
 export const STYLE_EN={'圣诞树盆栽':'Potted','折叠式圣诞树':'Pop-up','纤细圣诞树':'Slim','雪景款':'Snow / Flocked','预亮灯款':'Pre-lit','标准款':'Standard','其它树形类别':'Other tree shapes'};

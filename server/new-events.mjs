@@ -12,7 +12,7 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
  try{
   // The cloud only needs current NEW observations; it already retains pending
   // captures. Bound each payload as departments and retailers grow.
-  const observations=snapshot.products.filter(p=>p.newStatus).map(p=>({sku:p.sku,sourceUrl:p.sourceUrl,newStatus:p.newStatus,kind:p.kind,department:p.department,departmentIds:p.departmentIds,variantName:p.variantName,priceGBP:p.priceGBP,variantImageUrl:p.variantImageUrl,imageUrl:p.imageUrl}));
+  const observations=snapshot.products.filter(p=>p.newStatus).map(p=>({sku:p.sku,sourceUrl:p.sourceUrl,newStatus:p.newStatus,kind:p.kind,department:p.department,departmentIds:p.departmentIds,variantName:p.variantName,priceGBP:p.priceGBP,originalPrice:p.originalPrice,promoText:p.promoText,variantImageUrl:p.variantImageUrl,imageUrl:p.imageUrl}));
   let plan;for(let offset=0;offset<Math.max(observations.length,1);offset+=500)plan=await controlCall('/internal/monitor-plan',{lease,products:observations.slice(offset,offset+500)});
   const current=new Map(snapshot.products.map(p=>[p.sku,p]));
   const pending=plan.candidates.map(p=>current.get(p.sku)).filter(Boolean);if(pending.length)await reader.prepareFamilies?.(pending);
