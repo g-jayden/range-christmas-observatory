@@ -167,7 +167,7 @@ export class Control{
     const entries=Object.entries(values);for(let i=0;i<entries.length;i+=100)await this.db.put(Object.fromEntries(entries.slice(i,i+100)));await this.db.put('seeded',new Date().toISOString());return response({seeded:true,changed:true});
    }
    if(route==='/internal/extend-baseline'&&req.method==='POST'){
-    const b=await req.json();if(!['christmas-decorations-v1','christmas-lights-v1'].includes(b.scope)||!Array.isArray(b.records)||b.records.length>30000)throw Error('Invalid scoped baseline');
+    const b=await req.json();if(!['christmas-decorations-v1','christmas-lights-v1','christmas-themes-v1'].includes(b.scope)||!Array.isArray(b.records)||b.records.length>30000)throw Error('Invalid scoped baseline');
     if(await this.db.get('baseline/'+b.scope))return response({seeded:true,changed:false});
     const records=b.records;if(records.some(p=>!/^\d{1,12}$/.test(String(p.sku))))throw Error('Invalid baseline SKU');
     for(const p of records)if(p.everNew&&!await this.db.get('pending/'+p.sku)&&!await this.db.get('event/'+p.sku))await this.db.put('seen/'+p.sku,true);

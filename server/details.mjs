@@ -53,7 +53,7 @@ export function productInformation(product,specs){
 export function applyDetails(p,d){
  const s=d.specs,t=d.featuresText,lower=t.toLowerCase();
  if(p.kind==='decoration'){p.sourceDescription=t;p.dimensions=productDimensions(s,t);p.detailsReady=true;delete p.detailIssue;delete p.detailError;}
- p.originalImages=d.originalImages||[];p.originalImageUrl=p.originalImages.find(g=>g.thumbnail===p.variantImageUrl)?.url||p.originalImages[0]?.url||null;
+ p.originalImages=d.originalImages||[];if(p.originalImages.length)p.originalSourceEvidence={version:'verified-official-gallery-v1',selectedSku:p.sku,sourceUrl:d.sourceUrl,observedAt:d.observedAt};p.originalImageUrl=p.originalImages.find(g=>g.thumbnail===p.variantImageUrl)?.url||p.originalImages[0]?.url||null;
  p.appearanceSource=descriptionFacts(p,s,t);p.sourceColour=s.Colour||s.Color||null;p.sourceMaterial=s.Material||s['Material Composition']||null;
  const info=productInformation(p,s);
  p.attributeObservedAt=d.observedAt;p.detailEvidence={url:d.sourceUrl,text:info.text,sourceContentHash:d.contentHash,verifiedProductSection:true,selectedSku:d.sku,observedAt:d.observedAt,verificationMethod:d.verificationMethod||'selected-SKU-DOM',sourceTransport:d.sourceTransport,breadcrumbs:d.breadcrumbs||[],jsonSource:d.jsonSource};p.productSummary=info.summary;p.specifications=p.kind==='decoration'?s:info.specifications;p.descriptionHash=d.contentHash;

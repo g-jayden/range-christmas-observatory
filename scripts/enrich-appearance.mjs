@@ -1,3 +1,5 @@
+import {readThemes,loadThemeDetails,publishThemes} from '../server/themes.mjs';
+import {restoreOriginalImages} from '../server/original-images.mjs';
 import {readLights,loadLightingDetails,publishLights} from '../server/lights.mjs';
 import fs from 'node:fs/promises';
 import {enrichProducts,selectGalleryImages} from '../server/enrich-appearance.mjs';
@@ -22,19 +24,20 @@ if(decorations.products.length){
  for(const p of decorations.products)if(p.specifications)p.material=materialFacts(p.specifications,p.sourceDescription||'').label;
  decorationReadiness(decorations);
  const priorStatus=await fs.readFile('web/decorations-status.json','utf8').then(JSON.parse).catch(()=>({}));
- await publishDecorations(decorations);
+ await restoreOriginalImages(decorations.products);await publishDecorations(decorations);
  await publishDecorationStatus(decorations,priorStatus.native||{});
 }
 if(JSON.stringify(beforeIds)!==JSON.stringify(decorations.products.map(p=>p.sku).sort())||sourceObservedAt!==decorations.observedAt)throw Error('Local reclassification must retain every SKU and its source observation date');
 const canonical=new Map(decorations.products.map(p=>[p.sku,p]));
 for(const p of d.products){const current=canonical.get(p.sku);if(current)for(const k of ['department','departmentIds','classificationEvidence'])p[k]=current[k];}
-d.revision=digest({observedAt:d.observedAt,products:d.products,sources:d.sources,excluded:d.excluded});
+await restoreOriginalImages(d.products);d.revision=digest({observedAt:d.observedAt,products:d.products,sources:d.sources,excluded:d.excluded});
 if(d.browserImageAudit)d.browserImageAudit.catalogueRevision=d.revision;
 Object.assign(s,{revision:d.revision,appearanceAudit:d.appearanceAudit});
 if(s.browserImageAudit)s.browserImageAudit.catalogueRevision=d.revision;
 await atomicJson('web/catalogue.json',d);await atomicJson('web/status.json',s);
-const lights=await readLights();if(lights.products.length){await loadLightingDetails(lights.products);await publishLights(lights);}
-const products=new Map([...decorations.products,...lights.products,...d.products].map(p=>[p.sku,p]));
+const lights=await readLights();if(lights.products.length){await loadLightingDetails(lights.products);await restoreOriginalImages(lights.products);await publishLights(lights);}
+const themes=await readThemes();if(themes.products.length){await loadThemeDetails(themes.products);await restoreOriginalImages(themes.products);await publishThemes(themes);}
+const products=new Map([...decorations.products,...lights.products,...themes.products,...d.products].map(p=>[p.sku,p]));
 for(const p of lights.products){const prior=products.get(p.sku);if(prior&&prior!==p)prior.departmentIds=[...new Set([...(prior.departmentIds||[]),...p.departmentIds])];}
 let arrivals;try{arrivals=JSON.parse(await fs.readFile('web/new-arrivals.json','utf8'));}catch(e){if(e.code!=='ENOENT')throw e;}
 if(arrivals){

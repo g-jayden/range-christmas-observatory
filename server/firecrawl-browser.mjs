@@ -15,7 +15,7 @@ async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=2000
  let gtm,gtmId;for(const el of doc.querySelectorAll('script:not([src])')){const match=el.textContent.match(/(?:var\s+)?gtm_product_data\s*=\s*(\[[\s\S]*?\])\s*;/);if(match){gtmId=match[1].match(/["']prod_id["']\s*:\s*["']?(\d+)/)?.[1];try{gtm=sourceJson(match[1])}catch{}}}
  const offers=product?.offers?.offers||[product?.offers];
  const evidence={url,jsonUrl,breadcrumbs:Array.from(doc.querySelectorAll('[itemtype$=\"BreadcrumbList\"] [itemprop=\"name\"],[class*=\"breadcrumb\"] a,[id*=\"breadcrumb\"] a')).map(e=>plain(e.textContent)),productId:doc.querySelector('#product_id')?.value||gtm?.[0]?.prod_id||gtmId||null,title:doc.title,features:Array.from(doc.querySelectorAll('#product-dyn-features-ul li')).map(e=>plain(e.textContent)),information:description?plain(description.textContent):'',offers:offers.filter(Boolean).map(o=>({sku:String(o.sku),image:o.image?.url||null})),gallery:Array.from(doc.querySelectorAll('img[data-variant]')).map(e=>({url:e.getAttribute('src'),variants:(e.getAttribute('data-variant')||'').split(',').filter(Boolean)}))};
- const originalGallery=Array.from(doc.querySelectorAll('#product-gallery .rsImg')).map(e=>({url:e.getAttribute('href')||e.getAttribute('data-rsBigImg')||e.getAttribute('src'),thumbnail:e.querySelector('img[data-variant]')?.getAttribute('src')||e.getAttribute('data-rsTmb'),variants:(e.querySelector('img[data-variant]')?.getAttribute('data-variant')||e.getAttribute('data-variant')||'').split(',').filter(Boolean)})).filter(g=>g.url&&/\/media\//.test(g.url));
+ const originalGallery=Array.from(doc.querySelectorAll('#available-imgs a.rsImg, #product-gallery a.rsImg')).map(e=>({url:e.getAttribute('href')||e.getAttribute('data-rsBigImg')||e.getAttribute('src'),thumbnail:e.querySelector('img[data-variant]')?.getAttribute('src')||e.getAttribute('data-rsTmb'),variants:(e.querySelector('img[data-variant]')?.getAttribute('data-variant')||e.getAttribute('data-variant')||'').split(',').filter(Boolean)})).filter(g=>g.url&&/\/media\//.test(g.url));
  const rawGallery=product?.image?.url||product?.image||[];evidence.originalGallery=originalGallery;evidence.structuredOriginalImages=(Array.isArray(rawGallery)?rawGallery:[rawGallery]).map(x=>typeof x==='string'?x:x?.url).filter(Boolean);
  const variants=Array.isArray(body.variant_arr)?body.variant_arr.map(v=>({code:v.code,prod_id:v.prod_id,sku:v.sku,id:v.id,attributes:v.attributes,attributes_supplementary:{'Model Number':v.attributes_supplementary?.['Model Number']},product_specification:v.product_specification||[],features:v.features||[],desc_override:v.desc_override,descriptionText:plain(v.description_html)})):[];
  return {status:200,variants,evidence};
@@ -177,6 +177,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   })();active.set(identifier,promise);try{return await promise}finally{active.delete(identifier)}
  }
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;
+ reader.batchDocuments=async(fn,payload)=>scriptAction('('+fn.toString()+')('+JSON.stringify(payload)+')');
  reader.captureVerified=enhancedCapture;reader.originalsFor=url=>captureOriginals.get(sourceUrl(url))||[];
  reader.familyCount=()=>families.size;
  reader.recommendedFamilyBatchSize=()=>policy.familyBatchSize||100;

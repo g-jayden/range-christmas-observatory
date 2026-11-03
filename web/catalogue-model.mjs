@@ -1,3 +1,5 @@
+import {THEME_DEFINITIONS,isThemeScope} from './theme-model.mjs';
+export {THEME_DEFINITIONS,isThemeScope} from './theme-model.mjs';
 export const DEPARTMENTS=[
  ['tree','圣诞树','Christmas Trees'],['skirt','圣诞树裙','Christmas Tree Skirts'],
  ['ornaments','圣诞装饰品','Christmas Ornaments'],['standing','立式装饰品','Standing Decorations'],
@@ -13,13 +15,15 @@ export const DEPARTMENTS=[
  ['outdoor-lights','户外圣诞灯饰','Outdoor Christmas Lights','lights'],
  ['christmas-lanterns','圣诞灯笼','Christmas Lanterns','lights'],
  ['acrylic-lights','亚克力圣诞灯','Acrylic Christmas Lights','lights'],
- ['christmas-tree-lights','圣诞树彩灯','Christmas Tree Lights','lights']
-].map(([id,zh,en,parentId])=>({id,zh,en,label:zh+' · '+en,...(parentId?{parentId}:{}),...((id==='lights'||parentId==='lights')?{charts:false}:{} )}));
+ ['christmas-tree-lights','圣诞树彩灯','Christmas Tree Lights','lights'],
+ ['themes','按主题分类','Christmas Themes'],
+ ...THEME_DEFINITIONS.map(t=>[t.id,t.zh,t.en,'themes'])
+].map(([id,zh,en,parentId])=>({id,zh,en,label:zh+' · '+en,...(parentId?{parentId}:{}),...((id==='lights'||parentId==='lights'||isThemeScope(id))?{charts:false}:{} )}));
 export const DEPARTMENT_MAP=Object.fromEntries(DEPARTMENTS.map(d=>[d.id,d]));
 export const ROOT_DEPARTMENTS=DEPARTMENTS.filter(d=>!d.parentId);
 export const LIGHT_DEPARTMENTS=DEPARTMENTS.filter(d=>d.parentId==='lights');
 export const isLightingScope=id=>id==='lights'||DEPARTMENT_MAP[id]?.parentId==='lights';
-export const decorationDepartments=DEPARTMENTS.filter(d=>!['tree','skirt'].includes(d.id)&&!isLightingScope(d.id));
+export const decorationDepartments=DEPARTMENTS.filter(d=>!['tree','skirt'].includes(d.id)&&!isLightingScope(d.id)&&!isThemeScope(d.id));
 // Prices come from the retailer's integer-pence fields, never historical changes.
 export function sourcePrice(p){
  const current=Number.isFinite(p.priceGBP)?Math.round(p.priceGBP*100):Number.isInteger(p.price)?p.price:null;
