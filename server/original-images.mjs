@@ -39,11 +39,15 @@ function matchesOriginal(p,saved){
  // Some compact category records omit the internal variant ID. Share the
  // verified SKU/photo mapping without accepting a conflicting known variant.
  const ids=[...new Set((saved.originalImages||[]).map(g=>g.variantId).filter(Boolean))];
- if(!p.variantId&&ids.length===1)return saved.fingerprint===originalInput({...p,variantId:ids[0]});
- if(p.variantId&&ids.length===0&&saved.originalImages?.every(g=>g.selectedSku===p.sku))return saved.fingerprint===originalInput({...p,variantId:null});
+ if(!p.variantId&&ids.length===1&&saved.fingerprint===originalInput({...p,variantId:ids[0]}))return true;
+ if(p.variantId&&ids.length===0&&saved.originalImages?.every(g=>g.selectedSku===p.sku)&&saved.fingerprint===originalInput({...p,variantId:null}))return true;
+ const originals=saved.originalImages||[],photos=new Set(originals.flatMap(g=>[g.thumbnail,g.url]).filter(Boolean));
+ if(!photos.has(p.variantImageUrl)||p.variantId&&ids.length&&ids.some(id=>String(id)!==String(p.variantId)))return false;
+ const variants=p.variantId?[p.variantId,...(ids.length===0?[null]:[])]:[null,...ids];
+ for(const variantId of variants)for(const hero of photos)if(saved.fingerprint===originalInput({...p,variantId,variantImageUrl:hero}))return true;
  return false;
 }
-export function applyOriginal(p,saved){if(!matchesOriginal(p,saved)||p.originalImageUrl&&Date.parse(p.originalSourceEvidence?.observedAt)>Date.parse(saved.observedAt))return false;p.originalImageUrl=saved.originalImageUrl;p.originalImages=saved.originalImages;p.originalSourceEvidence={version:saved.version,sourceUrl:saved.sourceUrl,selectedSku:p.sku,observedAt:saved.observedAt,method:saved.method,fingerprint:saved.fingerprint};return true;}
+export function applyOriginal(p,saved){if(!matchesOriginal(p,saved)||p.originalImageUrl&&Date.parse(p.originalSourceEvidence?.observedAt)>Date.parse(saved.observedAt))return false;p.originalImageUrl=saved.originalImages.find(g=>g.thumbnail===p.variantImageUrl||g.url===p.variantImageUrl)?.url||saved.originalImageUrl;p.originalImages=saved.originalImages;p.originalSourceEvidence={version:saved.version,sourceUrl:saved.sourceUrl,selectedSku:p.sku,observedAt:saved.observedAt,method:saved.method,fingerprint:saved.fingerprint};return true;}
 export async function mapOriginalImages(products,reader,{batchSize=400}={}){
  const unique=[...new Map(products.map(p=>[p.sku,p])).values()],buckets=new Map();for(let n=0;n<100;n++){const key=String(n).padStart(2,'0');buckets.set(key,await fs.readFile('web/original-image-map/'+key+'.json','utf8').then(JSON.parse).catch(()=>({})));}
  const pending=[],issues=[];let reused=0,mapped=0;for(const p of unique){const saved=buckets.get(p.sku.slice(-2).padStart(2,'0'))[p.sku];if(applyOriginal(p,saved)){reused++;continue;}if(p.originalImageUrl&&p.originalImages?.some(g=>g.url===p.originalImageUrl&&(g.selectedSku===p.sku||p.variantId&&String(g.variantId)===String(p.variantId)))){reused++;continue;}if(p.detailsReady||p.detailEvidence?.verifiedProductSection)pending.push(p);}
