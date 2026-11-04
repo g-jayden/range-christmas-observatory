@@ -1,4 +1,4 @@
-import {readThemes,loadThemeDetails,publishThemes} from '../server/themes.mjs';
+import {readThemes,loadThemeDetails,publishThemes,borrowThemeEvidence} from '../server/themes.mjs';
 import {restoreOriginalImages} from '../server/original-images.mjs';
 import {applySourceRepairs,applySourceOriginalRepairs} from '../server/source-repairs.mjs';
 import {readLedger} from '../server/credit-budget.mjs';
@@ -42,7 +42,7 @@ Object.assign(s,{revision:d.revision,appearanceAudit:d.appearanceAudit});
 if(s.browserImageAudit)s.browserImageAudit.catalogueRevision=d.revision;
 await atomicJson('web/catalogue.json',d);await atomicJson('web/status.json',s);
 const lights=await readLights();if(lights.products.length){await loadLightingDetails(lights.products);sourceRepairs.lights=await applySourceRepairs(lights.products);sourceRepairs.lightOriginals=await applySourceOriginalRepairs(lights.products);await restoreOriginalImages(lights.products);await publishLights(lights);}
-const themes=await readThemes();if(themes.products.length){await loadThemeDetails(themes.products);sourceRepairs.themes=await applySourceRepairs(themes.products);sourceRepairs.themeOriginals=await applySourceOriginalRepairs(themes.products);await restoreOriginalImages(themes.products);await publishThemes(themes);}
+const themes=await readThemes();if(themes.products.length){await loadThemeDetails(themes.products);borrowThemeEvidence(themes,[decorations,lights,d]);sourceRepairs.themes=await applySourceRepairs(themes.products);sourceRepairs.themeOriginals=await applySourceOriginalRepairs(themes.products);await restoreOriginalImages(themes.products);await publishThemes(themes);}
 await atomicJson('web/source-repairs-proof.json',sourceRepairs);console.log(JSON.stringify({phase:'saved-source-repairs',...sourceRepairs}));
 const products=new Map([...decorations.products,...lights.products,...themes.products,...d.products].map(p=>[p.sku,p]));
 for(const p of lights.products){const prior=products.get(p.sku);if(prior&&prior!==p)prior.departmentIds=[...new Set([...(prior.departmentIds||[]),...p.departmentIds])];}
