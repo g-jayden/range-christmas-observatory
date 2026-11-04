@@ -6,7 +6,7 @@ const HOME=SITE+'/range-christmas-observatory/';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const hash=async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))].map(v=>v.toString(16).padStart(2,'0')).join('');
 const allowedScopes=DEPARTMENTS.map(d=>d.id);
-const accepts=(sub,p)=>sub.scopes.some(scope=>scope===p.kind||(p.departmentIds||[p.department]).includes(scope));
+const accepts=(sub,p)=>(!p.taxonomyAudit||p.taxonomyAudit.disposition==='include')&&sub.scopes.some(scope=>scope===p.kind||(p.departmentIds||[p.department]).includes(scope));
 const token=()=>crypto.randomUUID()+crypto.randomUUID();
 const validEmail=s=>typeof s==='string'&&s.length<=254&&/^[^\s@<>;,]+@[^\s@<>;,]+\.[^\s@<>;,]+$/.test(s);
 function response(value,status=200){return Response.json(value,{status,headers:{'cache-control':'no-store'}})}
@@ -153,6 +153,19 @@ export class Control{
     const assets=mailAssets(p),key=String(b.requestId||'');if(!/^[A-Za-z0-9_-]{4,100}$/.test(key))throw Error('Invalid test request');const prior=await this.db.get('test/'+key);if(prior)return response({accepted:true,alreadySent:true});
     const messageId=await this.send(email,'【测试】邮箱直接保存图片｜'+p.variantName,productMail(p,url.origin,true),assets,await hash('test/'+key));await this.db.put('test/'+key,{messageId,at:new Date().toISOString()});return response({accepted:true,messageId});
    }
+   if(route==='/internal/classification-sync'&&req.method==='POST'){
+    const b=await req.json();if(!Array.isArray(b.products)||b.products.length>500||typeof b.version!=='string')throw Error('Invalid classification sync');
+    const events=await this.db.list({prefix:'event/'}),pending=await this.db.list({prefix:'pending/'});let eventsUpdated=0,pendingUpdated=0,excludedPending=0;
+    for(const a of b.products){if(!/^\d{1,12}$/.test(a.sku)||!['include','exclude','review'].includes(a.disposition)||!Array.isArray(a.memberships))throw Error('Invalid SKU classification');
+     for(const [prefix,records]of [['event/',events],['pending/',pending]]){const key=prefix+a.sku,p=records.get(key);if(!p)continue;
+      p.taxonomyAudit={version:b.version,disposition:a.disposition,primary:a.primary,memberships:a.memberships};p.department=a.primary;p.departmentIds=a.memberships;
+      if(a.mailAssets&&a.mailAssets.sku===p.sku&&a.mailAssets.sourceUrl===p.sourceUrl){mailAssets({...p,mailAssets:a.mailAssets});p.mailAssets=a.mailAssets;p.priceGBP=a.mailAssets.priceGBP;p.originalPrice=a.mailAssets.originalPrice;p.promoText=a.mailAssets.promoText;p.colorValues=a.mailAssets.colors;p.material=a.mailAssets.material;p.style=a.mailAssets.style;}
+      if(prefix==='pending/'){pendingUpdated++;if(a.disposition!=='include'){p.unavailableSince||=new Date().toISOString();excludedPending++;}}else eventsUpdated++;
+      await this.db.put(key,p);
+     }
+    }
+    return response({synced:true,eventsUpdated,pendingUpdated,excludedPending,sent:0,seenHistoryChanged:false});
+   }
    if(route==='/internal/mail-status'&&req.method==='GET'){
     const subs=[...(await this.db.list({prefix:'sub/'})).values()];return response({...await this.deliveryStatus(),confirmedSubscriptions:subs.filter(s=>s.confirmedAt).length,pendingSubscriptions:subs.filter(s=>!s.confirmedAt).length,pendingScreenshots:(await this.db.list({prefix:'pending/'})).size});
    }
@@ -192,11 +205,11 @@ export class Control{
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
     if(!Array.isArray(b.products)||b.products.length>30000)throw Error('Invalid scan');
     for(const p of b.products){if(!/^\d{1,12}$/.test(p.sku))throw Error('Invalid SKU');verifyUrl(p.sourceUrl,['therange.co.uk']);if(p.newStatus&&!await this.db.get('seen/'+p.sku)){const pending=await this.db.get('pending/'+p.sku);if(!pending)await this.db.put('pending/'+p.sku,{...p,firstDetectedAt:new Date().toISOString()});else if(pending.unavailableSince){delete pending.unavailableSince;await this.db.put('pending/'+p.sku,pending);}}}
-    return response({candidates:[...(await this.db.list({prefix:'pending/'})).values()]});
+    return response({candidates:[...(await this.db.list({prefix:'pending/'})).values()].filter(p=>!p.taxonomyAudit||p.taxonomyAudit.disposition==='include')});
    }
    if(['/internal/event','/internal/recover-event'].includes(route)&&req.method==='POST'){
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(route==='/internal/event'&&lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
-    const p=b.product;if(!/^\d{1,12}$/.test(p?.sku))throw Error('Invalid SKU');verifyUrl(p.sourceUrl,['therange.co.uk']);
+    const p=b.product;if(p?.taxonomyAudit&&p.taxonomyAudit.disposition!=='include')return response({error:'商品不属于已核验圣诞范围'},422);if(!/^\d{1,12}$/.test(p?.sku))throw Error('Invalid SKU');verifyUrl(p.sourceUrl,['therange.co.uk']);
     if(await this.db.get('seen/'+p.sku))return response({alreadyRecorded:true});
     if(route==='/internal/recover-event'){
      const pending=await this.db.get('pending/'+p.sku);

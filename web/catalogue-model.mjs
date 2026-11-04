@@ -1,3 +1,5 @@
+import {TAXONOMY_VERSION,productBody,offeredObject,objectMemberships,isPublishedProduct} from './taxonomy.mjs';
+export {isPublishedProduct} from './taxonomy.mjs';
 import {THEME_DEFINITIONS,isThemeScope} from './theme-model.mjs';
 export {THEME_DEFINITIONS,isThemeScope} from './theme-model.mjs';
 export const DEPARTMENTS=[
@@ -39,7 +41,7 @@ export function heightCategoryLabel(raw){const s=String(raw||'').trim();if(/^(?:
 export function beijingDay(value=Date.now()){return new Date(new Date(value).getTime()+28800000).toISOString().slice(0,10)}
 export function isToday(p,now=Date.now()){return p.arrivalEvidence==='observed-after-baseline'&&Boolean(p.firstNewObservedAt)&&beijingDay(p.firstNewObservedAt)===beijingDay(now)}
 export function isNew(p){return p.newStatus===true||Boolean(p.firstNewObservedAt&&p.arrivalEvidence==='observed-after-baseline')}
-export function inDepartment(p,id){return p.kind===id||p.department===id||(p.departmentIds||[]).includes(id)}
+export function inDepartment(p,id){return isPublishedProduct(p)&&(p.taxonomyAudit?.version===TAXONOMY_VERSION?p.taxonomyAudit.memberships.includes(id):p.kind===id||p.department===id||(p.departmentIds||[]).includes(id))}
 export function scopeProducts(products,id,mode='all',now=Date.now()){return products.filter(p=>inDepartment(p,id)&&(mode==='all'||(mode==='new'?isNew(p):isToday(p,now))))}
 export function availableProducts(source,arrivals={}){
  const rows=new Map((source?.products||[]).map(p=>[p.sku,p]));
@@ -48,50 +50,10 @@ export function availableProducts(source,arrivals={}){
  for(const p of arrivals.products||[]){const prior=rows.get(p.sku);if(prior)rows.set(p.sku,Date.parse(p.observedAt)>Date.parse(prior.observedAt)?{...prior,...p}:{...p,...prior});else if(live?.has(p.sku)||arrivalAt>=sourceAt)rows.set(p.sku,p);}
  return [...rows.values()].filter(p=>!live||live.has(p.sku));
 }
+const currentTaxonomy=p=>p.taxonomyAudit?.version===TAXONOMY_VERSION&&p.taxonomyAudit.title===productBody(p)&&p.taxonomyAudit.imageHash===(p.displayImage?.sha256||p.imageCacheEvidence?.sha256||null);
 export function classifyDecoration(p){
- const breadcrumb=(p.detailEvidence?.breadcrumbs||[]).join(' ');
- const title=String(p.variantName||p.name||''),productTitle=title.split(/\s[-–]\s/)[0],description=p.appearanceSource?.descriptionText||p.sourceDescription||'',text=title+' '+description;
- if(/\btree (?:skirt|collar)\b|tree stand cover/i.test(title))return {id:'ornaments',method:'tree-base-decoration',matched:title};
- // Printed characters do not change the type of homeware, clothing or gift wrap.
- if(/\b(?:duvet|bedding|pillowcases?|tablecloth|placemats?|napkins?|tea towels?|mugs?|tumblers?|pens?|pencils?|earrings?|wrapping paper|gift wrap|pyjamas|socks|advent calendars?)\b/i.test(productTitle)||/\bcushions?(?:\s+covers?)?\b/i.test(productTitle)&&!/\bcushion garland\b/i.test(productTitle))return {id:'ornaments',method:'homeware-or-accessory-product-type',matched:title};
- const presentBody=title.split(/\b(?:with|holding|carrying|wearing|in (?:a )?gift[ -]?box(?:es)?)\b/i)[0];
- const packaging=/\b(?:gift[ -]?(?:bags?|sacks?|tags?|wrap(?:ping)?|accessor(?:y|ies))|present sacks?|present bows?)\b/i.test(presentBody);
- const packagingSource=/christmas gift wrap/i.test(breadcrumb)||/gift box packaging|(?:packaged|presented|supplied) in (?:a )?gift box/i.test(description);
- const otherObject=/\b(?:tree (?:skirt|collar)|picks?|sprays?|stems?|branches|wreaths?|garlands?|swags?|sacks?|stockings?|bags?|cushions?|nutcrackers?|mice|mouse|cats?|snow[ -]?globes?|model village|scenes?|diamond art|advent|calendars?|gift shop|christmas eve|list box|book boxes)\b/i.test(presentBody);
- const presentShape=/\b(?:presents?|parcels?|gift[ -]?box(?:es)?)\b/i.test(presentBody)||/\b(?:gift[ -]?box[ -]?shaped|present[ -]?shaped|shaped (?:like|as) (?:a |an )?(?:wrapped )?(?:present|gift box|parcel))\b/i.test(description);
- if(packaging||presentShape&&packagingSource&&!otherObject)return {id:'ornaments',method:'gift-packaging-or-accessory',matched:title};
- if(presentShape&&(!otherObject||/\bemerging out of.{0,100}\b(?:present|gift) box\b/i.test(description)))return {id:'presents',method:'present-shaped-product-title-and-description',matched:title};
- if(/\b(?:ornament display stand|display easel)\b/i.test(title))return {id:'standing',method:'standing-display-product-type',matched:title};
- // Product type in its title takes precedence over examples of where it can be used.
- if(/\bhang(?:ing)?\b/i.test(title)&&/tree decorations/i.test(breadcrumb)&&!/wreath|garland|swag|drop/i.test(title))return {id:'tree-decorations',method:'official-breadcrumb-and-hanging-product',matched:breadcrumb};
- const rules=[
-  ['inflatable',/\binflatabl[ea]\b/i],
-  ['candle-holder',/\b(?:candle[ -]?(?:holder|stick|stand|bridge)s?|candelabra|tea[ -]?light[ -]?(?:holder|lantern)s?)\b/i],
-  ['swag',/\b(?:swags?|tear[ -]?drops?)\b/i],
-  ['wreath',/\bwreaths?\b/i],['garland',/\b(?:garlands?|mantel[ -]?piece (?:foliage|decoration))\b/i],
-  ['spray',/\b(?:picks?|sprays?|stems?|branches|branch|bush(?:es)?|sprigs?)\b/i],
-  ['scenes',/\b(?:nativity|village|scene|diorama|miniature (?:house|church|shop|model)|snow[ -]?globes?|water[ -]?spinner|model (?:train|house|church))\b/i],
-  ['wall',/\b(?:wall[ -]?(?:art|decor|decoration|hanging|sticker|mounted)|window (?:sticker|cling|decal)|door (?:sign|plaque)|hanging (?:sign|plaque)|window and wall)\b/i],
-  ['tree-decorations',/\b(?:baubles?|tree (?:decorations?|ornaments?|toppers?|pendants?)|hanging (?:ornaments?|decorations?)|tinsel|christmas tree (?:bows?|ribbons?|stars?)|shatterproof)\b/i],
-  ['standing',/\b(?:standing|stand[ -]?up|nutcracker|gonks?|gnomes?|santa|snowman|penguin|reindeer|polar bear|figurine|figure|elf|elves|soldier)\b/i],
-  ['outdoor',/\b(?:outdoor|garden|lawn|pathway|porch|weather[ -]?proof)\b/i]
- ];
- for(const [id,re]of rules){
-  if(id==='spray'&&/\b(?:snow spray|spray (?:paint|snow)|bauble|candle|tinsel)\b/i.test(title))continue;
-  if(id==='swag'&&!/\bswag/i.test(title)&&/\b(?:bauble|glass|crystal|tree (?:ornament|decoration))\b/i.test(title))continue;
-  if(id==='scenes'&&/\b(?:baubles?|tree (?:decorations?|ornaments?))\b/i.test(title))continue;
-  if(['standing','outdoor'].includes(id)&&!(/\bstanding\b|stand[ -]?up/i.test(title)&&id==='standing'))continue;
-  if(id==='tree-decorations'&&re.test(title)&&/\bfree[ -]?standing\b/i.test(description))return {id:'standing',method:'explicit-standing-description',matched:title};
-  if(re.test(title))return {id,method:'product-title',matched:title};
- }
- if(/\bfree[ -]?standing\b/i.test(description)&&/\b(?:ornaments?|decorations?|figures?|figurines?|display|santa|snowman|reindeer|gnome|gonk|nutcracker)\b/i.test(title))return {id:'standing',method:'explicit-standing-description',matched:title};
- const official=[['standing',/standing decorations?|christmas figures?/i],['scenes',/christmas scenes?.{0,8}models?/i],['tree-decorations',/tree decorations?/i],['inflatable',/inflatable christmas decorations?/i],['outdoor',/christmas outdoor decorations?/i],['wall',/christmas wall decorations?/i],['wreath',/christmas wreaths?/i],['garland',/christmas garlands?/i],['swag',/christmas swags?|christmas drops?/i],['candle-holder',/christmas candle holders?/i],['spray',/christmas (?:sprays?|picks?|branches|bushes)/i],['ornaments',/christmas ornaments?/i]];
- for(const crumb of [...(p.detailEvidence?.breadcrumbs||[])].reverse())for(const [id,re]of official)if(re.test(crumb))return {id,method:'official-breadcrumb',matched:crumb};
- for(const [id,re]of rules)if(['standing','outdoor'].includes(id)&&re.test(title)&&!(id==='standing'&&/\bhang(?:ing)?\b/i.test(title)))return {id,method:'product-title',matched:title};
- // Only explicit descriptions of this object's type, not recommended companion items.
- const lead=text.slice(title.length,title.length+450);
- for(const [id,re]of rules)if(re.test(lead)&&/\b(?:this|the|our)\s+(?:[\w-]+\s+){0,5}(?:wreath|garland|swag|pick|spray|candle holder|inflatable|scene|figurine)\b/i.test(lead))return {id,method:'product-description',matched:lead};
- return {id:'ornaments',method:'root-decoration-catalogue',matched:'Official Christmas Decorations catalogue; no more specific supported product type'};
+ if(currentTaxonomy(p))return {id:p.taxonomyAudit.primary,method:'SKU-object-image-season-audit',reason:p.taxonomyAudit.objectReason,matched:p.taxonomyAudit.objectEvidence};
+ const cls=offeredObject(p);return {...cls,matched:cls.evidence};
 }
 export function toCentimetres(value){
  const t=String(value||'').trim(),m=t.match(/^([\d.]+)\s*(cm|mm|met(?:er|re)s?|m|feet|foot|ft|inch(?:es)?|in|["′'])/i);
@@ -111,4 +73,7 @@ export function productDimensions(specs={},description=''){
  return {values,axes,maxCm:max,evidence,sourceSize:rawSize||null,categoryLabel,label:axes.length?axes.map(a=>a.label+' '+a.cm+'cm').join(' × '):categoryLabel||'尺寸未注明 · Size not specified'};
 }
 
-export function decorationMemberships(p,primary=classifyDecoration(p).id){const text=(p.detailEvidence?.breadcrumbs||[]).join(' '),ids=[primary];for(const [id,re]of [['outdoor',/outdoor|garden|lawn/i],['tree-decorations',/tree decorations/i],['wall',/wall decorations/i],['scenes',/scenes.{0,4}models/i],['inflatable',/inflatable/i]])if(re.test(text)||id==='outdoor'&&re.test(p.variantName+' '+(p.specifications?.['Indoor/Outdoor']||'')))ids.push(id);return [...new Set(ids)];}
+export function decorationMemberships(p,primary=classifyDecoration(p).id){
+ if(currentTaxonomy(p))return p.taxonomyAudit.memberships;
+ return objectMemberships(p,{...offeredObject(p),id:primary});
+}

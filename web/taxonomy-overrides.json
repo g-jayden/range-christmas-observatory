@@ -1,0 +1,316 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-11-04T05:29:05.977Z",
+  "method": "source-product-images-and-exact-SKU-descriptions-reviewed",
+  "products": {
+    "90309": {
+      "title": "Pack of 2 Stainless Steel Square Self Adhesive Hooks",
+      "imageHash": "446239491e6065ab439eb4aa0a2c59c41ae6dc82fc4ca14c0abbbf9b1ae2b91a",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/diy/hardware-and-accessories/hooks-and-hanging/adhesive-hooks/wilko-pack-of-2-stainless-steel-square-self-adhesive-hooks/#90309",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "1084558": {
+      "title": "Moss Wreath Ring ",
+      "imageHash": "7d668d15642fdd549c774b43ca008e4adae07542299ab569a8506fe0e4479f18",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/p/moss-wreath-ring/m3750792/#1084558",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "1102168": {
+      "title": "Naturebase Biodegradable Floral Foam Ring 2 Pack",
+      "imageHash": "a2c1373327dd3cde5029addedba96c2eb571293bce0cbec4b857c9f72ab0eb22",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/p/naturebase-biodegradable-floral-foam-ring-2-pack/m1102168/#1102168",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "1102196": {
+      "title": "Naturebase Biodegradable Floral Foam Ring 2 Pack Green",
+      "imageHash": "a1e0f7317e415038748b2d48e67e079fa7c8243869e58519fa0515fcefdc8b75",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/p/naturebase-biodegradable-floral-foam-ring-2-pack-green/m1102196/#1102196",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "1103492": {
+      "title": "Spicer Designs Plastic Based Foam Ring 2 Pack",
+      "imageHash": "98bd994f6528fb4d712b4cd533ad594b727819562ccd439acef7998fe8ad65d2",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/p/spicer-designs-plastic-based-foam-ring-2-pack/m1103492/#1103492",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "1400388": {
+      "title": "Eucalyptus Artificial Foliage Garland 200cms¿¿(8097)",
+      "imageHash": "f3d5295fab5b77baa9f667ba0bdd95b39f48d05e740543863acb3b5a4af65cc3",
+      "disposition": "include",
+      "reason": "Christmas-directory-foliage-garland-image-reviewed",
+      "evidence": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-flowers/eucalyptus-artificial-foliage-garland-200cms  -8097/#1400388",
+      "note": "照片为连续绿色尤加利长藤；在官方圣诞目录中，没有其它节日造型；保留长藤分类，缺少的原站规格不填造。"
+    },
+    "1469950": {
+      "title": "Grey Thick Willow Round Wreath ¿ 60cm",
+      "imageHash": "c1287e4c1e0a5c81bba8040c488a7459ca899c11a7f6d46e3b9e308826e7a2b4",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/p/grey-thick-willow-round-wreath-\u0013-60cm/m1469950/#1469950",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "1469955": {
+      "title": "Grey Thick Willow Heart Wreath ¿ 40cm",
+      "imageHash": "0d8682309828ad15443b85855ce235b5ab734facab01f0717e9f1328260da30e",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/p/grey-thick-willow-heart-wreath-\u0013-40cm/m1469955/#1469955",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "1493194": {
+      "title": "Arc Wreath with Branches, Berries, Pine, Pinecones, Bells and Bow",
+      "imageHash": "4e208c39561b6a76d3de8915f15a58676526c0280e2c5f1730269dbb96e114fd",
+      "disposition": "include",
+      "reason": "arc-shaped-foliage-swag-image-and-SKU-reviewed",
+      "evidence": "https://www.therange.co.uk/p/arc-wreath-with-branches-berries-pine-pinecones-bells-and-bow/m1493194/#1493194",
+      "object": {
+        "id": "swag",
+        "reason": "arc-shaped-foliage-swag-image-and-SKU-reviewed"
+      },
+      "note": "图片为半弧垂挂枝叶、铃铛与蝴蝶结，商品说明为arc；不是完整圆形门圈。"
+    },
+    "1493436": {
+      "title": "Grey Thick Willow Round Wreath ¿ 50cm",
+      "imageHash": "615b675a83b686b7f831bcc94d4f06269ab321aa2e9e87ba95b40c9bdddf8097",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/p/grey-thick-willow-round-wreath-\u0013-50cm/m1493436/#1493436",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "1493492": {
+      "title": "Grey Thick Willow Heart Wreath ¿ 60cm",
+      "imageHash": "b42b3513830688ce877caf75d605709d20ab2963f4b0224af5d8a7d4e9d4b6cc",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/p/grey-thick-willow-heart-wreath-\u0013-60cm/m1493492/#1493492",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "1493498": {
+      "title": "Grey Thick Willow Heart Wreath ¿ 50cm",
+      "imageHash": "6c30785cf6409bca6c92e5891b2eea7a8e8c38348cd69a1ef669e0c99d3474d5",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/p/grey-thick-willow-heart-wreath-\u0013-50cm/m1493498/#1493498",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "1493522": {
+      "title": "Grey Thick Willow Round Wreath ¿ 40cm",
+      "imageHash": "0b2b61544161ef0af4b6c6bd5d816ef24a537a9a247ef3ae1f54970a3657234b",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/p/grey-thick-willow-round-wreath-\u0013-40cm/m1493522/#1493522",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "1493548": {
+      "title": "Rustic Bird Decorative Wreath ¿ 20cm",
+      "imageHash": "0c3114ecfffbaca254f72d47d0b4386213c651e8d3928a1550de9201fc6b0495",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/p/rustic-bird-decorative-wreath-\u0013-20cm/m1493548/#1493548",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "1493551": {
+      "title": "White Paper Display Plinth 100cm",
+      "imageHash": "02dfbd40fec10bc6704fbaddb2f295f3a043f12c83a50395901c60527d665f80",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/p/white-paper-display-plinth-100cm/m1493551/#1493551",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "1493568": {
+      "title": "White Paper Display Plinth 10cm",
+      "imageHash": "dfcd68aebdc2a0a554737fa5c00b16afca2426730efebda7d8cfe5fbc285c98c",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/p/white-paper-display-plinth-10cm/m1493568/#1493568",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "1590928": {
+      "title": "Frosted Pine Wreath With Pinecones - Pale Green",
+      "imageHash": "0ed6bdd601537a961f2e9e012f1c3093e32c5d1535b1b9454d7f5bdb1b9e7567",
+      "disposition": "include",
+      "reason": "manufacturer-model-22747-and-dimensions-confirm-full-wreath",
+      "evidence": "https://www.therange.co.uk/p/frosted-pine-wreath-with-pinecones/m1590928/#1590928",
+      "object": {
+        "id": "wreath",
+        "reason": "manufacturer-model-22747-and-dimensions-confirm-full-wreath"
+      },
+      "note": "零售图库错配烛台；厂家型号22747、55×55×9cm及官方原图一致确认是花环。采用标明来源的厂家原图，并更正厂家确认的塑料材质。",
+      "displayImage": {
+        "selectedSku": "1590928",
+        "sourceInputImageUrl": "https://www.therange.co.uk/media/6/8/1791795876_2577.jpg",
+        "sourceUrl": "https://www.hill-interiors.com/images/giant/22747.jpg",
+        "sourceProductUrl": "https://www.hill-interiors.com/item/frosted-pine-wreath-with-pinecones/",
+        "sourceType": "manufacturer-model-matched",
+        "cachePath": "images/source/89de3709c5f0442ce1efad7f559b04264e8a16a6f3c28de4b3eb009c4b52e189.jpg",
+        "sha256": "89de3709c5f0442ce1efad7f559b04264e8a16a6f3c28de4b3eb009c4b52e189",
+        "width": 1800,
+        "height": 1800,
+        "bytes": 718780,
+        "verifiedAt": "2026-11-04T05:29:05.993Z",
+        "manufacturerModel": "22747",
+        "verifiedSpecifications": {
+          "Height": "55cm",
+          "Width": "55cm",
+          "Length": "9cm",
+          "Weight": "0.36kg",
+          "Material": "Plastic",
+          "Colour": "Green, White"
+        },
+        "invalidSourceFields": [
+          "Shipping Weight"
+        ],
+        "colors": [
+          "绿色",
+          "白色"
+        ]
+      }
+    },
+    "1627362": {
+      "title": "Rustic Outline Tree and Star With Four Glass Votives",
+      "imageHash": "38d6bddec24053c96590c49ea1f4fe02c6981c114346d2df385a932a8e7ea8a5",
+      "disposition": "include",
+      "reason": "four-integrated-glass-votive-holders",
+      "evidence": "https://www.therange.co.uk/p/rustic-outline-tree-and-star-with-four-glass-votives/m1627362/#1627362",
+      "object": {
+        "id": "candle-holder",
+        "reason": "four-integrated-glass-votive-holders"
+      },
+      "note": "图片与介绍均证实四个玻璃烛杯，树形为烛台造型。"
+    },
+    "3013096": {
+      "title": "T Mains Connector Accessory White  IP65",
+      "imageHash": "5a97781843dba8273930fe7a52084ac18276867d7909152335b5aa8e16692b91",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/christmas/christmas-lights/outdoor-christmas-lights/outdoor-christmas-string-lights/t-mains-connector-accessory-white-ip65/#3013096",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "4725100": {
+      "title": "Y Mains Splitter Accessory Black  IP65",
+      "imageHash": "3dd907f309d1cda30ed80ba1991f816ce59c876c27fdd3c9e161081f8852d656",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/christmas/christmas-lights/outdoor-christmas-lights/outdoor-christmas-string-lights/y-mains-splitter-accessory-black-ip65/#4725100",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "5007368": {
+      "title": "10 Way Connector Accessory White  IP65",
+      "imageHash": "0fa3d34d818cd53de50c0f66c218d04586ab1edc1ddc0b145530cfabbf007e91",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/christmas/christmas-lights/outdoor-christmas-lights/outdoor-christmas-string-lights/10-way-connector-accessory-white-ip65/#5007368",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "5108408": {
+      "title": "Ceramic Star Decoration Minimalist Holiday Accent Piece",
+      "imageHash": "6f11fed5e64a4eb9e9cee061cba617a42aeb566657dccb6a779c9fc1955aa8d0",
+      "disposition": "include",
+      "reason": "standalone-ceramic-star-verified-in-same-SKU-gallery",
+      "evidence": "https://www.therange.co.uk/p/ceramic-star-decoration-minimalist-holiday-accent-piece/m5108408/#5108408",
+      "object": {
+        "id": "standing",
+        "reason": "standalone-ceramic-star-verified-in-same-SKU-gallery"
+      },
+      "note": "SKU介绍说明为独立摆放的陶瓷星星；已核对该SKU后续原图库中的独立商品照片，主场景里的长藤属于背景。",
+      "displayImage": {
+        "selectedSku": "5108408",
+        "sourceInputImageUrl": "https://www.therange.co.uk/media/1/0/1755089116_4897.jpg",
+        "sourceUrl": "https://www.therange.co.uk/media/2/1/1790265838_3642.jpg",
+        "sourceProductUrl": "https://www.therange.co.uk/p/ceramic-star-decoration-minimalist-holiday-accent-piece/m5108408/#5108408",
+        "sourceType": "retailer-SKU-gallery",
+        "cachePath": "images/source/c260e7d91c2d891f2070748a15e831f52b368c80571147984568473ad7afe629.jpg",
+        "sha256": "c260e7d91c2d891f2070748a15e831f52b368c80571147984568473ad7afe629",
+        "width": 1500,
+        "height": 1500,
+        "bytes": 220086,
+        "verifiedAt": "2026-11-04T05:29:05.991Z",
+        "colors": [
+          "白色"
+        ]
+      }
+    },
+    "5905862": {
+      "title": "5 Way Mains Connector Black  IP65",
+      "imageHash": "67021c5bd673478a44c0040a5be5635a3b6d793d85750f161c87763686c04147",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/christmas/christmas-lights/outdoor-christmas-lights/outdoor-christmas-string-lights/5-way-mains-connector-black-ip65/#5905862",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "6666088": {
+      "title": "2m Mains Power Lead Accessory Black",
+      "imageHash": "360681e0f2597919b76c3199c0c59004222534fff951e37d76aba26b71b8372e",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/christmas/christmas-lights/outdoor-christmas-lights/outdoor-christmas-string-lights/2m-mains-power-lead-accessory-black/#6666088",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "6964978": {
+      "title": "2m Mains Power Lead Accessory White",
+      "imageHash": "9550ad96bf6f7aaeac343971dd0fa3bec3bba18005e0d5a8d2cabd68f6068032",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/christmas/christmas-lights/outdoor-christmas-lights/outdoor-christmas-string-lights/2m-mains-power-lead-accessory-white/#6964978",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "7550751": {
+      "title": "10 Way Mains Connector Black  IP65",
+      "imageHash": "9e61b8bc3c6d6f431b86ae45dca57ace985373ddf2180374e0395a03f6da6f07",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/christmas/christmas-lights/outdoor-christmas-lights/outdoor-christmas-string-lights/10-way-mains-connector-black-ip65/#7550751",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "7780987": {
+      "title": "2m Cable Mains Black Rubber IP65",
+      "imageHash": "408a97d351d8066ffa7369c1716156ba8ea98fe3fe68f88bea4a366e0420356f",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/christmas/christmas-lights/outdoor-christmas-lights/outdoor-christmas-string-lights/2m-cable-mains-black-rubber-ip65/#7780987",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "8016023": {
+      "title": "2m Cable Mains White Rubber IP65",
+      "imageHash": "ce0f786142d40d54c6fec4d5853660c0950f1f287c19ff414ca2d8a54132b3fa",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/christmas/christmas-lights/outdoor-christmas-lights/outdoor-christmas-string-lights/2m-cable-mains-white-rubber-ip65/#8016023",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "8869331": {
+      "title": "Y Mains Splitter Accessory White  IP65",
+      "imageHash": "94d902f0d1a0e197ac817e3abdae568c2dd2fad2e47f0ea316c32a81d043f39d",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/christmas/christmas-lights/outdoor-christmas-lights/outdoor-christmas-string-lights/y-mains-splitter-accessory-white-ip65/#8869331",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "8872985": {
+      "title": "5 Way Mains Connector White  IP65",
+      "imageHash": "1983067c73bb530c6d76db07cd6d27a04a5efce70bcd742cc533a5ade814a49a",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/christmas/christmas-lights/outdoor-christmas-lights/outdoor-christmas-string-lights/5-way-mains-connector-white-ip65/#8872985",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    },
+    "9439050": {
+      "title": "T Mains Connector Accessory Black  IP65",
+      "imageHash": "13fcaa8501d1999d587abf10f7aca7276427bba374b87fc368a1f5ff89837728",
+      "disposition": "exclude",
+      "reason": "reviewed-non-christmas-craft-base-electrical-or-display-accessory",
+      "evidence": "https://www.therange.co.uk/christmas/christmas-lights/outdoor-christmas-lights/outdoor-christmas-string-lights/t-mains-connector-accessory-black-ip65/#9439050",
+      "note": "已对照原图与现有SKU资料：裸柳条圈、花艺泡沫/苔藓圈、普通电气接头、展示台或普通五金；不属于本项目圣诞装饰品。"
+    }
+  }
+}

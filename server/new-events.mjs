@@ -1,3 +1,4 @@
+import {isPublishedProduct,christmasEligibility,offeredObject} from '../web/taxonomy.mjs';
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {atomicJson} from './sync.mjs';
@@ -12,13 +13,13 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
  try{
   // The cloud only needs current NEW observations; it already retains pending
   // captures. Bound each payload as departments and retailers grow.
-  const observations=snapshot.products.filter(p=>p.newStatus).map(p=>({sku:p.sku,sourceUrl:p.sourceUrl,newStatus:p.newStatus,kind:p.kind,department:p.department,departmentIds:p.departmentIds,variantName:p.variantName,priceGBP:p.priceGBP,originalPrice:p.originalPrice,promoText:p.promoText,variantImageUrl:p.variantImageUrl,imageUrl:p.imageUrl}));
+  const observations=snapshot.products.filter(p=>p.newStatus&&isPublishedProduct(p)&&christmasEligibility(p,offeredObject(p)).disposition==='include').map(p=>({sku:p.sku,taxonomyAudit:p.taxonomyAudit,sourceUrl:p.sourceUrl,newStatus:p.newStatus,kind:p.kind,department:p.department,departmentIds:p.departmentIds,variantName:p.variantName,priceGBP:p.priceGBP,originalPrice:p.originalPrice,promoText:p.promoText,variantImageUrl:p.variantImageUrl,imageUrl:p.imageUrl}));
   let plan;for(let offset=0;offset<Math.max(observations.length,1);offset+=500)plan=await controlCall('/internal/monitor-plan',{lease,products:observations.slice(offset,offset+500)});
   const current=new Map(snapshot.products.map(p=>[p.sku,p]));
   const pending=plan.candidates.map(p=>current.get(p.sku)).filter(Boolean);if(pending.length)await reader.prepareFamilies?.(pending);
   for(const candidate of plan.candidates){
    const p=current.get(candidate.sku),key=p&&productKey(p,policy)+':screenshot',failure=key&&state.failures[key];
-   if(!p){unavailableSkus.push(candidate.sku);continue;}
+   if(!p||!isPublishedProduct(p)||christmasEligibility(p,offeredObject(p)).disposition!=='include'){unavailableSkus.push(candidate.sku);continue;}
    if(attempted>=policy.maxScreenshotPagesPerRun||budget.remaining()<1||failure?.fingerprint===detailFingerprint(p)&&Date.parse(failure.retryAt)>now()){deferred++;continue;}
    if(/[\u0000-\u001f]/.test(p.sourceUrl)){deferred++;continue;}
    attempted++;
@@ -49,6 +50,14 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
 }
 
 export async function finishNewEvents(result,{snapshot,lease,controlCall=control}={}){
+ // Reclassification is not a new-product event. Suppress out-of-scope or
+ // unresolved products before persisting any mail, retaining the global SKU
+ // history in the cloud so category changes cannot cause duplicate sends.
+ const allowed=new Map(snapshot.products.filter(p=>isPublishedProduct(p)&&christmasEligibility(p,offeredObject(p)).disposition==='include').map(p=>[p.sku,p]));
+ const removed=(result.events||[]).filter(e=>!allowed.has(e.product.sku));
+ result.events=(result.events||[]).filter(e=>allowed.has(e.product.sku));
+ result.unavailableSkus=[...new Set([...(result.unavailableSkus||[]),...removed.map(e=>e.product.sku)])];result.captured=result.events.length;
+
  for(const event of result.events||[]){const p=snapshot.products.find(p=>p.sku===event.product.sku);if(p)event.product={...event.product,...p,description:event.product.mailAssets?event.product.description:(p.productSummary||event.product.description)};if(!event.product.mailAssets){const assets=await buildMailAssets(event.product,event.screenshotBase64);event.screenshotBase64=assets.attachmentBase64;event.product.description=(event.product.productSummary||event.product.description||'')+'。附件前半为完整商品信息卡，后半为同一SKU原站真实截图。保存完整信息卡与官网原图：'+assets.downloadUrl;event.product.screenshotKind=assets.attachmentKind;}}
  // Persist verified events in the private cloud queue before Pages publication.
  // A runner or deploy failure must not lose a paid capture or require another scrape.
