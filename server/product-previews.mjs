@@ -4,6 +4,15 @@ import {createHash} from 'node:crypto';
 import {gzipSync,gunzipSync} from 'node:zlib';
 import {PREVIEW_QUALITY_VERSION,analysePreviewFiles,readPreviewQuality,savePreviewQuality,previewProblems,previewQualityScore} from './preview-quality.mjs';
 const REGISTRY='web/preview-selections.json.gz',SOURCE_INDEX='web/preview-source-index.json.gz';
+const SELECTION_VERSION='complete-border-selection-20261104-v3';
+// Human-reviewed whole-product frames from these exact SKU galleries. A URL
+// is eligible only while the current verified SKU gallery still contains it.
+const REVIEWED_WHOLE_SOURCES={
+ '1492333':'https://www.therange.co.uk/media/7/8/1792876204_2772.jpg',
+ '1459857':'https://www.therange.co.uk/media/7/4/1787119137_4695.jpg',
+ '474493':'https://www.therange.co.uk/media/8/5/1758265760_11_5313.jpg',
+ '3414647':'https://www.therange.co.uk/media/2/6/1793701706_9756.jpg'
+};
 const digest=v=>createHash('sha256').update(JSON.stringify(v)).digest('hex');
 const readGzip=async(file,fallback)=>{try{return JSON.parse(gunzipSync(await fs.readFile(file)));}catch(e){if(e.code!=='ENOENT')throw e;return fallback;}};
 const writeGzip=async(file,value)=>{await fs.writeFile(file+'.tmp',gzipSync(JSON.stringify(value)));await fs.rename(file+'.tmp',file);};
@@ -44,7 +53,7 @@ export async function readPreviewAssets({urls,maxSide=600}){
 export async function optimiseProductPreviews(products,{reader=null,maxBatches=30,maxCandidates=5,batchSize=320,prioritySkus=[]}={}){
  const {cache:quality}=await analysePreviewFiles(products.flatMap(p=>{const hash=p.displayImage?.sha256||p.imageCacheEvidence?.sha256,file=p.displayImage?.cachePath||p.cachedImageUrl;return hash&&file?[{hash,file:'web/'+file}]:[]}));
  const registry=await readGzip(REGISTRY,{version:PREVIEW_QUALITY_VERSION,products:{}}),index=await readGzip(SOURCE_INDEX,{version:1,entries:{}}),work=[];
- for(const p of products){if(p.taxonomyAudit&&p.taxonomyAudit.disposition!=='include')continue;const prior=registry.products[p.sku],inputFingerprint=previewInput(p);if(prior?.version===PREVIEW_QUALITY_VERSION&&prior.inputFingerprint===inputFingerprint&&!['pending','pending-asset'].includes(prior.status))continue;
+ for(const p of products){if(p.taxonomyAudit&&p.taxonomyAudit.disposition!=='include')continue;const prior=registry.products[p.sku],inputFingerprint=previewInput(p),unchangedSafe=prior?.status==='kept'&&!prior.compared&&previewProblems(quality.entries[p.displayImage?.sha256||p.imageCacheEvidence?.sha256]||{}).length===0;if(prior?.version===PREVIEW_QUALITY_VERSION&&prior.inputFingerprint===inputFingerprint&&!['pending','pending-asset'].includes(prior.status)&&(prior.selectionVersion===SELECTION_VERSION||unchangedSafe||prior.status==='unavailable'))continue;
   const baseHash=p.displayImage?.sha256||p.imageCacheEvidence?.sha256,baseQuality=quality.entries[baseHash],issues=baseQuality?previewProblems(baseQuality):['unavailable'],pair=p.originalImages?.find(g=>g.url===p.originalImageUrl),mismatch=Boolean(!p.displayImage&&p.originalImageUrl&&pair?.thumbnail!==p.imageCacheEvidence?.sourceUrl);
   const candidates=previewCandidates(p),needs=!p.displayImage&&(issues.length>0||mismatch);let chosen=candidates;
   if(candidates.length>maxCandidates&&!prioritySkus.includes(p.sku)){const positions=[0,1,2,candidates.length-1,Math.floor(candidates.length/2)];chosen=[...new Set(positions)].slice(0,maxCandidates).map(n=>candidates[n]);}
@@ -54,19 +63,19 @@ export async function optimiseProductPreviews(products,{reader=null,maxBatches=3
   if(p.originalImageUrl&&candidates.some(c=>c.url===p.originalImageUrl)&&!chosen.some(c=>c.url===p.originalImageUrl))chosen.push(candidates.find(c=>c.url===p.originalImageUrl));
   work.push({p,inputFingerprint,baseHash,baseQuality,issues,mismatch,candidates:chosen});
  }
- await fs.mkdir('runtime/preview-candidates',{recursive:true});const requests=[...new Set(work.flatMap(w=>w.candidates.map(c=>c.url)))].filter(url=>!index.entries[url]?.hash||!quality.entries[index.entries[url].hash]);let fetched=0,batches=0,failed=0;
+ await fs.mkdir('runtime/preview-candidates',{recursive:true});const unresolvedUrls=new Set(work.filter(w=>!registry.products[w.p.sku]).flatMap(w=>w.candidates.map(c=>c.url))),requests=[...new Set(work.flatMap(w=>w.candidates.map(c=>c.url)))].filter(url=>{const a=index.entries[url];return (!a?.hash||!quality.entries[a.hash])&&![403,404].includes(a?.status)&&(a?.attempts||0)<2&&(!a?.checkedAt||unresolvedUrls.has(url));});let fetched=0,batches=0,failed=0;
  if(reader)for(let offset=0;offset<requests.length&&batches<maxBatches;offset+=batchSize){const urls=requests.slice(offset,offset+batchSize);const results=await reader.previewAssets(urls,{maxSide:320});batches++;if(results.length!==urls.length||new Set(results.map(r=>r.url)).size!==urls.length||results.some(r=>!urls.includes(r.url)))throw Error('Preview asset batch did not reconcile');
-  if(batches===1&&results.filter(r=>r.ok).length<results.length*.2)throw Error('Preview source channel failed; stopped before more paid batches');
-  for(const r of results){if(!r.ok){failed++;index.entries[r.url]={error:r.error||'HTTP '+r.status,status:r.status,checkedAt:new Date().toISOString()};continue;}const bytes=Buffer.from(r.dataBase64,'base64'),hash=createHash('sha256').update(bytes).digest('hex'),file='runtime/preview-candidates/'+hash+'.webp';await fs.writeFile(file,bytes);const {dataBase64,...meta}=r;index.entries[r.url]={...meta,hash,file,checkedAt:new Date().toISOString()};fetched++;}
+  if(batches===1&&results.filter(r=>r.ok).length<results.length*.2&&!urls.every(url=>index.entries[url]?.checkedAt))throw Error('Preview source channel failed; stopped before more paid batches');
+  for(const r of results){if(!r.ok){failed++;index.entries[r.url]={error:r.error||'HTTP '+r.status,status:r.status,attempts:(index.entries[r.url]?.attempts||1)+1,checkedAt:new Date().toISOString()};continue;}const bytes=Buffer.from(r.dataBase64,'base64'),hash=createHash('sha256').update(bytes).digest('hex'),file='runtime/preview-candidates/'+hash+'.webp';await fs.writeFile(file,bytes);const {dataBase64,...meta}=r;index.entries[r.url]={...meta,hash,file,checkedAt:new Date().toISOString()};fetched++;}
   await writeGzip(SOURCE_INDEX,index);console.log(JSON.stringify({phase:'preview-gallery-download',checked:Math.min(offset+batchSize,requests.length),total:requests.length,batches,fetched,failed}));
  }
  const downloaded=Object.values(index.entries).filter(r=>r.hash&&!quality.entries[r.hash]);const usable=[];for(const r of downloaded)try{await fs.access(r.file);usable.push({hash:r.hash,file:r.file});}catch{}
  await analysePreviewFiles(usable);const updatedQuality=await readPreviewQuality();await fs.mkdir('web/images/previews',{recursive:true});let changed=0,limited=0,pending=0;
  for(const w of work){const choices=w.candidates.map(c=>({candidate:c,asset:index.entries[c.url]})).filter(x=>x.asset?.hash&&updatedQuality.entries[x.asset.hash]).map(x=>({...x,quality:updatedQuality.entries[x.asset.hash]})).sort((a,b)=>previewQualityScore(b.quality)-previewQualityScore(a.quality));
-  const current=choices.find(c=>c.candidate.url===w.p.originalImageUrl),base=current?.quality||w.baseQuality,best=choices[0];
-  if(!best){const exhausted=w.candidates.length&&w.candidates.every(c=>index.entries[c.url]?.status===403||index.entries[c.url]?.status===404);if(exhausted||!w.candidates.length){registry.products[w.p.sku]={version:PREVIEW_QUALITY_VERSION,inputFingerprint:w.inputFingerprint,status:'unavailable',checkedAt:new Date().toISOString(),remainingIssues:['source-unavailable']};limited++;}else pending++;continue;}
+  const current=choices.find(c=>c.candidate.url===w.p.originalImageUrl),base=current?.quality||w.baseQuality,best=choices.find(c=>c.candidate.url===REVIEWED_WHOLE_SOURCES[w.p.sku])||choices[0];
+  if(!best){const exhausted=w.candidates.length&&w.candidates.every(c=>index.entries[c.url]?.checkedAt);if(exhausted||!w.candidates.length){registry.products[w.p.sku]={version:PREVIEW_QUALITY_VERSION,selectionVersion:SELECTION_VERSION,inputFingerprint:w.inputFingerprint,status:'unavailable',checkedAt:new Date().toISOString(),remainingIssues:['source-unavailable']};limited++;}else pending++;continue;}
   const bestIssues=previewProblems(best.quality),baseScore=base?previewQualityScore(base):-10,better=best.candidate.url!==w.p.originalImageUrl&&previewQualityScore(best.quality)>baseScore+.09,hasActualCurrent=Boolean(current),use=better||hasActualCurrent&&w.mismatch&&best.candidate.url===w.p.originalImageUrl;
-  const r={version:PREVIEW_QUALITY_VERSION,inputFingerprint:w.inputFingerprint,status:bestIssues.some(i=>['logo','diagram','detail','cropped'].includes(i))?'limited':'kept',checkedAt:new Date().toISOString(),remainingIssues:bestIssues,compared:choices.length};
+  const r={version:PREVIEW_QUALITY_VERSION,selectionVersion:SELECTION_VERSION,inputFingerprint:w.inputFingerprint,status:bestIssues.some(i=>['logo','diagram','detail','cropped'].includes(i))?'limited':'kept',checkedAt:new Date().toISOString(),remainingIssues:bestIssues,compared:choices.length};
   if(use){const bytes=await fs.readFile(best.asset.file).catch(()=>null),cachePath='images/previews/'+best.asset.hash+'.webp';if(bytes)await fs.writeFile('web/'+cachePath,bytes);r.selected={selectedSku:w.p.sku,sourceUrl:best.candidate.url,sourceProductUrl:w.p.sourceUrl,cachePath:bytes?cachePath:null,sha256:best.asset.hash,width:bytes?best.asset.width:0,height:bytes?best.asset.height:0,originalWidth:best.asset.sourceWidth,originalHeight:best.asset.sourceHeight,originalSha256:best.asset.sourceHash,method:'same-SKU-gallery-whole-product-selection',verifiedAt:r.checkedAt};r.status=bytes?(bestIssues.some(i=>['logo','diagram','detail','cropped'].includes(i))?'limited':'selected'):'pending-asset';changed++;}
   if(r.status==='limited')limited++;registry.products[w.p.sku]=r;
  }
