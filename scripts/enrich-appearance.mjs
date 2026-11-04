@@ -1,6 +1,6 @@
 import {readThemes,loadThemeDetails,publishThemes} from '../server/themes.mjs';
 import {restoreOriginalImages} from '../server/original-images.mjs';
-import {applySourceRepairs} from '../server/source-repairs.mjs';
+import {applySourceRepairs,applySourceOriginalRepairs} from '../server/source-repairs.mjs';
 import {readLights,loadLightingDetails,publishLights} from '../server/lights.mjs';
 import fs from 'node:fs/promises';
 import {enrichProducts,selectGalleryImages} from '../server/enrich-appearance.mjs';
@@ -12,7 +12,7 @@ import {materialFacts} from '../server/appearance.mjs';
 import {buildMailAssets,MAIL_CARD_VERSION} from '../server/mail-assets.mjs';
 
 const d=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));
-const sourceRepairs={trees:await applySourceRepairs(d.products)};
+const sourceRepairs={trees:await applySourceRepairs(d.products),treeOriginals:await applySourceOriginalRepairs(d.products)};
 d.appearanceAudit=await enrichProducts(d.products);
 const s=JSON.parse(await fs.readFile('web/status.json','utf8'));
 console.log(JSON.stringify(d.appearanceAudit));
@@ -22,6 +22,7 @@ const oldDepartments=new Map(decorations.products.map(p=>[p.sku,p.department]));
 if(decorations.products.length){
  await loadDecorationDetails(decorations.products);
  sourceRepairs.decorations=await applySourceRepairs(decorations.products);
+ sourceRepairs.decorationOriginals=await applySourceOriginalRepairs(decorations.products);
  await selectGalleryImages(decorations.products);
  await enrichDecorations(decorations.products,{infer:false});
  for(const p of decorations.products)if(p.specifications)p.material=materialFacts(p.specifications,p.sourceDescription||'').label;
@@ -38,8 +39,8 @@ if(d.browserImageAudit)d.browserImageAudit.catalogueRevision=d.revision;
 Object.assign(s,{revision:d.revision,appearanceAudit:d.appearanceAudit});
 if(s.browserImageAudit)s.browserImageAudit.catalogueRevision=d.revision;
 await atomicJson('web/catalogue.json',d);await atomicJson('web/status.json',s);
-const lights=await readLights();if(lights.products.length){await loadLightingDetails(lights.products);sourceRepairs.lights=await applySourceRepairs(lights.products);await restoreOriginalImages(lights.products);await publishLights(lights);}
-const themes=await readThemes();if(themes.products.length){await loadThemeDetails(themes.products);sourceRepairs.themes=await applySourceRepairs(themes.products);await restoreOriginalImages(themes.products);await publishThemes(themes);}
+const lights=await readLights();if(lights.products.length){await loadLightingDetails(lights.products);sourceRepairs.lights=await applySourceRepairs(lights.products);sourceRepairs.lightOriginals=await applySourceOriginalRepairs(lights.products);await restoreOriginalImages(lights.products);await publishLights(lights);}
+const themes=await readThemes();if(themes.products.length){await loadThemeDetails(themes.products);sourceRepairs.themes=await applySourceRepairs(themes.products);sourceRepairs.themeOriginals=await applySourceOriginalRepairs(themes.products);await restoreOriginalImages(themes.products);await publishThemes(themes);}
 await atomicJson('web/source-repairs-proof.json',sourceRepairs);console.log(JSON.stringify({phase:'saved-source-repairs',...sourceRepairs}));
 const products=new Map([...decorations.products,...lights.products,...themes.products,...d.products].map(p=>[p.sku,p]));
 for(const p of lights.products){const prior=products.get(p.sku);if(prior&&prior!==p)prior.departmentIds=[...new Set([...(prior.departmentIds||[]),...p.departmentIds])];}
