@@ -1,6 +1,7 @@
 import {readThemes,loadThemeDetails,publishThemes} from '../server/themes.mjs';
 import {restoreOriginalImages} from '../server/original-images.mjs';
 import {applySourceRepairs,applySourceOriginalRepairs} from '../server/source-repairs.mjs';
+import {readLedger} from '../server/credit-budget.mjs';
 import {readLights,loadLightingDetails,publishLights} from '../server/lights.mjs';
 import fs from 'node:fs/promises';
 import {enrichProducts,selectGalleryImages} from '../server/enrich-appearance.mjs';
@@ -12,6 +13,7 @@ import {materialFacts} from '../server/appearance.mjs';
 import {buildMailAssets,MAIL_CARD_VERSION} from '../server/mail-assets.mjs';
 
 const d=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));
+await atomicJson('web/collection-ledger.json',await readLedger());
 const sourceRepairs={trees:await applySourceRepairs(d.products),treeOriginals:await applySourceOriginalRepairs(d.products)};
 d.appearanceAudit=await enrichProducts(d.products);
 const s=JSON.parse(await fs.readFile('web/status.json','utf8'));

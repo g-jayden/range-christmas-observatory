@@ -4,7 +4,16 @@ const file='web/collection-ledger.json';
 export const periodKey=(now=Date.now())=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit'}).format(new Date(now));
 export const runKey=()=>String(process.env.GITHUB_RUN_ID||'local')+'-'+String(process.env.GITHUB_RUN_ATTEMPT||'1');
 export function budgetError(message){const e=new SourceError(message,402);e.budgetLimited=true;return e;}
-export async function readLedger(){let data;try{data=JSON.parse(await fs.readFile(file,'utf8'))}catch{data={}};data.version=2;data.periods||={};return data;}
+export async function readLedger(){
+ let data;try{data=JSON.parse(await fs.readFile(file,'utf8'))}catch{data={}};data.version=2;data.periods||={};
+ const diagnostics=await fs.readFile('web/collection-diagnostics.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return null;throw e;});
+ if(diagnostics){data.externalReceipts||={};for(const r of diagnostics.receipts){
+  if(data.externalReceipts[r.id])continue;
+  if(!/^mcp-[a-f0-9-]+$/.test(r.id)||!/^\d{4}-\d{2}$/.test(r.period)||!Number.isFinite(r.credits)||!Number.isFinite(r.refunded)||r.credits<0||r.refunded<0||r.refunded>r.credits)throw Error('Invalid diagnostic billing receipt');
+  const p=data.periods[r.period]||={used:0,reservations:{}},net=r.credits-r.refunded;p.used+=net;p.externalCredits=(p.externalCredits||0)+net;data.externalReceipts[r.id]=r;
+ }data.unreceiptedDiagnostics=diagnostics.unreceipted;}
+ return data;
+}
 export async function reserveCredits(policy,{now=Date.now(),key=runKey(),accountRemaining=Infinity}={}){
  const ledger=await readLedger(),period=periodKey(now),p=ledger.periods[period]||={used:0,reservations:{}};p.reservations||={};
  if(p.reservations[key])return {ledger,period,key,limit:p.reservations[key].amount};

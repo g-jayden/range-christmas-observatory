@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "receipts": [
+    {
+      "id": "mcp-01a1a3a8-3ef5-7754-a47c-2495a46fdd0c",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3aa-f604-72de-bbdb-b26e10f85305",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3aa-f819-71c6-b60f-1ec238ab1c89",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3c8-1a95-71af-9b69-1217bcd2f129",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3ac-b7d3-756c-a223-6d1e46c0ff06",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 1
+    },
+    {
+      "id": "mcp-01a1a3af-50bf-7109-a471-f9b98eec7d81",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3af-db67-7429-b13f-4c7f4401515d",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3b2-42f9-74f3-addc-cf18830e9aff",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3ba-e0c9-72ee-9e0e-80cae1fb24db",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3bb-a483-7092-9d9c-734190e4e4d7",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3be-12f9-717e-bf74-e9247770fe0b",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3cb-85b1-726d-8bb4-0fbd960f98b8",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3d7-a301-713d-bbf9-2e44b3b98911",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    }
+  ],
+  "unreceipted": [
+    {
+      "id": "01a1a3b7-dc28-754f-a346-63f7af16a560",
+      "operation": "map",
+      "reason": "No billing receipt returned"
+    },
+    {
+      "operation": "sitemap-1.xml scrape",
+      "reason": "Transport closed without billing receipt"
+    }
+  ]
+}
