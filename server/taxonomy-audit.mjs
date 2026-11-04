@@ -24,7 +24,7 @@ export async function auditTaxonomy(snapshots,{infer=true,writeViews=true}={}){
   p.taxonomySources=records.map(r=>r.source);before.set(sku,{primary:sorted[0].p.department,ids:[...new Set(records.flatMap(r=>[r.p.department,...r.p.departmentIds||[],...(['tree','skirt'].includes(r.p.kind)?[r.p.kind]:[])]).filter(Boolean))]});
   canonical.push(p);
  }
- let baseline;try{baseline=JSON.parse(gunzipSync(await fs.readFile('web/taxonomy-baseline.json.gz')));}catch(e){if(e.code!=='ENOENT')throw e;}if(baseline?.version===TAXONOMY_VERSION)for(const p of canonical)if(baseline.records[p.sku])before.set(p.sku,baseline.records[p.sku]);
+ let baseline;try{baseline=JSON.parse(gunzipSync(await fs.readFile('web/taxonomy-baseline.json.gz')));}catch(e){if(e.code!=='ENOENT')throw e;}if(baseline?.sourceCommit&&baseline.records)for(const p of canonical)if(baseline.records[p.sku])before.set(p.sku,baseline.records[p.sku]);
  const overrides=await read('web/taxonomy-overrides.json',{products:{}});
  for(const p of canonical){
   const o=overrides.products[p.sku],d=o?.displayImage;

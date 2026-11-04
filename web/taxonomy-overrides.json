@@ -176,6 +176,18 @@
         ]
       }
     },
+    "1627058": {
+      "title": "Natural Rattan Bell Decoration with Branches and Ribbon",
+      "imageHash": "b4e380924be6f37cba0b607cfb56716a428b9fd26b4e54537cfc75fe20f5f86a",
+      "disposition": "include",
+      "reason": "small-hanging-bell-with-foliage-not-a-floral-branch",
+      "evidence": "https://www.therange.co.uk/p/four-candle-natural-rattan-bell-decoration-with-branches-and-ribbon/m1627058/#1627058",
+      "object": {
+        "id": "tree-decorations",
+        "reason": "small-hanging-bell-with-foliage-not-a-floral-branch"
+      },
+      "note": "已对照原图：15cm铃铛本体带吊绳，枝叶和缎带为配件，不是单枝；按小型树挂饰归类。"
+    },
     "1627362": {
       "title": "Rustic Outline Tree and Star With Four Glass Votives",
       "imageHash": "38d6bddec24053c96590c49ea1f4fe02c6981c114346d2df385a932a8e7ea8a5",

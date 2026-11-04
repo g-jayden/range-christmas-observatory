@@ -1,7 +1,7 @@
 // Classify the offered SKU, not motifs printed on it or objects in its roomset.
 // This module has no network or model dependencies and is shared by monitoring
 // and the public catalogue. Image scores are evidence, never fabricated facts.
-export const TAXONOMY_VERSION='2026-11-04-object-season-v1';
+export const TAXONOMY_VERSION='2026-11-04-object-season-v2';
 export const isPublishedProduct=p=>!p.taxonomyAudit||p.taxonomyAudit.disposition==='include';
 export function productDescription(p){return String(p.sourceDescription||p.appearanceSource?.descriptionText||p.productSummary||'');}
 export function productBody(p){
@@ -14,7 +14,8 @@ function extent(p){const v=p.dimensions?.values||p.specifications||{};const ns=[
 export function offeredObject(p,{visual=p.taxonomyVisual}={}){
  const title=String(p.variantName||p.name||''),body=productBody(p),nounBody=productBody(p).split(/\b(?:with|holding|carrying|wearing|featuring)\b/i)[0],description=productDescription(p),lead=description.slice(0,650),crumbs=(p.detailEvidence?.breadcrumbs||[]).join(' '),size=extent(p);
  const r=(id,reason,extra)=>hit(id,reason,body,extra);
- if(/\b(?:hanging ornament|tree decoration)\b/i.test(nounBody)&&/\b(?:stocking|sack|bag|cushion)\b/i.test(nounBody)&&size!==null&&size<=22)return r('tree-decorations','miniature-ornament-shaped-as-a-stocking-or-accessory');
+ if(/\b(?:hanging ornament|tree decoration|tree ornament)\b/i.test(body)&&/\b(?:stocking|sack|bag|cushion|mug|bowl|plate)\b/i.test(body)&&size!==null&&size<=22)return r('tree-decorations','miniature-ornament-shaped-as-a-stocking-or-accessory');
+ if(/\bstorage bags?\b/i.test(nounBody))return r('ornaments','actual-seasonal-storage-bag-not-its-contents',{subtype:'accessory'});
  if(/\b(?:snow spray|spray snow|tree stand)(?! cover)\b/i.test(nounBody))return r('ornaments','tree-accessory-not-a-whole-tree',{subtype:'accessory'});
  if(/\b(?:tree flowers?|poinsettia (?:flowers? )?ornaments?)\b/i.test(nounBody))return r('tree-decorations','floral-tree-ornaments-not-a-whole-tree');
  if(p.kind==='tree'&&/\btree(?:s)?\b/i.test(nounBody)&&!/\b(?:baubles? set|tree (?:topper|skirt|collar)|tree stand cover|tree shaped (?:bauble|ornament)|hanging tree|tree (?:hanging|pendant)|craft kit|diamond art|stocking|cushion)\b/i.test(nounBody))return r('tree','whole-tree-SKU-and-source-catalogue');
@@ -23,9 +24,16 @@ export function offeredObject(p,{visual=p.taxonomyVisual}={}){
 
  // Containers, clothing, printed products, kits and supports are their own
  // objects even when 'wreath', 'Santa' or 'Christmas tree' describes a motif.
+ if(/\b(?:shopper bags?|shopping bags?|tote bags?|drawstring (?:lined )?bags?|filled cushions?|cutlery holders?|bottle covers?|(?:Christmas )?eve (?:gift )?box(?:es)?|keepsake box(?:es)?|card holders?|pop[ -]?up cards?)\b/i.test(body)||/\b(?:plates?|bowls?|serving trays?|treat trays?)\b/i.test(nounBody)&&!/\b(?:candle|tea[ -]?light|votive)\b/i.test(nounBody))return r('ornaments','offered-homeware-container-or-card-not-its-printed-motif',{subtype:'homeware-or-accessory'});
+ if(/\b(?:wreath|garland)\b/i.test(nounBody)&&/\b(?:hang(?:er|ers)|hooks?)\b/i.test(nounBody)||/\bdoor\s+(?:plate\s+)?hang(?:er|ers)\b/i.test(nounBody))return r('wall','actual-door-support-or-hanging-decoration-not-a-wreath',{subtype:'accessory'});
  if(/\b(?:wreath|garland)\s+(?:hang(?:er|ers)|hooks?|holders?|storage|bags?|boxes|stockings?|cushions?)\b|\b(?:hook|hanger|holder)\b.{0,20}\bwreath\b/i.test(body))return r(/\b(?:stocking|cushion|storage|bag|box)\b/i.test(body)?'ornaments':'wall','wreath-accessory-or-printed-object',{subtype:'accessory'});
+ if(/\b(?:kit|kits)\b/i.test(nounBody)&&/\b(?:make your own|paint your own|diamond your own|crystal canvas|making kit|paperchains?|plywood lantern)\b/i.test(nounBody))return r('ornaments','offered-activity-kit-not-a-finished-model',{subtype:'craft-kit'});
  if(/\b(?:diamond (?:art|painting)|paint.by.numbers|cross.stitch|craft|embroidery)\b.{0,80}\b(?:kit|set)|\b(?:wreath|ornament)\s+(?:making|craft)\s+kit\b/i.test(body))return r('ornaments','craft-kit-not-the-depicted-wreath',{subtype:'craft-kit'});
  if(/\b(?:stockings?|sacks?|gift[ -]?bags?|gift[ -]?tags?|treat bags?|party bags?|wrapping paper|gift wrap|gift bows?|bedding|duvet|pillowcases?|cushions?(?: covers?)?|tablecloth|placemats?|napkins?|tea towels?|mugs?|tumblers?|pens?|pencils?|earrings?|pyjamas|socks|advent calendars?|ribbon rolls?)\b/i.test(nounBody)&&!/\b(?:cushion garland|pyjama standing)\b/i.test(body))return r('ornaments','actual-homeware-packaging-or-stockings',{subtype:'homeware-or-accessory'});
+ if(/\bribbon\b/i.test(nounBody)&&/\bpick[ -]?up truck\b/i.test(nounBody))return r('ornaments','offered-ribbon-not-a-floral-pick');
+ if(/\btree trim bows?\b/i.test(nounBody))return r('tree-decorations','explicit-tree-trimming-bows');
+ if(/\bribbon\b/i.test(nounBody)&&!/\b(?:bows?|wreath|garland|swag|spray|pick|stem|candle|tealight|lantern|LED|lights?|lighting|figurine|inflatable|bauble|hanging|standing|door|wall|cone|tree\s+\d|pop[ -]?up tree)\b/i.test(nounBody))return r(/\btree\b/i.test(nounBody)?'tree-decorations':'ornaments','offered-ribbon-not-its-printed-object');
+ if(/\b(?:birds?|peacocks?|robins?|butterflies|butterfly|flowers?|leaves|poinsettia)\b/i.test(body)&&/\b(?:with (?:a )?clip|clip[ -]?on|clips?)\b/i.test(body)&&!/\b(?:LED|lights?|lighting|fairy)\b/i.test(body))return r('tree-decorations','offered-clip-on-tree-ornament');
  if(/\btree (?:skirt|collar)\b|tree stand cover/i.test(body))return r('skirt','tree-base-cover');
  if(p.kind==='tree'&&!/\b(?:bauble|ornament|topper|skirt|collar|cover|tree decoration|cushion|pick|spray|clip|garland|wreath)\b/i.test(body))return r('tree','verified-tree-catalogue-and-offered-object');
  const hanging=/\b(?:hanging|hang|pendant|bauble|tree decoration|tree ornament)\b/i.test(body+' '+lead),small=size!==null&&size<=22;
@@ -37,6 +45,7 @@ export function offeredObject(p,{visual=p.taxonomyVisual}={}){
  if(freestanding&&!/\b(?:bauble|tree topper|hanging|pendant)\b/i.test(body))return r('standing','explicit-free-standing-SKU-description');
  if(/\b(?:baubles?|tree (?:decorations?|ornaments?|toppers?|pendants?)|shatterproof|flower clips?|floral clips?|poinsettia clips?)\b/i.test(body)&&!/\b(?:bauble wreath|bauble garland|bauble swag|bauble pick|bauble spray|wreath with baubles)\b/i.test(body))return r('tree-decorations','offered-tree-ornament-or-clip');
  if(/\b(?:string (?:light|lighting)|fairy lights?|cluster lights?|icicle lights?|net lights?|curtain lights?|rope lights?|neon(?: flex| effect| lights?)?|light strings?|festoon lights?|tree lights?)\b/i.test(nounBody))return r('lights','offered-lighting-not-a-decorative-motif');
+ if(/\bspheres?\b/i.test(nounBody)&&/\bLEDs?\b/i.test(body))return r('lights','offered-LED-sphere-not-the-branches-used-for-installation');
  if(/\b(?:potted|pop[ -]?up|slim|pencil|artificial|pre[ -]?lit|flocked|fibre optic)\b.{0,65}\b(?:christmas|xmas|pine|fir|spruce|tinsel)\s+tree\b/i.test(nounBody)&&!hanging&&!/\b(?:ornaments?|flowers?|craft|spray|topper|stand)\b/i.test(nounBody))return r('tree','offered-whole-christmas-tree');
  const beforeContext=body.split(/\b(?:with|holding|carrying|wearing|featuring|decorated with|in (?:a )?gift[ -]?box(?:es)?)\b/i)[0];
  if(/\b(?:gift box packaging|packaged in (?:a )?gift box|supplied in (?:a )?gift box)\b/i.test(lead)&&/\b(?:ornament|bauble|decoration)\b/i.test(body))return r('ornaments','gift-box-is-packaging-not-the-product');
@@ -46,16 +55,17 @@ export function offeredObject(p,{visual=p.taxonomyVisual}={}){
  if(/\b(?:swags?|tear[ -]?drops?)\b/i.test(body)&&!/\b(?:bauble|glass|crystal|tree (?:ornament|decoration))\b/i.test(body))return r('swag','offered-foliage-swag-or-drop');
  // Garland precedes incidental 'wreath' in SEO-heavy garland titles. A genuine
  // wreath-and-garland set is the only reason to assign both foliage classes.
- if(/\bgarlands?\b|mantel[ -]?piece (?:foliage|decoration)/i.test(body)){
+ const foliageBody=/\b(?:santa|snowman|elf|gnome|gonk|reindeer|bell|sphere|ball|figurine|figure)\b/i.test(nounBody)&&nounBody!==body?nounBody:body;
+ if(/\bgarlands?\b|mantel[ -]?piece (?:foliage|decoration)/i.test(foliageBody)){
   if(/\b(?:set|bundle|pack)\b/i.test(body)&&/\bwreath\b/i.test(body))return r('wreath','explicit-wreath-and-garland-set',{additional:['garland']});
   return r('garland','offered-continuous-garland');
  }
- if(/\bwreaths?\b/i.test(body)){
+ if(/\bwreaths?\b/i.test(foliageBody)){
   if(hanging&&small&&!/\b(?:door|front door|doorway|wall|full size)\b/i.test(body))return r('tree-decorations','miniature-wreath-shaped-tree-ornament');
   if(/\b(?:wreath house|wreath cottage)\b/i.test(body))return r('scenes','house-with-wreath-motif');
   return r('wreath','offered-full-wreath');
  }
- if(/\b(?:picks?|sprays?|stems?|branches|branch|bush(?:es)?|sprigs?|floral stems?)\b/i.test(body)&&!/\b(?:snow spray|spray paint|spray snow|bauble|candle|tinsel)\b/i.test(body))return r('spray','offered-floral-stem-or-pick');
+ if(/\b(?:picks?|sprays?|stems?|branches|branch|bush(?:es)?|sprigs?|floral stems?)\b/i.test(foliageBody)&&!/\b(?:snow spray|spray paint|spray snow|bauble|candle|tinsel|ribbon)\b/i.test(foliageBody))return r('spray','offered-floral-stem-or-pick');
  if(/\b(?:nativity|village|scene|diorama|snow[ -]?globes?|water[ -]?spinner|model (?:train|house|church))\b/i.test(body))return r('scenes','offered-miniature-scene-or-globe');
  if(/\b(?:wall[ -]?(?:art|decor|decoration|hanging|sticker|mounted)|canvas|framed|window (?:sticker|cling|decal)|door (?:sign|plaque)|hanging (?:sign|plaque)|bunting|banner)\b/i.test(body))return r('wall','offered-wall-sign-art-or-bunting');
  if(/\b(?:ornament display stand|display easel)\b/i.test(body))return r('standing','display-stand');
@@ -70,11 +80,14 @@ export function offeredObject(p,{visual=p.taxonomyVisual}={}){
 
 export function christmasEligibility(p,object=offeredObject(p),visual=p.taxonomyVisual){
  const rawTitle=productBody(p),brand=String(p.brand||'').trim(),title=brand&&rawTitle.toLowerCase().startsWith(brand.toLowerCase()+' ')?rawTitle.slice(brand.length).trim():rawTitle,description=productDescription(p),lead=description.slice(0,1000),specs=p.specifications||{},occasion=String(specs.Occasion||specs.Season||'');
- const titleSeason=/\b(?:halloween|easter|thanksgiving|valentine|spring|summer|harvest|autumn(?:al)?|eid|ramadan|diwali|hanukkah|birthday|wedding|baby shower|graduation)\b/i.exec(title),occasionSeason=/\b(?:halloween|easter|thanksgiving|valentine|spring|summer|harvest|autumn(?:al)?|eid|ramadan|diwali|hanukkah|birthday|wedding|baby shower|graduation)\b/i.exec(occasion),positiveTitle=/\b(?:christmas|xmas|santa|noel|gingerbread|nutcracker|candy cane|jingle bell)\b/i.test(title),explicit=titleSeason||(!positiveTitle?occasionSeason:null);
+ const titleSeason=/\b(?:halloween|easter|thanksgiving|valentine|cupids? arrow|spring|summer|harvest|autumn(?:al)?|eid|ramadan|diwali|hanukkah|birthday|wedding|baby shower|graduation)\b/i.exec(title),occasionSeason=/\b(?:halloween|easter|thanksgiving|valentine|spring|summer|harvest|autumn(?:al)?|eid|ramadan|diwali|hanukkah|birthday|wedding|baby shower|graduation)\b/i.exec(occasion),positiveTitle=/\b(?:christmas|xmas|santa|noel|gingerbread|nutcracker|candy cane|jingle bell)\b/i.test(title),explicit=titleSeason||(!positiveTitle?occasionSeason:null);
  // Autumn can name a Christmas bauble's colour/finish. Its object and actual
  // Christmas usage must agree; autumn wreaths/garlands never get this exception.
  const christmasOrnamentFinish=explicit&&/\b(?:bauble|tree ornament|christmas tree decoration|scentsicles|scentfetti)\b/i.test(title)&&/\b(?:christmas|xmas|festive tree)\b/i.test(title+' '+lead),dualChristmasUse=positiveTitle&&/^(?:wedding|birthday|graduation)$/i.test(explicit?.[0]||'');
  if(explicit&&!christmasOrnamentFinish&&!dualChristmasUse)return {disposition:'exclude',reason:'other-season-or-holiday',evidence:explicit[0]};
+ const describedHoliday=/\b(?:halloween|easter|thanksgiving|valentines?|eid|ramadan|diwali|hanukkah|baby shower|gender reveal)\b/i.exec(lead);
+ if(!positiveTitle&&describedHoliday&&!/\b(?:christmas|xmas|santa|noel|nativity|advent)\b/i.test(lead))return {disposition:'exclude',reason:'SKU-description-identifies-another-holiday',evidence:describedHoliday[0]};
+ if(/\b(?:removable micro hooks?|hanger hooks?)\b/i.test(title)&&!/\b(?:christmas|xmas|wreath|bauble|tree decoration)\b/i.test(title)&&/\b(?:wardrobe|clothes|self[ -]adhesive|removable wall hooks?)\b/i.test(lead))return {disposition:'exclude',reason:'general-household-hook-not-a-Christmas-product',evidence:title};
  if(/\b(?:hardy|live plant|photinia|live succulent|9cm plant)\b/i.test(title)&&!/\b(?:plant pot|pot cover|ornament|silhouette|artificial)\b/i.test(title)&&!/\b(?:artificial|faux|christmas|xmas)\b/i.test(title))return {disposition:'exclude',reason:'non-christmas-live-plant',evidence:title};
  if(/\b(?:batteries?|alkaline|agfa photo|extension (?:cable|lead)|battery box|light connector|timer plug)\b/i.test(title)&&!/\b(?:christmas|xmas|festive|decorat|wreath|garland|santa|snowman|battery (?:powered|operated)|(?:icicle|fairy|string|net|curtain|cluster) lights?)\b/i.test(title))return {disposition:'exclude',reason:'general-electrical-accessory-not-a-christmas-product',evidence:title};
  const noun=title.split(/\b(?:with|holding|carrying|wearing|featuring)\b/i)[0];
