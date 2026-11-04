@@ -1,0 +1,8 @@
+import fs from 'node:fs/promises';import assert from 'node:assert/strict';import {gunzipSync} from 'node:zlib';
+const baseline=JSON.parse(await fs.readFile('runtime/preview-facts-before.json','utf8')),current=new Map;
+for(const file of await fs.readdir('web/classified'))for(const p of JSON.parse(await fs.readFile('web/classified/'+file,'utf8')).products)current.set(p.sku,p);
+const facts=p=>JSON.stringify({sku:p.sku,variantName:p.variantName,priceGBP:p.priceGBP,originalPrice:p.originalPrice,promoText:p.promoText,departmentIds:[...p.departmentIds].sort(),firstNewObservedAt:p.firstNewObservedAt,arrivalEvidence:p.arrivalEvidence,observedAt:p.observedAt});
+assert.equal(current.size,baseline.products.length,'A preview change must retain every active SKU');for(const before of baseline.products)assert.equal(facts(current.get(before.sku)),facts(before),'Product facts changed for '+before.sku);
+const registry=JSON.parse(gunzipSync(await fs.readFile('web/preview-selections.json.gz'))),selected=Object.entries(registry.products).filter(([sku,r])=>current.has(sku)&&r.selected?.cachePath);for(const [sku,r]of selected)assert.equal(current.get(sku).previewImage?.sha256,r.selected.sha256,'Selected preview was not published consistently for '+sku);
+for(const sku of ['1492333','1459857','474493','3414647']){const p=current.get(sku),before=baseline.products.find(p=>p.sku===sku);assert(p,'Requested example missing '+sku);assert.notEqual(p.previewImage?.sourceUrl||p.originalImageUrl,before.originalImageUrl,'Requested poor preview was not replaced '+sku);}
+console.log(JSON.stringify({phase:'preview-publication-verification',uniqueSkus:current.size,selectedPreviews:selected.length,exampleSkusVerified:4,pricesCategoriesAndArrivalDatesUnchanged:true,sent:0}));

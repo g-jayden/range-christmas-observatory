@@ -13,7 +13,7 @@ export async function readOriginalPages({families,concurrency=12}){
   const r=await fetch(item.url,{credentials:'include',cache:'no-store',signal:AbortSignal.timeout(12000)});if(r.status!==200){results.push({url:item.url,status:r.status});continue;}
   const doc=new DOMParser().parseFromString(await r.text(),'text/html');let product;for(const s of doc.querySelectorAll('script[type="application/ld+json"]'))try{const x=JSON.parse(s.textContent.replace(/[\u0000-\u001f]/g,' '));if(x['@type']==='Product')product=x;}catch{}
   const anchors=[...doc.querySelectorAll('#available-imgs a.rsImg, #product-gallery a.rsImg')];
-  const pairs=anchors.map(a=>{const img=a.querySelector('img[data-variant]');return {url:a.getAttribute('data-rsbigimg')||a.getAttribute('href'),thumbnail:img?.getAttribute('src'),variants:(img?.getAttribute('data-variant')||a.closest('[data-variant]')?.getAttribute('data-variant')||'').split(',').map(x=>x.trim()).filter(Boolean)}});
+  const pairs=anchors.map(a=>{const img=a.querySelector('img[data-variant]')||a.querySelector('img');return {url:a.getAttribute('data-rsbigimg')||a.getAttribute('href'),thumbnail:img?.getAttribute('src')||a.getAttribute('data-rstmb'),variants:(img?.getAttribute('data-variant')||a.closest('[data-variant]')?.getAttribute('data-variant')||'').split(',').map(x=>x.trim()).filter(Boolean)}});
   const offers=product?.offers?.offers||[product?.offers];
   results.push({url:item.url,status:200,product:!!product||!!doc.querySelector('#product_id')?.value,offers:offers.filter(Boolean).map(o=>String(o.sku)),pairs});
  }catch(e){results.push({url:item.url,status:0,error:e.message})}}}));
@@ -25,7 +25,8 @@ export function selectOriginals(p,result){
  const known=new Set([p.variantImageUrl,p.listingVariantImageUrl,...p.images||[]].filter(Boolean));
  const pairs=result.pairs.map(g=>({...g,url:abs(g.url),thumbnail:abs(g.thumbnail)})).filter(g=>g.url);
  const matched=pairs.filter(g=>known.has(g.thumbnail)||known.has(g.url)),variantIds=new Set(matched.flatMap(g=>g.variants));
- const selected=p.variantId?pairs.filter(g=>g.variants.includes(String(p.variantId))):variantIds.size===1?pairs.filter(g=>g.variants.includes([...variantIds][0])):matched;
+ const offered=[...new Set(result.offers.map(s=>String(s).replace(/^0+(?=\d)/,'')))],galleryIds=new Set(pairs.flatMap(g=>g.variants)),single=offered.length===1&&offered[0]===String(p.sku).replace(/^0+(?=\d)/,'')&&galleryIds.size<=1&&(!p.variantId||!galleryIds.size||galleryIds.has(String(p.variantId)));
+ const selected=single?pairs.filter(g=>!p.variantId||!g.variants.length||g.variants.includes(String(p.variantId))):p.variantId?pairs.filter(g=>g.variants.includes(String(p.variantId))):variantIds.size===1?pairs.filter(g=>g.variants.includes([...variantIds][0])):matched;
  if(!selected.length)return null;
  const sku=String(p.sku).replace(/^0+(?=\d)/,''),claimed=result.offers.some(s=>s.replace(/^0+(?=\d)/,'')===sku),prior=p.detailEvidence?.verifiedProductSection&&String(p.detailEvidence.selectedSku)===p.sku;
  if(!claimed&&!prior)return null;

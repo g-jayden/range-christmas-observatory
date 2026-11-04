@@ -56,7 +56,7 @@ for(const p of lights.products){const prior=products.get(p.sku);if(prior&&prior!
 let arrivals;try{arrivals=JSON.parse(await fs.readFile('web/new-arrivals.json','utf8'));}catch(e){if(e.code!=='ENOENT')throw e;}
 if(arrivals){
  let changed=false;
- for(const p of arrivals.products||[]){const current=products.get(p.sku);if(!current)continue;for(const k of ['department','departmentIds','classificationEvidence','taxonomyAudit','priceGBP','originalPrice','promoText','observedAt'])if(JSON.stringify(p[k])!==JSON.stringify(current[k])){p[k]=current[k];changed=true;}}
+ for(const p of arrivals.products||[]){const current=products.get(p.sku);if(!current)continue;for(const k of ['previewImage','previewAudit','department','departmentIds','classificationEvidence','taxonomyAudit','priceGBP','originalPrice','promoText','observedAt'])if(JSON.stringify(p[k])!==JSON.stringify(current[k])){p[k]=current[k];changed=true;}}
  if(changed){arrivals.revision=digest({at:arrivals.observedAt,products:arrivals.products,history:arrivals.history,availableSkus:arrivals.availableSkus});await atomicJson('web/new-arrivals.json',arrivals);}
 }
 const moved=decorations.products.filter(p=>oldDepartments.get(p.sku)!==p.department).map(p=>({sku:p.sku,from:oldDepartments.get(p.sku),to:p.department}));

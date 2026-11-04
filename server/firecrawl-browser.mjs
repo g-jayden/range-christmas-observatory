@@ -3,6 +3,7 @@ import {createHash} from 'node:crypto';
 import {SourceError,parseSource,atomicJson} from './sync.mjs';
 import {sourceUrl} from './free-source.mjs';
 import {budgetError} from './credit-budget.mjs';
+import {readPreviewAssets} from './product-previews.mjs';
 
 async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000}){
  const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch(error){return {status:0,error:String(error.message).slice(0,180)}}};
@@ -178,6 +179,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  }
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;
  reader.batchDocuments=async(fn,payload)=>scriptAction('('+fn.toString()+')('+JSON.stringify(payload)+')');
+ reader.previewAssets=async(urls,options={})=>scriptAction('('+readPreviewAssets.toString()+')('+JSON.stringify({urls,maxSide:options.maxSide||320})+')',{needsImages:true});
  reader.captureVerified=enhancedCapture;reader.originalsFor=url=>captureOriginals.get(sourceUrl(url))||[];
  reader.familyCount=()=>families.size;
  reader.recommendedFamilyBatchSize=()=>policy.familyBatchSize||100;

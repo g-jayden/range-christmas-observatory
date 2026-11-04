@@ -16,7 +16,7 @@ on:
       mode:
         description: Source collection mode
         type: choice
-        options: [verify-all, catalogue, probe, repair, monitor-probe, lights-init, themes-init]
+        options: [verify-all, catalogue, probe, repair, monitor-probe, lights-init, themes-init, previews]
         default: verify-all
       checkNew:
         description: Check NEW now without changing the regular schedule
@@ -87,13 +87,13 @@ jobs:
           FORCE_MONITOR: ${{ inputs.checkNew && 'true' || 'false' }}
         run: node scripts/schedule-tick.mjs
       - name: Load image files only for a real collection or publication
-        if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
+        if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
         run: git sparse-checkout disable
       - name: Verify source integrity, SKU matching and credit limits
         if: steps.tick.outputs.publish == 'true' || inputs.mode == 'probe'
         run: npm test
       - name: Install collection and local image analysis clients
-        if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
+        if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
         run: npm install --no-audit --no-fund
       - name: Restore reusable local vision model
         if: steps.tick.outputs.publish == 'true'
@@ -117,7 +117,7 @@ jobs:
         run: node scripts/mail-readiness.mjs
       - name: Reserve the run budget before opening a paid session
         id: budget
-        if: steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
+        if: steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
         continue-on-error: true
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
@@ -131,7 +131,7 @@ jobs:
           git pull --rebase
           git push
       - name: Restore resumable free collection state
-        if: (steps.tick.outputs.work == 'true' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init'))
+        if: (steps.tick.outputs.work == 'true' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init'))
         uses: actions/cache/restore@v6.1.0
         with:
           path: runtime/collection
@@ -173,6 +173,13 @@ jobs:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
           REPAIR_SCOPE: ${{ inputs.repairScope }}
         run: node scripts/run-repair.mjs
+      - name: Select whole-product previews from existing exact-SKU galleries
+        id: previews
+        if: inputs.mode == 'previews' && steps.budget.outcome == 'success'
+        continue-on-error: true
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: node scripts/optimise-product-previews.mjs
       - name: Complete the selected interval
         if: always() && steps.tick.outputs.full == 'true' && steps.refresh.outcome != 'skipped'
         env:
@@ -194,6 +201,9 @@ jobs:
       - name: Apply cached picture reviews and bilingual source materials
         if: steps.tick.outputs.publish == 'true'
         run: node scripts/enrich-appearance.mjs
+      - name: Verify previews preserve product facts and all four reported examples
+        if: inputs.mode == 'previews' && steps.previews.outcome == 'success'
+        run: node scripts/verify-product-previews.mjs
       - name: Keep the private NEW queue aligned with verified classifications
         if: steps.tick.outputs.publish == 'true'
         run: node scripts/sync-taxonomy-queue.mjs
@@ -236,14 +246,16 @@ jobs:
           git diff --cached --quiet || git commit -m "Record durable NEW delivery result"
           node scripts/push-evidence.mjs
       - name: Save the real source and credit proof
-        if: always() && (inputs.mode == 'probe' || inputs.mode == 'monitor-probe' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init'))
+        if: always() && (inputs.mode == 'probe' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init'))
         uses: actions/upload-artifact@v7.0.2
         with:
           name: free-source-proof
           path: |
             runtime/free-source-proof.json
+            runtime/preview-collection-proof.json
+            runtime/preview-facts-before.json
             runtime/daily-new-screenshot.png
           retention-days: 3
       - name: Report unsuccessful source collection
-        if: steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure' || steps.repair.outcome == 'failure' || steps.lights.outcome == 'failure' || steps.themes.outcome == 'failure'
+        if: steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure' || steps.repair.outcome == 'failure' || steps.lights.outcome == 'failure' || steps.themes.outcome == 'failure' || steps.previews.outcome == 'failure'
         run: exit 1

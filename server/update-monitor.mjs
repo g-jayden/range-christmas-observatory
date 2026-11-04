@@ -1,3 +1,4 @@
+import {optimiseChangedProductPreviews} from './product-previews.mjs';
 import {auditTaxonomy} from './taxonomy-audit.mjs';
 import {readThemes,collectThemeDirectory,loadThemeDetails,updateThemeDetails,publishThemes} from './themes.mjs';
 import {readLights,collectLightDirectory,loadLightingDetails,updateLightingDetails,publishLights} from './lights.mjs';
@@ -42,6 +43,7 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
   await selectGalleryImages(snapshot.products);const candidateIds=new Set(candidates.map(p=>p.sku));const deltaIds=new Set(deltaProducts.map(p=>p.sku));const changedImages=!probe?snapshot.products.filter(p=>!candidateIds.has(p.sku)&&p.variantImageUrl&&(!p.cachedImageUrl||deltaIds.has(p.sku))):[];const changedImageAudit=changedImages.length?await reader.auditImages(changedImages,{entries:{...previous.browserImageAudit?.entries,...previousDecorations.browserImageAudit?.entries,...previousLights.browserImageAudit?.entries}}):null;
   const imageAudit=candidates.length?await auditNotificationImages(reader,candidates,{entries:{...previous.browserImageAudit?.entries,...previousDecorations.browserImageAudit?.entries,...previousLights.browserImageAudit?.entries,...changedImageAudit?.entries}}):null;
   if(!probe&&imageAudit){await atomicJson('web/new-image-audit.json',imageAudit);retainVerifiedNewImages(result,snapshot,imageAudit);}
+  if(!probe)await optimiseChangedProductPreviews(snapshot.products,reader);
   await reader.close?.();
   if(probeProduct&&probeScreenshot){await enrichProducts([probeProduct]);await buildMailAssets(probeProduct,probeScreenshot);}
   const changedIds=new Set([...deltaProducts.map(p=>p.sku),...(deltaDetails?.issues||[]).map(p=>p.sku),...changedImages.map(p=>p.sku),...candidates.map(p=>p.sku)]);const analysedProducts=snapshot.products.filter(p=>changedIds.has(p.sku));const appearanceAudit=analysedProducts.length?await enrichProducts(analysedProducts.filter(p=>p.kind!=='decoration')):{products:0,analysedImages:0,firecrawlCredits:0};
