@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';import fs from 'node:fs/promises';import os from 'node:os';import path from 'node:path';import {createHash} from 'node:crypto';
 import {copyPublishedAssets} from './publish-assets.mjs';
+import {execFileSync} from 'node:child_process';import {fileURLToPath,pathToFileURL} from 'node:url';
 const tmp=await fs.mkdtemp(path.join(os.tmpdir(),'range-publish-assets-'));
 try{
  const web=path.join(tmp,'web'),out=path.join(tmp,'public');await fs.mkdir(web+'/images/source',{recursive:true});await fs.mkdir(web+'/mail-assets/123',{recursive:true});await fs.mkdir(out+'/details',{recursive:true});
@@ -13,5 +14,11 @@ try{
  await fs.access(web+'/mail-assets/123/proof-source.bin');await fs.access(web+'/images/source/unused.jpg');
  await fs.mkdir(web+'/mail-assets/124',{recursive:true});const rawPrefix='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/mail-assets/124/';await fs.writeFile(web+'/mail-assets/124/manifest.json',JSON.stringify({sku:'124',card:{url:rawPrefix+'card.png'},original:{url:rawPrefix+'original.webp'},mailOriginal:{url:rawPrefix+'original-lossless.png'},proof:{url:rawPrefix+'proof.png'}}));const withRepositoryAssets=await copyPublishedAssets(web,out);assert.equal(withRepositoryAssets.mailFiles,5);await fs.access(out+'/mail-assets/124/manifest.json');await assert.rejects(fs.access(out+'/mail-assets/124/original.webp'),'Repository-native attachments must not be copied into Pages a second time');
  await fs.writeFile(out+'/broken.json',JSON.stringify({cachedImageUrl:'images/source/missing.jpg'}));await assert.rejects(copyPublishedAssets(web,out),/ENOENT/,'A referenced image must never be silently omitted');
+ // Exercise the actual build with small data: JS modules must be copied as
+ // code, never added to the JSON validation list or omitted from the artifact.
+ const fixture=path.join(tmp,'build-smoke');await fs.mkdir(fixture+'/web',{recursive:true});
+ for(const file of await fs.readdir('web')){if(file.endsWith('.json'))await fs.writeFile(fixture+'/web/'+file,'{}');else if(/\.(?:mjs|js|css|html)$/.test(file))await fs.copyFile('web/'+file,fixture+'/web/'+file);}
+ execFileSync(process.execPath,[fileURLToPath(new URL('./build-static.mjs',import.meta.url))],{cwd:fixture,encoding:'utf8'});
+ const labels=await import(pathToFileURL(fixture+'/public/monitor-labels.mjs'));assert.match(labels.monitorLabel({state:'delivery-blocked',pendingDeliveries:1,blockedDeliveries:1}),/Blocked: 1/);assert.match(await fs.readFile(fixture+'/public/controls.js','utf8'),/monitor-labels\.mjs/);
  console.log('PASS: complete published image references, byte-identical originals and all manifest downloads; historical caches and private capture checkpoints stay in the repository.');
 }finally{await fs.rm(tmp,{recursive:true,force:true});}

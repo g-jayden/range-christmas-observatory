@@ -1,5 +1,6 @@
 import {DEPARTMENT_MAP,colourLabel,STYLE_EN,sourcePrice} from '../web/catalogue-model.mjs';
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';
+import {ensureMailImageFormat} from './mail-format.mjs';
 const HOME='https://g-jayden.github.io/range-christmas-observatory/';
 export const MAIL_CARD_VERSION='bilingual-card-v4-source-prices';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
@@ -33,10 +34,10 @@ export async function buildMailAssets(p,pdpBase64=null){
   const divider=Buffer.from(`<svg width="${W}" height="110"><rect width="100%" height="100%" fill="#edf2ed"/><text x="50" y="75" font-family="Noto Sans CJK SC" font-size="38" fill="#173c32">以下为同一 SKU 的原站商品页真实截图</text></svg>`);
   combined=await sharp({create:{width:W,height:H+110+ph,channels:3,background:'white'}}).composite([{input:card,left:0,top:0},{input:divider,left:0,top:H},{input:proof,left:Math.floor((W-pw)/2),top:H+110}]).png({compressionLevel:9}).toBuffer();
  }
- await fs.writeFile(dir+'/notification.png',combined);const prefix=HOME+'mail-assets/'+p.sku+'/';
+ await fs.writeFile(dir+'/notification.png',combined);const prefix='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/mail-assets/'+p.sku+'/';
  const cardHash=createHash('sha256').update(card).digest('hex');
  const manifest={version:1,cardVersion:MAIL_CARD_VERSION,department:p.department||p.kind,departmentIds:p.departmentIds,sku:String(p.sku),name:p.variantName,priceGBP:p.priceGBP,originalPrice:p.originalPrice,promoText:p.promoText,colors:p.colorValues,style:p.style,material:p.material,height:p.heightLabel,sourceUrl:p.sourceUrl,observedAt:p.newEvidence?.observedAt||p.observedAt,card:{url:prefix+'card.png?v='+cardHash.slice(0,16),sha256:cardHash,width:W,height:H,bytes:card.length},original:{url:prefix+'original.'+ext,sourceUrl:p.originalImageUrl||p.imageCacheEvidence?.sourceUrl,width:meta.width,height:meta.height,sha256:createHash('sha256').update(original).digest('hex'),bytes:original.length,upscaled:false,recompressed:false},proof:pdpBase64?{url:prefix+'proof.png',kind:'selected-SKU-official-page-screenshot'}:null,notification:{url:prefix+'notification.png',kind:pdpBase64?'information-card-plus-official-page-screenshot':'information-card-only-test',bytes:combined.length}};
- await fs.writeFile(dir+'/manifest.json',JSON.stringify(manifest));p.mailAssets=manifest;
+ await ensureMailImageFormat(manifest,dir);await fs.writeFile(dir+'/manifest.json',JSON.stringify(manifest));p.mailAssets=manifest;
  return {manifest,downloadUrl:HOME+'product.html?sku='+p.sku,attachmentBase64:combined.length<=5000000?combined.toString('base64'):pdpBase64,attachmentKind:combined.length<=5000000?'information-card-plus-official-page-screenshot':'official-page-screenshot-with-card-download-link'};
 }
 export async function auditNotificationImages(reader,products,previous){

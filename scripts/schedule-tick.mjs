@@ -1,3 +1,4 @@
+import {hasReadyDeliveries} from '../cloud/delivery-policy.mjs';
 import fs from 'node:fs/promises';
 import {firstRun,scheduleLabel} from '../server/schedule.mjs';
 import {control,apiBase} from '../server/cloud-client.mjs';
@@ -9,7 +10,7 @@ const previousStatus=await fs.readFile('web/status.json','utf8').then(JSON.parse
 const blocked=event==='schedule'&&sourceCircuitOpen(previousStatus.sourceHealth,process.env.COLLECTION_PROVIDER||'firecrawl-browser');
 if(!config.nextRunAt)config=firstRun(config);
 let daily=await readDailyMonitor();await saveDailyMonitor(daily);
-const cloudState=apiBase&&!blocked?await control('/public/status'):null,pendingDelivery=Number(cloudState?.monitor?.pendingDeliveries||0)>0;
+const cloudState=apiBase&&!blocked?await control('/public/status'):null,pendingDelivery=hasReadyDeliveries(cloudState?.monitor);
 if(event!=='push'&&!['probe','repair','monitor-probe','lights-init','themes-init','previews'].includes(mode)&&!blocked){
  if(apiBase){
   const savedConfig=config;const state=cloudState;config=state.config;
