@@ -206,7 +206,9 @@ jobs:
         run: node scripts/verify-product-previews.mjs
       - name: Keep the private NEW queue aligned with verified classifications
         if: steps.tick.outputs.publish == 'true'
-        run: node scripts/sync-taxonomy-queue.mjs
+        run: |
+          node scripts/repair-mail-formats.mjs
+          node scripts/sync-taxonomy-queue.mjs
       - name: Finalize saved lighting baseline without source requests
         if: steps.tick.outputs.publish == 'true'
         run: node scripts/finalize-lights.mjs

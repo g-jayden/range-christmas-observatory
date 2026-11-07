@@ -21,7 +21,7 @@ export async function copyPublishedAssets(source='web',destination='public'){
   if(!manifest)continue;
   if(String(manifest.sku)!==dir.name)throw Error('Mail manifest SKU mismatch: '+dir.name);
   const files=new Set(['manifest.json']);
-  for(const name of ['card','original','proof','notification'])if(manifest[name]?.url){const url=new URL(manifest[name].url);const prefix='/range-christmas-observatory/mail-assets/'+dir.name+'/';if(url.origin!=='https://g-jayden.github.io'||!url.pathname.startsWith(prefix))throw Error('Unexpected published mail asset');const file=url.pathname.slice(prefix.length);if(!/^[\w.-]+$/.test(file))throw Error('Invalid mail filename');files.add(file);}
+  for(const name of ['card','original','mailOriginal','proof','notification'])if(manifest[name]?.url){const url=new URL(manifest[name].url);const prefix='/range-christmas-observatory/mail-assets/'+dir.name+'/';if(url.origin==='https://raw.githubusercontent.com'&&url.pathname.startsWith('/g-jayden/range-christmas-observatory/main/web/mail-assets/'+dir.name+'/'))continue;if(url.origin!=='https://g-jayden.github.io'||!url.pathname.startsWith(prefix))throw Error('Unexpected published mail asset');const file=url.pathname.slice(prefix.length);if(!/^[\w.-]+$/.test(file))throw Error('Invalid mail filename');files.add(file);}
   const output=path.join(destination,'mail-assets',dir.name);await fs.mkdir(output,{recursive:true});
   for(const file of files){await fs.copyFile(path.join(input,file),path.join(output,file));mailBytes+=(await fs.stat(path.join(input,file))).size;mailFiles++;}
  }
