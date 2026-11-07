@@ -256,7 +256,7 @@ export class Control{
       const id=await this.send(sub.email,'NEW｜'+p.variantName,html,(p.mailAssets?.card&&p.mailAssets?.original)?mailAssets(p):[{name:'NEW-'+p.sku+'.png',content}],await hash(p.sku+'/'+subKey));
       // Manifest + three attachment HEADs + one Brevo call. Eight messages
       // leave room below the free Worker's 50 external-subrequest limit.
-      await this.db.put(delivered,{acceptedAt:new Date().toISOString(),providerId:id});accepted++;if(accepted>=8)return response({accepted,morePending:true});
+      const acceptedAt=new Date().toISOString();await this.db.put(delivered,{acceptedAt,providerId:id});accepted++;await this.db.put('last-delivery',{accepted,at:acceptedAt});if(accepted>=8)return response({accepted,morePending:true});
      }
     }
     const delivery={accepted,at:new Date().toISOString()};if(accepted)await this.db.put('last-delivery',delivery);
