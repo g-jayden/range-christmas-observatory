@@ -25,7 +25,7 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
  const previousStatus=await fs.readFile('web/status.json','utf8').then(JSON.parse).catch(()=>({}));
  const engine='firecrawl-browser';
  let tick;try{tick=JSON.parse(await fs.readFile('runtime/tick.json','utf8'))}catch{tick={full:true,monitor:false,lease:null}}
- if(tick.full===false||process.env.COLLECTION_MODE==='monitor-probe')return runMonitorDaily({previous,policy,readerFactory,budgetFactory,now,tick});
+ if(tick.full===false||['monitor-probe','mail-recovery'].includes(process.env.COLLECTION_MODE))return runMonitorDaily({previous,policy,readerFactory,budgetFactory,now,tick,recoveryOnly:process.env.COLLECTION_MODE==='mail-recovery'});
  let config;try{config=JSON.parse(await fs.readFile('web/settings.json','utf8'))}catch{config={intervalDays:7,time:'00:00'}}
  if(tick.config)config=tick.config;
  const state={schedule:scheduleLabel(config),timezone:'Asia/Shanghai',nextCheckAt:config.nextRunAt||null,startedAt:new Date(now()).toISOString(),lastSuccess:previous.observedAt||null,revision:previous.revision,running:true,mode:'firecrawl-browser',lastError:null,provider:'firecrawl-browser',firecrawlRequests:0,firecrawlCredits:0};

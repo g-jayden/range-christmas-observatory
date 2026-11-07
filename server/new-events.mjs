@@ -16,7 +16,7 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
   const observations=snapshot.products.filter(p=>p.newStatus&&isPublishedProduct(p)&&christmasEligibility(p,offeredObject(p)).disposition==='include').map(p=>({sku:p.sku,taxonomyAudit:p.taxonomyAudit,sourceUrl:p.sourceUrl,newStatus:p.newStatus,kind:p.kind,department:p.department,departmentIds:p.departmentIds,variantName:p.variantName,priceGBP:p.priceGBP,originalPrice:p.originalPrice,promoText:p.promoText,variantImageUrl:p.variantImageUrl,imageUrl:p.imageUrl}));
   let plan;for(let offset=0;offset<Math.max(observations.length,1);offset+=500)plan=await controlCall('/internal/monitor-plan',{lease,products:observations.slice(offset,offset+500)});
   const current=new Map(snapshot.products.map(p=>[p.sku,p]));
-  const pending=plan.candidates.map(p=>current.get(p.sku)).filter(Boolean);if(pending.length)await reader.prepareFamilies?.(pending);
+  const pending=plan.candidates.map(p=>current.get(p.sku)).filter(Boolean);if(pending.length)try{await reader.prepareFamilies?.(pending)}catch(e){console.error(JSON.stringify({phase:'NEW-family-preparation',error:String(e.message).slice(0,250)}));}
   for(const candidate of plan.candidates){
    const p=current.get(candidate.sku),key=p&&productKey(p,policy)+':screenshot',failure=key&&state.failures[key];
    if(!p||!isPublishedProduct(p)||christmasEligibility(p,offeredObject(p)).disposition!=='include'){unavailableSkus.push(candidate.sku);continue;}
@@ -44,8 +44,9 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
   return {success:true,attempted,captured,deferred,issues,scanned:snapshot.products.length};
  }catch(e){
   const error=String(e.message).replace(/fc-[\w-]+/g,'[redacted]').slice(0,250);
-  await controlCall('/internal/monitor-complete',{lease,success:false,error:'本轮新品处理未完成，已保留待处理记录',scanned:snapshot.products.length,newCount:captured}).catch(()=>{});
-  await saveState(state,dir);return {success:false,attempted,captured,deferred,issues,error};
+  console.error(JSON.stringify({phase:'NEW-event-processing',error}));
+  if(!deferDelivery)await controlCall('/internal/monitor-complete',{lease,success:false,error:'本轮新品处理未完成，已保留待处理记录',scanned:snapshot.products.length,newCount:captured}).catch(()=>{});
+  await saveState(state,dir);return {success:false,attempted,captured,deferred,issues,error,events,unavailableSkus,scanned:snapshot.products.length};
  }
 }
 
