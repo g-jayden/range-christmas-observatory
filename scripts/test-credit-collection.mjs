@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {Script} from 'node:vm';
-import {createFirecrawlBrowserReader} from '../server/firecrawl-browser.mjs';
+import {createFirecrawlBrowserReader,readExactVariantOriginal} from '../server/firecrawl-browser.mjs';
 import {parseDetails,applyDetails} from '../server/details.mjs';
 import {defaults} from '../server/collection-policy.mjs';
 import {reserveCredits,readLedger} from '../server/credit-budget.mjs';
@@ -16,6 +16,8 @@ const detail=parseDetails(valid,'7305060',base+'#7305060');
 assert.equal(detail.specs.Colour,'Green');assert.equal(detail.specs.Material,'Plastic');assert.equal(detail.specs.Design,'Non-Flocked');assert.equal(detail.specs.Width,'105.4cm');
 const placeholderOffer=structuredClone(valid);placeholderOffer.data.familyEvidence.offers.find(o=>o.sku==='7305060').image='/img/placeholder.jpg';placeholderOffer.data.familyEvidence.gallery=[{url:'https://www.therange.co.uk/media/wrong.jpg',variants:['unrelated']},{url:'https://www.therange.co.uk/media/exact-gallery.jpg',variants:[String(placeholderOffer.data.sourceVariant.id)]}];assert.equal(parseDetails(placeholderOffer,'7305060',base+'#7305060').image,'https://www.therange.co.uk/media/exact-gallery.jpg','A source placeholder must fall back only to a gallery image tagged with the exact selected variant');
 const product={sku:'7305060',variantName:'Non-Flocked Christmas Tree',features:{snow:true}};applyDetails(product,detail);assert.equal(product.heightLabel,'7ft');assert.equal(product.heightCm,213.36);assert.equal(product.features.snow,false);
+let galleryFetches=[];const gallerySource='https://www.therange.co.uk/media/exact-native.jpg',anchor={getAttribute:name=>name==='href'?gallerySource:null,querySelector:()=>({getAttribute:name=>name==='data-variant'?'9264464':'https://www.therange.co.uk/media/thumb.jpg'})},galleryContext={document:{querySelector:()=>({textContent:'P516251'}),querySelectorAll:()=>[anchor]},fetch:async url=>{galleryFetches.push(url);return {status:200,headers:{get:()=> 'image/jpeg'},blob:async()=>new Blob(['native-original'])}},createImageBitmap:async()=>({width:1500,height:1500,close(){}}),AbortSignal};const exactGalleryCall=input=>new Script('('+readExactVariantOriginal.toString()+')('+JSON.stringify(input)+')').runInNewContext(galleryContext);
+const mappedOriginal=await exactGalleryCall({sku:'516251',variantId:'9264464'});assert.equal(mappedOriginal[0].url,gallerySource);assert.equal(mappedOriginal[0].width,1500);assert.equal(mappedOriginal[0].evidence,'official-exact-variant-gallery');assert.equal((await exactGalleryCall({sku:'516252',variantId:'9264464'})).length,0);assert.equal((await exactGalleryCall({sku:'516251',variantId:'wrong-variant'})).length,0);assert.deepEqual(galleryFetches,[gallerySource],'A broken gallery widget can use only a decodable official original tagged to the fresh exact SKU variant; other SKUs and variant images are rejected');
 assert.throws(()=>parseDetails(valid,'2372015',base+'#2372015'),/SKU/);
 const wrongFamily=structuredClone(valid);wrongFamily.data.familyEvidence.productId='unrelated';assert.throws(()=>parseDetails(wrongFamily,'7305060',base+'#7305060'),/family ID/);
 let navigations=0,apiCalls=[],closed=0;
@@ -34,6 +36,15 @@ try{
  assert.equal(reader.metrics().familyReads,1);assert.equal(reader.metrics().familyReuse,1);
  await reader.close();await reader.close();assert.equal(closed,1);assert.equal(apiCalls.filter(x=>x.method==='DELETE').length,1);assert.equal(reader.metrics().firecrawlCredits,2);assert.equal(reader.metrics().billingVerified,true);
  assert.equal(apiCalls[0].body.ttl,600);assert.equal(apiCalls[0].body.location.country,'GB','The UK catalogue and product pages must use the UK browser location');assert.equal(reader.metrics().fallbackLimit,40);assert(!('prompt'in apiCalls[0].body),'No AI browser prompt surcharges');assert(!apiCalls.some(c=>c.url.includes('/scrape')),'No per-product paid scrape calls');
+ let quicNavigations=0,quicStops=0,quicScrapes=0;
+ const quicReader=await createFirecrawlBrowserReader({policy:defaults,budget:{limit:60},connect:async()=>({contexts:()=>[{newPage:async()=>({goto:async()=>{quicNavigations++;throw Error('page.goto: net::ERR_QUIC_PROTOCOL_ERROR')}})}],close:async()=>{}}),fetcher:async(url,opts)=>{
+  if(!url.startsWith('https://api.firecrawl.dev/'))return new Response(Buffer.alloc(2501),{headers:{'content-type':'image/png'}});
+  if(opts.method==='DELETE'){quicStops++;return Response.json({success:true,creditsBilled:1})}
+  const body=JSON.parse(opts.body);if(!url.endsWith('/scrape'))return Response.json({success:true,id:'quic-session',cdpUrl:'wss://not-contacted.invalid'});
+  quicScrapes++;const sku=new URL(body.url).hash.slice(1);return Response.json({success:true,data:{metadata:{statusCode:200,creditsUsed:1},screenshot:'https://proof.example/selected.png',actions:{javascriptReturns:[{value:{sku,images:1,originals:[{url:'https://www.therange.co.uk/media/'+sku+'.jpg',width:1500,height:1500,selectedSku:sku}]}}]}}});
+ }});
+ await quicReader.prepareNativeCapture();for(const sku of ['1001','1002','1003'])assert.equal(Buffer.from(await quicReader.captureVerified('https://www.therange.co.uk/p/proof/p'+sku+'/#'+sku),'base64').length,2501);
+ assert.equal(quicNavigations,2,'Two distinct QUIC transport failures stop the unusable billed browser, without repeatedly trying every product');assert.equal(quicStops,1);assert.equal(quicReader.metrics().nativeCaptureDisabled,'repeated-QUIC-transport-failure');await quicReader.close();assert.equal(quicStops,1);assert.equal(quicScrapes,3);assert.equal(quicReader.metrics().firecrawlCredits,4,'Exact-SKU verified fallback remains usable after early browser settlement');
 }finally{if(savedKey===undefined)delete process.env.FIRECRAWL_API_KEY;else process.env.FIRECRAWL_API_KEY=savedKey}
 const root=process.cwd(),temp=await fs.mkdtemp(path.join(os.tmpdir(),'range-credit-budget-'));
 try{
