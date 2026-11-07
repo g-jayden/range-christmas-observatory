@@ -53,7 +53,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  async function api(path,method,body){
   metrics.firecrawlRequests++;
   const response=await fetcher('https://api.firecrawl.dev/v2/'+path,{method,headers:{authorization:'Bearer '+key,...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(105000)});
-  const result=await response.json();if(!response.ok||result.success===false)throw new SourceError('Firecrawl '+method+' 请求未成功 HTTP '+response.status,response.status);
+  const result=await response.json();if(!response.ok||result.success===false){const detail=String(result.error?.message||result.error||result.message||result.code||'').replace(/fc-[\w-]+/g,'[redacted]').slice(0,180);throw new SourceError('Firecrawl '+method+' 请求未成功 HTTP '+response.status+(detail?': '+detail:''),response.status);}
   return result;
  }
  function availableFallback(){return sessionClosed&&Number.isFinite(browserReceipt?.creditsBilled)?Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-browserReceipt.creditsBilled)):fallbackLimit;}
@@ -89,7 +89,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   if(sessionClosed)throw Error('本轮浏览器已完成并关闭，不能重新创建付费会话');
   if(!starting)starting=(async()=>{
    guard();created=now();deadline=created+ttl*1000;
-   try{session=await api('interact','POST',{ttl,activityTtl:120,streamWebView:false,blockAds:policy.blockAds===true,location:{country:'US'}});}
+   try{session=await api('interact','POST',{ttl,activityTtl:120,streamWebView:false,blockAds:policy.blockAds===true,location:{country:'GB'}});}
    catch(error){metrics.creationUncertain=![400,401,402,403,429].includes(error.status);throw error;}
    if(!session.id||!session.cdpUrl)throw Error('Firecrawl没有返回浏览器会话');
    try{browser=await(connect||(async url=>(await import('playwright')).chromium.connectOverCDP(url)))(session.cdpUrl);}
@@ -145,10 +145,10 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    const bytes=Buffer.from(await image.arrayBuffer());if(bytes.length<2000||bytes.length>5000000)throw Error('Screenshot image size invalid');metrics.screenshots++;return bytes.toString('base64');
   }catch(e){if(!charged){scrapeCredits++;scrapeBillingVerified=false;}throw e;}
  }
- async function capture(url,family){
+ async function capture(url,family,options={}){
   const expected=new URL(url).hash.slice(1).replace(/^0+(?=\d)/,''),page=await take();try{
-   await navigate(page,url);
-   await page.waitForSelector('#product-dyn-code',{timeout:12000});
+   metrics.browserPages++;const response=await page.goto(url,{waitUntil:'domcontentloaded',timeout:15000});if(!response||response.status()>=400)throw new SourceError('Native product page HTTP '+(response?.status()||0),response?.status()||0);
+   await page.waitForSelector('#product-dyn-code',{timeout:5000});
    if((await page.locator('#product-dyn-code').innerText()).trim().replace(/^[PM]/i,'').replace(/^0+(?=\d)/,'')!==expected){
     // Retry the retailer's own failed AJAX initialization, without inventing DOM data.
     await page.evaluate(async sku=>{
@@ -157,9 +157,14 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
      const variant=g_variantArr.find(v=>String(v.sku)===sku);if(variant&&typeof selectAttrFilterByVariant==='function')selectAttrFilterByVariant(variant);
     },expected);
    }
-   await page.waitForFunction(sku=>(document.querySelector('#product-dyn-code')?.textContent||'').trim().replace(/^[PM]/i,'').replace(/^0+(?=\d)/,'')===sku,expected,{timeout:10000});
-   const image=family.evidence.offers.find(o=>o.sku===expected)?.image;
-   if(image)await page.waitForFunction(url=>Array.from(document.images).some(i=>i.complete&&i.naturalWidth>=64&&i.naturalHeight>=64&&(i.currentSrc===url||i.src===url)),image,{timeout:12000});
+   await page.waitForFunction(sku=>(document.querySelector('#product-dyn-code')?.textContent||'').trim().replace(/^[PM]/i,'').replace(/^0+(?=\d)/,'')===sku,expected,{timeout:5000});
+   if(options.preferredThumbnail)await page.evaluate(preferred=>{const thumb=Array.from(document.querySelectorAll('#product-gallery .rsThumb img')).find(i=>i.src===preferred);thumb?.parentElement?.click();},options.preferredThumbnail);
+   const image=family?.evidence?.offers?.find(o=>o.sku===expected)?.image;
+   if(image)await page.waitForFunction(url=>Array.from(document.images).some(i=>i.complete&&i.naturalWidth>=64&&i.naturalHeight>=64&&(i.currentSrc===url||i.src===url)),image,{timeout:5000});
+   const proof=await page.evaluate(sku=>{const selected=(document.querySelector('#product-dyn-code')?.textContent||'').trim().replace(/^[PM]/i,'').replace(/^0+(?=\d)/,'');const root=document.querySelector('#product-gallery .rsOverflow'),box=root?.getBoundingClientRect();const originals=Array.from(document.querySelectorAll('#product-gallery .rsMainSlideImage')).filter(i=>i.complete&&i.naturalWidth>=64&&i.naturalHeight>=64).map(i=>{const r=i.getBoundingClientRect(),area=box?Math.max(0,Math.min(r.right,box.right)-Math.max(r.left,box.left))*Math.max(0,Math.min(r.bottom,box.bottom)-Math.max(r.top,box.top)):0;return {url:i.currentSrc||i.src,width:i.naturalWidth,height:i.naturalHeight,visibleArea:area,selectedSku:selected}}).filter(i=>i.visibleArea>0).sort((a,b)=>b.visibleArea-a.visibleArea);return {sku:selected,originals};},expected);
+   if(proof.sku!==expected||!proof.originals.length)throw Error('Native selected-SKU original image not visible');
+   captureOriginals.set(sourceUrl(url),proof.originals);
+   if(options.recoverFamily){const u=new URL(url);u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');const bundle=await page.evaluate('async payload=>{payload.providedHtml=document.documentElement.outerHTML;return await ('+readFamilyBundle.toString()+')(payload)}',{url:u.href,jsonUrl:u.href+'?json',initial:partialFamilies.get(u.href)?.jsonBody});if(bundle?.status===200&&bundle.variants?.some(v=>String(v.sku)===expected)&&bundle.evidence?.productId){bundle.evidence.observedAt=new Date(now()).toISOString();bundle.evidence.sourceTransport='native-visible-selected-SKU-page';families.set(u.href,Promise.resolve({variants:bundle.variants,evidence:bundle.evidence}));familyFailures.delete(u.href);metrics.familyReads++;}}
    const section=page.locator('#variant_container');await section.scrollIntoViewIfNeeded();const bytes=await section.screenshot({type:'png',timeout:20000});metrics.screenshots++;return bytes.toString('base64');
   }finally{release(page)}
  }
@@ -183,7 +188,8 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;
  reader.batchDocuments=async(fn,payload)=>scriptAction('('+fn.toString()+')('+JSON.stringify(payload)+')');
  reader.previewAssets=async(urls,options={})=>scriptAction('('+readPreviewAssets.toString()+')('+JSON.stringify({urls,maxSide:options.maxSide||320})+')',{needsImages:true});
- reader.captureVerified=(url,options={})=>{const id=JSON.stringify([sourceUrl(url),options.preferredThumbnail||null]);if(!verifiedCaptures.has(id))verifiedCaptures.set(id,enhancedCapture(url,options));return verifiedCaptures.get(id)};
+ reader.prepareNativeCapture=async()=>{if(!sessionClosed)await start();};
+ reader.captureVerified=(url,options={})=>{const id=JSON.stringify([sourceUrl(url),options.preferredThumbnail||null]);if(!verifiedCaptures.has(id))verifiedCaptures.set(id,(async()=>{if(session&&!sessionClosed)try{const u=new URL(sourceUrl(url));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');const family=await families.get(u.href);return await capture(url,family,options);}catch(e){metrics.nativeCaptureFailures=(metrics.nativeCaptureFailures||0)+1;console.error(JSON.stringify({phase:'native-NEW-capture-fallback',sku:new URL(url).hash.slice(1),status:e.status||0,error:String(e.message).slice(0,160)}));}return enhancedCapture(url,options);})());return verifiedCaptures.get(id)};
  reader.repairFamily=(url,{preferredThumbnail}={})=>{const u=new URL(sourceUrl(url));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');const key=u.href,error=familyFailures.get(key);if(!error||error.status===404)return Promise.reject(error||Error('No failed family to recover'));if(!priorityRepairs.has(key))priorityRepairs.set(key,(async()=>{await reader.captureVerified(url,{preferredThumbnail,recoverFamily:true});if(!families.has(key))throw error;return true})());return priorityRepairs.get(key)};
  reader.repairFamilies=async products=>{const unique=new Map();for(const p of products){const u=new URL(sourceUrl(p.sourceUrl));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');if(familyFailures.has(u.href)&&familyFailures.get(u.href).status!==404&&!unique.has(u.href))unique.set(u.href,p);}const queue=[...unique.values()];let cursor=0,recovered=0;await Promise.all(Array.from({length:Math.min(2,queue.length)},async()=>{while(cursor<queue.length){const p=queue[cursor++];try{await reader.repairFamily(p.sourceUrl,{preferredThumbnail:p.variantImageUrl});recovered++;console.log(JSON.stringify({phase:'NEW-family-visible-page-recovery',sku:p.sku,recovered,total:queue.length}))}catch(e){console.error(JSON.stringify({phase:'NEW-family-visible-page-pending',sku:p.sku,error:String(e.message).slice(0,200)}));}}}));return {attempted:queue.length,recovered};};
  reader.originalsFor=url=>captureOriginals.get(sourceUrl(url))||[];
