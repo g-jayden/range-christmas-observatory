@@ -250,7 +250,8 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  };
  reader.metrics=()=>({...metrics,scrapeCredits,sessionSeconds:created?Math.ceil(((browserEndedAt||now())-created)/1000):0});
  reader.closeBrowser=async()=>{
-  if(!session||sessionClosed)return;sessionClosed=true;
+  if(sessionClosed)return;sessionClosed=true;
+  if(!session){browserReceipt={creditsBilled:0};metrics.fallbackLimit=availableFallback();return;}
   try{if(session.id)browserReceipt=await api('interact/'+encodeURIComponent(session.id),'DELETE');}
   catch{metrics.closeReceiptUnavailable=true;}
   finally{await browser?.close().catch(()=>{});browserEndedAt=now();deadline=0;metrics.fallbackLimit=availableFallback();}
