@@ -197,7 +197,9 @@ jobs:
         if: steps.tick.outputs.publish == 'true'
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: node scripts/restore-new-artifacts.mjs
+        run: |
+          node scripts/restore-new-artifacts.mjs
+          node scripts/recover-browser-new.mjs
       - name: Apply cached picture reviews and bilingual source materials
         if: steps.tick.outputs.publish == 'true'
         run: node scripts/enrich-appearance.mjs
@@ -256,6 +258,9 @@ jobs:
             runtime/preview-facts-before.json
             runtime/daily-new-screenshot.png
           retention-days: 3
+      - name: Release a NEW claim when checks stop before collection
+        if: always() && steps.tick.outputs.monitor == 'true' && steps.refresh.outcome == 'skipped'
+        run: node scripts/release-unused-monitor.mjs
       - name: Report unsuccessful source collection
         if: steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure' || steps.repair.outcome == 'failure' || steps.lights.outcome == 'failure' || steps.themes.outcome == 'failure' || steps.previews.outcome == 'failure'
         run: exit 1
