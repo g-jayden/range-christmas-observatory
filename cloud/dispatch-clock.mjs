@@ -1,3 +1,4 @@
+import {hasReadyDeliveries} from './delivery-policy.mjs';
 const ENDPOINT='https://api.github.com/repos/g-jayden/range-christmas-observatory/actions/workflows/daily-pages.yml/dispatches';
 const MAX_ATTEMPTS=3,RECHECK_MS=15*60000;
 
@@ -9,7 +10,7 @@ export async function dispatchDue({storage,env,config,monitor,fullLease,monitorL
  const due=[];
  if(now>=Date.parse(config.nextRunAt)&&!(fullLease?.expires>now))due.push('full:'+config.nextRunAt);
  if(initialized&&env.BREVO_API_KEY&&env.MAIL_FROM&&now>=Date.parse(monitor.nextRunAt)&&!(monitorLease?.expires>now))due.push('new:'+monitor.nextRunAt);
- if(monitor.pendingDeliveries>0&&!(fullLease?.expires>now)&&!(monitorLease?.expires>now))due.push('delivery:'+(monitor.checkedAt||monitor.lastSuccess||'recovery'));
+ if(hasReadyDeliveries(monitor)&&!(fullLease?.expires>now)&&!(monitorLease?.expires>now))due.push('delivery:'+(monitor.checkedAt||monitor.lastSuccess||'recovery'));
  if(!due.length)return {...base,enabled:true,due:false};
  const key=due.join('|');let claim;
  await storage.transaction(async db=>{

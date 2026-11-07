@@ -1,6 +1,7 @@
 import {DEPARTMENTS,DEPARTMENT_MAP,colourLabel,STYLE_EN,sourcePrice} from '../web/catalogue-model.mjs';
 import {firstRun,advanceRun,scheduleLabel,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';
 import {dispatchDue} from './dispatch-clock.mjs';
+import {payloadIdentity,retryState,deliveryFailure} from './delivery-policy.mjs';
 const SITE='https://g-jayden.github.io';
 const HOME=SITE+'/range-christmas-observatory/';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -14,18 +15,19 @@ function checkAuth(req,secret){if(!secret||req.headers.get('authorization')!=='B
 function verifyUrl(raw,hosts){const u=new URL(raw);if(u.protocol!=='https:'||!hosts.some(h=>u.hostname===h||u.hostname.endsWith('.'+h)))throw Error('非允许的来源地址。');return u.href;}
 function mailAssets(p){
  const m=p.mailAssets;if(!m?.card?.url||!m?.original?.url)throw Error('完整信息卡或官网原图尚未生成');
- const allowed=raw=>{const u=new URL(raw);if(u.origin!==SITE||!u.pathname.startsWith('/range-christmas-observatory/mail-assets/'+p.sku+'/'))throw Error('Invalid generated mail asset');return u.href;};
- return [{name:'NEW-'+p.sku+'-card.png',url:allowed(m.card.url)},{name:'NEW-'+p.sku+'-original.'+new URL(m.original.url).pathname.split('.').pop(),url:allowed(m.original.url)},...(m.proof?.url?[{name:'NEW-'+p.sku+'-source-page.png',url:allowed(m.proof.url)}]:[])];
+ const allowed=raw=>{const u=new URL(raw),pages=u.origin===SITE&&u.pathname.startsWith('/range-christmas-observatory/mail-assets/'+p.sku+'/'),repository=u.origin==='https://raw.githubusercontent.com'&&u.pathname.startsWith('/g-jayden/range-christmas-observatory/main/web/mail-assets/'+p.sku+'/');if(!pages&&!repository)throw Error('Invalid generated mail asset');return u.href;};
+ const original=m.mailOriginal||m.original;
+ return [{name:'NEW-'+p.sku+'-card.png',url:allowed(m.card.url)},{name:'NEW-'+p.sku+'-original.'+new URL(original.url).pathname.split('.').pop(),url:allowed(original.url)},...(m.proof?.url?[{name:'NEW-'+p.sku+'-source-page.png',url:allowed(m.proof.url)}]:[])];
 }
 function productMail(p,origin,test=false,unsubscribe=null){
  const m=p.mailAssets,has=m?.card?.url&&m?.original?.url;if(has)mailAssets(p);
  const checked=p.newEvidence?.observedAt||p.observedAt||p.detectedAt;
  const header=test?'测试示例 · Test example; source NEW, not a first discovery today':'NEW · '+(DEPARTMENT_MAP[p.kind==='decoration'?p.department:p.kind]?.label||'圣诞装饰品 · Christmas Decorations');
- const ext=has?new URL(m.original.url).pathname.split('.').pop():null;
+ const original=m?.mailOriginal||m?.original,ext=has?new URL(original.url).pathname.split('.').pop():null;
  const price=sourcePrice(p);
  const attributes=[['SKU',p.sku],['价格 · Price','£'+Number(p.priceGBP).toFixed(2)],...(price.reduced?[['原站划线原价 · Source original price','£'+(price.originalPence/100).toFixed(2)]]:[]),...(price.promoText?[['原站促销 · Source offer',price.promoText]]:[]),['尺寸 · Size',p.kind==='tree'?p.heightLabel:p.dimensions?.label||p.skirtDiameterCm&&p.skirtDiameterCm+'cm'||'原站未注明 · Not specified'],['本体颜色 · Body colours',(p.colorValues||[]).map(colourLabel).join(' / ')||p.treeColor||'待核验 · Unconfirmed'],['材质 · Materials',p.material||'原站未注明 · Not specified']];
  if(p.kind==='tree')attributes.push(['分类 · Shape',p.style+' · '+(STYLE_EN[p.style]||'Other')]);
- return `<div style="font:16px/1.8 Arial,sans-serif;max-width:900px;margin:auto;color:#173c32"><p>${esc(header)}</p><h1>${esc(p.variantName)}</h1>${has?`<p style="background:#eef4ed;padding:14px">直接保存到手机：长按下方图片选择“保存图片／存储图像”，或打开邮件底部的图片附件保存。<br>Long-press an image to save it, or open the image attachments below.<br>完整信息卡 · Product card: NEW-${esc(p.sku)}-card.png<br>官网原图 · Source original: NEW-${esc(p.sku)}-original.${esc(ext)}</p><h2>完整商品信息卡 · Full product card</h2><img src="${esc(m.card.url)}" alt="完整商品信息卡 · Full product card; long-press to save" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><h2>官网原图 · Original product photo</h2><img src="${esc(m.original.url)}" alt="官网原图 · Original source photo; long-press to save" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><p>官网原图 ${Number(m.original.width)}×${Number(m.original.height)} 像素，原文件未经放大或二次压缩；保存附件可保留原始文件。<br>Original source bytes, with no enlargement or recompression. Save the attachment to retain the original file.</p>`:`<img src="${origin}/shots/${p.imageAccess}" alt="具体SKU原站截图 · Exact SKU source screenshot" style="width:100%;height:auto">`}<p>${attributes.map(([label,value])=>esc(label)+'：'+esc(value)).join('<br>')}</p><p><a href="${esc(p.sourceUrl)}">查看原站具体SKU购买页 · View exact SKU product page</a></p><p style="font-size:13px;color:#607168">价格与NEW核验 · Price / NEW checked: ${esc(checked)}。下单时以官网为准 · Confirm live details before purchase.${test?' 本测试不改变新品基线 · This test does not change the NEW baseline.':''}</p><p>${unsubscribe?`<a href="${esc(unsubscribe)}">取消订阅 · Unsubscribe</a> · `:''}<a href="${HOME}">查看分析网站 · View analysis</a></p></div>`;
+ return `<div style="font:16px/1.8 Arial,sans-serif;max-width:900px;margin:auto;color:#173c32"><p>${esc(header)}</p><h1>${esc(p.variantName)}</h1>${has?`<p style="background:#eef4ed;padding:14px">直接保存到手机：长按下方图片选择“保存图片／存储图像”，或打开邮件底部的图片附件保存。<br>Long-press an image to save it, or open the image attachments below.<br>完整信息卡 · Product card: NEW-${esc(p.sku)}-card.png<br>官网原图 · Source original: NEW-${esc(p.sku)}-original.${esc(ext)}</p><h2>完整商品信息卡 · Full product card</h2><img src="${esc(m.card.url)}" alt="完整商品信息卡 · Full product card; long-press to save" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><h2>官网原图 · Original product photo</h2><img src="${esc(original.url)}" alt="官网原图 · Original source photo; long-press to save" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><p>官网原图 ${Number(m.original.width)}×${Number(m.original.height)} 像素。${m.mailOriginal?'邮件附件为原尺寸无损 PNG 副本，像素完全一致；官网原始文件保留在下载页。<br>Full-size lossless PNG with identical pixels; the native original is retained on the download page.':'原文件未经放大或二次压缩；保存附件可保留原始文件。<br>Original source bytes, with no enlargement or recompression. Save the attachment to retain the original file.'}</p>`:`<img src="${origin}/shots/${p.imageAccess}" alt="具体SKU原站截图 · Exact SKU source screenshot" style="width:100%;height:auto">`}<p>${attributes.map(([label,value])=>esc(label)+'：'+esc(value)).join('<br>')}</p><p><a href="${esc(p.sourceUrl)}">查看原站具体SKU购买页 · View exact SKU product page</a></p><p style="font-size:13px;color:#607168">价格与NEW核验 · Price / NEW checked: ${esc(checked)}。下单时以官网为准 · Confirm live details before purchase.${test?' 本测试不改变新品基线 · This test does not change the NEW baseline.':''}</p><p>${unsubscribe?`<a href="${esc(unsubscribe)}">取消订阅 · Unsubscribe</a> · `:''}<a href="${HOME}">查看分析网站 · View analysis</a></p></div>`;
 }
 export class Control{
  constructor(ctx,env){this.ctx=ctx;this.env=env;this.db=ctx.storage;}
@@ -36,10 +38,17 @@ export class Control{
   return m;
  }
  async deliveryStatus(){
-  const events=await this.db.list({prefix:'event/'}),subs=await this.db.list({prefix:'sub/'});let pendingDeliveries=0;
-  for(const p of events.values())for(const [key,sub]of subs)if(sub.confirmedAt&&Date.parse(sub.confirmedAt)<=Date.parse(p.detectedAt)&&accepts(sub,p)&&!await this.db.get('delivered/'+p.sku+'/'+key.slice(4)))pendingDeliveries++;
-  return {pendingDeliveries,lastDelivery:await this.db.get('last-delivery')||null};
+  const events=await this.db.list({prefix:'event/'}),subs=await this.db.list({prefix:'sub/'}),revision=await this.deliveryRevision();let pendingDeliveries=0,readyDeliveries=0,blockedDeliveries=0,waitingDeliveries=0;
+  for(const p of events.values()){
+   const fingerprint=await hash(payloadIdentity(p,revision)),assetState=retryState(await this.db.get('delivery-asset-error/'+p.sku),fingerprint);
+   for(const [key,sub]of subs)if(sub.confirmedAt&&Date.parse(sub.confirmedAt)<=Date.parse(p.detectedAt)&&accepts(sub,p)&&!await this.db.get('delivered/'+p.sku+'/'+key.slice(4))){
+    pendingDeliveries++;const state=assetState==='ready'?retryState(await this.db.get('delivery-error/'+p.sku+'/'+key.slice(4)),fingerprint):assetState;
+    if(state==='ready')readyDeliveries++;else if(state==='blocked')blockedDeliveries++;else waitingDeliveries++;
+   }
+  }
+  return {pendingDeliveries,readyDeliveries,blockedDeliveries,waitingDeliveries,lastDelivery:await this.db.get('last-delivery')||null};
  }
+ async deliveryRevision(){return hash(JSON.stringify([this.env.BREVO_API_KEY||'',this.env.MAIL_FROM||'']));}
  async send(to,subject,html,attachments=[],idempotencyKey){
   if(!this.env.BREVO_API_KEY||!this.env.MAIL_FROM)throw Object.assign(Error('邮件服务尚未连接，尚未发送邮件。'),{status:503});
   // Brevo limits this header's length. Keep one stable 36-character ID per event/recipient.
@@ -229,39 +238,51 @@ export class Control{
     const delivery=await this.deliveryStatus();await this.db.put('monitor',{...previous,...delivery,state:b.success?(delivery.pendingDeliveries?'delivery-pending':'active'):'error',nextRunAt:advanceNewCheck(previous.nextRunAt),checkedAt:new Date().toISOString(),lastSuccess:b.success?new Date().toISOString():previous.lastSuccess||null,lastError:b.success?null:String(b.error||'源站检查未完成').slice(0,200),scanned:b.scanned||0,newCount:b.newCount||0});await this.db.delete('lease/monitor');return response({saved:true});
    }
    if(route==='/internal/deliver'&&req.method==='POST'){
-    const events=await this.db.list({prefix:'event/'}),subs=await this.db.list({prefix:'sub/'});let accepted=0;
-    for(const [eventKey,p] of events){
+    const events=await this.db.list({prefix:'event/'}),subs=await this.db.list({prefix:'sub/'}),revision=await this.deliveryRevision();let accepted=0,attempted=0,failed=0;
+    const failures=[];
+    const recordFailure=async(key,p,fingerprint,e)=>{const record=deliveryFailure(await this.db.get(key),fingerprint,e);await this.db.put(key,record);failed++;failures.push({sku:p.sku,attempts:record.attempts,blocked:record.blocked,providerStatus:record.providerStatus,providerCode:record.providerCode,assetStatus:record.assetStatus});};
+    deliveryBatch:for(const [eventKey,p] of events){
      const created=Date.parse(p.detectedAt);if(Date.now()-created>14*86400000){await this.db.delete(eventKey);await this.db.delete('image-access/'+p.imageAccess);for(let i=0;i<p.screenshotParts;i++)await this.db.delete('shot/'+p.sku+'/'+i);continue}
-     const needsDelivery=await Promise.all([...subs].map(async([key,sub])=>sub.confirmedAt&&Date.parse(sub.confirmedAt)<=created&&accepts(sub,p)&&!await this.db.get('delivered/'+p.sku+'/'+key.slice(4))));
-     if(!needsDelivery.some(Boolean))continue;
-     // Publication can include a local image review after queueing. Keep the
-     // body and the native attachments aligned without reading the retailer.
-     if(p.mailAssets?.cardVersion&&p.mailAssets.original?.sha256){
-      const r=await fetch(HOME+'mail-assets/'+p.sku+'/manifest.json',{signal:AbortSignal.timeout(10000)});if(!r.ok)throw Object.assign(Error('新品信息卡尚未发布，保留队列等待投递。'),{status:503});
-      const m=await r.json();if(m.sku!==p.sku||m.sourceUrl!==p.sourceUrl||m.priceGBP!==p.priceGBP||m.original?.sha256!==p.mailAssets.original.sha256)throw Object.assign(Error('已发布附件与核验SKU不一致，已保留队列。'),{status:503});
-      mailAssets({...p,mailAssets:m});Object.assign(p,{mailAssets:m,colorValues:m.colors,treeColor:(m.colors||[]).join(' / '),material:m.material,style:m.style,heightLabel:m.height});await this.db.put(eventKey,p);
-     }
-     let content;
-     for(const [subKey,sub] of subs){
-      if(!sub.confirmedAt||Date.parse(sub.confirmedAt)>created||!accepts(sub,p))continue;
-      const delivered='delivered/'+p.sku+'/'+subKey.slice(4);if(await this.db.get(delivered))continue;
-      if(!content){const chunks=[];for(let i=0;i<p.screenshotParts;i++)chunks.push(await this.db.get('shot/'+p.sku+'/'+i));content=chunks.join('')}
-      const unsubscribe=url.origin+'/unsubscribe?token='+encodeURIComponent(sub.unsubscribe);
-      const html=productMail(p,url.origin,false,unsubscribe);
-      if(p.mailAssets?.card&&p.mailAssets?.original)for(const asset of mailAssets(p)){
-       const ready=await fetch(asset.url,{method:'HEAD',signal:AbortSignal.timeout(10000)});
-       if(!ready.ok||!ready.headers.get('content-type')?.startsWith('image/'))throw Object.assign(Error('新品高清附件尚未发布；待发记录已保留，将仅重试投递。'),{status:503,assetStatus:ready.status,assetName:asset.name,assetContentType:ready.headers.get('content-type')});
+     let fingerprint=await hash(payloadIdentity(p,revision));
+     const assetKey='delivery-asset-error/'+p.sku;
+     if(retryState(await this.db.get(assetKey),fingerprint)!=='ready')continue;
+     const recipients=[];
+     for(const [key,sub]of subs)if(sub.confirmedAt&&Date.parse(sub.confirmedAt)<=created&&accepts(sub,p)&&!await this.db.get('delivered/'+p.sku+'/'+key.slice(4))&&retryState(await this.db.get('delivery-error/'+p.sku+'/'+key.slice(4)),fingerprint)==='ready')recipients.push([key,sub]);
+     if(!recipients.length)continue;
+     if(attempted>=8)break;
+     // Only the published, exact-SKU manifest can refresh the queued assets.
+     // A bad product must not abort the remaining verified products.
+     let attachments;
+     try{
+      if(p.mailAssets?.cardVersion&&p.mailAssets.original?.sha256){
+       const r=await fetch(HOME+'mail-assets/'+p.sku+'/manifest.json',{signal:AbortSignal.timeout(10000)});if(!r.ok)throw Object.assign(Error('新品信息卡尚未发布'),{assetStatus:r.status});
+       const m=await r.json();if(m.sku!==p.sku||m.sourceUrl!==p.sourceUrl||m.priceGBP!==p.priceGBP||m.original?.sha256!==p.mailAssets.original.sha256)throw Error('已发布附件与核验SKU不一致');
+       mailAssets({...p,mailAssets:m});Object.assign(p,{mailAssets:m,colorValues:m.colors,treeColor:(m.colors||[]).join(' / '),material:m.material,style:m.style,heightLabel:m.height});await this.db.put(eventKey,p);fingerprint=await hash(payloadIdentity(p,revision));
       }
-      const id=await this.send(sub.email,'NEW｜'+p.variantName,html,(p.mailAssets?.card&&p.mailAssets?.original)?mailAssets(p):[{name:'NEW-'+p.sku+'.png',content}],await hash(p.sku+'/'+subKey));
-      // Manifest + three attachment HEADs + one Brevo call. Eight messages
-      // leave room below the free Worker's 50 external-subrequest limit.
-      await this.db.put(delivered,{acceptedAt:new Date().toISOString(),providerId:id});accepted++;if(accepted>=8)return response({accepted,morePending:true});
+      if(p.mailAssets?.card&&p.mailAssets?.original){
+       attachments=mailAssets(p);
+       for(const asset of attachments){const ready=await fetch(asset.url,{method:'HEAD',signal:AbortSignal.timeout(10000)});if(!ready.ok||!ready.headers.get('content-type')?.startsWith('image/'))throw Object.assign(Error('新品附件尚未发布'),{assetStatus:ready.status});}
+      }else{const chunks=[];for(let i=0;i<p.screenshotParts;i++)chunks.push(await this.db.get('shot/'+p.sku+'/'+i));attachments=[{name:'NEW-'+p.sku+'.png',content:chunks.join('')}];}
+      await this.db.delete(assetKey);
+     }catch(e){attempted++;await recordFailure(assetKey,p,fingerprint,e);continue;}
+     for(const [subKey,sub]of recipients){
+      if(attempted>=8)break deliveryBatch;
+      const delivered='delivered/'+p.sku+'/'+subKey.slice(4),errorKey='delivery-error/'+p.sku+'/'+subKey.slice(4);
+      if(retryState(await this.db.get(errorKey),fingerprint)!=='ready')continue;
+      attempted++;
+      try{
+       const html=productMail(p,url.origin,false,url.origin+'/unsubscribe?token='+encodeURIComponent(sub.unsubscribe));
+       const id=await this.send(sub.email,'NEW｜'+p.variantName,html,attachments,await hash(p.sku+'/'+subKey));
+       const acceptedAt=new Date().toISOString();await this.db.put(delivered,{acceptedAt,providerId:id});await this.db.delete(errorKey);accepted++;await this.db.put('last-delivery',{accepted,at:acceptedAt});
+      }catch(e){await recordFailure(errorKey,p,fingerprint,e);}
      }
     }
-    const delivery={accepted,at:new Date().toISOString()};if(accepted)await this.db.put('last-delivery',delivery);
-    const status=await this.deliveryStatus(),monitor=await this.monitorState();
-    if(!status.pendingDeliveries&&(accepted||monitor.state==='delivery-pending'||monitor.state==='not-started'&&status.lastDelivery))await this.db.put('monitor',{...monitor,state:'active',lastDelivery:accepted?delivery:status.lastDelivery,pendingDeliveries:0,nextRunAt:Date.parse(monitor.nextRunAt)<=Date.now()?nextNewCheck():monitor.nextRunAt});
-    return response({accepted,morePending:false,...status});
+    const status=await this.deliveryStatus(),monitor=await this.monitorState(),pendingCaptures=[...(await this.db.list({prefix:'pending/'})).values()].some(p=>!p.unavailableSince);
+    if(!status.pendingDeliveries&&!pendingCaptures&&monitor.state!=='error'&&(accepted||['delivery-pending','delivery-blocked','delivery-waiting'].includes(monitor.state)||monitor.state==='not-started'&&status.lastDelivery))await this.db.put('monitor',{...monitor,state:'active',lastError:null,lastSuccess:monitor.lastSuccess||null,lastDelivery:status.lastDelivery,pendingDeliveries:0,nextRunAt:Date.parse(monitor.nextRunAt)<=Date.now()?nextNewCheck():monitor.nextRunAt});
+    else if(status.pendingDeliveries&&monitor.state!=='error')await this.db.put('monitor',{...monitor,state:status.blockedDeliveries?'delivery-blocked':status.waitingDeliveries?'delivery-waiting':'delivery-pending',lastError:status.blockedDeliveries?'部分新品投递被拒绝，已隔离并停止重复发送；其他商品继续投递。':status.waitingDeliveries?'部分新品投递暂未成功，等待限次重试。':monitor.lastError||null});
+    // Only ready messages justify another invocation. Waiting/blocked records
+    // remain durable and visible but never cause a tight delivery/publish loop.
+    return response({accepted,attempted,failed,failures,morePending:status.readyDeliveries>0,...status});
    }
   }
   return response({error:'Not found'},404);

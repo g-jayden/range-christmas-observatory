@@ -1,0 +1,3 @@
+import fs from 'node:fs/promises';import {ensureMailImageFormat} from '../server/mail-format.mjs';
+let repaired=0;for(const sku of await fs.readdir('web/mail-assets').catch(e=>{if(e.code==='ENOENT')return[];throw e;})){if(!/^\d+$/.test(sku))continue;const dir='web/mail-assets/'+sku,manifest=await fs.readFile(dir+'/manifest.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return null;throw e;});if(manifest&&await ensureMailImageFormat(manifest,dir)){await fs.writeFile(dir+'/manifest.json',JSON.stringify(manifest));repaired++;}}
+console.log(JSON.stringify({phase:'mail-format-compatibility',repaired,sourcePixelsChanged:false,nativeOriginalsPreserved:true,firecrawlCredits:0}));

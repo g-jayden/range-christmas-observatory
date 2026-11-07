@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {dispatchDue} from '../cloud/dispatch-clock.mjs';
 import {releaseUnusedMonitor} from '../server/monitor-cleanup.mjs';
+import fs from 'node:fs/promises';import path from 'node:path';import os from 'node:os';import {execFileSync} from 'node:child_process';
 const releases=[];assert.equal(await releaseUnusedMonitor({monitor:true,monitorLease:'owned-failed-run'},async(route,body)=>{releases.push({route,body});return {saved:true}}),true);assert.equal(releases[0].route,'/internal/monitor-complete');assert.equal(releases[0].body.lease,'owned-failed-run');assert.equal(releases[0].body.success,false);assert.equal(releases[0].body.scanned,0);assert.equal(await releaseUnusedMonitor({monitor:false,monitorLease:'another-run'},()=>{throw Error('An unowned claim must never be released')}),false);assert.equal(await releaseUnusedMonitor({monitor:true,monitorLease:'completed'},async()=>{throw Object.assign(Error('Already completed'),{status:409})}),false);await assert.rejects(releaseUnusedMonitor({monitor:true,monitorLease:'owned'},async()=>{throw Object.assign(Error('Real transport failure'),{status:503})}),/transport failure/);
 class Store{constructor(){this.data=new Map()}async get(k){return structuredClone(this.data.get(k))}async put(k,v){this.data.set(k,structuredClone(v))}async transaction(fn){return fn(this)}}
 const at=Date.parse('2026-11-03T23:00:00Z'),storage=new Store,env={GITHUB_DISPATCH_TOKEN:'test-only-not-sent',BREVO_API_KEY:'test-only-not-sent',MAIL_FROM:'sender@example.invalid'},config={nextRunAt:'2026-11-05T16:00:00Z'},monitor={nextRunAt:'2026-11-03T23:00:00Z'};let calls=0;
@@ -12,3 +13,17 @@ assert.equal((await run(at+15*60000)).dispatched,true);assert.equal((await run(a
 const failed=new Store;let failures=0;for(let n=0;n<5;n++)await run(at+n*300000,{storage:failed,fetcher:async()=>{failures++;return new Response(null,{status:401})}});assert.equal(failures,3,'Credential errors never cause endless dispatch retries');assert.equal(JSON.stringify(await failed.get('dispatch-clock')).includes(env.GITHUB_DISPATCH_TOKEN),false);
 assert.equal((await run(at,{monitor:{nextRunAt:'2026-11-04T23:00:00Z'}})).due,false);console.log('PASS: 07:00 Beijing cloud dispatch, no early run, no source/email calls, active leases and repeated ticks deduplicate, and failed dispatch stops after three attempts without exposing credentials.');
 const recoveryStorage=new Store,recoveryMonitor={nextRunAt:'2026-11-04T23:00:00Z',checkedAt:'2026-11-03T23:01:00Z',pendingDeliveries:18};assert.equal((await run(at,{storage:recoveryStorage,monitor:recoveryMonitor,monitorLease:{expires:at+60000}})).due,false);assert.equal((await run(at+60001,{storage:recoveryStorage,monitor:recoveryMonitor})).dispatched,true);assert.equal((await run(at+120000,{storage:recoveryStorage,monitor:recoveryMonitor})).bounded,true,'Queued delivery is recovered without a repeated source claim or a dispatch loop');
+
+const suppressed={...recoveryMonitor,readyDeliveries:0,blockedDeliveries:18};assert.equal((await run(at,{storage:new Store,monitor:suppressed})).due,false,'Blocked delivery does not trigger a publication or source collection');assert.equal((await run(at,{storage:new Store,monitor:{...suppressed,nextRunAt:monitor.nextRunAt}})).dispatched,true,'Blocked old mail cannot suppress the next daily NEW check');
+// Exercise the real first checkout, before the workflow expands to all files.
+// A new scheduler import must not break an otherwise source-free push.
+const sparseFixture=await fs.mkdtemp(path.join(os.tmpdir(),'range-sparse-tick-'));
+try{
+ const workflow=await fs.readFile('.github/workflows/daily-pages.yml','utf8'),selection=/sparse-checkout: \|\n([\s\S]*?)\n      - uses:/.exec(workflow)[1].trim().split('\n').map(s=>s.trim().replace(/^\//,''));
+ for(const relative of selection){const dest=path.join(sparseFixture,relative);await fs.mkdir(path.dirname(dest),{recursive:true});await fs.cp(relative,dest,{recursive:true});}
+ await fs.writeFile(path.join(sparseFixture,'block-source.mjs'),"globalThis.fetch=()=>{throw Error('The first publication tick must not make a network/source request')};");
+ const stdout=execFileSync(process.execPath,['--import',path.join(sparseFixture,'block-source.mjs'),'scripts/schedule-tick.mjs'],{cwd:sparseFixture,encoding:'utf8',env:{...process.env,CONTROL_API_URL:'',CONTROL_TOKEN:'',GITHUB_EVENT_NAME:'push',COLLECTION_MODE:'verify-all',FORCE_MONITOR:'false',MANUAL_REFRESH:'false',GITHUB_OUTPUT:path.join(sparseFixture,'outputs')}});
+ const tick=JSON.parse(stdout.trim().split('\n').at(-1));assert.equal(tick.work,false);assert.equal(tick.publish,true);assert.equal(tick.sourceRequestsMade,false);
+ assert(workflow.indexOf('- name: Install collection and local image analysis clients')<workflow.indexOf('- name: Verify source integrity, SKU matching and credit limits'),'Native format tests must run after their image decoder dependency is installed');
+ console.log('PASS: actual sparse-checkout scheduler imports and dependency order; publication still opens no paid source session.');
+}finally{await fs.rm(sparseFixture,{recursive:true,force:true});}
