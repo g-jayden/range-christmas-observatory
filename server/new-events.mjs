@@ -49,7 +49,16 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
  }
 }
 
-export async function finishNewEvents(result,{snapshot,lease,controlCall=control}={}){
+export function mergeVerifiedEventProduct(eventProduct,current){
+ const merged={...eventProduct,...current,description:eventProduct.mailAssets?eventProduct.description:(current.productSummary||eventProduct.description)};
+ const proof=eventProduct.verifiedNotificationImage;
+ if(proof&&String(proof.sku)===String(current.sku)&&proof.sourceUrl===current.sourceUrl&&proof.variantImageUrl===(current.variantImageUrl||current.imageUrl)&&(!current.originalImageUrl||proof.originalImageUrl===current.originalImageUrl)){
+  merged.originalImageUrl=proof.originalImageUrl;merged.originalCachedImageUrl=proof.originalCachedImageUrl;merged.originalImageEvidence=proof.originalImageEvidence;
+ }else if(proof){delete merged.originalCachedImageUrl;delete merged.mailAssets;delete merged.verifiedNotificationImage;}
+ return merged;
+}
+
+export async function finishNewEvents(result,{snapshot,lease,controlCall=control,buildAssets=buildMailAssets}={}){
  // Reclassification is not a new-product event. Suppress out-of-scope or
  // unresolved products before persisting any mail, retaining the global SKU
  // history in the cloud so category changes cannot cause duplicate sends.
@@ -58,10 +67,18 @@ export async function finishNewEvents(result,{snapshot,lease,controlCall=control
  result.events=(result.events||[]).filter(e=>allowed.has(e.product.sku));
  result.unavailableSkus=[...new Set([...(result.unavailableSkus||[]),...removed.map(e=>e.product.sku)])];result.captured=result.events.length;
 
- for(const event of result.events||[]){const p=snapshot.products.find(p=>p.sku===event.product.sku);if(p)event.product={...event.product,...p,description:event.product.mailAssets?event.product.description:(p.productSummary||event.product.description)};if(!event.product.mailAssets){const assets=await buildMailAssets(event.product,event.screenshotBase64);event.screenshotBase64=assets.attachmentBase64;event.product.description=(event.product.productSummary||event.product.description||'')+'。附件前半为完整商品信息卡，后半为同一SKU原站真实截图。保存完整信息卡与官网原图：'+assets.downloadUrl;event.product.screenshotKind=assets.attachmentKind;}}
  // Persist verified events in the private cloud queue before Pages publication.
  // A runner or deploy failure must not lose a paid capture or require another scrape.
- if(!result.queuePersisted){for(const event of result.events||[])await controlCall('/internal/event',event);result.queuePersisted=true;}
+ const ready=[];
+ for(const event of result.events||[]){
+  try{const p=allowed.get(event.product.sku);event.product=mergeVerifiedEventProduct(event.product,p);
+   if(!event.product.mailAssets){const assets=await buildAssets(event.product,event.screenshotBase64);event.screenshotBase64=assets.attachmentBase64;event.product.description=(event.product.productSummary||event.product.description||'')+'。附件前半为完整商品信息卡，后半为同一SKU原站真实截图。保存完整信息卡与官网原图：'+assets.downloadUrl;event.product.screenshotKind=assets.attachmentKind;}
+  }catch(e){result.issues||=[];result.issues.push({sku:event.product.sku,reason:'新品附件待核验 · NEW attachments pending',error:String(e.message).slice(0,250)});result.deferred=(result.deferred||0)+1;result.success=false;continue;}
+  // Queue each completed SKU immediately. Transport failures still propagate;
+  // the cloud's SKU idempotency safely retains everything already accepted.
+  if(!result.queuePersisted)await controlCall('/internal/event',event);ready.push(event);
+ }
+ result.events=ready;result.captured=ready.length;result.queuePersisted=true;
  if(!result.monitorCompleted){await controlCall('/internal/monitor-complete',{lease,success:result.success,error:result.success?undefined:'部分新品截图或详情未通过核验',scanned:result.scanned,newCount:result.captured,unavailableSkus:result.unavailableSkus||[]});result.monitorCompleted=true;}
  if(process.env.GITHUB_ACTIONS==='true'&&process.env.NOTIFICATION_PHASE!=='deliver'){await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/notification-outbox.private.json',JSON.stringify({result,snapshot:{products:(result.events||[]).map(e=>e.product)},lease}));const {events,...summary}=result;return {...summary,deliveryPending:(result.events||[]).length>0};}
  const delivery=await deliverVerifiedEvents(controlCall);
@@ -84,7 +101,11 @@ export async function captureNewScreenshots(result,{reader,state,policy,now=()=>
 export function retainVerifiedNewImages(result,snapshot,audit){
  const entries=audit?.entries||{},failures=audit?.failures||[],passed=[];
  for(const event of result.events||[]){const p=snapshot.products.find(p=>p.sku===event.product.sku),main=p&&(p.variantImageUrl||p.imageUrl),urls=p?[main,p.originalImageUrl]:[],bad=urls.find(url=>!url||!entries[url]?.ok);
-  if(p&&urls.length===2&&urls.every(url=>url&&entries[url]?.ok)&&p.originalCachedImageUrl){passed.push(event);continue;}
+  if(p&&urls.length===2&&urls.every(url=>url&&entries[url]?.ok)&&p.originalCachedImageUrl){
+   // Compact catalogue publication may replace this object before mail cards
+   // are rendered. Retain exact-SKU original evidence on the durable event.
+   event.product={...event.product,variantImageUrl:main,originalImageUrl:p.originalImageUrl,originalCachedImageUrl:p.originalCachedImageUrl,originalImageEvidence:p.originalImageEvidence,verifiedNotificationImage:{sku:p.sku,sourceUrl:p.sourceUrl,variantImageUrl:main,originalImageUrl:p.originalImageUrl,originalCachedImageUrl:p.originalCachedImageUrl,originalImageEvidence:p.originalImageEvidence}};
+   passed.push(event);continue;}
   const detail=failures.find(f=>f.url===bad);result.issues.push({sku:event.product.sku,reason:'原图待核验 · Original image pending',url:bad||p?.originalImageUrl||null,imageError:detail?.error||'Original photo evidence unavailable',status:detail?.status||null});result.deferred++;result.success=false;
  }
  result.events=passed;result.captured=passed.length;return result;

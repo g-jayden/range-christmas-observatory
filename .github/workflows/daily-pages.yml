@@ -48,7 +48,7 @@ concurrency:
 jobs:
   website:
     runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
-    timeout-minutes: 40
+    timeout-minutes: 60
     env:
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
@@ -235,6 +235,7 @@ jobs:
         uses: actions/deploy-pages@v5.0.1
         with:
           artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
+          timeout: '1200000'
       - name: Send verified NEW emails after download files are published
         if: steps.deployment.outcome == 'success'
         run: |

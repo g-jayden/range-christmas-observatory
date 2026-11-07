@@ -70,8 +70,9 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
  }catch(e){
   await reader?.close?.().catch(()=>{});const native=reader?.metrics?.()||{};const error=String(e.message).replace(/fc-[\w-]+/g,'[redacted]');
   await budget?.settle({credits:native.firecrawlCredits||0,receipt:native.receipt,report:{mode:'daily-new-only',success:false,error,native}});
-  if(!probe){await saveDailyMonitor({...daily,state:'error',lastError:error});await controlCall('/internal/monitor-complete',{lease:tick.monitorLease||tick.lease,success:false,error:'新品检查未完成，未将失败记录为没有新品',scanned:0,newCount:0}).catch(()=>{});}
-  await atomicJson('web/monitor-proof.json',{success:false,observedAt:new Date(now()).toISOString(),error,native,firecrawlCredits:native.firecrawlCredits||0});outcome={success:false,state:daily};console.error(error);
+  const report={success:false,mode:'daily-new-only',observedAt:new Date(now()).toISOString(),error,native,firecrawlCredits:native.firecrawlCredits||0};
+  if(!probe){daily={...daily,state:'error',lastError:error,lastResult:report};await saveDailyMonitor(daily);await controlCall('/internal/monitor-complete',{lease:tick.monitorLease||tick.lease,success:false,error:'新品检查未完成，未将失败记录为没有新品',scanned:0,newCount:0}).catch(()=>{});}
+  await atomicJson('web/monitor-proof.json',report);outcome={success:false,state:daily};console.error(error);
  }finally{await reader?.close?.()}
  return outcome;
 }

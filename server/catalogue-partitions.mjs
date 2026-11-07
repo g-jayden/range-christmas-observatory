@@ -22,11 +22,9 @@ export async function collectPartitionedCategory(id,reader){
    if(map.size===expected)return map;
   }
   if(depth>=3)throw new SourceError('Source partition remains incomplete; refusing omitted SKUs: '+map.size+'/'+expected);
-  if(!filters.price_f){
-   const counts=new Map();for(const p of map.values())counts.set(p.price,(counts.get(p.price)||0)+1);
-   let group=[],n=0;const groups=[];for(const [price,count]of counts){if(n+count>90&&group.length){groups.push(group);group=[];n=0;}group.push(String(price));n+=count;}if(group.length)groups.push(group);
-   for(const prices of groups)for(const p of (await collect({...filters,price_f:prices},depth+1)).values())insert(map,p);
-  }else if(!filters.colour_group_f){
+  // price_f is a range facet; the source ignores arrays of exact prices.
+  // Never treat that ignored filter as independent coverage evidence.
+  if(!filters.colour_group_f){
    const options=facets.find(f=>f.id==='colour_group_f')?.options||[];
    for(const colour of options)for(const p of (await collect({...filters,colour_group_f:[colour.name]},depth+1)).values())insert(map,p);
   }else{
@@ -49,6 +47,22 @@ export async function collectPartitionedCategory(id,reader){
   const currentBrands=root.facets?.find(f=>f.id==='brand_f')?.options;if(!currentBrands)throw new SourceError('Final official brand counts unavailable');
   all.clear();for(const part of results.values())for(const p of part.values())insert(all,p);
   if(all.size===target)break;
+  // A brand union can contain stale members even when each group's count is
+  // unchanged. Rebuild an independent root observation instead of subtracting
+  // arbitrary SKUs, or unioning stale rows into every subsequent retry. Relevance
+  // also avoids the unstable ordering of a large equal-price bucket.
+  let coherent=false;
+  for(const sort of ['relevance','price_lth','price_htl']){
+   const first=await fetchPage({in_stock_f:['true']},0,sort),expected=first.totalResults,rows=new Map();let conflict=false;
+   try{
+    for(const p of first.products)insert(rows,p);
+    for(let offset=80;offset<expected;offset+=80){const page=await fetchPage({in_stock_f:['true']},offset,sort);for(const p of page.products)insert(rows,p);}
+    const end=await reader(apiUrl(id,0,{in_stock_f:['true']},true));requests++;
+    if(end.totalResults===expected&&rows.size===expected){for(const p of end.products){if(!rows.has(String(p.sku)))throw new SourceError('Root membership changed during observation');insert(rows,p);}all.clear();for(const [sku,p]of rows)all.set(sku,p);target=expected;root=end;coherent=true;}
+   }catch(e){if(!/SKU changed|Root membership changed/.test(e.message))throw e;conflict=true;}
+   reconciliations.push({method:'independent-root-observation',sort,expected,observed:rows.size,complete:coherent,conflict});if(coherent)break;
+  }
+  if(coherent)break;
   // Some live SKUs do not occur in any advertised brand facet. The unfiltered
   // official catalogue is an independent coverage path, not another brand retry.
   const rootRows=new Map(),beforeRootPages=all.size;
