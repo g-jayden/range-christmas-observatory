@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';import fs from 'node:fs/promises';import os from 'node:os';import path from 'node:path';import {createHash} from 'node:crypto';
+import {copyPublishedAssets} from './publish-assets.mjs';
+const tmp=await fs.mkdtemp(path.join(os.tmpdir(),'range-publish-assets-'));
+try{
+ const web=path.join(tmp,'web'),out=path.join(tmp,'public');await fs.mkdir(web+'/images/source',{recursive:true});await fs.mkdir(web+'/mail-assets/123',{recursive:true});await fs.mkdir(out+'/details',{recursive:true});
+ const original=Buffer.from('unchanged-native-original-bytes');await fs.writeFile(web+'/images/source/current.jpg',original);await fs.writeFile(web+'/images/source/unused.jpg','historical-version');await fs.writeFile(out+'/details/23.json',JSON.stringify({product:{originalCachedImageUrl:'images/source/current.jpg'}}));
+ const prefix='https://g-jayden.github.io/range-christmas-observatory/mail-assets/123/';const manifest={sku:'123',card:{url:prefix+'card.png?v=exact'},original:{url:prefix+'original.jpg'},proof:{url:prefix+'proof.png'},notification:{url:prefix+'notification.png'}};
+ await fs.writeFile(web+'/mail-assets/123/manifest.json',JSON.stringify(manifest));for(const file of ['card.png','original.jpg','proof.png','notification.png','proof-source.bin','capture.json'])await fs.writeFile(web+'/mail-assets/123/'+file,original);
+ const report=await copyPublishedAssets(web,out);assert.equal(report.images,1);assert.equal(report.mailFiles,5);assert.equal(report.firecrawlCredits,0);
+ const hash=b=>createHash('sha256').update(b).digest('hex');assert.equal(hash(await fs.readFile(out+'/images/source/current.jpg')),hash(original));assert.equal(hash(await fs.readFile(out+'/mail-assets/123/original.jpg')),hash(original));
+ for(const file of ['images/source/unused.jpg','mail-assets/123/proof-source.bin','mail-assets/123/capture.json'])await assert.rejects(fs.access(out+'/'+file));
+ await fs.access(web+'/mail-assets/123/proof-source.bin');await fs.access(web+'/images/source/unused.jpg');
+ await fs.writeFile(out+'/broken.json',JSON.stringify({cachedImageUrl:'images/source/missing.jpg'}));await assert.rejects(copyPublishedAssets(web,out),/ENOENT/,'A referenced image must never be silently omitted');
+ console.log('PASS: complete published image references, byte-identical originals and all manifest downloads; historical caches and private capture checkpoints stay in the repository.');
+}finally{await fs.rm(tmp,{recursive:true,force:true});}

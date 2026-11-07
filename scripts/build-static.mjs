@@ -1,5 +1,7 @@
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
+import {copyPublishedAssets} from './publish-assets.mjs';
+await fs.rm('public',{recursive:true,force:true});
 await fs.mkdir('public',{recursive:true});
 for(const name of ['catalogue.json','status.json','settings.json','service.json','collection-policy.json','collection-ledger.json','monitor-state.json','new-arrivals.json','monitor-proof.json'])JSON.parse(await fs.readFile('web/'+name,'utf8'));
 for(const name of ['index.html','dashboard-full.css','dashboard-full.js','catalogue.json','status.json','image-check.html','image-check.js','controls.js','settings.json','service.json','collection-policy.json','collection-ledger.json','monitor-state.json','new-arrivals.json','monitor-proof.json','confirm.html','product.html','catalogue-model.mjs','theme-model.mjs','taxonomy.mjs','product-preview.mjs','product-preview-dialog.js','catalogue-navigation.mjs','dashboard-navigation.js'])await fs.copyFile('web/'+name,'public/'+name);
@@ -17,7 +19,6 @@ for(const page of ['index.html','image-check.html']){
  }
  await fs.writeFile('public/'+page,html);
 }
-try{await fs.cp('web/images','public/images',{recursive:true})}catch(e){if(e.code!=='ENOENT')throw e;}
-try{await fs.cp('web/mail-assets','public/mail-assets',{recursive:true})}catch(e){if(e.code!=='ENOENT')throw e;}
 for(const name of ['preview-status.json','classified','taxonomy-status.json','taxonomy-audit.json','decorations.json','decorations-status.json','decoration-details','lights.json','lights-status.json','light-details','themes.json','themes-status.json','theme-details'])try{const source='web/'+name;const st=await fs.stat(source);if(st.isDirectory())await fs.cp(source,'public/'+name,{recursive:true});else await fs.copyFile(source,'public/'+name)}catch(e){if(e.code!=='ENOENT')throw e;}
+await copyPublishedAssets();
 await fs.writeFile('public/.nojekyll','');console.log('Static cloud website built.');
