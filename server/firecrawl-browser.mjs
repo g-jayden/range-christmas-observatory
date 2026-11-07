@@ -231,7 +231,8 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  };
  reader.auditImages=async (products,previous={},options={})=>{
   const checkpoint=policy.imageCheckpoint?await fs.readFile(policy.imageCheckpoint,'utf8').then(JSON.parse).catch(()=>({})):{};
-  previous={...previous,entries:{...checkpoint.entries,...previous.entries}};
+  const browserRecovery=await fs.readFile('web/browser-image-recovery.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return {};throw e;});
+  previous={...previous,entries:{...checkpoint.entries,...previous.entries,...browserRecovery.entries}};
   const allUrls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))],results=[],known=[],newUrls=[],validPrior={};
   for(const url of allUrls){
    let u;try{u=new URL(url)}catch{}if(!u||u.protocol!=='https:'||!['www.therange.co.uk','kube-media-unpublished.rstore.com'].includes(u.hostname)||!u.pathname.startsWith('/media/')){results.push({url,ok:false,error:/placeholder/i.test(url)?'source-placeholder-no-product-photo':'source-image-URL-not-verified'});continue;}
