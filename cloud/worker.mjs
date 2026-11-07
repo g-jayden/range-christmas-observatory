@@ -278,8 +278,8 @@ export class Control{
      }
     }
     const status=await this.deliveryStatus(),monitor=await this.monitorState(),pendingCaptures=[...(await this.db.list({prefix:'pending/'})).values()].some(p=>!p.unavailableSince);
-    if(!status.pendingDeliveries&&!pendingCaptures&&(accepted||['delivery-pending','delivery-blocked','delivery-waiting'].includes(monitor.state)||monitor.state==='not-started'&&status.lastDelivery))await this.db.put('monitor',{...monitor,state:'active',lastError:null,lastSuccess:monitor.lastSuccess||null,lastDelivery:status.lastDelivery,pendingDeliveries:0,nextRunAt:Date.parse(monitor.nextRunAt)<=Date.now()?nextNewCheck():monitor.nextRunAt});
-    else if(status.pendingDeliveries)await this.db.put('monitor',{...monitor,state:status.blockedDeliveries?'delivery-blocked':status.waitingDeliveries?'delivery-waiting':'delivery-pending',lastError:status.blockedDeliveries?'部分新品投递被拒绝，已隔离并停止重复发送；其他商品继续投递。':status.waitingDeliveries?'部分新品投递暂未成功，等待限次重试。':monitor.lastError||null});
+    if(!status.pendingDeliveries&&!pendingCaptures&&monitor.state!=='error'&&(accepted||['delivery-pending','delivery-blocked','delivery-waiting'].includes(monitor.state)||monitor.state==='not-started'&&status.lastDelivery))await this.db.put('monitor',{...monitor,state:'active',lastError:null,lastSuccess:monitor.lastSuccess||null,lastDelivery:status.lastDelivery,pendingDeliveries:0,nextRunAt:Date.parse(monitor.nextRunAt)<=Date.now()?nextNewCheck():monitor.nextRunAt});
+    else if(status.pendingDeliveries&&monitor.state!=='error')await this.db.put('monitor',{...monitor,state:status.blockedDeliveries?'delivery-blocked':status.waitingDeliveries?'delivery-waiting':'delivery-pending',lastError:status.blockedDeliveries?'部分新品投递被拒绝，已隔离并停止重复发送；其他商品继续投递。':status.waitingDeliveries?'部分新品投递暂未成功，等待限次重试。':monitor.lastError||null});
     // Only ready messages justify another invocation. Waiting/blocked records
     // remain durable and visible but never cause a tight delivery/publish loop.
     return response({accepted,attempted,failed,failures,morePending:status.readyDeliveries>0,...status});
