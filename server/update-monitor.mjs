@@ -1,4 +1,5 @@
 import {sourceRecovery,retryableSourceError} from '../cloud/source-recovery.mjs';
+import {canResumeDiscovery} from './discovery-recovery.mjs';
 import {optimiseChangedProductPreviews} from './product-previews.mjs';
 import {auditTaxonomy} from './taxonomy-audit.mjs';
 import {THEME_SOURCES,readThemes,collectThemeDirectory,loadThemeDetails,updateThemeDetails,publishThemes} from './themes.mjs';
@@ -15,13 +16,14 @@ import {atomicJson,apiUrl,categories} from './sync.mjs';
 import {digest,planDetails} from './collection-policy.mjs';
 import {control} from './cloud-client.mjs';
 export async function runMonitorDaily({previous,policy,readerFactory,budgetFactory,now=()=>Date.now(),tick={},collectSnapshot=catalogueSnapshot,controlCall=control,recoveryOnly=false}){
- policy={...policy,retryPendingNow:recoveryOnly,nativeCaptureEnabled:!recoveryOnly,repairImagesOnly:true,imageCheckpoint:'web/daily-image-checkpoint.json'};
+ policy={...policy,retryPendingNow:recoveryOnly,nativeCaptureEnabled:!recoveryOnly&&policy.catalogueTransport!=='enhanced-batch',repairImagesOnly:true,imageCheckpoint:'web/daily-image-checkpoint.json'};
  const probe=process.env.COLLECTION_MODE==='monitor-probe',state=await readState();let reader,budget;if(!probe){state.completed=[];state.attempted={};}
- let daily=await readDailyMonitor(new Date(now())),outcome;
+ let daily=await readDailyMonitor(new Date(now())),outcome,catalogueReady=false;
  try{
-  budget=await budgetFactory(policy);reader=await readerFactory({policy:probe?{...policy,repairImagesOnly:true}:policy,budget});
+  budget=await budgetFactory(policy);if(policy.nativeCaptureEnabled===false)policy.maxFallbackScrapesPerRun=budget.limit||policy.maxCreditsPerRun||60;reader=await readerFactory({policy:probe?{...policy,repairImagesOnly:true}:policy,budget});
   if(recoveryOnly&&(!previous.observedAt||now()-Date.parse(previous.observedAt)>6*3600000))throw Error('Saved discovery is older than six hours; a fresh NEW check is required');
   const [previousDecorations,previousLights,previousThemes]=await Promise.all([readDecorations(),readLights(),readThemes()]);
+  if(!probe&&!recoveryOnly){const proof=await fs.readFile('web/monitor-proof.json','utf8').then(JSON.parse).catch(()=>null);recoveryOnly=canResumeDiscovery({proof,snapshots:{catalogue:previous,decorations:previousDecorations,lights:previousLights,themes:previousThemes},now:now()});if(recoveryOnly){policy.retryPendingNow=true;policy.nativeCaptureEnabled=false;console.log(JSON.stringify({phase:'resume-verified-daily-discovery',sourceObservedAt:previous.observedAt,directoryRequests:0,timestampsPreserved:true}));}}
   if(!recoveryOnly&&reader.many){
    const filters={in_stock_f:['true']},roots=[...(previousDecorations.baselineReady?[apiUrl(DECORATION_SOURCE.id,0,filters,true)]:[]),...Object.values(categories).map(id=>apiUrl(id)),...(previousLights.baselineReady?LIGHT_SOURCES.map(s=>apiUrl(s.id,0,filters,true)):[]),...(previousThemes.baselineReady?THEME_SOURCES.map(s=>apiUrl(s.id,0,filters,true)):[])];
    await reader.many([...new Set(roots)]);
@@ -31,6 +33,7 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
   restoreProducts(gathered.snapshot,state,policy);preserveImages(previous,gathered.snapshot);if(decorations)await loadDecorationDetails(decorations.products);const lights=previousLights.baselineReady?(recoveryOnly?previousLights:await collectLightDirectory(reader,previousLights,[gathered.snapshot,decorations])):null;if(lights)await loadLightingDetails(lights.products);const themes=previousThemes.baselineReady?(recoveryOnly?previousThemes:await collectThemeDirectory(reader,previousThemes,[gathered.snapshot,decorations,lights])):null;if(themes)await loadThemeDetails(themes.products);const snapshot=notificationSnapshot(gathered.snapshot,decorations,lights,themes);
   // Fresh listing data must survive a later single-SKU image or mail failure.
   if(!probe){await atomicJson('web/catalogue.json',gathered.snapshot);if(decorations)await publishDecorations(structuredClone(decorations));if(lights)await publishLights(structuredClone(lights));if(themes)await publishThemes(structuredClone(themes));}
+  catalogueReady=true;
   let result={success:true,captured:0,attempted:0,scanned:snapshot.products.length,events:[],deferred:0,issues:[]};
   if(!probe)result=await checkNew({snapshot,reader,policy,budget,state,lease:tick.monitorLease||tick.lease,now,deferDelivery:true,controlCall});
   if(result.error&&!result.events.length)throw Error(result.error);
@@ -61,7 +64,7 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
   if(!probe&&lights){lights.browserImageAudit={entries:{...previousLights.browserImageAudit?.entries,...changedImageAudit?.entries,...imageAudit?.entries}};await restoreDecorationImageEvidence(lights);await publishLights(lights,reader.metrics());}
   if(!probe){await loadDecorationDetails(decorations?.products||[]);await loadLightingDetails(lights?.products||[]);await loadThemeDetails(themes?.products||[]);await auditTaxonomy([gathered.snapshot,decorations,lights,themes]);snapshot.products=notificationSnapshot(gathered.snapshot,decorations,lights,themes).products;}
   if(!probe)result=await finishNewEvents(result,{snapshot,lease:tick.monitorLease||tick.lease,controlCall});
-  const native=reader.metrics(),report={success:result.success,mode:probe?'daily-discovery-probe':recoveryOnly?'pending-NEW-recovery':'daily-new-only',sourceCatalogueReused:recoveryOnly,observedAt:snapshot.observedAt,scanned:snapshot.products.length,candidates:result.captured,notification:result,fullDetailSweep:false,fullImageSweep:false,screenshotProbe,discoveryCredits:native.firecrawlCredits-validationCredits,validationCredits,appearanceAudit,deltaDetails,decorationDelta,changedImageAudit,native,firecrawlCredits:native.firecrawlCredits};
+  const native=reader.metrics(),report={success:result.success,catalogueReady,completedAt:new Date(now()).toISOString(),mode:probe?'daily-discovery-probe':recoveryOnly?'pending-NEW-recovery':'daily-new-only',sourceCatalogueReused:recoveryOnly,observedAt:snapshot.observedAt,scanned:snapshot.products.length,candidates:result.captured,notification:result,fullDetailSweep:false,fullImageSweep:false,screenshotProbe,discoveryCredits:native.firecrawlCredits-validationCredits,validationCredits,appearanceAudit,deltaDetails,decorationDelta,changedImageAudit,native,firecrawlCredits:native.firecrawlCredits};
   await budget.settle({credits:native.firecrawlCredits||0,receipt:native.receipt,report});
   await atomicJson('web/monitor-proof.json',report);
   if(!probe){
@@ -78,7 +81,7 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
  }catch(e){
   await reader?.close?.().catch(()=>{});const native=reader?.metrics?.()||{};const error=String(e.message).replace(/fc-[\w-]+/g,'[redacted]');
   await budget?.settle({credits:native.firecrawlCredits||0,receipt:native.receipt,report:{mode:'daily-new-only',success:false,error,native}});
-  const retryable=retryableSourceError(e);const report={success:false,retryable,sourceFailures:e.sourceFailures,mode:'daily-new-only',observedAt:new Date(now()).toISOString(),error,native,firecrawlCredits:native.firecrawlCredits||0};
+  const retryable=retryableSourceError(e);const report={success:false,catalogueReady,completedAt:new Date(now()).toISOString(),retryable,sourceFailures:e.sourceFailures,mode:recoveryOnly?'pending-NEW-recovery':'daily-new-only',observedAt:new Date(now()).toISOString(),error,native,firecrawlCredits:native.firecrawlCredits||0};
   if(!probe){daily={...daily,...sourceRecovery(daily,{success:false,retryable,now:now()}),state:'error',lastError:error,lastResult:report};await saveDailyMonitor(daily);await controlCall('/internal/monitor-complete',{lease:tick.monitorLease||tick.lease,success:false,retryable,error:'新品检查未完成，未将失败记录为没有新品',scanned:0,newCount:0}).catch(()=>{});}
   await atomicJson('web/monitor-proof.json',report);outcome={success:false,state:daily};console.error(error);
  }finally{await reader?.close?.()}

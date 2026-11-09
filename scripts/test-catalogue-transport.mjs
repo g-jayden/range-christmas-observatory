@@ -70,3 +70,10 @@ await assert.rejects(collectPartitionedCategory('94578',missingReader),/brand fa
 let readFailures=0;const failedReader=async()=>({totalResults:200,products:catalogueRows.slice(0,120),facets:[]});failedReader.many=async()=>{readFailures++;throw Object.assign(Error('bounded provider failure'),{status:503});};
 await assert.rejects(collectPartitionedCategory('94578',failedReader),/bounded provider failure/);assert.equal(readFailures,1,'A transport failure must not buy a second whole catalogue scan');
 console.log('PASS: a complete 10k-SKU root costs at most eight batches; omissions and transport failures cannot become partial success');
+let enhancedOnlyCalls=0;
+const enhancedOnly=await createFirecrawlBrowserReader({policy:{...defaults,catalogueTransport:'enhanced-batch',nativeCaptureEnabled:false,maxFallbackScrapesPerRun:60},budget:{limit:60},connect:()=>{throw Error('Unused native session must not reserve evidence credits');},fetcher:async url=>{assert(url.endsWith('/scrape'));enhancedOnlyCalls++;return Response.json({success:true,data:{metadata:{statusCode:200,creditsUsed:1},actions:{javascriptReturns:[{value:[]}]}}});}});
+for(let n=0;n<41;n++)await enhancedOnly.batchDocuments(async()=>[],[]);
+await enhancedOnly.prepareNativeCapture();
+for(let n=0;n<6;n++)await enhancedOnly.batchDocuments(async()=>[],[]);
+await enhancedOnly.close();assert.equal(enhancedOnlyCalls,47);assert.equal(enhancedOnly.metrics().firecrawlCredits,47);assert.equal(enhancedOnly.metrics().browserCredits,0);
+console.log('PASS: 41 discovery credits leave usable evidence credits rather than being locked in an unused native session');

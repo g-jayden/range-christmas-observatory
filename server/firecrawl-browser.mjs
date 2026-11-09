@@ -131,6 +131,11 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   const u=new URL(input);u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');const canonical=u.href;
   if(families.has(canonical)){metrics.familyReuse++;return families.get(canonical)}
   if(familyFailures.has(canonical))throw familyFailures.get(canonical);
+  if(policy.nativeCaptureEnabled===false&&policy.catalogueTransport==='enhanced-batch'){
+   await reader.prepareFamilies([{sourceUrl:input}]);
+   if(families.has(canonical))return families.get(canonical);
+   throw familyFailures.get(canonical)||new SourceError('Selected SKU family evidence is unavailable',503);
+  }
   const promise=(async()=>{
    const page=await take();try{
     const jsonUrl=canonical+'?json';
@@ -217,7 +222,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;if(policy.catalogueTransport==='enhanced-batch'){reader.many=urls=>Promise.all(urls.map(reader));reader.fresh=url=>catalogueBatch.fresh(sourceUrl(url));}
  reader.batchDocuments=async(fn,payload)=>scriptAction('('+fn.toString()+')('+JSON.stringify(payload)+')');
  reader.previewAssets=async(urls,options={})=>scriptAction('('+readPreviewAssets.toString()+')('+JSON.stringify({urls,maxSide:options.maxSide||320})+')',{needsImages:true});
- reader.prepareNativeCapture=async()=>{if(!sessionClosed)await start();};
+ reader.prepareNativeCapture=async()=>{if(policy.nativeCaptureEnabled!==false&&!sessionClosed)await start();};
  reader.captureVerified=(url,options={})=>{const id=JSON.stringify([sourceUrl(url),options.preferredThumbnail||null]);if(!verifiedCaptures.has(id))verifiedCaptures.set(id,(async()=>{if(session&&!sessionClosed)try{const u=new URL(sourceUrl(url));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');const family=await families.get(u.href);return await capture(url,family,options);}catch(e){metrics.nativeCaptureFailures=(metrics.nativeCaptureFailures||0)+1;console.error(JSON.stringify({phase:'native-NEW-capture-fallback',sku:new URL(url).hash.slice(1),status:e.status||0,error:String(e.message).slice(0,160)}));
    if(/net::ERR_QUIC_PROTOCOL_ERROR/.test(String(e.message))){nativeTransportFailures.add(sourceUrl(url));if(nativeTransportFailures.size>=2){metrics.nativeCaptureDisabled='repeated-QUIC-transport-failure';await reader.closeBrowser();console.log(JSON.stringify({phase:'native-NEW-session-stopped',reason:metrics.nativeCaptureDisabled,failedPages:nativeTransportFailures.size}));}}
   }return enhancedCapture(url,options);})());return verifiedCaptures.get(id)};
