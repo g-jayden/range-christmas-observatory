@@ -275,6 +275,9 @@ jobs:
         uses: actions/deploy-pages@v5.0.1
         with:
           artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
+          # Keep a slow Pages file sync independent from source collection.
+          # This is a bounded wait for the already-built artifact, not a rescrape.
+          timeout: '1800000'
       - name: Send verified NEW emails after download files are published
         if: steps.deployment.outcome == 'success'
         run: |

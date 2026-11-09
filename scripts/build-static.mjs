@@ -19,6 +19,6 @@ for(const page of ['index.html','image-check.html']){
  }
  await fs.writeFile('public/'+page,html);
 }
-for(const name of ['preview-status.json','classified','taxonomy-status.json','taxonomy-audit.json','decorations.json','decorations-status.json','decoration-details','lights.json','lights-status.json','light-details','themes.json','themes-status.json','theme-details'])try{const source='web/'+name;const st=await fs.stat(source);if(st.isDirectory())await fs.cp(source,'public/'+name,{recursive:true});else await fs.copyFile(source,'public/'+name)}catch(e){if(e.code!=='ENOENT')throw e;}
+for(const name of ['product-evidence-health.json','product-evidence-repair.json','browser-image-repair-proof.json','preview-status.json','classified','taxonomy-status.json','taxonomy-audit.json','decorations.json','decorations-status.json','decoration-details','lights.json','lights-status.json','light-details','themes.json','themes-status.json','theme-details'])try{const source='web/'+name;const st=await fs.stat(source);if(st.isDirectory())await fs.cp(source,'public/'+name,{recursive:true});else await fs.copyFile(source,'public/'+name)}catch(e){if(e.code!=='ENOENT')throw e;}
 await copyPublishedAssets('web','public',{repositoryImages:true});
 await fs.writeFile('public/.nojekyll','');console.log('Static cloud website built.');
