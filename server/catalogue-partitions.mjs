@@ -27,8 +27,10 @@ async function collectRootFirst(id,reader,initial){
 export async function collectPartitionedCategory(id,reader){
  let root=await reader(apiUrl(id,0,{in_stock_f:['true']},true));
  if(root.totalResults===0)return {products:[],audit:{expected:0,observed:0,unique:0,complete:true,rootCategoryId:id,requests:1,records:[]}};
- if(reader.many&&root.totalResults>120){const direct=await collectRootFirst(id,reader,root);console.log(JSON.stringify({phase:'coherent-root-directory',category:id,complete:!direct.failure,expected:direct.audit?.expected,failure:direct.failure}));if(!direct.failure)return direct;}
  const brands=root.facets?.find(f=>f.id==='brand_f')?.options;
+ // The live 10k decoration index has unstable relevance pages while its
+ // checked brand partitions reconcile. Avoid paying for both complete paths.
+ if(reader.many&&root.totalResults>120&&(root.totalResults<=5000||!brands?.length)){const direct=await collectRootFirst(id,reader,root);console.log(JSON.stringify({phase:'coherent-root-directory',category:id,complete:!direct.failure,expected:direct.audit?.expected??direct.expected,observed:direct.audit?.observed??direct.observed,failure:direct.failure}));if(!direct.failure)return direct;}
  if(!brands?.length)throw new SourceError('Official brand facet required for complete large-catalogue coverage');
  let target=root.totalResults;const all=new Map(),partitions=[],batches=[],facets=root.facets,reconciliations=[];
  let requests=1;const fetched=new Map();const prime=async urls=>{if(reader.many){const rows=await reader.many(urls);urls.forEach((u,i)=>fetched.set(u,rows[i]));}};

@@ -22,8 +22,8 @@ export async function fetchCataloguePages(urls){
  // only exceptional network/transient responses, once, inside this same paid
  // request. A route-wide outage, 403 or invalid data never enters this path.
  const retry=results.filter(r=>[0,408,502,503,504].includes(r.status));
- if(retry.length>0&&retry.length<=4&&results.some(r=>r.status===200&&r.body)&&Date.now()-started<55000){
-  let next=0;await Promise.all(Array.from({length:Math.min(2,retry.length)},async()=>{
+ if(retry.length>0&&retry.length<=12&&results.some(r=>r.status===200&&r.body)&&Date.now()-started<55000){
+  let next=0;await Promise.all(Array.from({length:Math.min(4,retry.length)},async()=>{
    while(next<retry.length){const row=retry[next++],remaining=79000-(Date.now()-started);if(remaining<1000)break;
     try{const r=await fetch(row.url,{credentials:'include',cache:'no-store',signal:AbortSignal.timeout(Math.min(12000,remaining))}),text=await r.text();let body;try{body=JSON.parse(text)}catch{}Object.assign(row,{status:r.status,body,observedAt:new Date().toISOString(),attempts:2});delete row.error;}
     catch(e){row.error=String(e.message).slice(0,120);row.attempts=2;}
