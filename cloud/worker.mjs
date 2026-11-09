@@ -1,5 +1,7 @@
 import {endedMonitorOwner,githubRunReader} from './monitor-owner.mjs';
 import {sourceRetryDue,sourceRecovery} from './source-recovery.mjs';
+import {evidenceRetryDue,evidenceDeadline,completeMonitorState,MONITOR_PIPELINE_VERSION} from './evidence-recovery.mjs';
+import {mailAssetUrl,pinMailAssets,publishedManifestUrl} from './published-mail-assets.mjs';
 import {DEPARTMENTS,DEPARTMENT_MAP,colourLabel,STYLE_EN,sourcePrice} from '../web/catalogue-model.mjs';
 import {firstRun,advanceRun,scheduleLabel,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';
 import {dispatchDue} from './dispatch-clock.mjs';
@@ -17,7 +19,7 @@ function checkAuth(req,secret){if(!secret||req.headers.get('authorization')!=='B
 function verifyUrl(raw,hosts){const u=new URL(raw);if(u.protocol!=='https:'||!hosts.some(h=>u.hostname===h||u.hostname.endsWith('.'+h)))throw Error('非允许的来源地址。');return u.href;}
 function mailAssets(p){
  const m=p.mailAssets;if(!m?.card?.url||!m?.original?.url)throw Error('完整信息卡或官网原图尚未生成');
- const allowed=raw=>{const u=new URL(raw),pages=u.origin===SITE&&u.pathname.startsWith('/range-christmas-observatory/mail-assets/'+p.sku+'/'),repository=u.origin==='https://raw.githubusercontent.com'&&u.pathname.startsWith('/g-jayden/range-christmas-observatory/main/web/mail-assets/'+p.sku+'/');if(!pages&&!repository)throw Error('Invalid generated mail asset');return u.href;};
+ const allowed=raw=>mailAssetUrl(raw,p.sku);
  const original=m.mailOriginal||m.original;
  return [{name:'NEW-'+p.sku+'-card.png',url:allowed(m.card.url)},{name:'NEW-'+p.sku+'-original.'+new URL(original.url).pathname.split('.').pop(),url:allowed(original.url)},...(m.proof?.url?[{name:'NEW-'+p.sku+'-source-page.png',url:allowed(m.proof.url)}]:[])];
 }
@@ -65,7 +67,8 @@ export class Control{
   if(!owner)return;
   const previous=await this.monitorState();await this.db.transaction(async db=>{
    if((await db.get('lease/monitor'))?.lease!==held.lease)return;
-   await db.delete('lease/monitor');await db.put('monitor',{...previous,...sourceRecovery(previous,{success:false,retryable:true}),nextRunAt:advanceNewCheck(previous.nextRunAt),state:'error',lastError:'上次GitHub任务已结束但未完成检查，已释放占用并安排限次恢复 · Ended run released for recovery',abandonedRunId:owner.runId});
+   const ready=previous.stage==='evidence'&&Date.now()<Date.parse(evidenceDeadline(previous.lastDiscoverySuccess));
+   await db.delete('lease/monitor');await db.put('monitor',{...completeMonitorState(previous,{success:false,catalogueReady:ready,sourceObservedAt:previous.lastDiscoverySuccess,evidenceRetryable:true,retryable:true,error:'上次任务已结束，已释放占用并安排对应阶段恢复 · Ended run released for stage recovery'},{}),nextRunAt:advanceNewCheck(previous.nextRunAt),abandonedRunId:owner.runId});
   });
  }
  async fetch(req){
@@ -75,7 +78,7 @@ export class Control{
   const url=new URL(req.url),route=url.pathname;
   if(route==='/public/status'&&req.method==='GET'){
    const config=await this.config(),monitor=await this.monitorState(),clock=await this.db.get('dispatch-clock');
-   const dispatchClock={enabled:Boolean(this.env.GITHUB_DISPATCH_TOKEN),lastAttemptAt:clock?.lastAttemptAt||null,lastAcceptedAt:clock?.lastAcceptedAt||null,lastStatus:clock?.lastStatus||null,attempts:clock?.attempts||0};
+   const dispatchClock={enabled:Boolean(this.env.GITHUB_DISPATCH_TOKEN),pipelineVersion:MONITOR_PIPELINE_VERSION,lastAttemptAt:clock?.lastAttemptAt||null,lastAcceptedAt:clock?.lastAcceptedAt||null,lastStatus:clock?.lastStatus||null,attempts:clock?.attempts||0};
    const pending=[...(await this.db.list({prefix:'pending/'})).values()];return response({config,schedule:scheduleLabel(config),dispatchClock,baselineReady:Boolean(await this.db.get('seeded')),monitor:{...monitor,...await this.deliveryStatus(),pendingScreenshots:pending.filter(p=>!p.unavailableSince).length,pendingUnavailable:pending.filter(p=>p.unavailableSince).length},mailReady:Boolean(this.env.BREVO_API_KEY&&this.env.MAIL_FROM),recent:await this.db.get('recent')||[]});
   }
   if(route.startsWith('/shots/')&&req.method==='GET'){
@@ -209,13 +212,19 @@ export class Control{
    if(route==='/internal/claim'&&req.method==='POST'){
     await this.recoverAbandonedMonitor();
     const options=await req.json(),config=await this.config(),monitorState=await this.monitorState(),now=Date.now(),lease=token(),initialized=await this.db.get('seeded');
-    let full=false,monitor=false;
+    let full=false,monitor=false,evidenceRecovery=false;
     await this.db.transaction(async db=>{
-     const f=await db.get('lease/full');if(now>=Date.parse(config.nextRunAt)&&(!f||f.expires<now)){full=true;await db.put('lease/full',{lease,expires:now+7*3600000,revision:config.revision||null,due:config.nextRunAt})}
      const m=await db.get('lease/monitor');
-     if(initialized&&this.env.BREVO_API_KEY&&(!m||m.expires<now)&&(options.forceMonitor===true||sourceRetryDue(monitorState,now)||now>=Date.parse(monitorState.nextRunAt))){monitor=true;await db.put('lease/monitor',{lease,createdAt:now,ownerRunId:/^\d+$/.test(String(options.ownerRunId||''))?String(options.ownerRunId):null,expires:now+100*60000})}
+     const wantsMonitor=initialized&&this.env.BREVO_API_KEY&&(options.forceMonitor===true||evidenceRetryDue(monitorState,now)||sourceRetryDue(monitorState,now)||now>=Date.parse(monitorState.nextRunAt));
+     const f=await db.get('lease/full');if(!wantsMonitor&&now>=Date.parse(config.nextRunAt)&&(!f||f.expires<now)){full=true;await db.put('lease/full',{lease,expires:now+7*3600000,revision:config.revision||null,due:config.nextRunAt})}
+     if(wantsMonitor&&(!m||m.expires<now)){monitor=true;evidenceRecovery=evidenceRetryDue(monitorState,now);await db.put('lease/monitor',{lease,createdAt:now,ownerRunId:/^\d+$/.test(String(options.ownerRunId||''))?String(options.ownerRunId):null,expires:now+100*60000});await db.put('monitor',{...monitorState,state:'checking',stage:evidenceRecovery?'evidence':'discovery'});}
     });
-    return response({config,full,monitor,lease});
+    return response({config,full,monitor,lease,evidenceRecovery});
+   }
+   if(route==='/internal/discovery-ready'&&req.method==='POST'){
+    const b=await req.json(),lease=await this.db.get('lease/monitor');if(lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
+    const at=Date.parse(b.sourceObservedAt);if(!Number.isFinite(at)||at>Date.now()||Date.now()>=Date.parse(evidenceDeadline(b.sourceObservedAt))||!Number.isInteger(b.scanned)||b.scanned<0)throw Error('Invalid verified discovery checkpoint');
+    const previous=await this.monitorState();await this.db.put('monitor',{...previous,...sourceRecovery(previous,{success:true}),state:'checking',stage:'evidence',lastDiscoverySuccess:b.sourceObservedAt,evidenceSourceAt:b.sourceObservedAt,evidenceDeadlineAt:evidenceDeadline(b.sourceObservedAt),scanned:b.scanned});return response({saved:true});
    }
    if(route==='/internal/full-complete'&&req.method==='POST'){
     const b=await req.json(),lease=await this.db.get('lease/full');if(lease?.lease!==b.lease)return response({error:'运行租约不匹配'},409);
@@ -247,7 +256,8 @@ export class Control{
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
     const previous=await this.monitorState();
     for(const sku of b.unavailableSkus||[]){const p=await this.db.get('pending/'+sku);if(p)await this.db.put('pending/'+sku,{...p,unavailableSince:new Date().toISOString()});}
-    const delivery=await this.deliveryStatus();await this.db.put('monitor',{...previous,...delivery,...sourceRecovery(previous,{success:b.success,retryable:b.retryable===true}),state:b.success?(delivery.pendingDeliveries?'delivery-pending':'active'):'error',nextRunAt:advanceNewCheck(previous.nextRunAt),checkedAt:new Date().toISOString(),lastSuccess:b.success?new Date().toISOString():previous.lastSuccess||null,lastError:b.success?null:String(b.error||'源站检查未完成').slice(0,200),scanned:b.scanned||0,newCount:b.newCount||0});await this.db.delete('lease/monitor');return response({saved:true});
+    if(b.catalogueReady===undefined&&previous.stage==='evidence'&&Date.now()<Date.parse(previous.evidenceDeadlineAt)){b.catalogueReady=true;b.sourceObservedAt=previous.evidenceSourceAt;b.evidenceRetryable=b.retryable===true;}
+    const delivery=await this.deliveryStatus();await this.db.put('monitor',{...completeMonitorState(previous,b,delivery),nextRunAt:advanceNewCheck(previous.nextRunAt)});await this.db.delete('lease/monitor');return response({saved:true});
    }
    if(route==='/internal/deliver'&&req.method==='POST'){
     const events=await this.db.list({prefix:'event/'}),subs=await this.db.list({prefix:'sub/'}),revision=await this.deliveryRevision();let accepted=0,attempted=0,failed=0;
@@ -267,8 +277,8 @@ export class Control{
      let attachments;
      try{
       if(p.mailAssets?.cardVersion&&p.mailAssets.original?.sha256){
-       const r=await fetch(HOME+'mail-assets/'+p.sku+'/manifest.json',{signal:AbortSignal.timeout(10000)});if(!r.ok)throw Object.assign(Error('新品信息卡尚未发布'),{assetStatus:r.status});
-       const m=await r.json();if(m.sku!==p.sku||m.sourceUrl!==p.sourceUrl||m.priceGBP!==p.priceGBP||m.original?.sha256!==p.mailAssets.original.sha256)throw Error('已发布附件与核验SKU不一致');
+       const r=await fetch(publishedManifestUrl(p),{signal:AbortSignal.timeout(10000)});if(!r.ok)throw Object.assign(Error('新品信息卡尚未发布'),{assetStatus:r.status});
+       let m=await r.json();if(m.sku!==p.sku||m.sourceUrl!==p.sourceUrl||m.priceGBP!==p.priceGBP||m.original?.sha256!==p.mailAssets.original.sha256)throw Error('已发布附件与核验SKU不一致');if(p.mailAssets.publishedRevision)m=pinMailAssets(m,p.mailAssets.publishedRevision);
        mailAssets({...p,mailAssets:m});Object.assign(p,{mailAssets:m,colorValues:m.colors,treeColor:(m.colors||[]).join(' / '),material:m.material,style:m.style,heightLabel:m.height});await this.db.put(eventKey,p);fingerprint=await hash(payloadIdentity(p,revision));
       }
       if(p.mailAssets?.card&&p.mailAssets?.original){

@@ -72,6 +72,7 @@ jobs:
             /server/
             /cloud/delivery-policy.mjs
             /cloud/source-recovery.mjs
+            /cloud/evidence-recovery.mjs
             /cloud/monitor-owner.mjs
             /web/settings.json
             /web/status.json
@@ -166,6 +167,7 @@ jobs:
         continue-on-error: true
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          COLLECTION_CHECKPOINTS: '1'
         run: node server/update-daily.mjs
       - name: Initialize six lighting scopes and refresh all source price markers
         id: lights

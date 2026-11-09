@@ -5,9 +5,15 @@ import {atomicJson} from './sync.mjs';
 import {buildMailAssets} from './mail-assets.mjs';
 import {parseDetails,applyDetails,productInformation} from './details.mjs';
 import {control} from './cloud-client.mjs';
-import {productKey,detailFingerprint,failedAttempt} from './collection-policy.mjs';
+import {productKey,detailFingerprint,failedAttempt,verified} from './collection-policy.mjs';
 import {cacheProduct,saveState} from './incremental.mjs';
+import {retryableEvidence} from '../cloud/evidence-recovery.mjs';
+import {pinMailAssets} from '../cloud/published-mail-assets.mjs';
 export async function deliverVerifiedEvents(controlCall=control){let delivery,accepted=0;for(let batch=0;batch<100;batch++){delivery=await controlCall('/internal/deliver',{});accepted+=Number(delivery.accepted||0);if(!delivery.morePending)return {...delivery,accepted};}throw Error('仍有待发邮件，已保留云端队列');}
+export function reusableNewDetails(p,policy,now=Date.now()){
+ const at=Date.parse(p.attributeObservedAt),day=x=>new Date(x+8*3600000).toISOString().slice(0,10);
+ return Boolean(policy.retryPendingNow&&verified(p)&&p.detailInputFingerprint===detailFingerprint(p)&&Number.isFinite(at)&&at<=now&&now-at<6*3600000&&day(at)===day(now)&&p.originalImages?.length);
+}
 export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='runtime/collection',controlCall=control,fetcher=fetch,now=()=>Date.now(),deferDelivery=false}){
  let captured=0,attempted=0,deferred=0;const issues=[],events=[],unavailableSkus=[];
  try{
@@ -16,8 +22,8 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
   const observations=snapshot.products.filter(p=>p.newStatus&&isPublishedProduct(p)&&christmasEligibility(p,offeredObject(p)).disposition==='include').map(p=>({sku:p.sku,taxonomyAudit:p.taxonomyAudit,sourceUrl:p.sourceUrl,newStatus:p.newStatus,kind:p.kind,department:p.department,departmentIds:p.departmentIds,variantName:p.variantName,priceGBP:p.priceGBP,originalPrice:p.originalPrice,promoText:p.promoText,variantImageUrl:p.variantImageUrl,imageUrl:p.imageUrl}));
   let plan;for(let offset=0;offset<Math.max(observations.length,1);offset+=500)plan=await controlCall('/internal/monitor-plan',{lease,products:observations.slice(offset,offset+500)});
   const current=new Map(snapshot.products.map(p=>[p.sku,p]));
-  const pending=plan.candidates.map(p=>current.get(p.sku)).filter(p=>p&&isPublishedProduct(p)&&christmasEligibility(p,offeredObject(p)).disposition==='include');if(pending.length&&policy.nativeCaptureEnabled!==false)try{await reader.prepareNativeCapture?.()}catch(e){console.error(JSON.stringify({phase:'native-NEW-capture-start',error:String(e.message).slice(0,180)}));}if(pending.length)try{await reader.prepareFamilies?.(pending)}catch(e){console.error(JSON.stringify({phase:'NEW-family-preparation',error:String(e.message).slice(0,250)}));}
-  if(pending.length)await reader.repairFamilies?.(pending);
+  const pending=plan.candidates.map(p=>current.get(p.sku)).filter(p=>p&&isPublishedProduct(p)&&christmasEligibility(p,offeredObject(p)).disposition==='include'),reuse=p=>Boolean(reader.captureVerified&&deferDelivery&&reusableNewDetails(p,policy,now())),needDetails=pending.filter(p=>!reuse(p));if(pending.length&&policy.nativeCaptureEnabled!==false)try{await reader.prepareNativeCapture?.()}catch(e){console.error(JSON.stringify({phase:'native-NEW-capture-start',error:String(e.message).slice(0,180)}));}if(needDetails.length)try{await reader.prepareFamilies?.(needDetails)}catch(e){console.error(JSON.stringify({phase:'NEW-family-preparation',error:String(e.message).slice(0,250)}));}
+  if(needDetails.length)await reader.repairFamilies?.(needDetails);
   for(const candidate of plan.candidates){
    const p=current.get(candidate.sku),key=p&&productKey(p,policy)+':screenshot',failure=key&&state.failures[key];
    if(!p||!isPublishedProduct(p)||christmasEligibility(p,offeredObject(p)).disposition!=='include'){unavailableSkus.push(candidate.sku);continue;}
@@ -25,8 +31,10 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
    if(/[\u0000-\u001f]/.test(p.sourceUrl)){deferred++;continue;}
    attempted++;
    try{
-    const options={formats:reader.captureVerified&&deferDelivery?['rawHtml','markdown']:['rawHtml','markdown',{type:'screenshot',fullPage:true,quality:75,viewport:{width:1920,height:1080}}],waitFor:2000,purpose:'screenshot'};let capture;try{capture=await reader.raw(p.sourceUrl,options)}catch(e){if(!reader.repairFamily||e.status===404||e.budgetLimited)throw e;await reader.repairFamily(p.sourceUrl,{preferredThumbnail:p.variantImageUrl});capture=await reader.raw(p.sourceUrl,options);}
-    const detail=parseDetails(capture,p.sku,p.sourceUrl);applyDetails(p,detail);cacheProduct(p,state,policy);await saveState(state,dir);
+    const options={formats:reader.captureVerified&&deferDelivery?['rawHtml','markdown']:['rawHtml','markdown',{type:'screenshot',fullPage:true,quality:75,viewport:{width:1920,height:1080}}],waitFor:2000,purpose:'screenshot'};let capture={data:{}},detail;
+    if(reuse(p)){detail={specs:p.specifications||{},observedAt:p.attributeObservedAt};console.log(JSON.stringify({phase:'reuse-verified-NEW-details',sku:p.sku,sourceObservedAt:p.attributeObservedAt,firecrawlCredits:0}));}
+    else{try{capture=await reader.raw(p.sourceUrl,options)}catch(e){if(!reader.repairFamily||e.status===404||e.budgetLimited)throw e;await reader.repairFamily(p.sourceUrl,{preferredThumbnail:p.variantImageUrl});capture=await reader.raw(p.sourceUrl,options);}
+     detail=parseDetails(capture,p.sku,p.sourceUrl);applyDetails(p,detail);p.sourceDescription=detail.featuresText;p.detailsReady=true;cacheProduct(p,state,policy);await saveState(state,dir);}
     const screenshot=capture.data?.screenshotBase64;if(!screenshot&&!(reader.captureVerified&&deferDelivery))throw Error('该SKU原站截图未生成，等待浏览器重试');
     const bytes=Buffer.from(screenshot||'','base64');if(bytes.length>5000000)throw Error('截图超过邮件限制');
     const info=productInformation(p,detail.specs);
@@ -34,7 +42,7 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
     delete state.failures[key];captured++;
    }catch(e){
     if(e.budgetLimited){deferred++;continue;}
-    const failure=failedAttempt(p,e.message,state.failures,policy,now(),':screenshot');issues.push({sku:p.sku,reason:String(e.message).slice(0,250),retryAt:failure.retryAt});
+    const failure=failedAttempt(p,e.message,state.failures,policy,now(),':screenshot');issues.push({sku:p.sku,status:e.status||0,reason:String(e.message).slice(0,250),retryAt:failure.retryAt});
     if([401,402,429].includes(e.status)){deferred+=plan.candidates.length-attempted;break;}
    }
   }
@@ -60,7 +68,7 @@ export function mergeVerifiedEventProduct(eventProduct,current){
  return merged;
 }
 
-export async function finishNewEvents(result,{snapshot,lease,controlCall=control,buildAssets=buildMailAssets}={}){
+export async function finishNewEvents(result,{snapshot,lease,controlCall=control,buildAssets=buildMailAssets,publishCheckpoint,sourceObservedAt=snapshot?.observedAt}={}){
  // Reclassification is not a new-product event. Suppress out-of-scope or
  // unresolved products before persisting any mail, retaining the global SKU
  // history in the cloud so category changes cannot cause duplicate sends.
@@ -75,14 +83,21 @@ export async function finishNewEvents(result,{snapshot,lease,controlCall=control
  for(const event of result.events||[]){
   try{const p=allowed.get(event.product.sku);event.product=mergeVerifiedEventProduct(event.product,p);
    if(!event.product.mailAssets){const cardOnly=event.product.notificationEvidenceMode==='verified-information-card';const assets=await buildAssets(event.product,event.screenshotBase64,{verifiedCardOnly:cardOnly});event.screenshotBase64=assets.attachmentBase64;event.product.description=(event.product.productSummary||event.product.description||'')+(cardOnly?'。附件为具体SKU核验后的完整商品信息卡与官网原图。':'。附件前半为完整商品信息卡，后半为同一SKU原站真实截图。')+'保存完整信息卡与官网原图：'+assets.downloadUrl;event.product.screenshotKind=assets.attachmentKind;}
-  }catch(e){result.issues||=[];result.issues.push({sku:event.product.sku,reason:'新品附件待核验 · NEW attachments pending',error:String(e.message).slice(0,250)});result.deferred=(result.deferred||0)+1;result.success=false;continue;}
-  // Queue each completed SKU immediately. Transport failures still propagate;
-  // the cloud's SKU idempotency safely retains everything already accepted.
-  if(!result.queuePersisted)await controlCall('/internal/event',event);ready.push(event);
+  }catch(e){result.issues||=[];result.issues.push({sku:event.product.sku,status:e.status||0,reason:'新品附件待核验 · NEW attachments pending',error:String(e.message).slice(0,250)});result.deferred=(result.deferred||0)+1;result.success=false;continue;}
+  // Collect ready products before publishing and then queueing their files.
+  ready.push(event);
  }
+ // Files are durable before a SKU is marked seen. A queued email is pinned
+ // to that exact commit, independently of Pages or later product updates.
+ const publication=ready.length&&publishCheckpoint?await publishCheckpoint({stage:'new-assets'}):null;
+ if(publication?.published)for(const event of ready)event.product.mailAssets=pinMailAssets(event.product.mailAssets,publication.revision);
+ if(!result.queuePersisted)for(const event of ready)await controlCall('/internal/event',event);
  result.events=ready;result.captured=ready.length;result.queuePersisted=true;
- if(!result.monitorCompleted){await controlCall('/internal/monitor-complete',{lease,success:result.success,error:result.success?undefined:'部分新品截图或详情未通过核验',scanned:result.scanned,newCount:result.captured,unavailableSkus:result.unavailableSkus||[]});result.monitorCompleted=true;}
- if(process.env.GITHUB_ACTIONS==='true'&&process.env.NOTIFICATION_PHASE!=='deliver'){await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/notification-outbox.private.json',JSON.stringify({result,snapshot:{products:(result.events||[]).map(e=>e.product)},lease}));const {events,...summary}=result;return {...summary,deliveryPending:(result.events||[]).length>0};}
+ if(!result.monitorCompleted){await controlCall('/internal/monitor-complete',{lease,success:result.success,catalogueReady:true,sourceObservedAt,evidenceRetryable:!result.success&&retryableEvidence(result),error:result.success?undefined:'部分新品资料未通过核验，已隔离并安排对应阶段恢复',scanned:result.scanned,newCount:result.captured,unavailableSkus:result.unavailableSkus||[]});result.monitorCompleted=true;}
+ if(process.env.GITHUB_ACTIONS==='true'&&process.env.NOTIFICATION_PHASE!=='deliver'){
+  let delivery;if(publication?.published)try{delivery=await deliverVerifiedEvents(controlCall)}catch(e){delivery={pending:true,error:String(e.message).slice(0,160)};}
+  await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/notification-outbox.private.json',JSON.stringify({result,snapshot:{products:(result.events||[]).map(e=>e.product)},lease}));const {events,...summary}=result;return {...summary,delivery,deliveryPending:delivery?Boolean(delivery.pending||delivery.pendingDeliveries):(result.events||[]).length>0};
+ }
  const delivery=await deliverVerifiedEvents(controlCall);
  const {events,...publicResult}=result;return {...publicResult,delivery};
 }
@@ -106,7 +121,7 @@ export async function captureNewScreenshots(result,{reader,state,policy,now=()=>
    // gallery provenance and actual downloaded bytes. This is never labelled
    // as a retailer screenshot, and a missing original remains a hard failure.
    event.screenshotBase64=null;p.notificationEvidenceMode='verified-information-card';p.sourceScreenshotIssue={reason:String(e.message).slice(0,200),observedAt:new Date(now()).toISOString()};verified.push(event);result.optionalEvidenceIssues||=[];result.optionalEvidenceIssues.push({sku:p.sku,kind:'source-page-screenshot',reason:p.sourceScreenshotIssue.reason});delete state.failures[productKey(p,policy)+':screenshot'];console.log(JSON.stringify({phase:'NEW-verified-card-evidence',sku:p.sku,sourceScreenshotAvailable:false,originalAuditRequired:true}));
-  }else{const failure=failedAttempt(p,e.message,state.failures,policy,now(),':screenshot');result.issues.push({sku:p.sku,reason:String(e.message).slice(0,200),retryAt:failure.retryAt});result.success=false;result.deferred++;}}};
+  }else{const failure=failedAttempt(p,e.message,state.failures,policy,now(),':screenshot');result.issues.push({sku:p.sku,status:e.status||0,reason:String(e.message).slice(0,200),retryAt:failure.retryAt});result.success=false;result.deferred++;}}};
  await Promise.all(Array.from({length:Math.min(2,events.length)},async()=>{while(cursor<events.length)await captureOne(events[cursor++]);}));
  result.events=verified;result.captured=verified.length;return result;
 }

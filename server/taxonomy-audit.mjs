@@ -12,7 +12,7 @@ const hash=x=>createHash('sha256').update(JSON.stringify(x)).digest('hex');
 export const taxonomyFingerprint=p=>hash([TAXONOMY_VERSION,p.sku,productBody(p),productDescription(p),p.specifications||{},p.displayImage?.sha256||p.imageCacheEvidence?.sha256,p.kind,p.lightingDepartmentIds,p.themeIds]);
 const read=async(file,fallback)=>fs.readFile(file,'utf8').then(JSON.parse).catch(e=>{if(e.code!=='ENOENT')throw e;return fallback;});
 const clone=p=>structuredClone(p);
-export async function auditTaxonomy(snapshots,{infer=true,writeViews=true}={}){
+export async function auditTaxonomy(snapshots,{infer=true,writeViews=true,persist=true}={}){
  const bySku=new Map(),sourceNames=['trees-skirts','decorations','lights','themes'];
  for(let i=0;i<snapshots.length;i++)for(const p of snapshots[i]?.products||[]){if(!bySku.has(p.sku))bySku.set(p.sku,[]);bySku.get(p.sku).push({p,source:sourceNames[i]});}
  const canonical=[],before=new Map();
@@ -62,10 +62,10 @@ export async function auditTaxonomy(snapshots,{infer=true,writeViews=true}={}){
  const included=canonical.filter(p=>p.taxonomyAudit.disposition==='include'),observedAt=snapshots.filter(Boolean).map(s=>s.observedAt).filter(Boolean).sort().at(-1),revision=hash({taxonomy:Object.entries(index),previews:canonical.filter(p=>p.previewImage).map(p=>[p.sku,p.previewImage.sha256])});
  const counts=Object.fromEntries(DEPARTMENTS.map(d=>[d.id,{label:d.label,before:canonical.filter(p=>before.get(p.sku).ids.includes(d.id)).length,after:included.filter(p=>p.departmentIds.includes(d.id)).length}]));
  const report={version:TAXONOMY_VERSION,revision,auditedAt:new Date().toISOString(),sourceObservedAt:observedAt,uniqueSkus:canonical.length,included:included.length,excluded:excluded.length,needsReview:review.length,reclassified:moved.length,descriptionVerified:canonical.filter(p=>p.taxonomyAudit.descriptionVerified).length,imageAnalysed:canonical.filter(p=>p.taxonomyAudit.imageAnalysed).length,imageAudit,counts,sourceRequestsMade:false,firecrawlCredits:0,historyAndArrivalDatesPreserved:true,comparisonBaselineCommit:baseline?.sourceCommit||null};
- await atomicJson('web/taxonomy-audit.json',{...report,reclassifiedProducts:moved,excludedProducts:excluded,reviewProducts:review});
+ if(persist){await atomicJson('web/taxonomy-audit.json',{...report,reclassifiedProducts:moved,excludedProducts:excluded,reviewProducts:review});
  await atomicJson('web/taxonomy-status.json',report);
- const buckets=new Map();for(const [sku,audit]of Object.entries(index)){const k=sku.slice(-2).padStart(2,'0');if(!buckets.has(k))buckets.set(k,{});buckets.get(k)[sku]=audit;}for(const [k,v]of buckets)await atomicJson('web/taxonomy-index/'+k+'.json',v);
- if(writeViews){
+ const buckets=new Map();for(const [sku,audit]of Object.entries(index)){const k=sku.slice(-2).padStart(2,'0');if(!buckets.has(k))buckets.set(k,{});buckets.get(k)[sku]=audit;}for(const [k,v]of buckets)await atomicJson('web/taxonomy-index/'+k+'.json',v);}
+ if(persist&&writeViews){
   const fields=['previewImage','previewAudit','sku','kind','department','departmentIds','lightingDepartmentIds','themeIds','variantName','name','brand','priceGBP','originalPrice','promoText','currency','sourceUrl','imageUrl','variantImageUrl','listingVariantImageUrl','cachedImageUrl','imageCacheEvidence','newStatus','newEvidence','firstObservedAt','firstNewObservedAt','arrivalEvidence','everNew','observedAt','attributeObservedAt','detailsReady','detailIssue','imageIssue','dimensions','material','colorValues','treeColor','paletteEvidence','originalImageUrl','displayImage','specificationCorrections','detailsUrl','style','heightLabel','heightCm','heightValues','skirtDiameterCm','skirtBaseDiameterCm','skirtTopDiameterCm','mailAssets','classificationEvidence','taxonomyAudit'];
   for(const dept of DEPARTMENTS.filter(d=>d.id!=='themes'&&!d.id.startsWith('theme-'))){
    const products=included.filter(p=>p.departmentIds.includes(dept.id)).map(p=>Object.fromEntries([...fields,...(!p.detailsUrl?['specifications','sourceDescription','productSummary','detailEvidence','images','originalImages']:[])].filter(k=>p[k]!==undefined||k==='sourceDescription'&&productDescription(p)).map(k=>[k,k==='sourceDescription'?productDescription(p):p[k]])));
