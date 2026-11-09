@@ -4,6 +4,26 @@ import {normaliseColors,materialFacts,descriptionFacts} from './appearance.mjs';
 import {productDimensions,toCentimetres} from '../web/catalogue-model.mjs';
 const text=s=>String(s||'').replace(/<br\s*\/?\s*>/gi,'\n').replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').replace(/&nbsp;/g,' ').trim();
 export const asdaFingerprint=p=>createHash('sha256').update(JSON.stringify([p.sku,p.variantName,p.listingVariantImageUrl||p.variantImageUrl,p.asdaSource?.primaryCategoryID])).digest('hex');
+export function asdaDimensionFacts(specifications={},description='',title=''){
+ const specs={...specifications},raw=specs['Dimensions (WxDxH in cm)'];if(!raw)return {specifications:specs,dimensions:productDimensions(specs,description)};
+ // Keep the original complete string, including mixed sizes, in every export.
+ if(!/^\s*(?:#n\/a|n\/a|not specified)\s*$/i.test(raw))specs.Dimensions=raw;
+ const unit='(?:cm|mm|m|ft|feet|inches?|in)',defaultUnit=[...raw.matchAll(new RegExp('('+unit+')\\b','ig'))].at(-1)?.[1]||'cm',axes={W:'Width',D:'Depth',H:'Height',L:'Length'};
+ const assign=(key,value)=>{const n=toCentimetres(value);if(!(n>0))return;if(specs[key]&&toCentimetres(specs[key])!==n)specs['Source '+key]??=specs[key];specs[key]=n+'cm';};
+ for(const m of raw.matchAll(new RegExp('(?:^|[\\s:x×])([WDHL])\\s*([\\d.]+)\\s*('+unit+')?\\b','ig')))assign(axes[m[1].toUpperCase()],m[2]+(m[3]||defaultUnit));
+ const triple=raw.match(new RegExp('^\\s*([\\d.]+)\\s*('+unit+')?\\s*[x×]\\s*([\\d.]+)\\s*('+unit+')?\\s*[x×]\\s*([\\d.]+)\\s*('+unit+')?\\s*$','i'));
+ if(triple)for(const [i,key]of ['Width','Depth','Height'].entries())assign(key,triple[i*2+1]+(triple[i*2+2]||defaultUnit));
+ for(const key of ['Height','Width','Depth','Length','Diameter']){
+  const before=raw.match(new RegExp('\\b'+key+'\\s*:?\\s*(?:approx\\.?\\s*)?([\\d.]+)\\s*('+unit+')\\b','i')),after=raw.match(new RegExp('([\\d.]+)\\s*('+unit+')\\s*'+key+'\\b','i'));
+  if(before||after){const m=before||after;assign(key,m[1]+m[2]);}
+ }
+ const original=specs['Source Height'],originalCm=toCentimetres(original),height=toCentimetres(specs.Height),titleMeasures=[...title.matchAll(new RegExp('(\\d+(?:\\.\\d+)?)\\s*('+unit+')(?![a-z])','ig'))].map(m=>toCentimetres(m[1]+m[2]));
+ // Some marketplace rows put depth under Height. A native Height field and
+ // an agreeing title establish the intended axis without guessing from pixels.
+ if(originalCm>0&&height>0&&Math.abs(height-originalCm)>Math.max(5,originalCm*.12)&&titleMeasures.some(n=>Math.abs(n-originalCm)<2)){specs['Dimension column Height']=specs.Height;specs.Height=original;}
+ let dimensions=productDimensions(specs,description);if(!dimensions.maxCm&&/^\s*[\d.]+\s*[x×]\s*[\d.]+\s*$/.test(raw)){dimensions=productDimensions({...specs,Dimensions:raw+'cm'},description);dimensions.sourceSize=raw;dimensions.evidence.Max={value:raw,source:'ASDA size specification; centimetres in column heading',axisOrderUnknown:true};}
+ return {specifications:specs,dimensions};
+}
 export function asdaVariantListings(group,listing,pricing){
  if(!Array.isArray(group.variants)||!pricing?.productAvailability)throw Error('ASDA variant evidence missing');
  const ids=new Set(group.variants.map(v=>String(v.ID)));
@@ -37,8 +57,8 @@ export function normaliseAsdaProduct(listing,detail,{observedAt,previous=null,ba
  if(detail){
   p.sourceDescription=text(detail.longDescription||detail.productDescriptionAttributes?.longDescription);p.productSummary=p.sourceDescription;
   const specifications=Object.fromEntries((detail.attributes||[]).filter(x=>x.value!==null&&x.value!==undefined&&String(x.value)!=='').map(x=>[x.key,String(x.value)]));
-  const dimensions=specifications['Dimensions (WxDxH in cm)'];if(dimensions){const m=dimensions.match(/^\s*([\d.]+)\s*x\s*([\d.]+)\s*x\s*([\d.]+)\s*(?:cm)?\s*$/i);if(m){for(const [i,key]of ['Width','Depth','Height'].entries()){if(specifications[key]&&toCentimetres(specifications[key])!==Number(m[i+1]))specifications['Source '+key]=specifications[key];specifications[key]=m[i+1]+'cm';}}}
-  p.specifications=specifications;p.dimensions=productDimensions(specifications,p.sourceDescription);p.material=materialFacts(specifications,p.sourceDescription).label;
+  const facts=asdaDimensionFacts(specifications,p.sourceDescription,p.variantName);Object.assign(specifications,facts.specifications);
+  p.specifications=specifications;p.dimensions=facts.dimensions;p.material=materialFacts(specifications,p.sourceDescription).label;
   p.appearanceSource=descriptionFacts(p,specifications,p.sourceDescription);p.colorValues=normaliseColors(source.colour||specifications.Colour);p.treeColor=p.colorValues.join(' / ');p.heightCm=p.dimensions.values.Height||toCentimetres(specifications.Height);p.heightLabel=specifications.Height||null;
   p.attributeObservedAt=observedAt;p.detailsReady=true;p.detailEvidence={selectedSku:sku,verifiedProductSection:true,sourceUrl:url,observedAt,text:p.sourceDescription,sourceTransport:'ASDA-native-productData'};delete p.detailIssue;
  }
