@@ -12,7 +12,7 @@ async function renderer(){
  return (await import('sharp')).default;
 }
 export function verifyCardOnlyEvidence(p,original){
-  const selected=String(p.sku),mapped=p.originalImages?.some(g=>g.url===p.originalImageUrl&&g.variantId!=null&&p.variantId!=null&&String(g.variantId)===String(p.variantId))||p.originalSourceEvidence?.selectedSku===selected&&p.originalSourceEvidence?.sourceUrl===p.sourceUrl;
+  const selected=String(p.sku),mapped=p.originalImages?.some(g=>g.url===p.originalImageUrl&&(g.variantId!=null&&p.variantId!=null&&String(g.variantId)===String(p.variantId)||p.originalSourceEvidence?.selectedSku===selected&&p.originalSourceEvidence?.sourceUrl===p.sourceUrl));
   if(!p.detailEvidence?.verifiedProductSection||String(p.detailEvidence.selectedSku)!==selected||!p.attributeObservedAt||!mapped||p.originalImageEvidence?.sourceUrl!==p.originalImageUrl||createHash('sha256').update(original).digest('hex')!==p.originalImageEvidence?.sha256)throw Error('具体SKU详情、官网图库对应关系或原图字节未通过核验，不能生成替代截图的信息卡');
  return true;
 }
