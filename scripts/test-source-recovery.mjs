@@ -42,3 +42,17 @@ console.log('PASS: ended-run ownership verification, active/ambiguous lease prot
 
 const roundedJob={jobs:[{steps:[{...matching.jobs[0].steps[0],completed_at:new Date(now).toISOString().replace('.000Z','Z')}]}]};
 assert.equal((await endedMonitorOwner({...legacy,expires:legacy.expires+436},async path=>path.includes('?per_page')?{workflow_runs:[ended]}:roundedJob,{now:now+180000})).runId,123,'GitHub second-resolution step timestamps must include their complete final second');
+
+const fsCredit=await import('node:fs/promises'),osCredit=await import('node:os'),pathCredit=await import('node:path');
+const creditDir=await fsCredit.mkdtemp(pathCredit.join(osCredit.tmpdir(),'range-unused-budget-')),creditCwd=process.cwd(),creditFetch=globalThis.fetch,creditEnv={GITHUB_REPOSITORY:process.env.GITHUB_REPOSITORY,GITHUB_RUN_ID:process.env.GITHUB_RUN_ID};
+try{
+ process.chdir(creditDir);process.env.GITHUB_REPOSITORY='fixture/project';process.env.GITHUB_RUN_ID='20';await fsCredit.mkdir('web');
+ await fsCredit.writeFile('web/collection-ledger.json',JSON.stringify({periods:{'2026-11':{used:0,reservations:{'10-1':{amount:10}}}}}));
+ let probeSkipped=false;
+ globalThis.fetch=async url=>{assert(url.startsWith('https://api.github.com/repos/fixture/project/'));return Response.json(url.endsWith('/jobs')?{jobs:[{steps:[...['Collect official source','Repair remaining SKU','Prove the complete source'].map(name=>({name,conclusion:'skipped'})),{name:'Prove batched catalogue transport with one bounded request',conclusion:probeSkipped?'skipped':'success'}]}]}:{status:'completed',conclusion:'failure'})};
+ await import('../scripts/release-unused-reservations.mjs?billed-probe-test');
+ assert((JSON.parse(await fsCredit.readFile('web/collection-ledger.json'))).periods['2026-11'].reservations['10-1'],'An executed catalogue probe cannot be refunded as zero-cost preflight');
+ probeSkipped=true;await import('../scripts/release-unused-reservations.mjs?skipped-probe-test');
+ assert.equal((JSON.parse(await fsCredit.readFile('web/collection-ledger.json'))).periods['2026-11'].reservations['10-1'],undefined);
+ console.log('PASS: executed probes keep their billing reservation; source steps proven skipped release zero-cost preflight reservations');
+}finally{process.chdir(creditCwd);globalThis.fetch=creditFetch;for(const[k,v]of Object.entries(creditEnv)){if(v===undefined)delete process.env[k];else process.env[k]=v;}await fsCredit.rm(creditDir,{recursive:true,force:true});}

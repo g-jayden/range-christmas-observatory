@@ -80,6 +80,7 @@ jobs:
             /web/collection-policy.json
             /web/collection-ledger.json
             /web/collection-diagnostics.json
+            /web/notification-readiness.json
             /web/service.json
       - uses: actions/setup-node@v7.1.0
         with:
