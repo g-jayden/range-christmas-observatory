@@ -5,10 +5,15 @@ export const retailerProductKey=p=>(p.retailerId==='asda'?'asda:':'the-range:')+
 export function asdaMemberships(p){
  const title=String(p.variantName||p.name||'').toLowerCase(),body=String(p.sourceDescription||'').toLowerCase(),spec=p.specifications||{},category=p.asdaSource?.primaryCategoryID||'',type=String(p.asdaSource?.customType||'').toLowerCase();let primary;const physical=offeredObject({...p,kind:category==='D18M2G1C4'?'tree':'decoration'});
  const smallHanging=/\bbaubles?\b|\btree toppers?\b|hanging (?:tree |christmas )?(?:decoration|ornament)|\btinsel\b(?!.*\btree\b)/.test(title);
- if(/\bwreath (?:hanger|hook)|\bstocking|christmas sack|\badvent calendar/.test(title))primary='asda-room';
+ if(/\bwreath (?:hanger|hook)|\bstocking|christmas sack|\badvent calendar|\b(?:name |place ?card )?placeholders?\b|\bchair d[eé]cor|\bnapkin rings?\b/.test(title))primary='asda-room';
  else if(/\btree (?:skirt|collar|stand|base|storage bag)\b/.test(title))primary='asda-tree-decorations';
- else if(physical.id==='tree-decorations')primary='asda-tree-decorations';
+ else if(/\b(?:houses|churches|cottages)\b/.test(title)&&!/\b(?:baubles?|hanging|garland|lights string|string lights)\b/.test(title))primary='asda-room';
+ else if(/\b(?:hydrangea|poinsettia|rose|flower|floral)\b/.test(title)&&/\bclips?\b/.test(title))primary='asda-tree-decorations';
+ else if(category==='D18M2G1C3'&&!/\b(?:baubles?|tree (?:ornament|decoration|topper))\b/.test(title))primary=physical.id==='scenes'?'asda-room':'asda-lights';
+ else if(/\bgarland (?:string )?lights\b/.test(title))primary='asda-lights';
  else if(physical.id==='scenes'||['accessory','craft-kit'].includes(physical.subtype))primary='asda-room';
+ else if(/\bwreaths?\b/.test(title)&&!/\b(?:baubles?|kit|craft|tree (?:decoration|ornament)|wreath shaped hanging|wreath hanging decoration)\b/.test(title))primary='asda-wreath';
+ else if(physical.id==='tree-decorations')primary='asda-tree-decorations';
  else if(category==='D18M2G1C2'&&!/\bdoor\b/.test(title+' '+body))primary='asda-tree-decorations';
  else if(smallHanging&&!/\bgarland\b/.test(title))primary='asda-tree-decorations';
  else if(/\bgarlands?\b/.test(title))primary='asda-garland';
@@ -17,9 +22,10 @@ export function asdaMemberships(p){
  else if(category==='D18M2G1C2')primary='asda-tree-decorations';
  else if(category==='D18M2G1C3'||/\b(?:christmas|string|cluster|icicle|curtain|fairy|net|rope|tree) lights?\b/.test(title))primary='asda-lights';
  else primary='asda-room';
- const ids=[primary],use=String(spec['Indoor / Outdoor']||'').toLowerCase();
+ const use=String(spec['Indoor / Outdoor']||'').toLowerCase();
  // Indoor-only is stronger than outdoor styling in a photograph.
  const outdoor=!/indoor only/.test(use)&&(/outdoor|\bboth\b/.test(use)||/\boutdoor\b/.test(title)||/suitable for (?:indoor and |indoor\/)?outdoor/.test(body));
- if(outdoor)ids.push('asda-outdoor');
+ if(outdoor&&(/outdoor only/.test(use)||physical.id==='inflatable'))primary='asda-outdoor';
+ const ids=[primary];if(outdoor)ids.push('asda-outdoor');
  return {primary,memberships:[...new Set(ids)],method:'ASDA-exact-SKU-object-description-image',nativeCategory:category,offeredObjectReason:physical.reason};
 }

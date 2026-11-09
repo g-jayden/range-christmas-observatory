@@ -16,7 +16,7 @@ if(!config.nextRunAt)config=firstRun(config);
 let daily=await readDailyMonitor();await saveDailyMonitor(daily);
 const cloudState=apiBase&&(!blocked||process.env.CONTROL_TOKEN)?await control('/public/status'):null,pendingDelivery=hasReadyDeliveries(cloudState?.monitor);
 if(sourceRetryDue(cloudState?.monitor)||evidenceRetryDue(cloudState?.monitor)||dailyDue(daily))blocked=false;
-if(event!=='push'&&!['probe','catalogue-probe','repair','monitor-probe','lights-init','themes-init','previews','asda'].includes(mode)&&!blocked){
+if(event!=='push'&&!['probe','catalogue-probe','repair','monitor-probe','lights-init','themes-init','previews','asda','publish'].includes(mode)&&!blocked){
  if(apiBase){
   const savedConfig=config;const state=cloudState;config=state.config;
   if(!state.baselineReady){const d=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));await control('/internal/seed',{config:savedConfig,records:d.products.map(p=>({sku:p.sku,everNew:Boolean(p.everNew||p.newStatus)}))});config=(await control('/public/status')).config;}

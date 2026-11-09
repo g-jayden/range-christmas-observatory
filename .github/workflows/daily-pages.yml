@@ -16,7 +16,7 @@ on:
       mode:
         description: Source collection mode
         type: choice
-        options: [verify-all, catalogue, catalogue-probe, probe, repair, monitor-probe, mail-recovery, lights-init, themes-init, previews, asda]
+        options: [verify-all, catalogue, catalogue-probe, probe, repair, monitor-probe, mail-recovery, lights-init, themes-init, previews, asda, publish]
         default: verify-all
       checkNew:
         description: Check NEW now without changing the regular schedule
