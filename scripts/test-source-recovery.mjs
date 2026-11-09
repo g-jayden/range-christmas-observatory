@@ -39,3 +39,6 @@ assert.equal(await endedMonitorOwner(legacy,async path=>path.includes('?per_page
 await assert.rejects(endedMonitorOwner(lease,async()=>{throw Error('GitHub unavailable')},{now:now+180000}),/unavailable/);
 const workflow=await (await import('node:fs/promises')).readFile('.github/workflows/daily-pages.yml','utf8');assert.match(workflow,/if: always\(\) && steps\.tick\.outputs\.monitor == 'true'\s+run: node scripts\/release-unused-monitor\.mjs/);
 console.log('PASS: ended-run ownership verification, active/ambiguous lease protection and unconditional owned-claim cleanup');
+
+const roundedJob={jobs:[{steps:[{...matching.jobs[0].steps[0],completed_at:new Date(now).toISOString().replace('.000Z','Z')}]}]};
+assert.equal((await endedMonitorOwner({...legacy,expires:legacy.expires+436},async path=>path.includes('?per_page')?{workflow_runs:[ended]}:roundedJob,{now:now+180000})).runId,123,'GitHub second-resolution step timestamps must include their complete final second');

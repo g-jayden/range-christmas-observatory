@@ -10,7 +10,7 @@ export async function endedMonitorOwner(lease,get,{now=Date.now()}={}){
  if(candidates.length>3)return null;const found=[];
  for(const run of candidates.slice(0,3)){
   const jobs=(await get('/actions/runs/'+run.id+'/jobs')).jobs||[];
-  if(jobs.some(j=>j.steps?.some(s=>s.name==='Check the configured full and NEW schedules'&&s.conclusion==='success'&&Date.parse(s.started_at)<=at&&Date.parse(s.completed_at)>=at)))found.push(run);
+  if(jobs.some(j=>j.steps?.some(s=>s.name==='Check the configured full and NEW schedules'&&s.conclusion==='success'&&Date.parse(s.started_at)<=at&&Date.parse(s.completed_at)+1000>at)))found.push(run);
  }
  return found.length===1?{runId:found[0].id,legacyOwnerVerified:true}:null;
 }

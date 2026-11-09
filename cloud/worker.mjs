@@ -65,7 +65,7 @@ export class Control{
   if(!owner)return;
   const previous=await this.monitorState();await this.db.transaction(async db=>{
    if((await db.get('lease/monitor'))?.lease!==held.lease)return;
-   await db.delete('lease/monitor');await db.put('monitor',{...previous,...sourceRecovery(previous,{success:false,retryable:true}),state:'error',lastError:'上次GitHub任务已结束但未完成检查，已释放占用并安排限次恢复 · Ended run released for recovery',abandonedRunId:owner.runId});
+   await db.delete('lease/monitor');await db.put('monitor',{...previous,...sourceRecovery(previous,{success:false,retryable:true}),nextRunAt:advanceNewCheck(previous.nextRunAt),state:'error',lastError:'上次GitHub任务已结束但未完成检查，已释放占用并安排限次恢复 · Ended run released for recovery',abandonedRunId:owner.runId});
   });
  }
  async fetch(req){
