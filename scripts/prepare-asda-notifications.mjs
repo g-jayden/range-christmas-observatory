@@ -1,0 +1,13 @@
+import fs from 'node:fs/promises';import {createHash} from 'node:crypto';
+import {control} from '../server/cloud-client.mjs';import {buildMailAssets} from '../server/mail-assets.mjs';import {atomicJson} from '../server/sync.mjs';
+let snapshot;try{snapshot=JSON.parse(await fs.readFile('web/asda/catalogue.json','utf8'));}catch(e){if(e.code==='ENOENT')process.exit(0);throw e;}
+if(!snapshot.baselineReady)throw Error('ASDA complete baseline required before notifications');
+const plan=await control('/internal/asda-sync',{complete:true,observedAt:snapshot.observedAt,products:snapshot.products.map(p=>({retailerId:'asda',sku:p.sku,variantName:p.variantName,sourceUrl:p.sourceUrl,inStock:p.inStock,department:p.department,departmentIds:p.departmentIds,arrivalEvidence:p.arrivalEvidence,firstNewObservedAt:p.firstNewObservedAt}))});
+const events=[];for(const candidate of plan.candidates){const p=snapshot.products.find(p=>p.sku===candidate.sku);if(!p?.detailsReady||!p.inStock||!p.originalImageUrl)continue;
+ const u=new URL(p.originalImageUrl);if(u.origin!=='https://asda.scene7.com'||!p.originalImages.some(g=>g.url===u.href&&g.selectedSku===p.sku))throw Error('ASDA original image identity failed');
+ let bytes,cache=p.originalCachedImageUrl;try{if(cache)bytes=await fs.readFile('web/'+cache);}catch{}
+ if(!bytes){const r=await fetch(u.href,{signal:AbortSignal.timeout(30000)});if(!r.ok)throw Error('ASDA native original HTTP '+r.status);bytes=Buffer.from(await r.arrayBuffer());const hash=createHash('sha256').update(bytes).digest('hex');cache='images/asda/'+hash+'.jpg';await fs.mkdir('web/images/asda',{recursive:true});await fs.writeFile('web/'+cache,bytes);}
+ p.originalCachedImageUrl=cache;p.originalImageEvidence={sourceUrl:p.originalImageUrl,sha256:createHash('sha256').update(bytes).digest('hex'),observedAt:new Date().toISOString()};
+ const eventProduct={...p,newStatus:true,notificationEvidenceMode:'verified-information-card'};const assets=await buildMailAssets(eventProduct,null,{verifiedCardOnly:true});events.push({product:{...eventProduct,mailAssets:assets.manifest},screenshotBase64:assets.attachmentBase64,screenshotVerifiedAt:p.attributeObservedAt});
+}
+await atomicJson('web/asda/catalogue.json',snapshot);await fs.mkdir('runtime',{recursive:true});await atomicJson('runtime/asda-outbox.private.json',{events});console.log(JSON.stringify({phase:'ASDA notification preparation',baselineReady:plan.baselineReady,pending:plan.candidates.length,ready:events.length,firecrawlCredits:0}));

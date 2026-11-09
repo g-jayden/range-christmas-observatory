@@ -10,6 +10,7 @@ const DIR='web/asda',ROOT='https://direct.asda.com/george/christmas/trees-decora
 await fs.mkdir(DIR,{recursive:true});
 const request=await read('request.json',{}),previous=await read('catalogue.json',{products:[]}),checkpoint=await read('checkpoint.json',{details:{}}),initial=!previous.baselineReady;
 if(process.env.GITHUB_EVENT_NAME==='push'&&request.state!=='pending'){console.log('ASDA request already completed; no paid requests');process.exit(0);}
+const nowBjt=new Date(Date.now()+28800000).toISOString().slice(0,10),dailyDueAt=Date.parse(nowBjt+'T07:00:00+08:00');if(!initial&&process.env.GITHUB_EVENT_NAME!=='push'&&Date.parse(previous.observedAt)>=dailyDueAt){console.log('ASDA daily source observation already completed; no duplicate paid requests');process.exit(0);}
 const key=process.env.FIRECRAWL_API_KEY;if(!key)throw Error('Firecrawl server credential required');
 const policy=await loadPolicy();let budget,credits=0,requests=0,uncertain=0;const receipts=[];
 async function api(body){
@@ -39,14 +40,14 @@ try{
  const observedAt=new Date().toISOString(),old=new Map(previous.products.map(p=>[p.sku,p])),products=[];
  for(const listing of listings.values()){
   let detail=checkpoint.details[listing.id];const prior=old.get(listing.id),probe=normaliseAsdaProduct(listing,null,{observedAt,previous:prior,baseline:initial});
-  if(detail?.fingerprint!==asdaFingerprint(probe))detail=null;
+  if(detail?.fingerprint!==asdaFingerprint(probe)||Date.now()-Date.parse(detail.observedAt)>=7*86400000)detail=null;
   const p=normaliseAsdaProduct(listing,detail?.product,{observedAt,previous:prior,baseline:initial});if(detail)p.attributeObservedAt=detail.observedAt;
   products.push(p);
  }
  await atomicJson(DIR+'/directory-checkpoint.json',{observedAt,total,products});
- const needed=products.filter(p=>!p.detailsReady||p.detailInputFingerprint!==old.get(p.sku)?.detailInputFingerprint&&!checkpoint.details[p.sku]);
+ const needed=products.filter(p=>!p.detailsReady||Date.now()-Date.parse(p.attributeObservedAt)>=7*86400000||p.detailInputFingerprint!==old.get(p.sku)?.detailInputFingerprint&&!checkpoint.details[p.sku]);
  for(let i=0;i<needed.length;i+=36){const batch=needed.slice(i,i+36),out=await api(actionBody(ROOT,asdaBatchScript(batch.map(p=>({sku:p.sku,url:p.sourceUrl})))));if(!Array.isArray(out.value))throw Error('ASDA detail batch missing');
-  for(const row of out.value){const index=products.findIndex(p=>p.sku===row.sku),p=products[index];if(row.status!==200||!row.data?.product){p.detailIssue={status:row.status,observedAt:row.observedAt||observedAt};continue;}
+  for(const row of out.value){const index=products.findIndex(p=>p.sku===row.sku),p=products[index];if(row.status!==200||!row.data?.product){p.detailIssue={status:row.status,observedAt:row.observedAt||observedAt};p.detailsReady=false;continue;}
    const fresh=normaliseAsdaProduct(listings.get(p.sku),row.data.product,{observedAt:row.observedAt,previous:p,baseline:initial});fresh.observedAt=observedAt;products[index]=fresh;checkpoint.details[p.sku]={fingerprint:asdaFingerprint(fresh),product:row.data.product,observedAt:row.observedAt};
   }
   await atomicJson(DIR+'/checkpoint.json',checkpoint);await atomicJson(DIR+'/directory-checkpoint.json',{observedAt,total,products});console.log(JSON.stringify({phase:'ASDA exact SKU checkpoint',processed:Math.min(i+36,needed.length),total:needed.length,credits}));

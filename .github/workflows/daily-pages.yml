@@ -78,6 +78,7 @@ jobs:
             /web/status.json
             /web/monitor-state.json
             /web/catalogue.json
+            /web/asda-model.mjs
             /web/catalogue-model.mjs
             /web/collection-policy.json
             /web/collection-ledger.json

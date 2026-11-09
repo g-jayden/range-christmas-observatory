@@ -20,3 +20,9 @@ export async function analyseDecorationImages(products,imageFiles){
  for(const [noun,indices]of groups){const choices=COLORS.map(([color])=>`a ${color} ${noun}`),batches=await model(indices.map(i=>imageFiles[i]),choices);for(let n=0;n<indices.length;n++){const scores=batches[n],top=scores[0],match=COLORS[choices.indexOf(top.label)];output[indices[n]]={colors:match[1],confidence:top.score,method:'local-batched-CLIP-product-type-and-description',reviewed:false,top:scores.slice(0,3).map(x=>({colors:COLORS[choices.indexOf(x.label)][1],score:Math.round(x.score*1000)/1000}))};}}
  return output;
 }
+
+export async function analyseAsdaImages(products,files){
+ const model=await classifier(),objects=[['asda-tree','a full-size artificial Christmas tree with a floor stand'],['asda-tree-decorations','small Christmas tree hanging ornaments, baubles or tree topper'],['asda-lights','Christmas string lights, fairy lights or net lights'],['asda-room','a Christmas room ornament, figure or miniature house'],['asda-wreath','a full Christmas door wreath'],['asda-garland','a long Christmas foliage garland or decoration garland'],['asda-outdoor','an outdoor Christmas display or inflatable Christmas decoration']];
+ const colour=await model(files,COLORS.map(([c])=>'a '+c+' Christmas product, excluding its background')),shape=await model(files,objects.map(x=>x[1]));
+ return products.map((p,i)=>({colors:COLORS[COLORS.map(([c])=>'a '+c+' Christmas product, excluding its background').indexOf(colour[i][0].label)][1],colourConfidence:colour[i][0].score,objectTop:shape[i].slice(0,3).map(x=>({id:objects.find(o=>o[1]===x.label)[0],score:x.score})),method:'local-CLIP-image-plus-exact-SKU-description',checkedAt:new Date().toISOString()}));
+}

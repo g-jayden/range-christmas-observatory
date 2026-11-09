@@ -30,13 +30,26 @@ jobs:
           node-version: '24'
       - run: npm install --no-audit --no-fund
       - run: node scripts/test-asda.mjs
+      - uses: actions/cache@v6.1.0
+        with:
+          path: |
+            runtime/models
+            runtime/fonts
+          key: local-clip-vit-base-patch32-q8-v1
       - name: Collect one shared ASDA catalogue and changed exact SKU details
         run: node scripts/update-asda.mjs
+      - name: Verify full-product previews and colours locally without Firecrawl
+        run: node scripts/enrich-asda.mjs
+      - name: Prepare only newly observed ASDA notifications
+        run: node scripts/prepare-asda-notifications.mjs
       - name: Preserve paid source checkpoints even after a partial failure
         if: always()
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add web/asda web/collection-ledger.json
+          mkdir -p web/images/asda web/mail-assets
+          git add web/asda web/images/asda web/mail-assets web/collection-ledger.json
           git diff --cached --quiet || git commit -m "Save verified ASDA catalogue and exact SKU checkpoints"
           node scripts/push-evidence.mjs
+      - name: Deliver from the durable published attachment version
+        run: node scripts/deliver-asda-notifications.mjs

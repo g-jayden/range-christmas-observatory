@@ -1,3 +1,4 @@
+import {dispatchAsdaDue} from './asda-clock.mjs';
 import {endedMonitorOwner,githubRunReader} from './monitor-owner.mjs';
 import {sourceRetryDue,sourceRecovery} from './source-recovery.mjs';
 import {evidenceRetryDue,evidenceDeadline,completeMonitorState,MONITOR_PIPELINE_VERSION} from './evidence-recovery.mjs';
@@ -10,8 +11,11 @@ const SITE='https://g-jayden.github.io';
 const HOME=SITE+'/range-christmas-observatory/';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const hash=async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))].map(v=>v.toString(16).padStart(2,'0')).join('');
+const storageSku=p=>p.retailerId==='asda'?'asda:'+p.sku:String(p.sku);
+const assetId=p=>p.retailerId==='asda'?'asda-'+p.sku:String(p.sku);
+const verifyProductUrl=p=>verifyUrl(p.sourceUrl,p.retailerId==='asda'?['direct.asda.com']:['therange.co.uk']);
 const allowedScopes=DEPARTMENTS.map(d=>d.id);
-const accepts=(sub,p)=>(!p.taxonomyAudit||p.taxonomyAudit.disposition==='include')&&sub.scopes.some(scope=>scope===p.kind||(p.departmentIds||[p.department]).includes(scope));
+const accepts=(sub,p)=>(!p.taxonomyAudit||p.taxonomyAudit.disposition==='include')&&sub.scopes.some(scope=>(p.retailerId!=='asda'&&scope===p.kind)||(p.departmentIds||[p.department]).includes(scope));
 const token=()=>crypto.randomUUID()+crypto.randomUUID();
 const validEmail=s=>typeof s==='string'&&s.length<=254&&/^[^\s@<>;,]+@[^\s@<>;,]+\.[^\s@<>;,]+$/.test(s);
 function response(value,status=200){return Response.json(value,{status,headers:{'cache-control':'no-store'}})}
@@ -19,7 +23,7 @@ function checkAuth(req,secret){if(!secret||req.headers.get('authorization')!=='B
 function verifyUrl(raw,hosts){const u=new URL(raw);if(u.protocol!=='https:'||!hosts.some(h=>u.hostname===h||u.hostname.endsWith('.'+h)))throw Error('非允许的来源地址。');return u.href;}
 function mailAssets(p){
  const m=p.mailAssets;if(!m?.card?.url||!m?.original?.url)throw Error('完整信息卡或官网原图尚未生成');
- const allowed=raw=>mailAssetUrl(raw,p.sku);
+ const allowed=raw=>mailAssetUrl(raw,assetId(p));
  const original=m.mailOriginal||m.original;
  return [{name:'NEW-'+p.sku+'-card.png',url:allowed(m.card.url)},{name:'NEW-'+p.sku+'-original.'+new URL(original.url).pathname.split('.').pop(),url:allowed(original.url)},...(m.proof?.url?[{name:'NEW-'+p.sku+'-source-page.png',url:allowed(m.proof.url)}]:[])];
 }
@@ -31,7 +35,7 @@ function productMail(p,origin,test=false,unsubscribe=null){
  const price=sourcePrice(p);
  const attributes=[['SKU',p.sku],['价格 · Price','£'+Number(p.priceGBP).toFixed(2)],...(price.reduced?[['原站划线原价 · Source original price','£'+(price.originalPence/100).toFixed(2)]]:[]),...(price.promoText?[['原站促销 · Source offer',price.promoText]]:[]),['尺寸 · Size',p.kind==='tree'?p.heightLabel:p.dimensions?.label||p.skirtDiameterCm&&p.skirtDiameterCm+'cm'||'原站未注明 · Not specified'],['本体颜色 · Body colours',(p.colorValues||[]).map(colourLabel).join(' / ')||p.treeColor||'待核验 · Unconfirmed'],['材质 · Materials',p.material||'原站未注明 · Not specified']];
  if(p.kind==='tree')attributes.push(['分类 · Shape',p.style+' · '+(STYLE_EN[p.style]||'Other')]);
- return `<div style="font:16px/1.8 Arial,sans-serif;max-width:900px;margin:auto;color:#173c32"><p>${esc(header)}</p><h1>${esc(p.variantName)}</h1>${has?`<p style="background:#eef4ed;padding:14px">直接保存到手机：长按下方图片选择“保存图片／存储图像”，或打开邮件底部的图片附件保存。<br>Long-press an image to save it, or open the image attachments below.<br>完整信息卡 · Product card: NEW-${esc(p.sku)}-card.png<br>官网原图 · Source original: NEW-${esc(p.sku)}-original.${esc(ext)}</p><h2>完整商品信息卡 · Full product card</h2><img src="${esc(m.card.url)}" alt="完整商品信息卡 · Full product card; long-press to save" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><h2>官网原图 · Original product photo</h2><img src="${esc(original.url)}" alt="官网原图 · Original source photo; long-press to save" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><p>官网原图 ${Number(m.original.width)}×${Number(m.original.height)} 像素。${m.mailOriginal?'邮件附件为原尺寸无损 PNG 副本，像素完全一致；官网原始文件保留在下载页。<br>Full-size lossless PNG with identical pixels; the native original is retained on the download page.':'原文件未经放大或二次压缩；保存附件可保留原始文件。<br>Original source bytes, with no enlargement or recompression. Save the attachment to retain the original file.'}</p>`:`<img src="${origin}/shots/${p.imageAccess}" alt="具体SKU原站截图 · Exact SKU source screenshot" style="width:100%;height:auto">`}<p>${attributes.map(([label,value])=>esc(label)+'：'+esc(value)).join('<br>')}</p><p><a href="${esc(p.sourceUrl)}">查看原站具体SKU购买页 · View exact SKU product page</a></p><p style="font-size:13px;color:#607168">价格与NEW核验 · Price / NEW checked: ${esc(checked)}。下单时以官网为准 · Confirm live details before purchase.${test?' 本测试不改变新品基线 · This test does not change the NEW baseline.':''}</p><p>${unsubscribe?`<a href="${esc(unsubscribe)}">取消订阅 · Unsubscribe</a> · `:''}<a href="${HOME}">查看分析网站 · View analysis</a></p></div>`;
+ return `<div style="font:16px/1.8 Arial,sans-serif;max-width:900px;margin:auto;color:#173c32"><p>${p.retailerId==='asda'?'ASDA · George':'The Range'} · ${esc(header)}</p><h1>${esc(p.variantName)}</h1>${has?`<p style="background:#eef4ed;padding:14px">直接保存到手机：长按下方图片选择“保存图片／存储图像”，或打开邮件底部的图片附件保存。<br>Long-press an image to save it, or open the image attachments below.<br>完整信息卡 · Product card: NEW-${esc(p.sku)}-card.png<br>官网原图 · Source original: NEW-${esc(p.sku)}-original.${esc(ext)}</p><h2>完整商品信息卡 · Full product card</h2><img src="${esc(m.card.url)}" alt="完整商品信息卡 · Full product card; long-press to save" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><h2>官网原图 · Original product photo</h2><img src="${esc(original.url)}" alt="官网原图 · Original source photo; long-press to save" width="900" style="display:block;width:100%;max-width:900px;height:auto;border:0"><p>官网原图 ${Number(m.original.width)}×${Number(m.original.height)} 像素。${m.mailOriginal?'邮件附件为原尺寸无损 PNG 副本，像素完全一致；官网原始文件保留在下载页。<br>Full-size lossless PNG with identical pixels; the native original is retained on the download page.':'原文件未经放大或二次压缩；保存附件可保留原始文件。<br>Original source bytes, with no enlargement or recompression. Save the attachment to retain the original file.'}</p>`:`<img src="${origin}/shots/${p.imageAccess}" alt="具体SKU原站截图 · Exact SKU source screenshot" style="width:100%;height:auto">`}<p>${attributes.map(([label,value])=>esc(label)+'：'+esc(value)).join('<br>')}</p><p><a href="${esc(p.sourceUrl)}">查看原站具体SKU购买页 · View exact SKU product page</a></p><p style="font-size:13px;color:#607168">价格与NEW核验 · Price / NEW checked: ${esc(checked)}。下单时以官网为准 · Confirm live details before purchase.${test?' 本测试不改变新品基线 · This test does not change the NEW baseline.':''}</p><p>${unsubscribe?`<a href="${esc(unsubscribe)}">取消订阅 · Unsubscribe</a> · `:''}<a href="${HOME}">查看分析网站 · View analysis</a></p></div>`;
 }
 export class Control{
  constructor(ctx,env){this.ctx=ctx;this.env=env;this.db=ctx.storage;}
@@ -44,9 +48,9 @@ export class Control{
  async deliveryStatus(){
   const events=await this.db.list({prefix:'event/'}),subs=await this.db.list({prefix:'sub/'}),revision=await this.deliveryRevision();let pendingDeliveries=0,readyDeliveries=0,blockedDeliveries=0,waitingDeliveries=0;
   for(const p of events.values()){
-   const fingerprint=await hash(payloadIdentity(p,revision)),assetState=retryState(await this.db.get('delivery-asset-error/'+p.sku),fingerprint);
-   for(const [key,sub]of subs)if(sub.confirmedAt&&Date.parse(sub.confirmedAt)<=Date.parse(p.detectedAt)&&accepts(sub,p)&&!await this.db.get('delivered/'+p.sku+'/'+key.slice(4))){
-    pendingDeliveries++;const state=assetState==='ready'?retryState(await this.db.get('delivery-error/'+p.sku+'/'+key.slice(4)),fingerprint):assetState;
+   const fingerprint=await hash(payloadIdentity(p,revision)),assetState=retryState(await this.db.get('delivery-asset-error/'+storageSku(p)),fingerprint);
+   for(const [key,sub]of subs)if(sub.confirmedAt&&Date.parse(sub.confirmedAt)<=Date.parse(p.detectedAt)&&accepts(sub,p)&&!await this.db.get('delivered/'+storageSku(p)+'/'+key.slice(4))){
+    pendingDeliveries++;const state=assetState==='ready'?retryState(await this.db.get('delivery-error/'+storageSku(p)+'/'+key.slice(4)),fingerprint):assetState;
     if(state==='ready')readyDeliveries++;else if(state==='blocked')blockedDeliveries++;else waitingDeliveries++;
    }
   }
@@ -79,7 +83,7 @@ export class Control{
   if(route==='/public/status'&&req.method==='GET'){
    const config=await this.config(),monitor=await this.monitorState(),clock=await this.db.get('dispatch-clock');
    const dispatchClock={enabled:Boolean(this.env.GITHUB_DISPATCH_TOKEN),pipelineVersion:MONITOR_PIPELINE_VERSION,lastAttemptAt:clock?.lastAttemptAt||null,lastAcceptedAt:clock?.lastAcceptedAt||null,lastStatus:clock?.lastStatus||null,attempts:clock?.attempts||0};
-   const pending=[...(await this.db.list({prefix:'pending/'})).values()];return response({config,schedule:scheduleLabel(config),dispatchClock,baselineReady:Boolean(await this.db.get('seeded')),monitor:{...monitor,...await this.deliveryStatus(),pendingScreenshots:pending.filter(p=>!p.unavailableSince).length,pendingUnavailable:pending.filter(p=>p.unavailableSince).length},mailReady:Boolean(this.env.BREVO_API_KEY&&this.env.MAIL_FROM),recent:await this.db.get('recent')||[]});
+   const pending=[...(await this.db.list({prefix:'pending/'})).values()];return response({config,schedule:scheduleLabel(config),asdaMonitor:await this.db.get('asda-monitor')||null,asdaClock:await this.db.get('asda-clock')||null,dispatchClock,baselineReady:Boolean(await this.db.get('seeded')),monitor:{...monitor,...await this.deliveryStatus(),pendingScreenshots:pending.filter(p=>!p.unavailableSince).length,pendingUnavailable:pending.filter(p=>p.unavailableSince).length},mailReady:Boolean(this.env.BREVO_API_KEY&&this.env.MAIL_FROM),recent:await this.db.get('recent')||[]});
   }
   if(route.startsWith('/shots/')&&req.method==='GET'){
    const access=route.slice(7);if(!/^[a-f\d]{64}$/.test(access))return response({error:'Not found'},404);
@@ -168,11 +172,11 @@ export class Control{
   }
   if(route.startsWith('/internal/')){
    checkAuth(req,this.env.CONTROL_TOKEN);
-   if(route==='/internal/clock-tick'&&req.method==='POST'){await this.recoverAbandonedMonitor();return response(await dispatchDue({storage:this.db,env:this.env,config:await this.config(),monitor:{...await this.monitorState(),...await this.deliveryStatus()},fullLease:await this.db.get('lease/full'),monitorLease:await this.db.get('lease/monitor'),initialized:Boolean(await this.db.get('seeded'))}));}
+   if(route==='/internal/clock-tick'&&req.method==='POST'){await this.recoverAbandonedMonitor();const asda=await dispatchAsdaDue({storage:this.db,env:this.env});return response({...await dispatchDue({storage:this.db,env:this.env,config:await this.config(),monitor:{...await this.monitorState(),...await this.deliveryStatus()},fullLease:await this.db.get('lease/full'),monitorLease:await this.db.get('lease/monitor'),initialized:Boolean(await this.db.get('seeded'))}),asda});}
    if(route==='/internal/test-email'&&req.method==='POST'){
     const b=await req.json(),email=String(b.email||'').trim().toLowerCase(),sub=validEmail(email)&&await this.db.get('sub/'+await hash(email));
     if(!sub?.confirmedAt)return response({error:'测试邮箱尚未确认订阅'},409);
-    const p=b.product;if(!/^\d{1,12}$/.test(String(p?.sku))||p.newStatus!==true)throw Error('测试商品必须有真实NEW证据');verifyUrl(p.sourceUrl,['therange.co.uk']);
+    const p=b.product;if(!/^\d{1,12}$/.test(String(p?.sku))||p.newStatus!==true)throw Error('测试商品必须有真实NEW证据');verifyProductUrl(p);
     const assets=mailAssets(p),key=String(b.requestId||'');if(!/^[A-Za-z0-9_-]{4,100}$/.test(key))throw Error('Invalid test request');const prior=await this.db.get('test/'+key);if(prior)return response({accepted:true,alreadySent:true});
     const messageId=await this.send(email,'【测试】邮箱直接保存图片｜'+p.variantName,productMail(p,url.origin,true),assets,await hash('test/'+key));await this.db.put('test/'+key,{messageId,at:new Date().toISOString()});return response({accepted:true,messageId});
    }
@@ -198,7 +202,7 @@ export class Control{
     if(await this.db.get('seeded'))return response({seeded:true,changed:false});
     const b=await req.json();if(!Array.isArray(b.records)||b.records.length>10000)throw Error('Invalid baseline');
     const values={config:b.config?{...firstRun(),...b.config}:firstRun()};
-    for(const p of b.records){if(!/^\d{1,12}$/.test(String(p.sku)))throw Error('Invalid SKU');if(p.everNew)values['seen/'+p.sku]=true}
+    for(const p of b.records){if(!/^\d{1,12}$/.test(String(p.sku)))throw Error('Invalid SKU');if(p.everNew)values['seen/'+storageSku(p)]=true}
     // Only the first authenticated seed may migrate subscriptions with existing consent.
     const subscriptions=b.confirmedSubscriptions||[];if(!Array.isArray(subscriptions)||subscriptions.length>10000)throw Error('Invalid subscription migration');
     for(const sub of subscriptions){const email=String(sub.email||'').trim().toLowerCase(),confirmed=Date.parse(sub.confirmedAt),scopes=allowedScopes.filter(kind=>(sub.scopes||[]).includes(kind));if(!validEmail(email)||!Number.isFinite(confirmed)||confirmed>Date.now()||!scopes.length)throw Error('Unverified subscription migration');const id=await hash(email),unsubscribe=token();values['sub/'+id]={email,scopes,requestedAt:confirmed,confirmedAt:new Date(confirmed).toISOString(),unsubscribe};values['token/'+await hash(unsubscribe)]={id,action:'/unsubscribe',expires:Date.now()+3660*86400000};}
@@ -208,7 +212,7 @@ export class Control{
     const b=await req.json();if(!['christmas-decorations-v1','christmas-lights-v1','christmas-themes-v1'].includes(b.scope)||!Array.isArray(b.records)||b.records.length>30000)throw Error('Invalid scoped baseline');
     if(await this.db.get('baseline/'+b.scope))return response({seeded:true,changed:false});
     const records=b.records;if(records.some(p=>!/^\d{1,12}$/.test(String(p.sku))))throw Error('Invalid baseline SKU');
-    for(const p of records)if(p.everNew&&!await this.db.get('pending/'+p.sku)&&!await this.db.get('event/'+p.sku))await this.db.put('seen/'+p.sku,true);
+    for(const p of records)if(p.everNew&&!await this.db.get('pending/'+storageSku(p))&&!await this.db.get('event/'+storageSku(p)))await this.db.put('seen/'+storageSku(p),true);
     await this.db.put('baseline/'+b.scope,{observedAt:b.observedAt,products:records.length});return response({seeded:true,changed:true,products:records.length});
    }
    if(route==='/internal/claim'&&req.method==='POST'){
@@ -233,25 +237,39 @@ export class Control{
     const c=await this.config();if(b.success&&(c.revision||null)===lease.revision)await this.db.put('config',advanceRun(c));
     await this.db.delete('lease/full');return response({config:await this.config()});
    }
+   if(route==='/internal/asda-sync'&&req.method==='POST'){
+    const b=await req.json();if(!Array.isArray(b.products)||b.products.length>10000)throw Error('Invalid ASDA scan');const baseline=await this.db.get('baseline/asda-christmas-v1'),now=new Date().toISOString();
+    const ownerId=this.env.ASDA_OWNER_SUBSCRIPTION_ID;if(/^[a-f0-9]{64}$/.test(ownerId||'')&&!await this.db.get('asda-owner-opt-in')){const sub=await this.db.get('sub/'+ownerId);if(sub?.confirmedAt){sub.scopes=[...new Set([...sub.scopes,...allowedScopes.filter(s=>s.startsWith('asda-'))])];await this.db.put('sub/'+ownerId,sub);await this.db.put('asda-owner-opt-in',now);}}
+    for(const p of b.products){if(p.retailerId!=='asda'||!/^\d{8,12}$/.test(p.sku)||!(p.departmentIds||[]).every(id=>id.startsWith('asda-')&&allowedScopes.includes(id)))throw Error('Invalid ASDA identity');verifyProductUrl(p);const k=storageSku(p);
+     if(!baseline)await this.db.put('seen/'+k,true);
+     else if(!await this.db.get('seen/'+k)&&p.inStock&&p.arrivalEvidence==='observed-after-baseline'&&!await this.db.get('pending/'+k))await this.db.put('pending/'+k,{...p,newStatus:true,firstDetectedAt:p.firstNewObservedAt||now});
+    }
+    if(!baseline&&b.complete===true)await this.db.put('baseline/asda-christmas-v1',{observedAt:b.observedAt,products:b.products.length});
+    await this.db.put('asda-monitor',{observedAt:b.observedAt,scanned:b.products.length,checkedAt:now});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('asda-owner-opt-in')),baselineReady:Boolean(baseline)||b.complete===true,candidates:[...(await this.db.list({prefix:'pending/asda:'})).values()]});
+   }
+   if(route==='/internal/asda-subscription'&&req.method==='POST'){
+    const b=await req.json(),id=String(b.subscriptionId||'');if(!/^[a-f0-9]{64}$/.test(id))throw Error('Invalid confirmed subscription identity');const sub=await this.db.get('sub/'+id);if(!sub?.confirmedAt)return response({error:'Existing confirmed subscription required'},409);
+    sub.scopes=[...new Set([...sub.scopes,...allowedScopes.filter(s=>s.startsWith('asda-'))])];await this.db.put('sub/'+id,sub);return response({updated:true,confirmed:true,retailerId:'asda'});
+   }
    if(route==='/internal/monitor-plan'&&req.method==='POST'){
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
     if(!Array.isArray(b.products)||b.products.length>30000)throw Error('Invalid scan');
-    for(const p of b.products){if(!/^\d{1,12}$/.test(p.sku))throw Error('Invalid SKU');verifyUrl(p.sourceUrl,['therange.co.uk']);if(p.newStatus&&!await this.db.get('seen/'+p.sku)){const pending=await this.db.get('pending/'+p.sku);if(!pending)await this.db.put('pending/'+p.sku,{...p,firstDetectedAt:new Date().toISOString()});else if(pending.unavailableSince){delete pending.unavailableSince;await this.db.put('pending/'+p.sku,pending);}}}
-    return response({candidates:[...(await this.db.list({prefix:'pending/'})).values()].filter(p=>!p.taxonomyAudit||p.taxonomyAudit.disposition==='include')});
+    for(const p of b.products){if(!/^\d{1,12}$/.test(p.sku))throw Error('Invalid SKU');verifyProductUrl(p);if(p.newStatus&&!await this.db.get('seen/'+storageSku(p))){const pending=await this.db.get('pending/'+storageSku(p));if(!pending)await this.db.put('pending/'+storageSku(p),{...p,firstDetectedAt:new Date().toISOString()});else if(pending.unavailableSince){delete pending.unavailableSince;await this.db.put('pending/'+storageSku(p),pending);}}}
+    return response({candidates:[...(await this.db.list({prefix:'pending/'})).values()].filter(p=>p.retailerId!=='asda'&&(!p.taxonomyAudit||p.taxonomyAudit.disposition==='include'))});
    }
-   if(['/internal/event','/internal/recover-event'].includes(route)&&req.method==='POST'){
+   if(['/internal/event','/internal/recover-event','/internal/asda-event'].includes(route)&&req.method==='POST'){
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(route==='/internal/event'&&lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
-    const p=b.product;if(p?.taxonomyAudit&&p.taxonomyAudit.disposition!=='include')return response({error:'商品不属于已核验圣诞范围'},422);if(!/^\d{1,12}$/.test(p?.sku))throw Error('Invalid SKU');verifyUrl(p.sourceUrl,['therange.co.uk']);
-    if(await this.db.get('seen/'+p.sku))return response({alreadyRecorded:true});
-    if(route==='/internal/recover-event'){
-     const pending=await this.db.get('pending/'+p.sku);
-     if(!pending||p.newStatus!==true||p.sourceUrl!==pending.sourceUrl||p.detailEvidence?.selectedSku!==p.sku||!p.detailEvidence?.verifiedProductSection||!p.mailAssets?.proof?.url)return response({error:'只能恢复已有待处理且证据完整的真实新品'},409);
+    const p=b.product;if(route==='/internal/asda-event'&&p?.retailerId!=='asda')throw Error('ASDA exact retailer required');if(p?.taxonomyAudit&&p.taxonomyAudit.disposition!=='include')return response({error:'商品不属于已核验圣诞范围'},422);if(!/^\d{1,12}$/.test(p?.sku))throw Error('Invalid SKU');verifyProductUrl(p);
+    if(await this.db.get('seen/'+storageSku(p)))return response({alreadyRecorded:true});
+    if(route==='/internal/recover-event'||route==='/internal/asda-event'){
+     const pending=await this.db.get('pending/'+storageSku(p));
+     if(!pending||p.newStatus!==true||p.sourceUrl!==pending.sourceUrl||p.detailEvidence?.selectedSku!==p.sku||!p.detailEvidence?.verifiedProductSection||!(p.mailAssets?.proof?.url||p.retailerId==='asda'&&p.mailAssets?.evidenceMode==='verified-information-card'))return response({error:'只能恢复已有待处理且证据完整的真实新品'},409);
      mailAssets(p);
     }
     if(!b.screenshotBase64||b.screenshotBase64.length>7000000||!/^[A-Za-z0-9+/=]+$/.test(b.screenshotBase64))return response({error:'原站截图尚未取得，等待重试；不会用主图冒充截图。'},422);
-    const pending=await this.db.get('pending/'+p.sku),parts=b.screenshotBase64.match(/.{1,60000}/g),imageAccess=await hash(token()),record={...p,imageAccess,screenshotParts:parts.length,detectedAt:pending?.firstDetectedAt||new Date().toISOString(),screenshotVerifiedAt:b.screenshotVerifiedAt};
-    const values={};parts.forEach((part,i)=>values['shot/'+p.sku+'/'+i]=part);const entries=Object.entries(values);for(let i=0;i<entries.length;i+=100)await this.db.put(Object.fromEntries(entries.slice(i,i+100)));await this.db.put({['event/'+p.sku]:record,['seen/'+p.sku]:true,['image-access/'+imageAccess]:p.sku});
-    await this.db.delete('pending/'+p.sku);const recent=await this.db.get('recent')||[];recent.unshift({sku:p.sku,name:p.variantName,kind:p.kind,imageUrl:p.variantImageUrl||p.imageUrl,sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,detectedAt:record.detectedAt});await this.db.put('recent',recent.slice(0,30));
+    const pending=await this.db.get('pending/'+storageSku(p)),parts=b.screenshotBase64.match(/.{1,60000}/g),imageAccess=await hash(token()),record={...p,imageAccess,screenshotParts:parts.length,detectedAt:pending?.firstDetectedAt||new Date().toISOString(),screenshotVerifiedAt:b.screenshotVerifiedAt};
+    const values={};parts.forEach((part,i)=>values['shot/'+storageSku(p)+'/'+i]=part);const entries=Object.entries(values);for(let i=0;i<entries.length;i+=100)await this.db.put(Object.fromEntries(entries.slice(i,i+100)));await this.db.put({['event/'+storageSku(p)]:record,['seen/'+storageSku(p)]:true,['image-access/'+imageAccess]:storageSku(p)});
+    await this.db.delete('pending/'+storageSku(p));const recent=await this.db.get('recent')||[];recent.unshift({sku:p.sku,retailerId:p.retailerId||'the-range',name:p.variantName,kind:p.kind,imageUrl:p.variantImageUrl||p.imageUrl,sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,detectedAt:record.detectedAt});await this.db.put('recent',recent.slice(0,30));
     return response({recorded:true});
    }
    if(route==='/internal/monitor-complete'&&req.method==='POST'){
@@ -266,12 +284,12 @@ export class Control{
     const failures=[];
     const recordFailure=async(key,p,fingerprint,e)=>{const record=deliveryFailure(await this.db.get(key),fingerprint,e);await this.db.put(key,record);failed++;failures.push({sku:p.sku,attempts:record.attempts,blocked:record.blocked,providerStatus:record.providerStatus,providerCode:record.providerCode,assetStatus:record.assetStatus});};
     deliveryBatch:for(const [eventKey,p] of events){
-     const created=Date.parse(p.detectedAt);if(Date.now()-created>14*86400000){await this.db.delete(eventKey);await this.db.delete('image-access/'+p.imageAccess);for(let i=0;i<p.screenshotParts;i++)await this.db.delete('shot/'+p.sku+'/'+i);continue}
+     const created=Date.parse(p.detectedAt);if(Date.now()-created>14*86400000){await this.db.delete(eventKey);await this.db.delete('image-access/'+p.imageAccess);for(let i=0;i<p.screenshotParts;i++)await this.db.delete('shot/'+storageSku(p)+'/'+i);continue}
      let fingerprint=await hash(payloadIdentity(p,revision));
-     const assetKey='delivery-asset-error/'+p.sku;
+     const assetKey='delivery-asset-error/'+storageSku(p);
      if(retryState(await this.db.get(assetKey),fingerprint)!=='ready')continue;
      const recipients=[];
-     for(const [key,sub]of subs)if(sub.confirmedAt&&Date.parse(sub.confirmedAt)<=created&&accepts(sub,p)&&!await this.db.get('delivered/'+p.sku+'/'+key.slice(4))&&retryState(await this.db.get('delivery-error/'+p.sku+'/'+key.slice(4)),fingerprint)==='ready')recipients.push([key,sub]);
+     for(const [key,sub]of subs)if(sub.confirmedAt&&Date.parse(sub.confirmedAt)<=created&&accepts(sub,p)&&!await this.db.get('delivered/'+storageSku(p)+'/'+key.slice(4))&&retryState(await this.db.get('delivery-error/'+storageSku(p)+'/'+key.slice(4)),fingerprint)==='ready')recipients.push([key,sub]);
      if(!recipients.length)continue;
      if(attempted>=8)break;
      // Only the published, exact-SKU manifest can refresh the queued assets.
@@ -286,17 +304,17 @@ export class Control{
       if(p.mailAssets?.card&&p.mailAssets?.original){
        attachments=mailAssets(p);
        for(const asset of attachments){const ready=await fetch(asset.url,{method:'HEAD',signal:AbortSignal.timeout(10000)});if(!ready.ok||!ready.headers.get('content-type')?.startsWith('image/'))throw Object.assign(Error('新品附件尚未发布'),{assetStatus:ready.status});}
-      }else{const chunks=[];for(let i=0;i<p.screenshotParts;i++)chunks.push(await this.db.get('shot/'+p.sku+'/'+i));attachments=[{name:'NEW-'+p.sku+'.png',content:chunks.join('')}];}
+      }else{const chunks=[];for(let i=0;i<p.screenshotParts;i++)chunks.push(await this.db.get('shot/'+storageSku(p)+'/'+i));attachments=[{name:'NEW-'+p.sku+'.png',content:chunks.join('')}];}
       await this.db.delete(assetKey);
      }catch(e){attempted++;await recordFailure(assetKey,p,fingerprint,e);continue;}
      for(const [subKey,sub]of recipients){
       if(attempted>=8)break deliveryBatch;
-      const delivered='delivered/'+p.sku+'/'+subKey.slice(4),errorKey='delivery-error/'+p.sku+'/'+subKey.slice(4);
+      const delivered='delivered/'+storageSku(p)+'/'+subKey.slice(4),errorKey='delivery-error/'+storageSku(p)+'/'+subKey.slice(4);
       if(retryState(await this.db.get(errorKey),fingerprint)!=='ready')continue;
       attempted++;
       try{
        const html=productMail(p,url.origin,false,url.origin+'/unsubscribe?token='+encodeURIComponent(sub.unsubscribe));
-       const id=await this.send(sub.email,'NEW｜'+p.variantName,html,attachments,await hash(p.sku+'/'+subKey));
+       const id=await this.send(sub.email,'NEW｜'+p.variantName,html,attachments,await hash(storageSku(p)+'/'+subKey));
        const acceptedAt=new Date().toISOString();await this.db.put(delivered,{acceptedAt,providerId:id});await this.db.delete(errorKey);accepted++;await this.db.put('last-delivery',{accepted,at:acceptedAt});
       }catch(e){await recordFailure(errorKey,p,fingerprint,e);}
      }

@@ -1,0 +1,5 @@
+import fs from 'node:fs/promises';import {execFileSync} from 'node:child_process';import {control} from '../server/cloud-client.mjs';import {pinMailAssets} from '../cloud/published-mail-assets.mjs';import {deliverVerifiedEvents} from '../server/new-events.mjs';
+let out;try{out=JSON.parse(await fs.readFile('runtime/asda-outbox.private.json','utf8'))}catch(e){if(e.code==='ENOENT')process.exit(0);throw e;}
+const revision=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();let queued=0;
+for(const event of out.events){event.product.mailAssets=pinMailAssets(event.product.mailAssets,revision);const r=await control('/internal/asda-event',event);if(!r.recorded&&!r.alreadyRecorded)throw Error('ASDA event was not durably accepted');queued++;}
+const d=await deliverVerifiedEvents();console.log(JSON.stringify({phase:'ASDA verified delivery',queued,accepted:d.accepted,pendingDeliveries:d.pendingDeliveries,firecrawlCredits:0}));if(d.pendingDeliveries)throw Error('Mail delivery remains pending in private durable queue');
