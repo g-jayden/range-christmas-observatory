@@ -314,7 +314,7 @@ export class Control{
       attempted++;
       try{
        const html=productMail(p,url.origin,false,url.origin+'/unsubscribe?token='+encodeURIComponent(sub.unsubscribe));
-       const id=await this.send(sub.email,'NEW｜'+p.variantName,html,attachments,await hash(storageSku(p)+'/'+subKey));
+       const id=await this.send(sub.email,(p.retailerId==='asda'?'ASDA · George':'The Range')+'｜NEW｜'+p.variantName,html,attachments,await hash(storageSku(p)+'/'+subKey));
        const acceptedAt=new Date().toISOString();await this.db.put(delivered,{acceptedAt,providerId:id});await this.db.delete(errorKey);accepted++;await this.db.put('last-delivery',{accepted,at:acceptedAt});
       }catch(e){await recordFailure(errorKey,p,fingerprint,e);}
      }

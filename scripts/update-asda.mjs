@@ -1,3 +1,4 @@
+import {publishCollectionCheckpoint} from '../server/collection-checkpoints.mjs';
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {asdaBatchScript,parseSavedAsdaPage,asdaPageParserSource} from '../server/asda-source.mjs';
@@ -9,7 +10,7 @@ import {atomicJson} from '../server/sync.mjs';
 const DIR='web/asda',ROOT='https://direct.asda.com/george/christmas/trees-decorations/D18M2G1,default,sc.html',read=async(name,fallback)=>fs.readFile(DIR+'/'+name,'utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return fallback;throw e;});
 await fs.mkdir(DIR,{recursive:true});
 const request=await read('request.json',{}),previous=await read('catalogue.json',{products:[]}),checkpoint=await read('checkpoint.json',{details:{}}),initial=!previous.baselineReady;
-if(process.env.GITHUB_EVENT_NAME==='push'&&request.state!=='pending'){console.log('ASDA request already completed; no paid requests');process.exit(0);}
+if(process.env.GITHUB_EVENT_NAME==='push'&&!['pending','needs-evidence'].includes(request.state)){console.log('ASDA request already completed; no paid requests');process.exit(0);}
 const nowBjt=new Date(Date.now()+28800000).toISOString().slice(0,10),dailyDueAt=Date.parse(nowBjt+'T07:00:00+08:00');if(!initial&&process.env.GITHUB_EVENT_NAME!=='push'&&Date.parse(previous.observedAt)>=dailyDueAt){console.log('ASDA daily source observation already completed; no duplicate paid requests');process.exit(0);}
 const key=process.env.FIRECRAWL_API_KEY;if(!key)throw Error('Firecrawl server credential required');
 const policy=await loadPolicy(),ledger=await readLedger(),period=new Date(Date.now()+28800000).toISOString().slice(0,7),alreadyUsed=(ledger.periods[period]?.runs||[]).filter(r=>r.key===runKey()).reduce((n,r)=>n+r.credits,0);policy.maxCreditsPerRun=Math.max(0,policy.maxCreditsPerRun-alreadyUsed);let budget,credits=0,requests=0,uncertain=0;const receipts=[];
@@ -58,4 +59,6 @@ try{
  request.state=snapshot.baselineReady?'complete':'needs-evidence';request.completedAt=new Date().toISOString();await atomicJson(DIR+'/request.json',request);
  console.log(JSON.stringify({phase:'ASDA collection complete',total,details:ready.length,credits,requests}));
 }catch(e){await atomicJson(DIR+'/status.json',{state:'error',lastSuccess:previous.observedAt||null,error:String(e.message).slice(0,250),requests,firecrawlCredits:credits,checkedAt:new Date().toISOString()});console.error(e.message);process.exitCode=1;}
-finally{if(budget)await budget.settle({credits,receipt:{receipts,billingVerified:uncertain===0},report:{retailerId:'asda',firecrawlCredits:credits,requests,billingVerified:uncertain===0,completedAt:new Date().toISOString()}});}
+finally{if(budget)await budget.settle({credits,receipt:{receipts,billingVerified:uncertain===0},report:{retailerId:'asda',firecrawlCredits:credits,overallRunCredits:alreadyUsed+credits,asdaCredits:credits,otherRetailerCredits:alreadyUsed,requests,billingVerified:uncertain===0,completedAt:new Date().toISOString()}});}
+
+if(budget&&process.env.COLLECTION_CHECKPOINTS==='1')await publishCollectionCheckpoint({stage:'asda-source'});

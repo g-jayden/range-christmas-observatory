@@ -223,6 +223,7 @@ jobs:
         continue-on-error: true
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          COLLECTION_CHECKPOINTS: '1'
         run: |
           node scripts/update-asda.mjs
           node scripts/enrich-asda.mjs

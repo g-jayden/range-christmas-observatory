@@ -78,3 +78,5 @@ for(const name of await fs.readdir('web/mail-assets').catch(()=>[])){
  const proof=manifest.proof?await fs.readFile(dir+'/proof.png'):null;await buildMailAssets(p,proof?.toString('base64'));cardsUpdated++;
 }
 console.log(JSON.stringify({savedSourceMaterialsRecomputed:decorations.products.length,reclassified:moved.length,cardsUpdated,sourceRequestsMade:false,firecrawlCredits:0}));
+
+const asdaEvidence=await fs.readFile('web/asda/catalogue.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return null;throw e;});if(asdaEvidence&&asdaEvidence.imageAudit?.version!=='2026-11-10-asda-v2')await import('./enrich-asda.mjs');

@@ -1,8 +1,10 @@
+import {ASDA_DEPARTMENTS} from './asda-model.mjs';
 import {DEPARTMENTS} from './catalogue-model.mjs';
 import {CATALOGUE_GROUPS} from './catalogue-navigation.mjs';
 import {monitorLabel} from './monitor-labels.mjs';
 (()=>{
- document.getElementById('mailScopes').innerHTML=CATALOGUE_GROUPS.map(g=>'<details class="mailScopeGroup"><summary>'+g.zh+'<small>'+g.en+'</small></summary>'+[...(g.id==='themes'?['themes']:[]),...g.children].map(id=>{const d=DEPARTMENTS.find(d=>d.id===id);return '<label><input type="checkbox" name="mailScope" value="'+d.id+'" checked> '+d.label+'</label>';}).join('')+'</details>').join('');
+ const groups=[...CATALOGUE_GROUPS.map(g=>({...g,zh:'The Range · '+g.zh})),{id:'asda',zh:'ASDA · George 圣诞产品',en:'Christmas products',children:ASDA_DEPARTMENTS.map(d=>d.id)}];
+ document.getElementById('mailScopes').innerHTML=groups.map(g=>'<details class="mailScopeGroup"><summary>'+g.zh+'<small>'+g.en+'</small></summary>'+[...(g.id==='themes'?['themes']:[]),...g.children].map(id=>{const d=DEPARTMENTS.find(d=>d.id===id);return '<label><input type="checkbox" name="mailScope" value="'+d.id+'" checked> '+d.label+'</label>';}).join('')+'</details>').join('');
  const el=id=>document.getElementById(id),local=s=>new Date(s).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'});let api='',dirty=false,config={intervalDays:7,time:'00:00'};
  const message=(id,text)=>{el(id).textContent=text};
  async function request(path,body,secret){const r=await fetch(api+path,{method:body===undefined?'GET':'POST',headers:{...(body===undefined?{}:{'content-type':'application/json'}),...(secret?{authorization:'Bearer '+secret}:{})},body:body===undefined?undefined:JSON.stringify(body),cache:'no-store'});const result=await r.json();if(!r.ok)throw Error(result.error||'云端操作未完成');return result}

@@ -30,7 +30,7 @@ if(event!=='push'&&!['probe','catalogue-probe','repair','monitor-probe','lights-
  if(event==='workflow_dispatch'&&process.env.MANUAL_REFRESH!=='false'&&!monitor)full=true;
 }
 const asdaRequest=await fs.readFile('web/asda/request.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return {};throw e;});
-const asda=mode==='asda'||event==='push'&&asdaRequest.state==='pending'||full||monitor;
+const asda=mode==='asda'||event==='push'&&['pending','needs-evidence'].includes(asdaRequest.state)||full||monitor;
 const work=full||monitor,publish=!['probe','catalogue-probe'].includes(mode)&&(work||asda||pendingDelivery||event==='push'||event==='workflow_dispatch');
 await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/tick.json',JSON.stringify({config,full,monitor,asda,lease,fullLease,monitorLease:monitor?lease:null,evidenceRecovery,evidenceRepair,daily}));
 if(process.env.GITHUB_OUTPUT)await fs.appendFile(process.env.GITHUB_OUTPUT,`asda=${asda}\nfull=${full}\nmonitor=${monitor}\ndelivery=${pendingDelivery||monitor}\nwork=${work}\npublish=${publish}\nevidence_repair=${evidenceRepair}\nfull_lease=${fullLease||''}\n`);
