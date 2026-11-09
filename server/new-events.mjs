@@ -9,6 +9,7 @@ import {productKey,detailFingerprint,failedAttempt,verified} from './collection-
 import {cacheProduct,saveState} from './incremental.mjs';
 import {retryableEvidence} from '../cloud/evidence-recovery.mjs';
 import {pinMailAssets} from '../cloud/published-mail-assets.mjs';
+import {publishCollectionCheckpoint} from './collection-checkpoints.mjs';
 export async function deliverVerifiedEvents(controlCall=control){let delivery,accepted=0;for(let batch=0;batch<100;batch++){delivery=await controlCall('/internal/deliver',{});accepted+=Number(delivery.accepted||0);if(!delivery.morePending)return {...delivery,accepted};}throw Error('仍有待发邮件，已保留云端队列');}
 export function reusableNewDetails(p,policy,now=Date.now()){
  const at=Date.parse(p.attributeObservedAt),day=x=>new Date(x+8*3600000).toISOString().slice(0,10);
@@ -27,7 +28,8 @@ export async function checkNew({snapshot,reader,policy,budget,state,lease,dir='r
   for(const candidate of plan.candidates){
    const p=current.get(candidate.sku),key=p&&productKey(p,policy)+':screenshot',failure=key&&state.failures[key];
    if(!p||!isPublishedProduct(p)||christmasEligibility(p,offeredObject(p)).disposition!=='include'){unavailableSkus.push(candidate.sku);continue;}
-   if(attempted>=policy.maxScreenshotPagesPerRun||budget.remaining()<1||!policy.retryPendingNow&&failure?.fingerprint===detailFingerprint(p)&&Date.parse(failure.retryAt)>now()){deferred++;continue;}
+   const savedDetails=reuse(p)||Boolean(reader.captureVerified&&deferDelivery&&reader.familyReady?.(p.sourceUrl));
+   if(attempted>=policy.maxScreenshotPagesPerRun||budget.remaining()<1&&!savedDetails||!policy.retryPendingNow&&failure?.fingerprint===detailFingerprint(p)&&Date.parse(failure.retryAt)>now()){deferred++;continue;}
    if(/[\u0000-\u001f]/.test(p.sourceUrl)){deferred++;continue;}
    attempted++;
    try{
@@ -68,7 +70,7 @@ export function mergeVerifiedEventProduct(eventProduct,current){
  return merged;
 }
 
-export async function finishNewEvents(result,{snapshot,lease,controlCall=control,buildAssets=buildMailAssets,publishCheckpoint,sourceObservedAt=snapshot?.observedAt}={}){
+export async function finishNewEvents(result,{snapshot,lease,controlCall=control,buildAssets=buildMailAssets,publishCheckpoint=publishCollectionCheckpoint,sourceObservedAt=snapshot?.observedAt}={}){
  // Reclassification is not a new-product event. Suppress out-of-scope or
  // unresolved products before persisting any mail, retaining the global SKU
  // history in the cloud so category changes cannot cause duplicate sends.
