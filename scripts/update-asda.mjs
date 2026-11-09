@@ -28,9 +28,14 @@ try{
  const directory=await api(actionBody(ROOT+'?start=0&sz=600','('+asdaPageParserSource()+')(document.documentElement.outerHTML)'));
  const first=directory.value||parseSavedAsdaPage(directory.html);if(!first.search||!first.enriched?.length)throw Error('ASDA listing payload missing');
  const pageSize=first.search.pageSize,count=first.search.count,total=first.search.totalCount||count;if(!Number.isInteger(total)||total<1||total>10000)throw Error('ASDA invalid total');
- const listings=new Map(first.enriched.map(p=>[p.id,p]));
- if(listings.size<total){const items=[];for(let start=pageSize;start<total;start+=pageSize)items.push({url:ROOT+'?start='+start+'&sz='+pageSize});for(let i=0;i<items.length;i+=18){const out=await api(actionBody(ROOT,asdaBatchScript(items.slice(i,i+18))));if(!Array.isArray(out.value))throw Error('ASDA pagination batch missing');for(const row of out.value){if(row.status!==200||row.data?.search?.totalCount!==total)throw Error('ASDA pagination changed or incomplete');for(const p of row.data.enriched)listings.set(p.id,p);}}}
- if(listings.size!==total)throw Error('ASDA catalogue completeness mismatch '+listings.size+'/'+total);
+ await atomicJson(DIR+'/source-directory.json',{observedAt:new Date().toISOString(),...first});
+ const listingRows=d=>[...(d.search?.products||[]).filter(p=>/^\d{8,12}$/.test(String(p.id))),...(d.enriched||[])];
+ const listings=new Map(listingRows(first).map(p=>[p.id,p]));
+ console.log(JSON.stringify({phase:'ASDA source row reconciliation',total,pageSize,enriched:first.enriched.length,productRows:first.search.products.length,otherRows:first.search.products.filter(p=>!first.enriched.some(e=>e.id===p.id)).map(p=>({id:p.id,name:p.name,keys:Object.keys(p),url:p.URL,error:p.error}))}));
+ if(listings.size<total){const items=[];for(let start=pageSize;start<total;start+=pageSize)items.push({url:ROOT+'?start='+start+'&sz='+pageSize});for(let i=0;i<items.length;i+=18){const out=await api(actionBody(ROOT,asdaBatchScript(items.slice(i,i+18))));if(!Array.isArray(out.value))throw Error('ASDA pagination batch missing');for(const row of out.value){if(row.status!==200||row.data?.search?.totalCount!==total)throw Error('ASDA pagination changed or incomplete');for(const p of listingRows(row.data))listings.set(p.id,p);}}}
+ const nonProductCount=(first.search.products||[]).filter(p=>!/^\d{8,12}$/.test(String(p.id))).length;
+ if(listings.size!==total&&listings.size+nonProductCount!==total)throw Error('ASDA catalogue completeness mismatch '+listings.size+'/'+total);
+ console.log(JSON.stringify({phase:'ASDA source totals',realProducts:listings.size,advertisedTotal:total,nonProductTiles:nonProductCount}));
  const observedAt=new Date().toISOString(),old=new Map(previous.products.map(p=>[p.sku,p])),products=[];
  for(const listing of listings.values()){
   let detail=checkpoint.details[listing.id];const prior=old.get(listing.id),probe=normaliseAsdaProduct(listing,null,{observedAt,previous:prior,baseline:initial});
