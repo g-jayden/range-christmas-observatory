@@ -12,7 +12,7 @@ export async function catalogueMirror(req,{getRevision,fetcher=fetch}){
  const image=/^images\/[\w/-]+\.(?:jpg|jpeg|png|webp|avif)$/i.test(file),nested=/^(?:classified|decoration-details|light-details|theme-details)\/[\w-]+\.json$/.test(file)||/^asda\/(?:catalogue|status|reviews)\.json$/.test(file)||/^mail-assets\/(?:asda-)?\d+\/(?:manifest\.json|[\w-]+\.(?:png|jpg|jpeg|webp))$/.test(file);
  if(!rootFiles.has(file)&&!nested&&!image)return new Response('Not found',{status:404});
  const source=ROOT+sha+'/web/'+file;if(image||/^mail-assets\/.*\.(?:png|jpg|jpeg|webp)$/.test(file))return Response.redirect(source,302);
- const r=await fetcher(source,{method:req.method,redirect:'error',signal:AbortSignal.timeout(20000)});if(!r.ok)return new Response('Published file unavailable',{status:r.status===404?404:502});
+ let r;try{r=await fetcher(source,{method:req.method,redirect:'manual',signal:AbortSignal.timeout(20000)});}catch{return new Response('Published file temporarily unavailable',{status:503,headers:{'retry-after':'30'}});}if(!r.ok)return new Response('Published file unavailable',{status:r.status===404?404:502});
  const ext=file.split('.').pop(),headers={'content-type':types[ext]||'application/octet-stream','cache-control':ext==='html'?'no-store':'public, max-age=31536000, immutable','x-content-type-options':'nosniff','x-catalogue-revision':sha};
  if(file!=='index.html'||req.method==='HEAD')return new Response(r.body,{headers});
  const refresh=`<script>setInterval(()=>fetch('/public/published-site',{cache:'no-store'}).then(r=>r.json()).then(r=>{if(/^[a-f0-9]{40}$/.test(r.commit||'')&&r.commit!==${JSON.stringify(sha)})location.replace('/observatory/r/'+r.commit+'/'+location.search+location.hash)}).catch(()=>{}),60000)</script>`;
