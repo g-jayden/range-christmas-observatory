@@ -33,6 +33,11 @@ const {Script}=await import('node:vm');
 const direct=await new Script('('+fetchCataloguePages.toString()+')('+JSON.stringify([urls[0]])+')').runInNewContext({document:{querySelector:()=>({textContent:'{"totalResults":0,"products":[]}'})},location:{href:urls[0]},fetch:()=>{throw Error('The rendered first API page must not be requested twice')},URL,AbortSignal,Date});
 assert.equal(direct.length,1);assert.equal(direct[0].source,'enhanced-navigation');assert.equal(direct[0].status,200);
 console.log('PASS: enhanced API navigation supplies the first official JSON page without a cross-origin request');
+const browserCalls=new Map();
+const partialBrowser=await new Script('('+fetchCataloguePages.toString()+')('+JSON.stringify(urls.slice(0,3))+')').runInNewContext({fetch:async url=>{const n=(browserCalls.get(url)||0)+1;browserCalls.set(url,n);if(url===urls[1]&&n===1)throw Error('Temporary dropped connection');return {status:200,text:async()=>'{"totalResults":0,"products":[]}'};},URL,AbortSignal,Date});
+assert(partialBrowser.every(r=>r.status===200&&r.body));assert.equal(browserCalls.get(urls[0]),1);assert.equal(browserCalls.get(urls[1]),2);assert.equal(browserCalls.get(urls[2]),1);
+let outageFetches=0;await new Script('('+fetchCataloguePages.toString()+')('+JSON.stringify(urls.slice(0,3))+')').runInNewContext({fetch:async()=>{outageFetches++;throw Error('Provider offline');},URL,AbortSignal,Date});assert.equal(outageFetches,3,'A complete outage is not retried inside every catalogue URL');
+console.log('PASS: isolated dropped connections retry once within the same billed batch; healthy pages and complete outages are not repeated');
 
 let repaired=0,batchExecutions=0;
 const exceptional=createCatalogueTransport(async(fn,urls)=>{batchExecutions++;return urls.map(url=>url.endsWith('24')?{url,status:0,error:'Failed to fetch'}:{url,status:200,body:{revision:1}})},{recover:async()=>({revision:++repaired}),maxRepairs:2});
@@ -49,3 +54,19 @@ const retried=await createFirecrawlBrowserReader({policy:{...defaults,catalogueT
 }});
 await retried(urls[0]);await retried.close();assert.equal(retryCalls,2);assert.equal(retried.metrics().firecrawlCredits,1);assert.equal(retried.metrics().proxyRetries,1);assert.equal(retried.metrics().billingVerified,true);
 console.log('PASS: a provider-confirmed zero-credit proxy failure retries just its request and keeps authoritative billing');
+
+const {collectPartitionedCategory}=await import('../server/catalogue-partitions.mjs');
+const catalogueRows=Array.from({length:10381},(_,i)=>({sku:String(i+1),price:999,originalPrice:null,newIn:i%19===0,inStock:true,variantName:'Item '+i,variantImageUrl:'https://www.therange.co.uk/media/'+i+'.jpg'}));
+let rootBatches=0,brandRequests=0;
+const coherentReader=createCatalogueTransport(async(fn,urls)=>{rootBatches++;return urls.map(url=>{const u=new URL(url),offset=Number(u.searchParams.get('offset')),filters=JSON.parse(u.searchParams.get('filters'));if(filters.brand_f)brandRequests++;return {url,status:200,body:{products:catalogueRows.slice(offset,offset+120),totalResults:catalogueRows.length,facets:[]}};});});
+const coherent=await collectPartitionedCategory('94578',coherentReader);
+assert.deepEqual(new Set(coherent.products.map(p=>p.sku)),new Set(catalogueRows.map(p=>p.sku)),'Unadvertised brands and every equal-price SKU remain included');
+assert.equal(coherent.audit.complete,true);assert.equal(coherent.audit.expected,10381);assert.equal(brandRequests,0);assert(rootBatches<=8,'A coherent 10k-product catalogue must not pay for both brand and root scans');
+assert.equal(coherent.products.filter(p=>p.newIn).length,catalogueRows.filter(p=>p.newIn).length);
+
+const missingReader=createCatalogueTransport(async(fn,urls)=>urls.map(url=>{const u=new URL(url),offset=Number(u.searchParams.get('offset'));let products=catalogueRows.slice(offset,offset+120);if(offset===10300)products=products.map(p=>p.sku==='10381'?catalogueRows[0]:p);return {url,status:200,body:{products,totalResults:catalogueRows.length,facets:[]}};}));
+await assert.rejects(collectPartitionedCategory('94578',missingReader),/brand facet required/,'A matching declared count with one missing SKU must not pass the cheaper route');
+
+let readFailures=0;const failedReader=async()=>({totalResults:200,products:catalogueRows.slice(0,120),facets:[]});failedReader.many=async()=>{readFailures++;throw Object.assign(Error('bounded provider failure'),{status:503});};
+await assert.rejects(collectPartitionedCategory('94578',failedReader),/bounded provider failure/);assert.equal(readFailures,1,'A transport failure must not buy a second whole catalogue scan');
+console.log('PASS: a complete 10k-SKU root costs at most eight batches; omissions and transport failures cannot become partial success');

@@ -3,7 +3,7 @@ import {SourceError} from './sync.mjs';
 // Executed in Firecrawl's normal enhanced scrape browser. No identity changes,
 // security-warning bypasses, fabricated rows or stale catalogue substitutions.
 export async function fetchCataloguePages(urls){
- const results=[];let cursor=0;
+ const results=[],started=Date.now();let cursor=0;
  // The enhanced browser opens the first real API URL. Read its rendered JSON
  // directly, then fetch the remaining pages from the same official origin.
  if(typeof document!=='undefined'&&typeof location!=='undefined'&&location.href===urls[0])try{
@@ -17,7 +17,20 @@ export async function fetchCataloguePages(urls){
    const r=await fetch(url,{credentials:'include',cache:'no-store',signal:AbortSignal.timeout(20000)});const text=await r.text();let body;try{body=JSON.parse(text)}catch{}
    results.push({url,status:r.status,body,observedAt:new Date().toISOString()});
   }catch(e){results.push({url,status:0,error:String(e.message).slice(0,120),...(url===urls[0]&&typeof document!=='undefined'?{navigation:{href:location.href,title:document.title,contentType:document.contentType,preCount:document.querySelectorAll('pre').length,text:document.body?.innerText?.slice(0,250)}}:{})});}}
- }));return results;
+ }));
+ // A single dropped connection must not repurchase a healthy batch. Retry
+ // only exceptional network/transient responses, once, inside this same paid
+ // request. A route-wide outage, 403 or invalid data never enters this path.
+ const retry=results.filter(r=>[0,408,502,503,504].includes(r.status));
+ if(retry.length>0&&retry.length<=4&&results.some(r=>r.status===200&&r.body)&&Date.now()-started<55000){
+  let next=0;await Promise.all(Array.from({length:Math.min(2,retry.length)},async()=>{
+   while(next<retry.length){const row=retry[next++],remaining=79000-(Date.now()-started);if(remaining<1000)break;
+    try{const r=await fetch(row.url,{credentials:'include',cache:'no-store',signal:AbortSignal.timeout(Math.min(12000,remaining))}),text=await r.text();let body;try{body=JSON.parse(text)}catch{}Object.assign(row,{status:r.status,body,observedAt:new Date().toISOString(),attempts:2});delete row.error;}
+    catch(e){row.error=String(e.message).slice(0,120);row.attempts=2;}
+   }
+  }));
+ }
+ return results;
 }
 
 export function createCatalogueTransport(execute,{batchSize=24,validate=x=>x,recover,maxRepairs=4}={}){

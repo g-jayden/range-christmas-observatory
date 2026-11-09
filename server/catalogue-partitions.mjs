@@ -1,9 +1,33 @@
 import {apiUrl,SourceError} from './sync.mjs';
+// A coherent root observation includes unadvertised brands and avoids buying
+// every brand partition before discovering that its index is stale. Use the
+// batched transport only; ordinary readers keep the bounded partition route.
+async function collectRootFirst(id,reader,initial){
+ const filters={in_stock_f:['true']},urlFor=offset=>{const u=new URL(apiUrl(id,offset,filters));u.searchParams.set('sort','relevance');return u.href;};
+ const first=await reader(urlFor(0)),expected=first.totalResults,rows=new Map(),batches=[];
+ const fields=['price','originalPrice','newIn','inStock','variantImageUrl','variantName'];
+ const add=page=>{for(const p of page.products){const sku=String(p.sku),old=rows.get(sku);if(old&&fields.some(k=>old[k]!==p[k]))return false;rows.set(sku,p);}return true;};
+ const record=(page,offset)=>batches.push({url:urlFor(offset),offset,count:page.products.length,total:page.totalResults});
+ if(expected!==initial.totalResults||!add(first))return {failure:'initial-root-count-or-value-change'};
+ record(first,0);
+ const offsets=[];for(let offset=100;offset<expected;offset+=100)offsets.push(offset);
+ const pages=await reader.many(offsets.map(urlFor));
+ for(let i=0;i<pages.length;i++){const page=pages[i];record(page,offsets[i]);if(page.totalResults!==expected||!page.products.length||!add(page))return {failure:'root-page-count-or-value-change'};}
+ if(rows.size!==expected)return {failure:'root-SKU-coverage-mismatch',expected,observed:rows.size};
+ // Re-read the official denominator after pagination. Both independently
+ // sorted root headers must be members with the same current offer values.
+ const end=await (reader.fresh||reader)(apiUrl(id,0,filters,true));
+ if(end.totalResults!==expected)return {failure:'final-root-count-change'};
+ for(const p of [...initial.products,...end.products]){const old=rows.get(String(p.sku));if(!old||fields.some(k=>old[k]!==p[k]))return {failure:'final-root-membership-or-value-change'};}
+ const audit={expected,observed:rows.size,unique:rows.size,complete:true,rootCategoryId:id,method:'coherent-official-root-observation',sort:'relevance',pagination:'120 results / 100 offset; SKU deduplicated overlap',requests:offsets.length+3,partitions:[],reconciliations:[{method:'independent-root-observation',sort:'relevance',expected,observed:rows.size,complete:true}],batches,records:[...rows.keys()]};
+ return {products:[...rows.values()],audit};
+}
 // A large equal-price group is not stably ordered by the retailer. Partition
 // with its real facets, so each final request can be checked independently.
 export async function collectPartitionedCategory(id,reader){
  let root=await reader(apiUrl(id,0,{in_stock_f:['true']},true));
  if(root.totalResults===0)return {products:[],audit:{expected:0,observed:0,unique:0,complete:true,rootCategoryId:id,requests:1,records:[]}};
+ if(reader.many&&root.totalResults>120){const direct=await collectRootFirst(id,reader,root);console.log(JSON.stringify({phase:'coherent-root-directory',category:id,complete:!direct.failure,expected:direct.audit?.expected,failure:direct.failure}));if(!direct.failure)return direct;}
  const brands=root.facets?.find(f=>f.id==='brand_f')?.options;
  if(!brands?.length)throw new SourceError('Official brand facet required for complete large-catalogue coverage');
  let target=root.totalResults;const all=new Map(),partitions=[],batches=[],facets=root.facets,reconciliations=[];
