@@ -1,3 +1,4 @@
+import {endedMonitorOwner,githubRunReader} from './monitor-owner.mjs';
 import {sourceRetryDue,sourceRecovery} from './source-recovery.mjs';
 import {DEPARTMENTS,DEPARTMENT_MAP,colourLabel,STYLE_EN,sourcePrice} from '../web/catalogue-model.mjs';
 import {firstRun,advanceRun,scheduleLabel,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';
@@ -57,6 +58,15 @@ export class Control{
   const r=await fetch('https://api.brevo.com/v3/smtp/email',{method:'POST',headers:{'api-key':this.env.BREVO_API_KEY,'content-type':'application/json'},body:JSON.stringify({sender:{email:this.env.MAIL_FROM,name:'圣诞新品观察'},to:[{email:to}],subject,htmlContent:html,...(providerKey?{headers:{idempotencyKey:providerKey}}:{}),...(attachments.length?{attachment:attachments}:{})}),signal:AbortSignal.timeout(20000)});
   if(!r.ok){let detail;try{detail=await r.json()}catch{}throw Object.assign(Error('邮件服务未接受邮件，请稍后重试。'),{status:502,providerStatus:r.status,providerCode:String(detail?.code||'unknown'),providerMessage:String(detail?.message||'').slice(0,500)});}
   return (await r.json()).messageId;
+ }
+ async recoverAbandonedMonitor(){
+  const held=await this.db.get('lease/monitor');if(!held)return;
+  let owner;try{owner=await endedMonitorOwner(held,githubRunReader(this.env));}catch{return;}
+  if(!owner)return;
+  const previous=await this.monitorState();await this.db.transaction(async db=>{
+   if((await db.get('lease/monitor'))?.lease!==held.lease)return;
+   await db.delete('lease/monitor');await db.put('monitor',{...previous,...sourceRecovery(previous,{success:false,retryable:true}),state:'error',lastError:'上次GitHub任务已结束但未完成检查，已释放占用并安排限次恢复 · Ended run released for recovery',abandonedRunId:owner.runId});
+  });
  }
  async fetch(req){
   try{return await this.route(req)}catch(e){const privateRoute=/^\/(internal|admin)\//.test(new URL(req.url).pathname);return response({error:e.status?e.message:'操作未完成，请稍后重试。',...(privateRoute&&e.providerStatus?{providerStatus:e.providerStatus,providerCode:e.providerCode,providerMessage:e.providerMessage}:{}),...(privateRoute&&e.assetStatus?{assetStatus:e.assetStatus,assetName:e.assetName,assetContentType:e.assetContentType}:{})},e.status||500)}
@@ -155,7 +165,7 @@ export class Control{
   }
   if(route.startsWith('/internal/')){
    checkAuth(req,this.env.CONTROL_TOKEN);
-   if(route==='/internal/clock-tick'&&req.method==='POST')return response(await dispatchDue({storage:this.db,env:this.env,config:await this.config(),monitor:{...await this.monitorState(),...await this.deliveryStatus()},fullLease:await this.db.get('lease/full'),monitorLease:await this.db.get('lease/monitor'),initialized:Boolean(await this.db.get('seeded'))}));
+   if(route==='/internal/clock-tick'&&req.method==='POST'){await this.recoverAbandonedMonitor();return response(await dispatchDue({storage:this.db,env:this.env,config:await this.config(),monitor:{...await this.monitorState(),...await this.deliveryStatus()},fullLease:await this.db.get('lease/full'),monitorLease:await this.db.get('lease/monitor'),initialized:Boolean(await this.db.get('seeded'))}));}
    if(route==='/internal/test-email'&&req.method==='POST'){
     const b=await req.json(),email=String(b.email||'').trim().toLowerCase(),sub=validEmail(email)&&await this.db.get('sub/'+await hash(email));
     if(!sub?.confirmedAt)return response({error:'测试邮箱尚未确认订阅'},409);
@@ -197,12 +207,13 @@ export class Control{
     await this.db.put('baseline/'+b.scope,{observedAt:b.observedAt,products:records.length});return response({seeded:true,changed:true,products:records.length});
    }
    if(route==='/internal/claim'&&req.method==='POST'){
+    await this.recoverAbandonedMonitor();
     const options=await req.json(),config=await this.config(),monitorState=await this.monitorState(),now=Date.now(),lease=token(),initialized=await this.db.get('seeded');
     let full=false,monitor=false;
     await this.db.transaction(async db=>{
      const f=await db.get('lease/full');if(now>=Date.parse(config.nextRunAt)&&(!f||f.expires<now)){full=true;await db.put('lease/full',{lease,expires:now+7*3600000,revision:config.revision||null,due:config.nextRunAt})}
      const m=await db.get('lease/monitor');
-     if(initialized&&this.env.BREVO_API_KEY&&(!m||m.expires<now)&&(options.forceMonitor===true||sourceRetryDue(monitorState,now)||now>=Date.parse(monitorState.nextRunAt))){monitor=true;await db.put('lease/monitor',{lease,expires:now+100*60000})}
+     if(initialized&&this.env.BREVO_API_KEY&&(!m||m.expires<now)&&(options.forceMonitor===true||sourceRetryDue(monitorState,now)||now>=Date.parse(monitorState.nextRunAt))){monitor=true;await db.put('lease/monitor',{lease,createdAt:now,ownerRunId:/^\d+$/.test(String(options.ownerRunId||''))?String(options.ownerRunId):null,expires:now+100*60000})}
     });
     return response({config,full,monitor,lease});
    }

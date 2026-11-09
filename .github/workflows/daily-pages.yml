@@ -71,6 +71,7 @@ jobs:
             /server/
             /cloud/delivery-policy.mjs
             /cloud/source-recovery.mjs
+            /cloud/monitor-owner.mjs
             /web/settings.json
             /web/status.json
             /web/monitor-state.json
@@ -195,6 +196,9 @@ jobs:
           REFRESH_SUCCESS: ${{ steps.refresh.outputs.catalogue_success == 'true' }}
           SCHEDULE_LEASE: ${{ steps.tick.outputs.full_lease }}
         run: node scripts/complete-full.mjs
+      - name: Release this run's unfinished NEW claim
+        if: always() && steps.tick.outputs.monitor == 'true'
+        run: node scripts/release-unused-monitor.mjs
       - name: Save collection checkpoints
         if: always() && steps.tick.outputs.work == 'true'
         continue-on-error: true

@@ -24,3 +24,18 @@ assert.equal(retryableSourceError(Error('SKU membership mismatch')),false);
 assert.equal(sourceRecovery({}, {success:false,retryable:false,now}).sourceRetryAt,null);
 assert.equal(sourceRecovery({}, {success:false,retryable:true,now:Date.parse('2026-11-09T15:59:00Z')}).sourceRetryAt,null,'A recovery cannot leak into the next Beijing day');
 console.log('PASS: bounded same-day source recovery, independent clock, budget/permanent-failure isolation and success reset');
+
+const {endedMonitorOwner}=await import('../cloud/monitor-owner.mjs');
+const lease={lease:'private-test',createdAt:now,ownerRunId:'123',expires:now+100*60000};
+const ended={id:123,status:'completed',head_branch:'main',path:'.github/workflows/daily-pages.yml',run_started_at:new Date(now-60000).toISOString(),updated_at:new Date(now+60000).toISOString()};
+assert.equal((await endedMonitorOwner(lease,async()=>ended,{now:now+180000})).runId,123);
+assert.equal(await endedMonitorOwner(lease,async()=>({...ended,status:'in_progress'}),{now:now+180000}),null,'An active collector lease must never be stolen');
+assert.equal(await endedMonitorOwner(lease,async()=>({...ended,id:456}),{now:now+180000}),null);
+const legacy={lease:'private-legacy',expires:now+100*60000};
+const matching={jobs:[{steps:[{name:'Check the configured full and NEW schedules',conclusion:'success',started_at:new Date(now-1000).toISOString(),completed_at:new Date(now+1000).toISOString()}]}]};
+assert.equal((await endedMonitorOwner(legacy,async path=>path.includes('?per_page')?{workflow_runs:[ended]}:matching,{now:now+180000})).runId,123);
+assert.equal(await endedMonitorOwner(legacy,async path=>path.includes('?per_page')?{workflow_runs:[ended]}:{jobs:[]},{now:now+180000}),null,'A legacy claim requires exact schedule-step timing evidence');
+assert.equal(await endedMonitorOwner(legacy,async path=>path.includes('?per_page')?{workflow_runs:[ended,{...ended,id:456}]}:matching,{now:now+180000}),null,'Ambiguous ownership must remain protected');
+await assert.rejects(endedMonitorOwner(lease,async()=>{throw Error('GitHub unavailable')},{now:now+180000}),/unavailable/);
+const workflow=await (await import('node:fs/promises')).readFile('.github/workflows/daily-pages.yml','utf8');assert.match(workflow,/if: always\(\) && steps\.tick\.outputs\.monitor == 'true'\s+run: node scripts\/release-unused-monitor\.mjs/);
+console.log('PASS: ended-run ownership verification, active/ambiguous lease protection and unconditional owned-claim cleanup');

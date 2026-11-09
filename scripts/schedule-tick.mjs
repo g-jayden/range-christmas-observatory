@@ -19,7 +19,7 @@ if(event!=='push'&&!['probe','catalogue-probe','repair','monitor-probe','lights-
   if(!state.baselineReady){const d=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));await control('/internal/seed',{config:savedConfig,records:d.products.map(p=>({sku:p.sku,everNew:Boolean(p.everNew||p.newStatus)}))});config=(await control('/public/status')).config;}
   const wantsDaily=dailyDue(daily)||sourceRetryDue(cloudState?.monitor)||process.env.FORCE_MONITOR==='true';
   if(wantsDaily||Date.now()>=Date.parse(config.nextRunAt)){
-   const claim=await control('/internal/claim',{forceMonitor:wantsDaily});({config,full,monitor,lease}=claim);fullLease=full?lease:null;
+   const claim=await control('/internal/claim',{forceMonitor:wantsDaily,ownerRunId:process.env.GITHUB_RUN_ID||null});({config,full,monitor,lease}=claim);fullLease=full?lease:null;
    if(monitor&&!wantsDaily){await control('/internal/monitor-complete',{lease,success:false,error:'新品任务由每日07:00入口统一调度；本次没有执行新品检查',scanned:0,newCount:0});monitor=false;}
    if(monitor)daily=await claimDailyMonitor(daily);
   }
