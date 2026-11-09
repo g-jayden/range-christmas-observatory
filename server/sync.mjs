@@ -19,10 +19,12 @@ export function parseSource(result){
  if(!result?.success||!result.data?.rawHtml)throw new SourceError('Data provider did not return raw source data');
  if(result.data.metadata?.statusCode!==200)throw new SourceError('Source returned non-200 status',result.data.metadata?.statusCode);
  let body=result.data.rawHtml;let d;try{d=JSON.parse(body)}catch{throw new SourceError('Source is not a JSON catalogue');}
- if(!Array.isArray(d.products)||!Number.isInteger(d.totalResults)||d.products.some(p=>typeof p.newIn!=='boolean'||p.inStock!==true||p.sponsored!==false||!/^\d{1,12}$/.test(String(p.sku))||!Number.isInteger(p.price)))throw new SourceError('Source catalogue has invalid product fields');
+ if(!Array.isArray(d.products)||!Number.isInteger(d.totalResults))throw new SourceError('Source catalogue has invalid product fields',422);
+ const invalid=d.products.filter(p=>typeof p.newIn!=='boolean'||p.inStock!==true||p.sponsored!==false||!/^\d{1,12}$/.test(String(p.sku))||!Number.isInteger(p.price));
+ if(invalid.length)throw new SourceError('Source catalogue has invalid product fields: '+JSON.stringify(invalid.slice(0,3).map(p=>({sku:p.sku,newInType:typeof p.newIn,inStock:p.inStock,sponsored:p.sponsored,priceType:typeof p.price}))),422);
  return d;
 }
-export function apiUrl(categoryId,offset=0,filters={in_stock_f:['true']},facets=false){const u=new URL('https://search-lon.therange.co.uk/api/productlist');for(const [k,v] of Object.entries({categoryId,offset,limit:120,sort:'price_lth',filters:JSON.stringify(filters),facets,includePriceFacet:true,sponsoredProducts:false}))u.searchParams.set(k,String(v));return u.href;}
+export function apiUrl(categoryId,offset=0,filters={in_stock_f:['true']},facets=false){const u=new URL('https://search-lon.therange.co.uk/api/productlist');for(const [k,v] of Object.entries({categoryId,offset,limit:120,sort:'price_lth',filters:JSON.stringify(filters),facets,includePriceFacet:true}))u.searchParams.set(k,String(v));return u.href;}
 export function createReader(){throw Error('逐页Firecrawl抓取已禁用；请使用按时计费的Firecrawl浏览器会话。')}
 export async function collectCategory(id,reader){
  let expected;const raw=[],batches=[],map=new Map(),countDiscrepancies=[],prefetched=new Map();
