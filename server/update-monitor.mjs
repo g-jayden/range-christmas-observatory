@@ -1,3 +1,4 @@
+import {sourceRecovery,retryableSourceError} from '../cloud/source-recovery.mjs';
 import {optimiseChangedProductPreviews} from './product-previews.mjs';
 import {auditTaxonomy} from './taxonomy-audit.mjs';
 import {readThemes,collectThemeDirectory,loadThemeDetails,updateThemeDetails,publishThemes} from './themes.mjs';
@@ -66,14 +67,14 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
    // Preserve daily first-NEW observations independently of full-refresh timing.
    const history=[...new Map([...(old.history||[]),...snapshot.products.filter(p=>p.firstNewObservedAt&&p.arrivalEvidence==='observed-after-baseline').map(p=>({sku:p.sku,firstNewObservedAt:p.firstNewObservedAt,firstObservedAt:p.firstObservedAt,everNew:true,arrivalEvidence:p.arrivalEvidence}))].map(p=>[p.sku,p])).values()];
    const availableSkus=snapshot.products.map(p=>p.sku);await atomicJson('web/new-arrivals.json',{version:2,observedAt:snapshot.observedAt,availableSkus,products:[...rows.values()],history,browserImageAudit:imageAudit||old.browserImageAudit,revision:digest({at:snapshot.observedAt,history,availableSkus}),sourceCheckSuccess:result.success});
-   daily={...daily,state:result.success?(result.deliveryPending?'delivery-pending':'active'):'error',lastSuccess:result.success?snapshot.observedAt:daily.lastSuccess,lastError:result.success?null:'部分新品证据未通过核验，待下次每日任务处理',lastResult:report};await saveDailyMonitor(daily);
+   daily={...daily,...sourceRecovery(daily,{success:result.success,now:now()}),state:result.success?(result.deliveryPending?'delivery-pending':'active'):'error',lastSuccess:result.success?snapshot.observedAt:daily.lastSuccess,lastError:result.success?null:'部分新品证据未通过核验，待下次每日任务处理',lastResult:report};await saveDailyMonitor(daily);
   }
   await saveState(state);console.log(JSON.stringify(report));outcome={success:result.success,catalogueReady:true,state:daily};
  }catch(e){
   await reader?.close?.().catch(()=>{});const native=reader?.metrics?.()||{};const error=String(e.message).replace(/fc-[\w-]+/g,'[redacted]');
   await budget?.settle({credits:native.firecrawlCredits||0,receipt:native.receipt,report:{mode:'daily-new-only',success:false,error,native}});
-  const report={success:false,mode:'daily-new-only',observedAt:new Date(now()).toISOString(),error,native,firecrawlCredits:native.firecrawlCredits||0};
-  if(!probe){daily={...daily,state:'error',lastError:error,lastResult:report};await saveDailyMonitor(daily);await controlCall('/internal/monitor-complete',{lease:tick.monitorLease||tick.lease,success:false,error:'新品检查未完成，未将失败记录为没有新品',scanned:0,newCount:0}).catch(()=>{});}
+  const retryable=retryableSourceError(e);const report={success:false,retryable,mode:'daily-new-only',observedAt:new Date(now()).toISOString(),error,native,firecrawlCredits:native.firecrawlCredits||0};
+  if(!probe){daily={...daily,...sourceRecovery(daily,{success:false,retryable,now:now()}),state:'error',lastError:error,lastResult:report};await saveDailyMonitor(daily);await controlCall('/internal/monitor-complete',{lease:tick.monitorLease||tick.lease,success:false,retryable,error:'新品检查未完成，未将失败记录为没有新品',scanned:0,newCount:0}).catch(()=>{});}
   await atomicJson('web/monitor-proof.json',report);outcome={success:false,state:daily};console.error(error);
  }finally{await reader?.close?.()}
  return outcome;

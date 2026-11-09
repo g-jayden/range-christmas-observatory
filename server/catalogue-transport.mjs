@@ -13,7 +13,7 @@ export async function fetchCataloguePages(urls){
  }));return results;
 }
 
-export function createCatalogueTransport(execute,{batchSize=8,validate=x=>x}={}){
+export function createCatalogueTransport(execute,{batchSize=24,validate=x=>x}={}){
  const cache=new Map(),queue=[];let running=false,timer,failed=null;
  const fail=rows=>{const e=new SourceError('Firecrawl目录批次连接未通过；已停止重复请求，等待限次恢复',503);e.retryable=true;e.sourceTransportUnavailable=true;e.sourceStatuses=rows.map(r=>r.status);return e;};
  async function drain(){
@@ -24,7 +24,7 @@ export function createCatalogueTransport(execute,{batchSize=8,validate=x=>x}={})
     if(!Array.isArray(rows)||rows.length!==urls.length||new Set(rows.map(r=>r.url)).size!==urls.length||rows.some(r=>!urls.includes(r.url)))throw Error('Catalogue batch URL membership mismatch');
     const map=new Map(rows.map(r=>[r.url,r]));
     // A broken route is one provider failure, not eight new paid attempts.
-    if(rows.every(r=>r.status!==200)){failed=fail(rows);throw failed;}
+    if(rows.every(r=>r.status!==200||!r.body)){failed=fail(rows);throw failed;}
     for(const p of batch){const row=map.get(p.url);try{if(row.status!==200||!row.body){const e=fail([row]);e.assetStatus=row.status;throw e;}p.resolve(validate(row.body));}catch(e){p.reject(e);}}
    }catch(e){failed=e;for(const p of batch)p.reject(e);}
   }}finally{running=false;}

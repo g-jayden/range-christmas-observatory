@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {sourceRecovery,sourceRetryDue,retryableSourceError} from '../cloud/source-recovery.mjs';
+import {dispatchDue} from '../cloud/dispatch-clock.mjs';
+import {advanceNewCheck} from '../server/schedule.mjs';
+import {monitorLabel} from '../web/monitor-labels.mjs';
+const now=Date.parse('2026-11-08T23:01:00Z');let state={nextRunAt:'2026-11-09T23:00:00Z'};
+state={...state,...sourceRecovery(state,{success:false,retryable:true,now})};
+assert.equal(state.sourceAttempts,1);assert.equal(state.sourceRetryAt,'2026-11-08T23:16:00.000Z');
+assert.equal(sourceRetryDue(state,now),false);assert.equal(sourceRetryDue(state,now+15*60000),true);
+assert(monitorLabel({...state,state:'error'}).includes('自动恢复'));
+class Store{constructor(){this.m=new Map()}async get(k){return structuredClone(this.m.get(k))}async put(k,v){this.m.set(k,structuredClone(v))}async transaction(fn){return fn(this)}}
+let calls=0;const storage=new Store,env={GITHUB_DISPATCH_TOKEN:'test',BREVO_API_KEY:'test',MAIL_FROM:'test@example.invalid'};
+const tick=at=>dispatchDue({storage,env,initialized:true,now:at,config:{nextRunAt:'2026-11-19T23:00:00Z'},monitor:state,fetcher:async()=>{calls++;return new Response(null,{status:204})}});
+assert.equal((await tick(now)).due,false);assert.equal((await tick(now+15*60000)).dispatched,true);
+assert.equal((await tick(now+16*60000)).bounded,true);assert.equal(calls,1);
+state={...state,...sourceRecovery(state,{success:false,retryable:true,now:now+16*60000})};assert.equal(state.sourceAttempts,2);assert.equal(state.sourceRetryAt,'2026-11-09T00:02:00.000Z');
+state={...state,...sourceRecovery(state,{success:false,retryable:true,now:now+62*60000})};assert.equal(state.sourceAttempts,3);assert.equal(state.sourceRetryAt,null);assert.equal(state.sourceRetryExhausted,true);assert.equal(sourceRetryDue(state,now+90*60000),false);
+state={...state,...sourceRecovery(state,{success:true,now:now+120*60000})};assert.equal(state.sourceRetryExhausted,false);assert.equal(state.sourceAttempts,0);assert.equal(state.sourceRetryAt,null);
+assert.equal(advanceNewCheck(state.nextRunAt,new Date(now+120*60000)),state.nextRunAt.replace('00Z','00.000Z'),'Recovery must preserve tomorrow’s 07:00 slot');
+for(const status of [400,401,402,404,422])assert.equal(retryableSourceError({status,message:'fetch failed'}),false);
+for(const status of [0,403,408,429,500,502,503,504])assert.equal(retryableSourceError({status}),true);
+assert.equal(retryableSourceError(Error('net::ERR_QUIC_PROTOCOL_ERROR')),true);
+assert.equal(retryableSourceError(Error('SKU membership mismatch')),false);
+assert.equal(sourceRecovery({}, {success:false,retryable:false,now}).sourceRetryAt,null);
+assert.equal(sourceRecovery({}, {success:false,retryable:true,now:Date.parse('2026-11-09T15:59:00Z')}).sourceRetryAt,null,'A recovery cannot leak into the next Beijing day');
+console.log('PASS: bounded same-day source recovery, independent clock, budget/permanent-failure isolation and success reset');

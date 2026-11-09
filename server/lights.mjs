@@ -51,7 +51,7 @@ export function mergeLights(previous,collected,observedAt=new Date().toISOString
  borrowLightingEvidence(snapshot,[...shared,previous]);return snapshot;
 }
 export async function collectLightDirectory(reader,previous,shared=[]){
- const collected={};for(const source of LIGHT_SOURCES){collected[source.scope]=await collectPartitionedCategory(source.id,reader);console.log(JSON.stringify({phase:'lighting-directory',scope:source.scope,products:collected[source.scope].products.length}));}
+ const collected={};await Promise.all(LIGHT_SOURCES.map(async source=>{collected[source.scope]=await collectPartitionedCategory(source.id,reader);console.log(JSON.stringify({phase:'lighting-directory',scope:source.scope,products:collected[source.scope].products.length}));}));
  return mergeLights(previous,collected,new Date().toISOString(),shared);
 }
 export function inheritLightingArrivals(snapshot,shared=[]){

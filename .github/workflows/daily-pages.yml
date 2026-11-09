@@ -70,6 +70,7 @@ jobs:
             /scripts/
             /server/
             /cloud/delivery-policy.mjs
+            /cloud/source-recovery.mjs
             /web/settings.json
             /web/status.json
             /web/monitor-state.json

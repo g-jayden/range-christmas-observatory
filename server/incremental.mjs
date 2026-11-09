@@ -29,7 +29,7 @@ export async function catalogueSnapshot({previous,reader,policy,dir='runtime/col
   try{const snapshot=mergeSnapshot(previous,cached.collected,cached.observedAt);return {snapshot,reused:true,observedAt:cached.observedAt}}catch{}
  }
  const ordered=Object.entries(categories).sort(([a],[b])=>a==='pop-up-trees'?-1:b==='pop-up-trees'?1:0);
- const collected={};for(const [category,id]of ordered){onProgress(category);collected[category]=await collectStableCategory(id,reader);onProgress(category+' '+collected[category].products.length+' SKU已核对');if(category==='pop-up-trees')await onSessionReady(collected[category].products)}
+ const collected={};await Promise.all(ordered.map(async([category,id])=>{onProgress(category);collected[category]=await collectStableCategory(id,reader);onProgress(category+' '+collected[category].products.length+' SKU已核对');if(category==='pop-up-trees')await onSessionReady(collected[category].products)}));
  const observedAt=new Date(now()).toISOString(),snapshot=mergeSnapshot(previous,collected,observedAt);
  await atomicJson(dir+'/catalogue.json',{scope,observedAt,collected});
  return {snapshot,reused:false,observedAt};

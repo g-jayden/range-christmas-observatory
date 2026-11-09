@@ -25,10 +25,10 @@ export function parseSource(result){
 export function apiUrl(categoryId,offset=0,filters={in_stock_f:['true']},facets=false){const u=new URL('https://search-lon.therange.co.uk/api/productlist');for(const [k,v] of Object.entries({categoryId,offset,limit:120,sort:'price_lth',filters:JSON.stringify(filters),facets,includePriceFacet:facets}))u.searchParams.set(k,String(v));return u.href;}
 export function createReader(){throw Error('逐页Firecrawl抓取已禁用；请使用按时计费的Firecrawl浏览器会话。')}
 export async function collectCategory(id,reader){
- let expected;const raw=[],batches=[],map=new Map(),countDiscrepancies=[];
+ let expected;const raw=[],batches=[],map=new Map(),countDiscrepancies=[],prefetched=new Map();
  // Price is an official deterministic order; overlap absorbs small index movements at page boundaries.
  for(let offset=0;expected===undefined||offset<expected;offset+=100){
-  const url=apiUrl(id,offset),d=await reader(url);if(expected===undefined)expected=d.totalResults;
+  const url=apiUrl(id,offset),d=prefetched.get(url)||await reader(url);if(expected===undefined){expected=d.totalResults;if(reader.many){const urls=[];for(let n=100;n<expected;n+=100)urls.push(apiUrl(id,n));const pages=await reader.many(urls);urls.forEach((u,i)=>prefetched.set(u,pages[i]));}}
   if(d.totalResults!==expected)countDiscrepancies.push({offset,declaredAtStart:expected,pageTotal:d.totalResults});
   raw.push(...d.products);batches.push({url,offset,count:d.products.length,total:d.totalResults,observedAt:stamp()});
   if(!d.products.length&&offset<expected)throw new SourceError('Empty page before declared category total');

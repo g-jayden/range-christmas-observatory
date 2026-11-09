@@ -1,3 +1,4 @@
+import {sourceRetryDue,sourceRecovery} from './source-recovery.mjs';
 import {DEPARTMENTS,DEPARTMENT_MAP,colourLabel,STYLE_EN,sourcePrice} from '../web/catalogue-model.mjs';
 import {firstRun,advanceRun,scheduleLabel,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';
 import {dispatchDue} from './dispatch-clock.mjs';
@@ -201,7 +202,7 @@ export class Control{
     await this.db.transaction(async db=>{
      const f=await db.get('lease/full');if(now>=Date.parse(config.nextRunAt)&&(!f||f.expires<now)){full=true;await db.put('lease/full',{lease,expires:now+7*3600000,revision:config.revision||null,due:config.nextRunAt})}
      const m=await db.get('lease/monitor');
-     if(initialized&&this.env.BREVO_API_KEY&&(!m||m.expires<now)&&(options.forceMonitor===true||now>=Date.parse(monitorState.nextRunAt))){monitor=true;await db.put('lease/monitor',{lease,expires:now+100*60000})}
+     if(initialized&&this.env.BREVO_API_KEY&&(!m||m.expires<now)&&(options.forceMonitor===true||sourceRetryDue(monitorState,now)||now>=Date.parse(monitorState.nextRunAt))){monitor=true;await db.put('lease/monitor',{lease,expires:now+100*60000})}
     });
     return response({config,full,monitor,lease});
    }
@@ -235,7 +236,7 @@ export class Control{
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
     const previous=await this.monitorState();
     for(const sku of b.unavailableSkus||[]){const p=await this.db.get('pending/'+sku);if(p)await this.db.put('pending/'+sku,{...p,unavailableSince:new Date().toISOString()});}
-    const delivery=await this.deliveryStatus();await this.db.put('monitor',{...previous,...delivery,state:b.success?(delivery.pendingDeliveries?'delivery-pending':'active'):'error',nextRunAt:advanceNewCheck(previous.nextRunAt),checkedAt:new Date().toISOString(),lastSuccess:b.success?new Date().toISOString():previous.lastSuccess||null,lastError:b.success?null:String(b.error||'源站检查未完成').slice(0,200),scanned:b.scanned||0,newCount:b.newCount||0});await this.db.delete('lease/monitor');return response({saved:true});
+    const delivery=await this.deliveryStatus();await this.db.put('monitor',{...previous,...delivery,...sourceRecovery(previous,{success:b.success,retryable:b.retryable===true}),state:b.success?(delivery.pendingDeliveries?'delivery-pending':'active'):'error',nextRunAt:advanceNewCheck(previous.nextRunAt),checkedAt:new Date().toISOString(),lastSuccess:b.success?new Date().toISOString():previous.lastSuccess||null,lastError:b.success?null:String(b.error||'源站检查未完成').slice(0,200),scanned:b.scanned||0,newCount:b.newCount||0});await this.db.delete('lease/monitor');return response({saved:true});
    }
    if(route==='/internal/deliver'&&req.method==='POST'){
     const events=await this.db.list({prefix:'event/'}),subs=await this.db.list({prefix:'sub/'}),revision=await this.deliveryRevision();let accepted=0,attempted=0,failed=0;

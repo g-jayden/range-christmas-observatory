@@ -7,10 +7,10 @@ export async function collectPartitionedCategory(id,reader){
  const brands=root.facets?.find(f=>f.id==='brand_f')?.options;
  if(!brands?.length)throw new SourceError('Official brand facet required for complete large-catalogue coverage');
  let target=root.totalResults;const all=new Map(),partitions=[],batches=[],facets=root.facets,reconciliations=[];
- let requests=1;
+ let requests=1;const fetched=new Map();const prime=async urls=>{if(reader.many){const rows=await reader.many(urls);urls.forEach((u,i)=>fetched.set(u,rows[i]));}};
  const urlFor=(offset,filters,sort='price_lth')=>{const u=new URL(apiUrl(id,offset,filters));u.searchParams.set('sort',sort);return u.href;};
  async function fetchPage(filters,offset=0,sort='price_lth'){
-  const url=urlFor(offset,filters,sort),d=await reader(url);requests++;batches.push({url,offset,count:d.products.length,total:d.totalResults});return d;
+  const url=urlFor(offset,filters,sort),d=fetched.get(url)||await reader(url);requests++;batches.push({url,offset,count:d.products.length,total:d.totalResults});return d;
  }
  function insert(map,p){const sku=String(p.sku),old=map.get(sku);if(old&&['price','newIn','inStock','variantImageUrl'].some(k=>old[k]!==p[k]))throw new SourceError('SKU changed during partitioned source observation: '+sku);map.set(sku,p);}
  async function collect(filters,depth=0){
@@ -18,6 +18,7 @@ export async function collectPartitionedCategory(id,reader){
   if(expected<=120){if(map.size!==expected)throw new SourceError('Small source partition did not reconcile');return map;}
   // Bounded forward and reverse overlap usually reconciles a medium brand.
   for(const sort of ['price_lth','price_htl']){
+   {const urls=[];for(let offset=sort==='price_lth'?80:0;offset<expected;offset+=80)urls.push(urlFor(offset,filters,sort));await prime(urls);}
    for(let offset=sort==='price_lth'?80:0;offset<expected;offset+=80){const d=await fetchPage(filters,offset,sort);if(d.totalResults!==expected)reconciliations.push({category:id,filters,offset,firstPageTotal:expected,pageTotal:d.totalResults,method:'retain-all-returned-SKUs-and-reconcile-root-union'});for(const p of d.products)insert(map,p);}
    if(map.size===expected)return map;
   }
@@ -37,13 +38,14 @@ export async function collectPartitionedCategory(id,reader){
  const groups=[];let small=[],count=0;
  for(const b of brands){if(b.count>100){groups.push([b.name]);continue;}if(count+b.count>100&&small.length){groups.push(small);small=[];count=0;}small.push(b.name);count+=b.count;}if(small.length)groups.push(small);
  const results=new Map();
- async function checkedGroup(index){const values=groups[index];let failure;for(let attempt=0;attempt<3;attempt++)try{const part=await collect({in_stock_f:['true'],brand_f:values});results.set(index,part);return;}catch(e){failure=e;if(e.status||!/Partition count changed|SKU changed|partition.*reconcile|coverage mismatch/i.test(e.message))throw e;reconciliations.push({brands:values,attempt:attempt+1,reason:e.message});}throw failure;}
+ async function checkedGroup(index){const values=groups[index];let failure;for(let attempt=0;attempt<3;attempt++)try{if(attempt){fetched.clear();if(reader.fresh){const u=urlFor(0,{in_stock_f:['true'],brand_f:values});fetched.set(u,await reader.fresh(u));}}const part=await collect({in_stock_f:['true'],brand_f:values});results.set(index,part);return;}catch(e){failure=e;if(e.status||!/Partition count changed|SKU changed|partition.*reconcile|coverage mismatch/i.test(e.message))throw e;reconciliations.push({brands:values,attempt:attempt+1,reason:e.message});}throw failure;}
  async function runGroups(indices){let cursor=0;const workers=await Promise.allSettled(Array.from({length:Math.min(4,indices.length)},async()=>{while(cursor<indices.length)await checkedGroup(indices[cursor++]);}));const failed=workers.find(r=>r.status==='rejected');if(failed)throw failed.reason;}
+ await prime(groups.map(values=>urlFor(0,{in_stock_f:['true'],brand_f:values})));
  await runGroups(groups.map((_,i)=>i));
  // Only changed brand groups are re-read. A fresh official facet response is
  // the final denominator; a moving initial count is never silently reused.
  for(let round=0;round<3;round++){
-  root=await reader(apiUrl(id,0,{in_stock_f:['true']},true));requests++;target=root.totalResults;
+  root=await (reader.fresh||reader)(apiUrl(id,0,{in_stock_f:['true']},true));requests++;target=root.totalResults;
   const currentBrands=root.facets?.find(f=>f.id==='brand_f')?.options;if(!currentBrands)throw new SourceError('Final official brand counts unavailable');
   all.clear();for(const part of results.values())for(const p of part.values())insert(all,p);
   if(all.size===target)break;
@@ -56,8 +58,9 @@ export async function collectPartitionedCategory(id,reader){
    const first=await fetchPage({in_stock_f:['true']},0,sort),expected=first.totalResults,rows=new Map();let conflict=false;
    try{
     for(const p of first.products)insert(rows,p);
+    {const urls=[];for(let offset=80;offset<expected;offset+=80)urls.push(urlFor(offset,{in_stock_f:['true']},sort));await prime(urls);}
     for(let offset=80;offset<expected;offset+=80){const page=await fetchPage({in_stock_f:['true']},offset,sort);for(const p of page.products)insert(rows,p);}
-    const end=await reader(apiUrl(id,0,{in_stock_f:['true']},true));requests++;
+    const end=await (reader.fresh||reader)(apiUrl(id,0,{in_stock_f:['true']},true));requests++;
     if(end.totalResults===expected&&rows.size===expected){for(const p of end.products){if(!rows.has(String(p.sku)))throw new SourceError('Root membership changed during observation');insert(rows,p);}all.clear();for(const [sku,p]of rows)all.set(sku,p);target=expected;root=end;coherent=true;}
    }catch(e){if(!/SKU changed|Root membership changed/.test(e.message))throw e;conflict=true;}
    reconciliations.push({method:'independent-root-observation',sort,expected,observed:rows.size,complete:coherent,conflict});if(coherent)break;
