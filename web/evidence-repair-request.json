@@ -1,8 +1,1 @@
-{
-  "version": 1,
-  "requestId": "repair-current-evidence-20261109-1",
-  "scope": "current-product-evidence",
-  "state": "pending",
-  "maximumNewFirecrawlCredits": 20,
-  "reason": "Repair exact-SKU evidence sharing, JSON/HTML independence, official URL resolution and missing photo bytes without rescanning any directory"
-}
+{"version":1,"requestId":"repair-current-evidence-20261109-1","scope":"current-product-evidence","state":"claimed","maximumNewFirecrawlCredits":20,"reason":"Repair exact-SKU evidence sharing, JSON/HTML independence, official URL resolution and missing photo bytes without rescanning any directory","ownerRunId":"42650049447","claimedAt":"2026-11-09T15:59:46.459Z"}
