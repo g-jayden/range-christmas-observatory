@@ -12,6 +12,9 @@ try{
  for(const p of ['notification-readiness','monitor-state','collection-ledger'])await fs.writeFile(path.join(repo,'web',p+'.json'),'{}');
  await fs.writeFile(path.join(repo,'web/evidence-repair-request.json'),JSON.stringify({state:'pending',scope:'current-product-evidence',requestId:'claim-fixture'}));
  execFileSync('git',['init','--bare',origin],{stdio:'pipe'});run('git',['init','-b','main']);run('git',['config','user.name','Local fixture']);run('git',['config','user.email','fixture@example.invalid']);run('git',['remote','add','origin',origin]);run('git',['add','.']);run('git',['commit','-m','Fixture']);run('git',['push','-u','origin','main']);
+ // Model the production credential: creating checkpoint branches is forbidden,
+ // while data-only fast-forward publication to the existing main is allowed.
+ await fs.writeFile(path.join(origin,'hooks/pre-receive'),'#!/bin/sh\nwhile read oldrev newrev task_ref; do\n  if [ "$task_ref" != refs/heads/main ]; then echo "workflow permission unavailable for new branches" >&2; exit 1; fi\ndone\n',{mode:0o755});
  // Reproduce the real preflight state: mail readiness changed a public file
  // after checkout, before the one-time repair claim is durably published.
  await fs.writeFile(path.join(repo,'web/notification-readiness.json'),'{"mailReady":true}');

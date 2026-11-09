@@ -263,6 +263,17 @@ jobs:
       - name: Finalize saved lighting baseline without source requests
         if: steps.tick.outputs.publish == 'true'
         run: node scripts/finalize-lights.mjs
+      - name: Archive paid ASDA source data before repository publication
+        if: always() && steps.tick.outputs.asda == 'true'
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: source-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            web/asda/
+            web/collection-ledger.json
+          retention-days: 1
+          compression-level: 9
+          if-no-files-found: error
       - name: Preserve data and source status
         if: always() && (steps.tick.outputs.publish == 'true' || (inputs.mode == 'probe' || inputs.mode == 'catalogue-probe'))
         run: |
