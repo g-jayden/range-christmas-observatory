@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import {bestVerifiedEvidence,saveVerifiedRegistry,restoreVerifiedRegistry} from './verified-evidence.mjs';
 import {collectPartitionedCategory} from './catalogue-partitions.mjs';
 import {atomicJson,correctKnownProductPath} from './sync.mjs';
 import {detailFingerprint,digest} from './collection-policy.mjs';
@@ -16,8 +17,8 @@ const sharedShapeFields=['style','heightLabel','heightCm','heightValues','skirtD
 const evidenceFields=['detailsReady','detailEvidence','attributeObservedAt','specifications','sourceDescription','dimensions','material','colorValues','treeColor','sourceColour','sourceMaterial','appearanceSource','images','originalImages','originalImageUrl','variantImageUrl','cachedImageUrl','imageCacheEvidence','imageSelectionEvidence','detailIssue','productSummary','originalSourceEvidence',...sharedShapeFields];
 function memberships(p){return ['themes',...THEME_DEFINITIONS.map(d=>d.id).filter(id=>(p.themeIds||[]).includes(id))];}
 export function borrowThemeEvidence(snapshot,sources=[]){
- const records=new Map(sources.flatMap(s=>s?.products||[]).map(p=>[p.sku,p]));let reused=0;
- for(const p of snapshot.products){const q=records.get(p.sku);if(!q||q.sourceUrl?.split('#')[0]!==p.sourceUrl.split('#')[0]||q.variantName!==p.variantName||(q.listingVariantImageUrl||q.variantImageUrl)!==p.listingVariantImageUrl)continue;
+ const records=sources.flatMap(s=>s?.products||[]);let reused=0;
+ for(const p of snapshot.products){const q=bestVerifiedEvidence(p,records.filter(q=>q.sku===p.sku));if(!q)continue;
   const verified=q.detailEvidence?.verifiedProductSection&&String(q.detailEvidence.selectedSku)===p.sku;
   if(verified)for(const key of sharedShapeFields)if(q[key]!==undefined&&(p[key]===undefined||key==='style'&&q.kind==='tree'))p[key]=structuredClone(q[key]);
   if((!p.detailsReady||!p.detailEvidence?.verifiedProductSection)&&verified){for(const key of evidenceFields)if(q[key]!==undefined)p[key]=structuredClone(q[key]);p.detailsReady=true;p.detailInputFingerprint=detailFingerprint(p);reused++;}
@@ -53,9 +54,10 @@ export function inheritThemeArrivals(snapshot,shared=[]){
  for(const p of snapshot.products){const q=known.get(p.sku);if(!q?.firstNewObservedAt||q.arrivalEvidence==='initial-baseline')continue;for(const k of ['firstObservedAt','firstNewObservedAt','arrivalEvidence','everNew'])if(q[k]!=null)p[k]=q[k];snapshot.history[p.sku]={...snapshot.history[p.sku],firstObservedAt:p.firstObservedAt,firstNewObservedAt:p.firstNewObservedAt,arrivalEvidence:p.arrivalEvidence,everNew:p.everNew};}
 }
 export async function loadThemeDetails(products){
+ await restoreVerifiedRegistry(products);
  const buckets=new Map();for(const p of products){const key=p.sku.slice(-2).padStart(2,'0');if(!buckets.has(key))buckets.set(key,await fs.readFile('web/theme-details/'+key+'.json','utf8').then(JSON.parse).catch(()=>({})));const q=buckets.get(key)[p.sku];if(q?.detailInputFingerprint===p.detailInputFingerprint&&q.detailsReady&&(!p.detailsReady||!p.detailEvidence?.verifiedProductSection||Date.parse(q.attributeObservedAt)>Date.parse(p.attributeObservedAt))){for(const k of evidenceFields)if(q[k]!==undefined)p[k]=q[k];}}
 }
-async function saveThemeDetails(products){const groups=new Map();for(const p of products){const key=p.sku.slice(-2).padStart(2,'0');if(!groups.has(key))groups.set(key,{});groups.get(key)[p.sku]=p;}for(const [k,v]of groups)await atomicJson('web/theme-details/'+k+'.json',v);}
+async function saveThemeDetails(products){await saveVerifiedRegistry(products);const groups=new Map();for(const p of products){const key=p.sku.slice(-2).padStart(2,'0');if(!groups.has(key))groups.set(key,{});groups.get(key)[p.sku]=p;}for(const [k,v]of groups)await atomicJson('web/theme-details/'+k+'.json',v);}
 export async function updateThemeDetails(snapshot,reader,{shared=[],refreshAfter=null,retryFailed=false,selectedSkus=null}={}){
  await loadThemeDetails(snapshot.products);const reused=borrowThemeEvidence(snapshot,shared),selected=snapshot.products.filter(p=>selectedSkus?selectedSkus.includes(p.sku):!p.detailsReady&&(retryFailed||!(Date.parse(p.detailIssue?.retryAfter)>Date.now()))||refreshAfter&&Date.parse(p.attributeObservedAt)<Date.parse(refreshAfter));
  const grouped=new Map();for(const p of selected){const url=p.sourceUrl.split('#')[0].replace(/\/$/,'');if(!grouped.has(url))grouped.set(url,[]);grouped.get(url).push(p);}const urls=[...grouped.keys()];let refreshed=0;const issues=[];

@@ -6,9 +6,21 @@ import {budgetError} from './credit-budget.mjs';
 import {createCatalogueTransport} from './catalogue-transport.mjs';
 import {readPreviewAssets} from './product-previews.mjs';
 
-async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000}){
+export async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000,anchors=[]}){
  const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch(error){return {status:0,error:String(error.message).slice(0,180)}}};
  const [data,html]=await Promise.all([initial?{status:200,value:initial}:read(jsonUrl,true),providedHtml?{status:200,value:providedHtml}:read(url,false)]);
+ // Validate separately returned official JSON against requested SKU anchors.
+ // An unavailable HTML document supplies no description or gallery evidence.
+ if(data.status===200&&html.status!==200&&Array.isArray(data.value?.variant_arr)&&anchors.length){
+  const clean=x=>String(x??'').replace(/^0+(?=\d)/,''),normal=p=>{const u=new URL(p,url);return u.origin==='https://www.therange.co.uk'?u.origin+u.pathname.replace(/\/$/,''):null};
+  if(normal(url)!==normal(jsonUrl)||!new URL(jsonUrl).searchParams.has('json'))throw Error('Unverified variant JSON endpoint');
+  const found=data.value.variant_arr.filter(v=>anchors.some(a=>clean(a.sku)===clean(v.sku)&&clean(v.code)===clean(a.sku)&&(!a.variantId||String(a.variantId)===String(v.id))));
+  const ids=new Set(found.map(v=>String(v.prod_id)));if(found.length&&ids.size===1&&/^\d+$/.test([...ids][0])&&new Set(found.map(v=>clean(v.sku))).size===found.length){
+   const plain=s=>typeof DOMParser==='function'?new DOMParser().parseFromString(String(s||''),'text/html').body.textContent.replace(/\s+/g,' ').trim():String(s||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+   const variants=found.map(v=>({code:v.code,prod_id:v.prod_id,sku:v.sku,id:v.id,page_url:v.page_url,attributes:v.attributes,attributes_supplementary:{'Model Number':v.attributes_supplementary?.['Model Number']},product_specification:v.product_specification||[],features:v.features||[],desc_override:v.desc_override,descriptionText:plain(v.description_html)}));
+   return {status:200,variants,evidence:{url,jsonUrl,productId:[...ids][0],features:[],information:'',offers:[],gallery:[],originalGallery:[],structuredOriginalImages:[],sourceTransport:'official-exact-SKU-variant-json',htmlAvailable:false,htmlStatus:html.status,jsonStatus:200,anchorSkus:anchors.map(a=>String(a.sku))}};
+  }
+ }
  if(data.status!==200||html.status!==200)return {status:html.status===404?404:data.status!==200?data.status:html.status,jsonStatus:data.status,htmlStatus:html.status,jsonError:data.error,htmlError:html.error,jsonBody:data.value,html:html.value};
  const body=data.value,doc=new DOMParser().parseFromString(html.value,'text/html'),plain=html=>new DOMParser().parseFromString(String(html||''),'text/html').body.textContent.replace(/\s+/g,' ').trim();
  const description=doc.querySelector('#product-description')?.cloneNode(true);description?.querySelectorAll('a,script,style,#product-dyn-variant-desc').forEach(e=>e.remove());
@@ -23,6 +35,9 @@ async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=2000
  return {status:200,variants,evidence};
 }
 
+export async function findExactSkuPages({products,concurrency=6}){
+ const results=[];let cursor=0;await Promise.all(Array.from({length:Math.min(concurrency,products.length)},async()=>{while(cursor<products.length){const p=products[cursor++];let found=null,checked=[];for(const term of [String(p.sku),String(p.variantName||'').slice(0,100)]){const searchUrl='https://www.therange.co.uk/search?q='+encodeURIComponent(term);try{const r=await fetch(searchUrl,{credentials:'include',signal:AbortSignal.timeout(10000)});checked.push({url:searchUrl,status:r.status});if(!r.ok)continue;const doc=new DOMParser().parseFromString(await r.text(),'text/html'),data=doc.querySelector('[data-products]')?.getAttribute('data-products');const rows=data?JSON.parse(data):[];const row=rows.find(q=>String(q.sku)===String(p.sku));if(!row?.variantPath)continue;const target=new URL(row.variantPath.replace('#','/#'),'https://www.therange.co.uk/');if(target.origin!=='https://www.therange.co.uk'||target.hash.replace(/^#/,'')!==String(p.sku))continue;found={sku:String(p.sku),sourceUrl:target.href,searchUrl};break;}catch(e){checked.push({url:searchUrl,error:String(e.message).slice(0,100)});}}results.push(found||{sku:String(p.sku),noExactSkuMatch:true,checked});}}));return results;
+}
 export async function readExactVariantOriginal({sku,variantId,preferred}){
  const selected=(document.querySelector('#product-dyn-code')?.textContent||'').trim().replace(/^[PM]/i,'').replace(/^0+(?=\d)/,'');
  if(selected!==String(sku)||!variantId)return [];
@@ -143,12 +158,12 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
     if(!page.url().startsWith('https://www.therange.co.uk/')){
      try{initial=await jsonPage(page,jsonUrl)}catch(e){if([400,404].includes(e.status))throw e;initial=JSON.parse(await scrapeRaw(jsonUrl));}
     }
-    let bundle=await page.evaluate(readFamilyBundle,{url:canonical,jsonUrl,initial});
+    let bundle=await page.evaluate(readFamilyBundle,{url:canonical,jsonUrl,initial,anchors:[{sku:new URL(input).hash.slice(1)}]});
     if([400,404].includes(bundle.jsonStatus)||[400,404].includes(bundle.htmlStatus))throw new SourceError('官网商品数据请求失败 HTTP 404',404);
     if(bundle.status!==200){
      const json=bundle.jsonStatus===200?bundle.jsonBody:JSON.parse(await scrapeRaw(jsonUrl));
      const html=bundle.htmlStatus===200?bundle.html:await scrapeRaw(canonical);
-     bundle=await page.evaluate(readFamilyBundle,{url:canonical,jsonUrl,initial:json,providedHtml:html});
+     bundle=await page.evaluate(readFamilyBundle,{url:canonical,jsonUrl,initial:json,providedHtml:html,anchors:[{sku:new URL(input).hash.slice(1)}]});
     }
     if(bundle.status!==200)throw new SourceError('官网商品数据请求失败 HTTP '+bundle.status,bundle.status);
     const {variants,evidence}=bundle;
@@ -221,6 +236,11 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  }
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;if(policy.catalogueTransport==='enhanced-batch'){reader.many=urls=>Promise.all(urls.map(reader));reader.fresh=url=>catalogueBatch.fresh(sourceUrl(url));}
  reader.batchDocuments=async(fn,payload)=>scriptAction('('+fn.toString()+')('+JSON.stringify(payload)+')');
+ reader.resolveProductPages=products=>scriptAction('('+findExactSkuPages.toString()+')('+JSON.stringify({products:products.map(p=>({sku:p.sku,variantName:p.variantName}))})+')');
+ reader.readSelectedDetails=async p=>{
+  const script='(async()=>{const sku='+JSON.stringify(String(p.sku))+';let variants=typeof g_variantArr!=="undefined"?g_variantArr:[];const selected=variants.find(v=>String(v.sku)===sku);if(selected&&typeof selectAttrFilterByVariant==="function")selectAttrFilterByVariant(selected);const end=Date.now()+7000;while(Date.now()<end&&(document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"").replace(/^0+(?=\\d)/,"")!==sku)await new Promise(r=>setTimeout(r,200));const visible=(document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"").replace(/^0+(?=\\d)/,"");if(visible!==sku)throw Error("Rendered page selected another SKU");const text=selector=>Array.from(document.querySelectorAll(selector)).map(e=>e.textContent.trim().replace(/\\s+/g," "));const features=text("#product-dyn-features-ul li"),specs=text("#product-dyn-specification-ul li");if(!features.length&&!specs.length)throw Error("Rendered product has no source specification section");const markdown="## Features\\n"+features.map(x=>"- "+x).join("\\n")+"\\n## Information\\n"+(document.querySelector("#product-description")?.textContent||"")+"\\n## Specification\\n"+specs.map(x=>"- "+x).join("\\n")+"\\nAdditional Information";return [{success:true,data:{rawHtml:document.documentElement.outerHTML,markdown,metadata:{statusCode:200,renderedProductSection:true,sourceURL:location.href}}}]})()';
+  const rows=await scriptAction(script,{entryUrl:sourceUrl(p.sourceUrl)});if(rows.length!==1||!rows[0].data?.rawHtml)throw Error('Rendered exact-SKU details were unavailable');return rows[0];
+ };
  reader.previewAssets=async(urls,options={})=>scriptAction('('+readPreviewAssets.toString()+')('+JSON.stringify({urls,maxSide:options.maxSide||320})+')',{needsImages:true});
  reader.prepareNativeCapture=async()=>{if(policy.nativeCaptureEnabled!==false&&!sessionClosed)await start();};
  reader.captureVerified=(url,options={})=>{const id=JSON.stringify([sourceUrl(url),options.preferredThumbnail||null]);if(!verifiedCaptures.has(id))verifiedCaptures.set(id,(async()=>{if(session&&!sessionClosed)try{const u=new URL(sourceUrl(url));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');const family=await families.get(u.href);return await capture(url,family,options);}catch(e){metrics.nativeCaptureFailures=(metrics.nativeCaptureFailures||0)+1;console.error(JSON.stringify({phase:'native-NEW-capture-fallback',sku:new URL(url).hash.slice(1),status:e.status||0,error:String(e.message).slice(0,160)}));
@@ -233,9 +253,10 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  reader.recommendedFamilyBatchSize=()=>policy.familyBatchSize||100;
  reader.familyReady=input=>{const u=new URL(sourceUrl(input));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return families.has(u.href)};
  reader.prepareFamilies=async products=>{
+  const anchors={};for(const p of products){const u=new URL(sourceUrl(p.sourceUrl)),sku=String(p.sku||u.hash.slice(1));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');(anchors[u.href]||=[]).push({sku,variantId:p.variantId||null});}
   const urls=[...new Set(products.map(p=>{const u=new URL(sourceUrl(p.sourceUrl));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return u.href}))].filter(url=>!families.has(url)&&!familyFailures.has(url));
   if(!urls.length)return;const batchSize=policy.familyBatchSize||100;for(let offset=0;offset<urls.length;offset+=batchSize){const batchUrls=urls.slice(offset,offset+batchSize);
-  const makeScript=(batchUrls,concurrency=policy.familyBatchConcurrency||4)=>'(async()=>{const read='+readFamilyBundle.toString()+';const urls='+JSON.stringify(batchUrls)+';let cursor=0;const results=[],end=Date.now()+50000;await Promise.all(Array.from({length:'+String(concurrency)+'},async()=>{while(cursor<urls.length&&Date.now()<end){const url=urls[cursor++];try{results.push({url,bundle:await read({url,jsonUrl:url+"?json",timeoutMs:'+String(policy.familyFetchTimeoutMs||10000)+'})})}catch(e){results.push({url,error:e.message})}}}));while(cursor<urls.length)results.push({url:urls[cursor++],deferred:true,error:"bounded batch time limit"});return results})()';
+  const makeScript=(batchUrls,concurrency=policy.familyBatchConcurrency||4)=>'(async()=>{const read='+readFamilyBundle.toString()+';const anchors='+JSON.stringify(anchors)+';const urls='+JSON.stringify(batchUrls)+';let cursor=0;const results=[],end=Date.now()+50000;await Promise.all(Array.from({length:'+String(concurrency)+'},async()=>{while(cursor<urls.length&&Date.now()<end){const url=urls[cursor++];try{results.push({url,bundle:await read({url,jsonUrl:url+"?json",anchors:anchors[url]||[],timeoutMs:'+String(policy.familyFetchTimeoutMs||10000)+'})})}catch(e){results.push({url,error:e.message})}}}));while(cursor<urls.length)results.push({url:urls[cursor++],deferred:true,error:"bounded batch time limit"});return results})()';
   const started=Date.now();let results=await scriptAction(makeScript(batchUrls));
   const check=(rows,expected)=>{if(rows.length!==expected.length||new Set(rows.map(r=>r.url)).size!==expected.length||rows.some(r=>!expected.includes(r.url)))throw Error('商品系列批量补查地址不一致')};check(results,batchUrls);
   // A failed subrequest is retried once in a new, smaller action. Successful
@@ -247,7 +268,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   const elapsed=Date.now()-started,good=results.filter(r=>r.bundle?.status===200&&r.bundle?.variants?.length&&r.bundle?.evidence?.productId).length,deferred=results.filter(r=>r.deferred).length;metrics.familyBatchTimings||=[];metrics.familyBatchTimings.push({count:batchUrls.length,elapsedMs:elapsed,good,deferred});
   if(policy.adaptiveFamilies){const processed=results.filter(r=>!r.deferred).length;if(deferred)policy.familyBatchSize=Math.max(100,Math.min(400,Math.ceil(processed*1.05)));else if(elapsed<65000)policy.familyBatchSize=Math.min(400,Math.max(100,batchUrls.length*2));}
   if(results.length!==batchUrls.length||results.some(r=>!batchUrls.includes(r.url)))throw Error('商品系列批量补查地址不一致');
-  for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();b.evidence.sourceTransport='enhanced-batch';families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else {const error=new SourceError('官网商品详情链接异常，未返回可核实的具体SKU规格；本轮目录价格、库存、NEW与图片独立更新',b?.status||0);error.deferred=Boolean(r.deferred);error.transient=r.deferred||b?.status===0||b?.status===429||b?.status>=500;error.sourceResponse={url:r.url,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,jsonError:b?.jsonError,htmlError:b?.htmlError,observedAt:new Date(now()).toISOString()};familyFailures.set(r.url,error);if(b?.jsonStatus===200&&b.jsonBody)partialFamilies.set(r.url,{jsonBody:b.jsonBody});console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,jsonError:b?.jsonError,htmlError:b?.htmlError,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}}}
+  for(const r of results){const b=r.bundle;if(b?.status===200&&b.variants?.length&&b.evidence?.productId){b.evidence.observedAt=new Date(now()).toISOString();b.evidence.sourceTransport||='enhanced-batch';families.set(r.url,Promise.resolve({variants:b.variants,evidence:b.evidence}));metrics.familyReads++;}else {const error=new SourceError('官网商品详情链接异常，未返回可核实的具体SKU规格；本轮目录价格、库存、NEW与图片独立更新',b?.status||0);error.deferred=Boolean(r.deferred);error.transient=r.deferred||b?.status===0||b?.status===429||b?.status>=500;error.sourceResponse={url:r.url,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,jsonError:b?.jsonError,htmlError:b?.htmlError,observedAt:new Date(now()).toISOString()};familyFailures.set(r.url,error);if(b?.jsonStatus===200&&b.jsonBody)partialFamilies.set(r.url,{jsonBody:b.jsonBody});console.error(JSON.stringify({phase:'family-batch-failure',url:r.url,status:b?.status,jsonStatus:b?.jsonStatus,htmlStatus:b?.htmlStatus,jsonError:b?.jsonError,htmlError:b?.htmlError,variants:b?.variants?.length,productId:b?.evidence?.productId,error:r.error}));}}}
  };
  reader.auditImages=async (products,previous={},options={})=>{
   const checkpoint=policy.imageCheckpoint?await fs.readFile(policy.imageCheckpoint,'utf8').then(JSON.parse).catch(()=>({})):{};

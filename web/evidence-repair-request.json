@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "requestId": "repair-current-evidence-20261109-1",
+  "scope": "current-product-evidence",
+  "state": "pending",
+  "maximumNewFirecrawlCredits": 20,
+  "reason": "Repair exact-SKU evidence sharing, JSON/HTML independence, official URL resolution and missing photo bytes without rescanning any directory"
+}

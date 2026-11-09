@@ -1,0 +1,78 @@
+{
+  "variant_arr": [
+    {
+      "code": "1684540",
+      "prod_id": 4710859,
+      "sku": 1684540,
+      "description_html": "",
+      "desc_override": 0,
+      "id": 11740034,
+      "attr_name": "Metal Angel Christmas Stocking Hook Hanger",
+      "fulfilment": "D",
+      "size_class": "Regular",
+      "made_order": false,
+      "price": 1645,
+      "price_was": null,
+      "price_was_save": null,
+      "price_was_percent": null,
+      "price_rrp": null,
+      "dhd_supplier_id": 33084,
+      "payment_restricted": 0,
+      "page_url": "p/metal-angel-christmas-stocking-hook-hanger/m1684540",
+      "order_multiple": 1,
+      "is_dhd": 2,
+      "is_master": 0,
+      "urg_stk_limit": 2,
+      "is_mp": 1,
+      "supplier_brand_name": "Annibells",
+      "lead_sku": null,
+      "promo_count": 0,
+      "promo_name": null,
+      "discount_promo_count": null,
+      "product_manual": false,
+      "name": "Metal Angel Christmas Stocking Hook Hanger",
+      "features": [
+        "Decorative angel stocking hook",
+        "Gold finish for traditional or contemporary Christmas displays",
+        "Designed for hanging a stocking from a fireplace mantel"
+      ],
+      "pc_cmp_price": null,
+      "variant_colours": [
+        {
+          "group": "Gold",
+          "display_name": "Gold",
+          "hex": "#D4AF37"
+        }
+      ],
+      "attributes": {
+        "Width": "14cm",
+        "Weight": "0.3kg",
+        "Length": "9cm",
+        "Design": "Angel",
+        "Shipping Weight": "0.5kg",
+        "_swatch": "Gold",
+        "_hex": "#D4AF37"
+      },
+      "attributes_supplementary": [],
+      "attributes_custom": [],
+      "stock": true,
+      "product_specification": []
+    }
+  ],
+  "wishlist": false,
+  "email": false,
+  "ggl_prod_arr": {
+    "name": "Metal Angel Christmas Stocking Hook Hanger",
+    "review_score": 0,
+    "review_count": 0,
+    "code": "M1684540",
+    "has_stock": 1,
+    "min_price": 1645,
+    "max_price": 1645,
+    "brand": "Annibells",
+    "seller": "Annibells"
+  },
+  "res_mode": false,
+  "euro_pricing": false,
+  "can_reserve": true
+}

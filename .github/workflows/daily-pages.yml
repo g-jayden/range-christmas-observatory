@@ -84,6 +84,7 @@ jobs:
             /web/collection-diagnostics.json
             /web/notification-readiness.json
             /web/service.json
+            /web/evidence-repair-request.json
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
@@ -125,9 +126,18 @@ jobs:
       - name: Check private notification readiness without exposing addresses
         if: steps.tick.outputs.publish == 'true'
         run: node scripts/mail-readiness.mjs
+      - name: Persist the one-time evidence repair claim before paid requests
+        if: steps.tick.outputs.evidence_repair == 'true'
+        run: |
+          node scripts/claim-evidence-repair.mjs
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add web/evidence-repair-request.json
+          git commit -m "Claim bounded existing-product evidence repair [skip ci]"
+          node scripts/push-evidence.mjs
       - name: Reserve the run budget before opening a paid session
         id: budget
-        if: steps.tick.outputs.work == 'true' || (inputs.mode == 'probe' || inputs.mode == 'catalogue-probe') || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
+        if: steps.tick.outputs.work == 'true' || steps.tick.outputs.evidence_repair == 'true' || (inputs.mode == 'probe' || inputs.mode == 'catalogue-probe') || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
         continue-on-error: true
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
@@ -169,6 +179,13 @@ jobs:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
           COLLECTION_CHECKPOINTS: '1'
         run: node server/update-daily.mjs
+      - name: Repair only existing abnormal product evidence
+        id: evidence_repair
+        if: steps.tick.outputs.evidence_repair == 'true' && steps.budget.outcome == 'success'
+        continue-on-error: true
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: node scripts/repair-product-evidence.mjs
       - name: Initialize six lighting scopes and refresh all source price markers
         id: lights
         if: inputs.mode == 'lights-init' && steps.budget.outcome == 'success'
@@ -281,5 +298,5 @@ jobs:
             runtime/daily-new-screenshot.png
           retention-days: 3
       - name: Report unsuccessful source collection
-        if: steps.catalogue_probe.outcome == 'failure' || steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure' || steps.repair.outcome == 'failure' || steps.lights.outcome == 'failure' || steps.themes.outcome == 'failure' || steps.previews.outcome == 'failure'
+        if: steps.evidence_repair.outcome == 'failure' || steps.catalogue_probe.outcome == 'failure' || steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure' || steps.repair.outcome == 'failure' || steps.lights.outcome == 'failure' || steps.themes.outcome == 'failure' || steps.previews.outcome == 'failure'
         run: exit 1

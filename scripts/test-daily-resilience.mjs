@@ -53,8 +53,9 @@ await assert.rejects(publishCollectionCheckpoint({}, {env:{COLLECTION_CHECKPOINT
 assert.equal((await publishCollectionCheckpoint({stage:'discovery'}, {env:{COLLECTION_CHECKPOINTS:'1',GITHUB_ACTIONS:'true',GITHUB_REPOSITORY:'g-jayden/range-christmas-observatory',GITHUB_RUN_ID:'123'},run:fakeRun})).revision,rev);
 assert(commands.some(([,args])=>args.includes('scripts/push-evidence.mjs')));
 
-const root=await fs.mkdtemp(path.join(os.tmpdir(),'range-resilience-')),cwd=process.cwd(),priorFetch=globalThis.fetch,envBefore=Object.fromEntries(['GITHUB_ACTIONS','NOTIFICATION_PHASE','COLLECTION_MODE'].map(k=>[k,process.env[k]]));
+const root=await fs.mkdtemp(path.join(os.tmpdir(),'range-resilience-')),cwd=process.cwd(),priorFetch=globalThis.fetch,priorNow=Date.now,envBefore=Object.fromEntries(['GITHUB_ACTIONS','NOTIFICATION_PHASE','COLLECTION_MODE'].map(k=>[k,process.env[k]]));
 try{
+ Date.now=()=>Date.parse('2026-11-09T01:00:00Z');
  process.env.GITHUB_ACTIONS='true';delete process.env.NOTIFICATION_PHASE;delete process.env.COLLECTION_MODE;
  async function scenario(name,{badPhoto=false,failedPush=false,maintenanceFailure=false,fresh=false}={}){
   const dir=path.join(root,name);await fs.mkdir(path.join(dir,'web'),{recursive:true});process.chdir(dir);
@@ -103,4 +104,4 @@ try{
  // The publication guard also protects direct queue callers from runner loss.
  let events=0;await assert.rejects(finishNewEvents({success:true,scanned:1,events:[{product:{sku:'990001',kind:'tree',variantName:'Christmas Tree',sourceUrl:'https://www.therange.co.uk/p/tree/#990001',mailAssets:originalManifest},screenshotBase64:'cGl4ZWxz'}]}, {snapshot:{products:[{sku:'990001',kind:'tree',variantName:'Christmas Tree',sourceUrl:'https://www.therange.co.uk/p/tree/#990001',mailAssets:originalManifest}]},publishCheckpoint:async()=>{throw Error('Publication failed')},controlCall:async()=>{events++}}));assert.equal(events,0);
  console.log('PASS: automatic evidence clock; 3-attempt/day/deadline limits; exact-commit attachments; publication-before-seen; good NEW delivered despite refused original; no duplicate mail; zero source requests during recovery; verified details still delivered at zero remaining request budget; unrelated maintenance isolated.');
-}finally{process.chdir(cwd);globalThis.fetch=priorFetch;for(const[k,v]of Object.entries(envBefore)){if(v===undefined)delete process.env[k];else process.env[k]=v;}await fs.rm(root,{recursive:true,force:true});}
+}finally{process.chdir(cwd);globalThis.fetch=priorFetch;Date.now=priorNow;for(const[k,v]of Object.entries(envBefore)){if(v===undefined)delete process.env[k];else process.env[k]=v;}await fs.rm(root,{recursive:true,force:true});}

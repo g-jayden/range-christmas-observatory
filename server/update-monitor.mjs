@@ -1,6 +1,7 @@
 import {retryableSourceError} from '../cloud/source-recovery.mjs';
 import {completeMonitorState,retryableEvidence} from '../cloud/evidence-recovery.mjs';
 import {publishCollectionCheckpoint} from './collection-checkpoints.mjs';
+import {restoreVerifiedRegistry,reconcileVerifiedEvidence} from './verified-evidence.mjs';
 import {canResumeDiscovery} from './discovery-recovery.mjs';
 import {optimiseChangedProductPreviews} from './product-previews.mjs';
 import {auditTaxonomy} from './taxonomy-audit.mjs';
@@ -53,7 +54,7 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
   }
   const gathered=recoveryOnly?{snapshot:structuredClone(previous)}:await collectSnapshot({previous,reader,policy,now,forceFresh:true,onProgress:console.log});
   let decorations=previousDecorations.baselineReady?(recoveryOnly?previousDecorations:await collectDecorationDirectory(reader,previousDecorations)):null;
-  restoreProducts(gathered.snapshot,state,policy);preserveImages(previous,gathered.snapshot);if(decorations)await loadDecorationDetails(decorations.products);const lights=previousLights.baselineReady?(recoveryOnly?previousLights:await collectLightDirectory(reader,previousLights,[gathered.snapshot,decorations])):null;if(lights)await loadLightingDetails(lights.products);const themes=previousThemes.baselineReady?(recoveryOnly?previousThemes:await collectThemeDirectory(reader,previousThemes,[gathered.snapshot,decorations,lights])):null;if(themes)await loadThemeDetails(themes.products);const snapshot=notificationSnapshot(gathered.snapshot,decorations,lights,themes);
+  restoreProducts(gathered.snapshot,state,policy);preserveImages(previous,gathered.snapshot);if(decorations)await loadDecorationDetails(decorations.products);const lights=previousLights.baselineReady?(recoveryOnly?previousLights:await collectLightDirectory(reader,previousLights,[gathered.snapshot,decorations])):null;if(lights)await loadLightingDetails(lights.products);const themes=previousThemes.baselineReady?(recoveryOnly?previousThemes:await collectThemeDirectory(reader,previousThemes,[gathered.snapshot,decorations,lights])):null;if(themes)await loadThemeDetails(themes.products);await restoreVerifiedRegistry(gathered.snapshot.products);reconcileVerifiedEvidence([gathered.snapshot,decorations,lights,themes]);const snapshot=notificationSnapshot(gathered.snapshot,decorations,lights,themes);
   // Fresh listing data must survive a later single-SKU image or mail failure.
   if(!probe){await atomicJson('web/catalogue.json',gathered.snapshot);if(decorations)await publishDecorations(structuredClone(decorations));if(lights)await publishLights(structuredClone(lights));if(themes)await publishThemes(structuredClone(themes));}
   catalogueReady=true;

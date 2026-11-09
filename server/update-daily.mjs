@@ -15,6 +15,7 @@ import {openCreditBudget,budgetError} from './credit-budget.mjs';
 import {loadPolicy,digest,imageMapFingerprint,productKey,unchangedDetailInput} from './collection-policy.mjs';
 import {catalogueSnapshot,readState,refreshDetails,preserveImages,saveState,cacheProduct,restoreProducts} from './incremental.mjs';
 import {checkNew,finishNewEvents,captureNewScreenshots,retainVerifiedNewImages} from './new-events.mjs';
+import {restoreVerifiedRegistry,reconcileVerifiedEvidence} from './verified-evidence.mjs';
 import {atomicJson} from './sync.mjs';
 import {scheduleLabel} from './schedule.mjs';
 import {control,apiBase} from './cloud-client.mjs';
@@ -43,7 +44,7 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
    console.log('同一会话具体SKU已核验 '+p.sku);
   }});
   let next=gathered.snapshot;catalogueReady=true;const previousDecorations=await readDecorations();decorations=previousDecorations.baselineReady?await collectDecorationDirectory(reader,previousDecorations):null;if(decorations)await loadDecorationDetails(decorations.products);previousLights=await readLights();lights=previousLights.baselineReady?await collectLightDirectory(reader,previousLights,[next,decorations]):null;
-  const previousThemes=await readThemes();themes=previousThemes.baselineReady?await collectThemeDirectory(reader,previousThemes,[next,decorations,lights]):null;restoreProducts(next,collection,policy);
+  const previousThemes=await readThemes();themes=previousThemes.baselineReady?await collectThemeDirectory(reader,previousThemes,[next,decorations,lights]):null;restoreProducts(next,collection,policy);await restoreVerifiedRegistry(next.products);reconcileVerifiedEvidence([next,decorations,lights,themes]);
   const oldBySku=new Map(previous.products.map(p=>[p.sku,p])),previousIssues=new Set((previous.detailsAudit?.issues||[]).map(p=>p.sku));
   const difficult=next.products.filter(p=>(!p.attributeObservedAt||Date.parse(p.attributeObservedAt)<Date.parse(cycle.cutoff)||!unchangedDetailInput(oldBySku.get(p.sku),p))&&(oldBySku.get(p.sku)?.detailEvidence?.sourceTransport==='enhanced-batch'||previousIssues.has(p.sku)||(policy.enhancedFamilyIds||[]).some(id=>p.productPath?.endsWith('/'+id))));
   if(difficult.length){await reader.prepareFamilies?.(difficult);for(const p of difficult)if(reader.familyReady?.(p.sourceUrl))delete collection.failures[productKey(p,policy)];}

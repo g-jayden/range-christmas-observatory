@@ -1,4 +1,5 @@
 import {auditTaxonomy} from '../server/taxonomy-audit.mjs';
+import {reconcileVerifiedEvidence,saveVerifiedRegistry} from '../server/verified-evidence.mjs';
 import {readThemes,loadThemeDetails,publishThemes,borrowThemeEvidence} from '../server/themes.mjs';
 import {restoreOriginalImages} from '../server/original-images.mjs';
 import {applySourceRepairs,applySourceOriginalRepairs} from '../server/source-repairs.mjs';
@@ -46,6 +47,7 @@ const lights=await readLights();if(lights.products.length){await loadLightingDet
 const themes=await readThemes();if(themes.products.length){await loadThemeDetails(themes.products);borrowThemeEvidence(themes,[decorations,lights,d]);sourceRepairs.themes=await applySourceRepairs(themes.products);sourceRepairs.themeOriginals=await applySourceOriginalRepairs(themes.products);await restoreOriginalImages(themes.products);await publishThemes(themes);}
 // Hydrate saved exact-SKU descriptions before auditing all four source sets.
 await loadDecorationDetails(decorations.products);await loadLightingDetails(lights.products);await loadThemeDetails(themes.products);
+const sharedEvidence=reconcileVerifiedEvidence([d,decorations,lights,themes]);await saveVerifiedRegistry([d,decorations,lights,themes].flatMap(s=>s.products));console.log(JSON.stringify({phase:'shared-verified-product-evidence',...sharedEvidence,records:undefined}));
 const taxonomy=await auditTaxonomy([d,decorations,lights,themes]);
 await publishDecorations(decorations);await publishLights(lights);await publishThemes(themes);
 d.revision=digest({observedAt:d.observedAt,products:d.products,sources:d.sources,excluded:d.excluded});s.revision=d.revision;

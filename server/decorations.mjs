@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import {saveVerifiedRegistry,restoreVerifiedRegistry} from './verified-evidence.mjs';
 import {createHash} from 'node:crypto';
 import {classifyDecoration,productDimensions,decorationDepartments,decorationMemberships} from '../web/catalogue-model.mjs';
 import {normaliseColors,materialFacts} from './appearance.mjs';
@@ -25,11 +26,13 @@ export function mergeDecorations(previous,listing,observedAt=new Date().toISOStr
  return {...previous,version:1,products,history,observedAt,source:{...DECORATION_SOURCE,...listing.audit},ready:false,revision:digest({at:observedAt,products:products.map(p=>[p.sku,p.priceGBP,p.newStatus,p.listingVariantImageUrl])})};
 }
 export async function loadDecorationDetails(products){
+ await restoreVerifiedRegistry(products);
  const buckets=new Map();for(const p of products){const bucket=p.sku.slice(-2).padStart(2,'0');if(!buckets.has(bucket))buckets.set(bucket,await fs.readFile('web/decoration-details/'+bucket+'.json','utf8').then(JSON.parse).catch(()=>({})));const saved=buckets.get(bucket)[p.sku];if(saved?.detailsReady===true&&saved.detailEvidence?.verifiedProductSection&&String(saved.detailEvidence.selectedSku)===p.sku&&saved.detailInputFingerprint===p.detailInputFingerprint&&!(p.detailEvidence?.verifiedProductSection&&Date.parse(p.attributeObservedAt)>=Date.parse(saved.attributeObservedAt))){for(const key of ['detailsReady','detailEvidence','attributeObservedAt','specifications','sourceDescription','dimensions','material','colorValues','treeColor','paletteEvidence','sourceColour','sourceMaterial','appearanceSource','images','originalImages','originalImageUrl','originalSourceEvidence','department','departmentIds','classificationEvidence','variantImageUrl','cachedImageUrl','imageCacheEvidence','imageSelectionEvidence','sourceListingImageUrl'])if(saved[key]!==undefined)p[key]=saved[key];p.detailsReady=true;}}
  for(const p of products)if(!validProductImage(p.variantImageUrl)&&validProductImage(p.listingVariantImageUrl)){p.variantImageUrl=p.listingVariantImageUrl;if(p.imageCacheEvidence?.sourceUrl!==p.variantImageUrl){delete p.cachedImageUrl;delete p.imageCacheEvidence;}}
  return buckets;
 }
 export async function saveDecorationDetails(products){
+ await saveVerifiedRegistry(products);
  const buckets=new Map();for(const p of products){const bucket=p.sku.slice(-2).padStart(2,'0');if(!buckets.has(bucket))buckets.set(bucket,{});buckets.get(bucket)[p.sku]=p;}
  for(const [bucket,rows]of buckets)await atomicJson('web/decoration-details/'+bucket+'.json',rows);
 }
