@@ -9,6 +9,7 @@ for(let attempt=0;attempt<3;attempt++){
  catch(e){if(e.providerStatus)console.error(JSON.stringify({phase:'mail-provider-rejection',status:e.providerStatus,code:e.providerCode,reason:String(e.providerMessage||'').replace(/[\w.+-]+@[\w.-]+/g,'[recipient]').slice(0,300),firecrawlCredits:0}));if(e.status!==503||attempt===2)throw e;console.log(JSON.stringify({phase:'attachment-publication-wait',attempt:attempt+1,maxAttempts:3,firecrawlCredits:0}));await new Promise(resolve=>setTimeout(resolve,15000));}
 }
 if(out)await fs.unlink(file);
+console.log(JSON.stringify({phase:'verified-NEW-delivery',accepted:delivery.accepted||0,attempted:delivery.attempted||0,failed:delivery.failed||0,pendingDeliveries:delivery.pendingDeliveries||0,readyDeliveries:delivery.readyDeliveries||0,waitingDeliveries:delivery.waitingDeliveries||0,blockedDeliveries:delivery.blockedDeliveries||0,failures:delivery.failures||[],firecrawlCredits:0}));
 if(delivery.morePending||delivery.pendingDeliveries)throw Error('仍有待发新品邮件；云端队列保留，后续仅恢复投递，不重抓商品。');
 const receipt={...delivery,verifiedAt:new Date().toISOString(),firecrawlCredits:0};
 for(const name of ['monitor-state.json','status.json','collection-ledger.json']){

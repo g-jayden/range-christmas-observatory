@@ -11,10 +11,16 @@ async function renderer(){
  const config=path.join(dir,'fonts.conf');await fs.writeFile(config,`<?xml version="1.0"?><!DOCTYPE fontconfig SYSTEM "fonts.dtd"><fontconfig><dir>${esc(dir)}</dir><cachedir>${esc(dir+'/cache')}</cachedir></fontconfig>`);process.env.FONTCONFIG_FILE=config;
  return (await import('sharp')).default;
 }
-export async function buildMailAssets(p,pdpBase64=null){
- if(!/^\d{1,12}$/.test(String(p.sku)))throw Error('Invalid card SKU');const sharp=await renderer();
+export function verifyCardOnlyEvidence(p,original){
+  const selected=String(p.sku),mapped=p.originalImages?.some(g=>g.url===p.originalImageUrl&&g.variantId!=null&&p.variantId!=null&&String(g.variantId)===String(p.variantId))||p.originalSourceEvidence?.selectedSku===selected&&p.originalSourceEvidence?.sourceUrl===p.sourceUrl;
+  if(!p.detailEvidence?.verifiedProductSection||String(p.detailEvidence.selectedSku)!==selected||!p.attributeObservedAt||!mapped||p.originalImageEvidence?.sourceUrl!==p.originalImageUrl||createHash('sha256').update(original).digest('hex')!==p.originalImageEvidence?.sha256)throw Error('具体SKU详情、官网图库对应关系或原图字节未通过核验，不能生成替代截图的信息卡');
+ return true;
+}
+export async function buildMailAssets(p,pdpBase64=null,{verifiedCardOnly=false}={}){
+ if(!/^\d{1,12}$/.test(String(p.sku)))throw Error('Invalid card SKU');
  if(!p.originalCachedImageUrl||!p.originalImageUrl)throw Error('官网原图尚未核验，不能用缩略图代替原图');
- const originalPath='web/'+p.originalCachedImageUrl,original=await fs.readFile(originalPath),meta=await sharp(original).metadata();
+ const originalPath='web/'+p.originalCachedImageUrl,original=await fs.readFile(originalPath);if(verifiedCardOnly){if(pdpBase64)throw Error('信息卡不能标为官网页面截图');verifyCardOnlyEvidence(p,original);}
+ const sharp=await renderer(),meta=await sharp(original).metadata();
  if(!meta.width||!meta.height||meta.width<64||meta.height<64)throw Error('Real original photo not available');
  const displayW=Math.min(meta.width,1800),displayH=Math.round(meta.height*displayW/meta.width),W=Math.max(960,displayW+100),left=(W-displayW)/2;
  const titleSize=Math.round(W*.039),bodySize=Math.round(W*.029),margin=50;let y=margin+titleSize;
@@ -36,9 +42,9 @@ export async function buildMailAssets(p,pdpBase64=null){
  }
  await fs.writeFile(dir+'/notification.png',combined);const prefix='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/mail-assets/'+p.sku+'/';
  const cardHash=createHash('sha256').update(card).digest('hex');
- const manifest={version:1,cardVersion:MAIL_CARD_VERSION,department:p.department||p.kind,departmentIds:p.departmentIds,sku:String(p.sku),name:p.variantName,priceGBP:p.priceGBP,originalPrice:p.originalPrice,promoText:p.promoText,colors:p.colorValues,style:p.style,material:p.material,height:p.heightLabel,sourceUrl:p.sourceUrl,observedAt:p.newEvidence?.observedAt||p.observedAt,card:{url:prefix+'card.png?v='+cardHash.slice(0,16),sha256:cardHash,width:W,height:H,bytes:card.length},original:{url:prefix+'original.'+ext,sourceUrl:p.originalImageUrl||p.imageCacheEvidence?.sourceUrl,width:meta.width,height:meta.height,sha256:createHash('sha256').update(original).digest('hex'),bytes:original.length,upscaled:false,recompressed:false},proof:pdpBase64?{url:prefix+'proof.png',kind:'selected-SKU-official-page-screenshot'}:null,notification:{url:prefix+'notification.png',kind:pdpBase64?'information-card-plus-official-page-screenshot':'information-card-only-test',bytes:combined.length}};
+ const manifest={version:1,cardVersion:MAIL_CARD_VERSION,department:p.department||p.kind,departmentIds:p.departmentIds,sku:String(p.sku),name:p.variantName,priceGBP:p.priceGBP,originalPrice:p.originalPrice,promoText:p.promoText,colors:p.colorValues,style:p.style,material:p.material,height:p.heightLabel,sourceUrl:p.sourceUrl,observedAt:p.newEvidence?.observedAt||p.observedAt,evidenceMode:verifiedCardOnly?'verified-information-card':undefined,sourceScreenshotIssue:verifiedCardOnly?p.sourceScreenshotIssue:undefined,card:{url:prefix+'card.png?v='+cardHash.slice(0,16),sha256:cardHash,width:W,height:H,bytes:card.length},original:{url:prefix+'original.'+ext,sourceUrl:p.originalImageUrl||p.imageCacheEvidence?.sourceUrl,width:meta.width,height:meta.height,sha256:createHash('sha256').update(original).digest('hex'),bytes:original.length,upscaled:false,recompressed:false},proof:pdpBase64?{url:prefix+'proof.png',kind:'selected-SKU-official-page-screenshot'}:null,notification:{url:prefix+'notification.png',kind:pdpBase64?'information-card-plus-official-page-screenshot':verifiedCardOnly?'verified-information-card':'information-card-only-test',bytes:combined.length}};
  await ensureMailImageFormat(manifest,dir);await fs.writeFile(dir+'/manifest.json',JSON.stringify(manifest));p.mailAssets=manifest;
- return {manifest,downloadUrl:HOME+'product.html?sku='+p.sku,attachmentBase64:combined.length<=5000000?combined.toString('base64'):pdpBase64,attachmentKind:combined.length<=5000000?'information-card-plus-official-page-screenshot':'official-page-screenshot-with-card-download-link'};
+ return {manifest,downloadUrl:HOME+'product.html?sku='+p.sku,attachmentBase64:combined.length<=5000000?combined.toString('base64'):pdpBase64,attachmentKind:verifiedCardOnly?'verified-information-card':combined.length<=5000000?'information-card-plus-official-page-screenshot':'official-page-screenshot-with-card-download-link'};
 }
 export async function auditNotificationImages(reader,products,previous){
  const originals=products.filter(p=>p.originalImageUrl).map(p=>({sku:p.sku+'-original',variantImageUrl:p.originalImageUrl}));

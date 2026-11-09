@@ -16,7 +16,7 @@ import {atomicJson,apiUrl,categories} from './sync.mjs';
 import {digest,planDetails} from './collection-policy.mjs';
 import {control} from './cloud-client.mjs';
 export async function runMonitorDaily({previous,policy,readerFactory,budgetFactory,now=()=>Date.now(),tick={},collectSnapshot=catalogueSnapshot,controlCall=control,recoveryOnly=false}){
- policy={...policy,retryPendingNow:recoveryOnly,nativeCaptureEnabled:!recoveryOnly&&policy.catalogueTransport!=='enhanced-batch',repairImagesOnly:true,imageCheckpoint:'web/daily-image-checkpoint.json'};
+ policy={...policy,retryPendingNow:recoveryOnly,nativeCaptureEnabled:!recoveryOnly&&policy.catalogueTransport!=='enhanced-batch',allowVerifiedCardWithoutScreenshot:true,repairImagesOnly:true,imageCheckpoint:'web/daily-image-checkpoint.json'};
  const probe=process.env.COLLECTION_MODE==='monitor-probe',state=await readState();let reader,budget;if(!probe){state.completed=[];state.attempted={};}
  let daily=await readDailyMonitor(new Date(now())),outcome,catalogueReady=false;
  try{
