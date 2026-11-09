@@ -25,7 +25,7 @@ try{
  await fs.writeFile(path.join(gated,'web/settings.json'),JSON.stringify({intervalDays:7,time:'00:00'}));
  await fs.writeFile(path.join(gated,'web/status.json'),JSON.stringify({sourceHealth:denied}));
  await fs.writeFile(path.join(gated,'web/service.json'),JSON.stringify({apiBase:'https://must-not-request.invalid'}));
- const output=execFileSync(process.execPath,[fileURLToPath(new URL('./schedule-tick.mjs',import.meta.url))],{cwd:gated,encoding:'utf8',env:{...process.env,GITHUB_EVENT_NAME:'schedule',COLLECTION_MODE:'verify-all',COLLECTION_BROWSER_CHANNEL:'firefox',COLLECTION_PROVIDER:'firefox',CONTROL_API_URL:'https://must-not-request.invalid',GITHUB_OUTPUT:path.join(gated,'outputs')}});
+ const output=execFileSync(process.execPath,[fileURLToPath(new URL('./schedule-tick.mjs',import.meta.url))],{cwd:gated,encoding:'utf8',env:{...process.env,GITHUB_EVENT_NAME:'schedule',COLLECTION_MODE:'verify-all',COLLECTION_BROWSER_CHANNEL:'firefox',COLLECTION_PROVIDER:'firefox',CONTROL_API_URL:'https://must-not-request.invalid',CONTROL_TOKEN:'',GITHUB_OUTPUT:path.join(gated,'outputs')}});
  const tick=JSON.parse(output.trim());assert.equal(tick.sourceCircuitOpen,true);assert.equal(tick.work,false,'A stopped source must not enter the repeated collection loop');
 }finally{await fs.rm(gated,{recursive:true,force:true})}
 const seed=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),p=seed.products.find(p=>p.detailEvidence?.verifiedProductSection),fixture={products:[p],totalResults:1};
