@@ -33,3 +33,11 @@ const {Script}=await import('node:vm');
 const direct=await new Script('('+fetchCataloguePages.toString()+')('+JSON.stringify([urls[0]])+')').runInNewContext({document:{querySelector:()=>({textContent:'{"totalResults":0,"products":[]}'})},location:{href:urls[0]},fetch:()=>{throw Error('The rendered first API page must not be requested twice')},URL,AbortSignal,Date});
 assert.equal(direct.length,1);assert.equal(direct[0].source,'enhanced-navigation');assert.equal(direct[0].status,200);
 console.log('PASS: enhanced API navigation supplies the first official JSON page without a cross-origin request');
+
+let repaired=0,batchExecutions=0;
+const exceptional=createCatalogueTransport(async(fn,urls)=>{batchExecutions++;return urls.map(url=>url.endsWith('24')?{url,status:0,error:'Failed to fetch'}:{url,status:200,body:{revision:1}})},{recover:async()=>({revision:++repaired}),maxRepairs:2});
+await exceptional.many(urls.slice(20));assert.equal(repaired,1);assert.equal(batchExecutions,1);
+assert.equal((await exceptional.fresh(urls[24])).revision,2);assert.equal(batchExecutions,1,'A fresh directly verified exception does not rebuy the successful batch');
+await assert.rejects(exceptional.fresh(urls[24]),e=>e.retryable);assert.equal(repaired,2,'Direct exceptions have a hard per-observation limit');
+let outageRepairs=0;const outage=createCatalogueTransport(async(fn,urls)=>urls.map(url=>({url,status:0})),{recover:async()=>{outageRepairs++;return {}}});await assert.rejects(outage.many(urls));assert.equal(outageRepairs,0,'A complete provider outage never turns into per-page paid fallback');
+console.log('PASS: partial batches repair only exceptional URLs, fresh counts bypass old direct caches, and route-wide outages do not fan out');

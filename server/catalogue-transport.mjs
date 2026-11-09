@@ -20,9 +20,13 @@ export async function fetchCataloguePages(urls){
  }));return results;
 }
 
-export function createCatalogueTransport(execute,{batchSize=24,validate=x=>x}={}){
- const cache=new Map(),queue=[];let running=false,timer,failed=null;
+export function createCatalogueTransport(execute,{batchSize=24,validate=x=>x,recover,maxRepairs=4}={}){
+ const cache=new Map(),queue=[],direct=new Set();let running=false,timer,failed=null,healthy=0,repairs=0;
  const fail=rows=>{const e=new SourceError('Firecrawl目录批次连接未通过；已停止重复请求，等待限次恢复',503);e.retryable=true;e.sourceTransportUnavailable=true;e.sourceStatuses=rows.map(r=>r.status);e.sourceFailures=rows.filter(r=>r.status!==200||!r.body).map(({url,status,error,navigation})=>({url,status,error,navigation}));return e;};
+ const repair=async row=>{
+  if(!recover||repairs>=maxRepairs||[400,401,404,422].includes(row.status))throw fail([row]);
+  repairs++;const body=validate(await recover(row.url));direct.add(row.url);healthy++;return body;
+ };
  async function drain(){
   if(running)return;running=true;
   try{while(queue.length){const batch=queue.splice(0,batchSize);if(failed){for(const p of batch)p.reject(failed);continue;}
@@ -30,12 +34,18 @@ export function createCatalogueTransport(execute,{batchSize=24,validate=x=>x}={}
     const urls=batch.map(p=>p.url),rows=await execute(fetchCataloguePages,urls);
     if(!Array.isArray(rows)||rows.length!==urls.length||new Set(rows.map(r=>r.url)).size!==urls.length||rows.some(r=>!urls.includes(r.url)))throw Error('Catalogue batch URL membership mismatch');
     const map=new Map(rows.map(r=>[r.url,r]));
-    // A broken route is one provider failure, not eight new paid attempts.
-    if(rows.every(r=>r.status!==200||!r.body)){failed=fail(rows);throw failed;}
-    for(const p of batch){const row=map.get(p.url);try{if(row.status!==200||!row.body){const e=fail([row]);e.assetStatus=row.status;throw e;}p.resolve(validate(row.body));}catch(e){p.reject(e);}}
+    // A provider-wide failure stops at one batch. A single exceptional URL may
+    // be repaired only after this observation already proved a healthy route.
+    const good=rows.filter(r=>r.status===200&&r.body);healthy+=good.length;
+    if(!good.length&&!(rows.length===1&&healthy>0&&recover))throw fail(rows);
+    for(const p of batch){const row=map.get(p.url);p.resolve(row.status===200&&row.body?validate(row.body):await repair(row));}
    }catch(e){failed=e;for(const p of batch)p.reject(e);}
   }}finally{running=false;}
  }
  const read=url=>{if(cache.has(url))return cache.get(url);if(failed)return Promise.reject(failed);const promise=new Promise((resolve,reject)=>{queue.push({url,resolve,reject});if(!running){clearTimeout(timer);timer=setTimeout(drain,5);}});cache.set(url,promise);return promise;};
- read.many=urls=>Promise.all(urls.map(read));read.fresh=url=>{cache.delete(url);return read(url)};return read;
+ read.many=urls=>Promise.all(urls.map(read));read.fresh=url=>{
+  cache.delete(url);if(failed)return Promise.reject(failed);
+  if(!direct.has(url))return read(url);
+  const promise=repair({url,status:0,error:'Previously verified direct route requires a fresh response'}).catch(e=>{failed=e;throw e;});cache.set(url,promise);return promise;
+ };return read;
 }

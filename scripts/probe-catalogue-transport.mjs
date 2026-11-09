@@ -3,10 +3,10 @@ import {createFirecrawlBrowserReader} from '../server/firecrawl-browser.mjs';
 import {loadPolicy} from '../server/collection-policy.mjs';
 import {openCreditBudget} from '../server/credit-budget.mjs';
 import {apiUrl,categories} from '../server/sync.mjs';
-const policy={...await loadPolicy(),catalogueTransport:'enhanced-batch',browserCreditsPerRun:2,maxSessionSeconds:60,maxFallbackScrapesPerRun:1},budget=await openCreditBudget(policy);
+const policy={...await loadPolicy(),catalogueTransport:'enhanced-batch',browserCreditsPerRun:2,maxSessionSeconds:60,maxFallbackScrapesPerRun:3},budget=await openCreditBudget(policy);
 let reader,error;const proof={success:false,verifiedAt:new Date().toISOString(),source:'fresh-official-catalogue-enhanced-batch',baselineModified:false,mailSent:false};
 try{
- reader=await createFirecrawlBrowserReader({policy,budget:{...budget,limit:Math.min(3,budget.limit)}});
+ reader=await createFirecrawlBrowserReader({policy,budget:{...budget,limit:Math.min(5,budget.limit)}});
  const entries=[['christmas-decorations','94578',true],['christmas-lights','94579',true],...Object.entries(categories).slice(0,2)],rows=await reader.many(entries.map(([,id,facets])=>apiUrl(id,0,{in_stock_f:['true']},Boolean(facets))));
  proof.catalogues=rows.map((d,i)=>({category:entries[i][0],expected:d.totalResults,rows:d.products.length,unique:new Set(d.products.map(p=>p.sku)).size}));
  if(proof.catalogues.some(d=>!d.expected||d.rows!==Math.min(120,d.expected)||d.unique!==d.rows))throw Error('Live catalogue probe failed row-count verification');

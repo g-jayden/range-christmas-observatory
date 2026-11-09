@@ -70,8 +70,8 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   return result;
  }
  function availableFallback(){if(policy.catalogueTransport==='enhanced-batch'&&!session&&!starting&&!sessionClosed)return Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit));return sessionClosed&&Number.isFinite(browserReceipt?.creditsBilled)?Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-browserReceipt.creditsBilled)):fallbackLimit;}
- async function scrapeRaw(url){
-  guard();if(fallbackCache.has(url))return fallbackCache.get(url);
+ async function scrapeRaw(url,{fresh=false}={}){
+  guard();if(fresh)fallbackCache.delete(url);if(fallbackCache.has(url))return fallbackCache.get(url);
   if(fallbackReserved>=availableFallback())throw budgetError('受阻地址的定额抓取已达本轮上限，未启动更多付费请求');
   fallbackReserved++;metrics.scrapeRequests++;
   const promise=(async()=>{
@@ -183,7 +183,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    const section=page.locator('#variant_container');await section.scrollIntoViewIfNeeded();const bytes=await section.screenshot({type:'png',timeout:20000});metrics.screenshots++;return bytes.toString('base64');
   }finally{release(page)}
  }
- const catalogueBatch=createCatalogueTransport(async(fn,urls)=>{metrics.catalogueBatchRequests=(metrics.catalogueBatchRequests||0)+1;metrics.catalogueRequests=(metrics.catalogueRequests||0)+urls.length;const rows=await scriptAction('('+fn.toString()+')('+JSON.stringify(urls)+')',{entryUrl:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776'});console.log(JSON.stringify({phase:'catalogue-batch',requests:urls.length,failures:rows.filter(r=>r.status!==200||!r.body).map(({url,status,error,navigation})=>({url,status,error,navigation}))}));return rows;},{validate:body=>parseSource({success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200}}})});
+ const catalogueBatch=createCatalogueTransport(async(fn,urls)=>{metrics.catalogueBatchRequests=(metrics.catalogueBatchRequests||0)+1;metrics.catalogueRequests=(metrics.catalogueRequests||0)+urls.length;const rows=await scriptAction('('+fn.toString()+')('+JSON.stringify(urls)+')',{entryUrl:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776'});console.log(JSON.stringify({phase:'catalogue-batch',requests:urls.length,failures:rows.filter(r=>r.status!==200||!r.body).map(({url,status,error,navigation})=>({url,status,error,navigation}))}));return rows;},{validate:body=>parseSource({success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200}}}),recover:async url=>{metrics.catalogueDirectRepairs=(metrics.catalogueDirectRepairs||0)+1;console.log(JSON.stringify({phase:'catalogue-exception-repair',url}));return JSON.parse(await scrapeRaw(url,{fresh:true}));},maxRepairs:4});
  async function raw(input,options={}){
   const url=sourceUrl(input),u=new URL(url),catalogue=u.pathname==='/api/productlist';
   const identifier=JSON.stringify({url,formats:options.formats||[]});if(active.has(identifier))return active.get(identifier);

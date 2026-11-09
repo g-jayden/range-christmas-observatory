@@ -1,9 +1,9 @@
 import {sourceRecovery,retryableSourceError} from '../cloud/source-recovery.mjs';
 import {optimiseChangedProductPreviews} from './product-previews.mjs';
 import {auditTaxonomy} from './taxonomy-audit.mjs';
-import {readThemes,collectThemeDirectory,loadThemeDetails,updateThemeDetails,publishThemes} from './themes.mjs';
-import {readLights,collectLightDirectory,loadLightingDetails,updateLightingDetails,publishLights} from './lights.mjs';
-import {readDecorations,loadDecorationDetails,updateDecorationDetails,enrichDecorations,publishDecorations,publishDecorationStatus,notificationSnapshot,decorationReadiness,restoreDecorationImageEvidence} from './decorations.mjs';
+import {THEME_SOURCES,readThemes,collectThemeDirectory,loadThemeDetails,updateThemeDetails,publishThemes} from './themes.mjs';
+import {LIGHT_SOURCES,readLights,collectLightDirectory,loadLightingDetails,updateLightingDetails,publishLights} from './lights.mjs';
+import {DECORATION_SOURCE,readDecorations,loadDecorationDetails,updateDecorationDetails,enrichDecorations,publishDecorations,publishDecorationStatus,notificationSnapshot,decorationReadiness,restoreDecorationImageEvidence} from './decorations.mjs';
 import {collectDecorationDirectory} from './update-decorations.mjs';
 import {auditNotificationImages,buildMailAssets} from './mail-assets.mjs';
 import fs from 'node:fs/promises';
@@ -11,7 +11,7 @@ import {catalogueSnapshot,readState,saveState,restoreProducts,preserveImages,ref
 import {checkNew,finishNewEvents,captureNewScreenshots,retainVerifiedNewImages} from './new-events.mjs';
 import {enrichProducts,selectGalleryImages} from './enrich-appearance.mjs';
 import {readDailyMonitor,saveDailyMonitor} from './daily-monitor-state.mjs';
-import {atomicJson} from './sync.mjs';
+import {atomicJson,apiUrl,categories} from './sync.mjs';
 import {digest,planDetails} from './collection-policy.mjs';
 import {control} from './cloud-client.mjs';
 export async function runMonitorDaily({previous,policy,readerFactory,budgetFactory,now=()=>Date.now(),tick={},collectSnapshot=catalogueSnapshot,controlCall=control,recoveryOnly=false}){
@@ -21,9 +21,14 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
  try{
   budget=await budgetFactory(policy);reader=await readerFactory({policy:probe?{...policy,repairImagesOnly:true}:policy,budget});
   if(recoveryOnly&&(!previous.observedAt||now()-Date.parse(previous.observedAt)>6*3600000))throw Error('Saved discovery is older than six hours; a fresh NEW check is required');
+  const [previousDecorations,previousLights,previousThemes]=await Promise.all([readDecorations(),readLights(),readThemes()]);
+  if(!recoveryOnly&&reader.many){
+   const filters={in_stock_f:['true']},roots=[...(previousDecorations.baselineReady?[apiUrl(DECORATION_SOURCE.id,0,filters,true)]:[]),...Object.values(categories).map(id=>apiUrl(id)),...(previousLights.baselineReady?LIGHT_SOURCES.map(s=>apiUrl(s.id,0,filters,true)):[]),...(previousThemes.baselineReady?THEME_SOURCES.map(s=>apiUrl(s.id,0,filters,true)):[])];
+   await reader.many([...new Set(roots)]);
+  }
   const gathered=recoveryOnly?{snapshot:structuredClone(previous)}:await collectSnapshot({previous,reader,policy,now,forceFresh:true,onProgress:console.log});
-  const previousDecorations=await readDecorations();let decorations=previousDecorations.baselineReady?(recoveryOnly?previousDecorations:await collectDecorationDirectory(reader,previousDecorations)):null;
-  restoreProducts(gathered.snapshot,state,policy);preserveImages(previous,gathered.snapshot);if(decorations)await loadDecorationDetails(decorations.products);const previousLights=await readLights(),lights=previousLights.baselineReady?(recoveryOnly?previousLights:await collectLightDirectory(reader,previousLights,[gathered.snapshot,decorations])):null;if(lights)await loadLightingDetails(lights.products);const previousThemes=await readThemes(),themes=previousThemes.baselineReady?(recoveryOnly?previousThemes:await collectThemeDirectory(reader,previousThemes,[gathered.snapshot,decorations,lights])):null;if(themes)await loadThemeDetails(themes.products);const snapshot=notificationSnapshot(gathered.snapshot,decorations,lights,themes);
+  let decorations=previousDecorations.baselineReady?(recoveryOnly?previousDecorations:await collectDecorationDirectory(reader,previousDecorations)):null;
+  restoreProducts(gathered.snapshot,state,policy);preserveImages(previous,gathered.snapshot);if(decorations)await loadDecorationDetails(decorations.products);const lights=previousLights.baselineReady?(recoveryOnly?previousLights:await collectLightDirectory(reader,previousLights,[gathered.snapshot,decorations])):null;if(lights)await loadLightingDetails(lights.products);const themes=previousThemes.baselineReady?(recoveryOnly?previousThemes:await collectThemeDirectory(reader,previousThemes,[gathered.snapshot,decorations,lights])):null;if(themes)await loadThemeDetails(themes.products);const snapshot=notificationSnapshot(gathered.snapshot,decorations,lights,themes);
   // Fresh listing data must survive a later single-SKU image or mail failure.
   if(!probe){await atomicJson('web/catalogue.json',gathered.snapshot);if(decorations)await publishDecorations(structuredClone(decorations));if(lights)await publishLights(structuredClone(lights));if(themes)await publishThemes(structuredClone(themes));}
   let result={success:true,captured:0,attempted:0,scanned:snapshot.products.length,events:[],deferred:0,issues:[]};
