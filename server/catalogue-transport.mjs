@@ -16,13 +16,13 @@ export async function fetchCataloguePages(urls){
    const u=new URL(url);if(u.origin!=='https://search-lon.therange.co.uk'||u.pathname!=='/api/productlist')throw Error('Unexpected catalogue endpoint');
    const r=await fetch(url,{credentials:'include',cache:'no-store',signal:AbortSignal.timeout(20000)});const text=await r.text();let body;try{body=JSON.parse(text)}catch{}
    results.push({url,status:r.status,body,observedAt:new Date().toISOString()});
-  }catch(e){results.push({url,status:0,error:String(e.message).slice(0,120)});}}
+  }catch(e){results.push({url,status:0,error:String(e.message).slice(0,120),...(url===urls[0]&&typeof document!=='undefined'?{navigation:{href:location.href,title:document.title,contentType:document.contentType,preCount:document.querySelectorAll('pre').length,text:document.body?.innerText?.slice(0,250)}}:{})});}}
  }));return results;
 }
 
 export function createCatalogueTransport(execute,{batchSize=24,validate=x=>x}={}){
  const cache=new Map(),queue=[];let running=false,timer,failed=null;
- const fail=rows=>{const e=new SourceError('Firecrawl目录批次连接未通过；已停止重复请求，等待限次恢复',503);e.retryable=true;e.sourceTransportUnavailable=true;e.sourceStatuses=rows.map(r=>r.status);e.sourceFailures=rows.filter(r=>r.status!==200||!r.body).map(({url,status,error})=>({url,status,error}));return e;};
+ const fail=rows=>{const e=new SourceError('Firecrawl目录批次连接未通过；已停止重复请求，等待限次恢复',503);e.retryable=true;e.sourceTransportUnavailable=true;e.sourceStatuses=rows.map(r=>r.status);e.sourceFailures=rows.filter(r=>r.status!==200||!r.body).map(({url,status,error,navigation})=>({url,status,error,navigation}));return e;};
  async function drain(){
   if(running)return;running=true;
   try{while(queue.length){const batch=queue.splice(0,batchSize);if(failed){for(const p of batch)p.reject(failed);continue;}
