@@ -14,7 +14,7 @@ export async function fetchCataloguePages(urls){
  await Promise.all(Array.from({length:Math.min(8,urls.length)},async()=>{
   while(cursor<urls.length){const url=urls[cursor++];try{
    const u=new URL(url);if(u.origin!=='https://search-lon.therange.co.uk'||u.pathname!=='/api/productlist')throw Error('Unexpected catalogue endpoint');
-   const r=await fetch(url,{credentials:'include',cache:'no-store',signal:AbortSignal.timeout(20000)});const text=await r.text();let body;try{body=JSON.parse(text)}catch{}
+   const r=await fetch(url,{credentials:'omit',cache:'no-store',signal:AbortSignal.timeout(20000)});const text=await r.text();let body;try{body=JSON.parse(text)}catch{}
    results.push({url,status:r.status,body,observedAt:new Date().toISOString()});
   }catch(e){results.push({url,status:0,error:String(e.message).slice(0,120),...(url===urls[0]&&typeof document!=='undefined'?{navigation:{href:location.href,title:document.title,contentType:document.contentType,preCount:document.querySelectorAll('pre').length,text:document.body?.innerText?.slice(0,250)}}:{})});}}
  }));return results;
