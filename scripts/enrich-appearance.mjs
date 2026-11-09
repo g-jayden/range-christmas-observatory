@@ -14,7 +14,7 @@ import {digest} from '../server/collection-policy.mjs';
 import {readDecorations,loadDecorationDetails,enrichDecorations,publishDecorations,publishDecorationStatus,decorationReadiness} from '../server/decorations.mjs';
 import {DEPARTMENTS,scopeProducts} from '../web/catalogue-model.mjs';
 import {materialFacts} from '../server/appearance.mjs';
-import {buildMailAssets,MAIL_CARD_VERSION} from '../server/mail-assets.mjs';
+import {buildMailAssets,MAIL_CARD_VERSION,mailHeightLabel} from '../server/mail-assets.mjs';
 
 const d=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));
 await atomicJson('web/collection-ledger.json',await readLedger());
@@ -72,7 +72,7 @@ await atomicJson('web/classification-proof.json',{classifiedAt:new Date().toISOS
 let cardsUpdated=0;
 for(const name of await fs.readdir('web/mail-assets').catch(()=>[])){
  const dir='web/mail-assets/'+name,manifest=await fs.readFile(dir+'/manifest.json','utf8').then(JSON.parse).catch(()=>null),p=products.get(name);
- if(!manifest||!p||p.taxonomyAudit?.disposition!=='include'||manifest.material===p.material&&manifest.priceGBP===p.priceGBP&&manifest.originalPrice===p.originalPrice&&manifest.promoText===p.promoText&&manifest.cardVersion===MAIL_CARD_VERSION&&JSON.stringify(manifest.colors)===JSON.stringify(p.colorValues)&&manifest.department===(p.department||p.kind)&&(!p.displayImage||manifest.original.sha256===p.displayImage.sha256))continue;
+ if(!manifest||!p||p.taxonomyAudit?.disposition!=='include'||manifest.material===p.material&&manifest.priceGBP===p.priceGBP&&manifest.originalPrice===p.originalPrice&&manifest.promoText===p.promoText&&manifest.cardVersion===MAIL_CARD_VERSION&&manifest.height===mailHeightLabel(p)&&JSON.stringify(manifest.colors)===JSON.stringify(p.colorValues)&&manifest.department===(p.department||p.kind)&&(!p.displayImage||manifest.original.sha256===p.displayImage.sha256))continue;
  const original=p.displayImage?.cachePath||'mail-assets/'+name+'/'+new URL(manifest.original.url).pathname.split('/').pop();await fs.access('web/'+original);
  p.originalCachedImageUrl=original;p.originalImageUrl=p.displayImage?.sourceUrl||manifest.original.sourceUrl;
  const proof=manifest.proof?await fs.readFile(dir+'/proof.png'):null;await buildMailAssets(p,proof?.toString('base64'));cardsUpdated++;

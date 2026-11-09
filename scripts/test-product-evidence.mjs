@@ -9,6 +9,16 @@ import {borrowThemeEvidence} from '../server/themes.mjs';
 import {borrowLightingEvidence} from '../server/lights.mjs';
 import {repairDirectImages,restoreObservedImages} from '../server/direct-image-repair.mjs';
 import {createHash} from 'node:crypto';
+import {treeHeightConflict} from '../web/catalogue-model.mjs';
+import {productEvidenceHealth} from '../server/product-evidence-health.mjs';
+import {mailHeightLabel} from '../server/mail-assets.mjs';
+// Real retailer JSON for SKU 1427095 specifies 10ft and Length 120cm while
+// the exact listing title says 1.2M. Retain the raw source and disclose both.
+const conflicting={sku:'1427095',kind:'tree',variantName:'Lifeideas Collapsible 1.2M Pop Up Tinsel Christmas Tree with Base - Gold',heightLabel:'10ft',heightCm:304.8,specifications:{'Christmas Tree Height':'10ft',Length:'120cm'},attributeObservedAt:'2026-11-06T00:00:00Z',detailEvidence:{verifiedProductSection:true,selectedSku:'1427095'},cachedImageUrl:'images/source/verified.jpg',variantImageUrl:'https://www.therange.co.uk/media/tree.jpg',imageCacheEvidence:{sourceUrl:'https://www.therange.co.uk/media/tree.jpg',sha256:'verified'}};
+assert.equal(treeHeightConflict(conflicting).usableHeightCm,120);assert.equal(conflicting.specifications['Christmas Tree Height'],'10ft','Supplier values remain unchanged and reviewable');assert.equal(treeHeightConflict({...conflicting,specifications:{'Christmas Tree Height':'10ft'}}).usableHeightCm,null,'Disagreement without a confirming source length cannot invent a height');assert.equal(treeHeightConflict({...conflicting,variantName:'Tree 5ft-8ft - Green'}),null,'A size range is not an exact SKU height');assert.equal(treeHeightConflict({...conflicting,variantName:'Tree - Green / 4ft',heightCm:120,heightLabel:'120cm',specifications:{Height:'120cm'}}),null);assert.equal(treeHeightConflict({...conflicting,kind:'decoration',variantName:'2m Tree Lights'}),null);
+const conflictHealth=productEvidenceHealth([{products:[conflicting]}]);assert.equal(conflictHealth.missingDetailsUniqueSkus,0);assert.equal(conflictHealth.dimensionConflictUniqueSkus,1);assert.equal(conflictHealth.completeUniqueSkus,0,'A successfully retrieved but internally contradictory specification must remain visible in the audit');
+assert.match(mailHeightLabel(conflicting),/^120cm/,'Mail and charts use the same supported nominal height');assert.match(mailHeightLabel({...conflicting,specifications:{'Christmas Tree Height':'10ft'}}),/unconfirmed/,'Mail cannot present an unsupported conflicting height as verified');
+for(const variantName of ['Tree - Black / 4ft / 80cm','80cm and100cm Outdoor Trees','Tree 5ft-8ft - White / 6ft','Tree 150x30x20cm','Tree 150cmx30cm'])assert.equal(treeHeightConflict({...conflicting,variantName}),null,'Multiple non-equivalent dimensions do not identify one height: '+variantName);assert.equal(treeHeightConflict({...conflicting,taxonomyAudit:{primary:'ornaments'},variantName:'55cm Replacement Tree Stand'}),null,'A reclassified stand is not a whole-tree height');
 const fixture=JSON.parse(await fs.readFile('test/fixtures/variant-json-only-1684540.json','utf8')),url='https://www.therange.co.uk/p/metal-angel-christmas-stocking-hook-hanger/m1684540',sku='1684540';
 const priorFetch=globalThis.fetch;globalThis.fetch=async()=>new Response('Fixture HTML unavailable',{status:403});
 try{
