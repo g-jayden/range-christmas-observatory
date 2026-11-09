@@ -64,11 +64,23 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  if(ttl<60)throw budgetError('本轮积分不足以创建一个浏览器会话');
  const metrics={provider:'firecrawl-browser',billingMode:'code-session-time',firecrawlRequests:0,scrapeRequests:0,firecrawlCredits:0,creditsEstimatedUpperBound:ttl/30+fallbackLimit,browserCreditUpperBound:ttl/30,fallbackLimit,browserPages:0,familyReads:0,familyReuse:0,screenshots:0,sourceImageChecks:0};
  async function api(path,method,body){
-  metrics.firecrawlRequests++;
-  const response=await fetcher('https://api.firecrawl.dev/v2/'+path,{method,headers:{authorization:'Bearer '+key,...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(105000)});
-  const result=await response.json();if(!response.ok||result.success===false){const detail=String(result.error?.message||result.error||result.message||result.code||'').replace(/fc-[\w-]+/g,'[redacted]').slice(0,180);throw new SourceError('Firecrawl '+method+' 请求未成功 HTTP '+response.status+(detail?': '+detail:''),response.status);}
-  return result;
+  for(let attempt=0;;attempt++){
+   metrics.firecrawlRequests++;
+   const response=await fetcher('https://api.firecrawl.dev/v2/'+path,{method,headers:{authorization:'Bearer '+key,...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(105000)});
+   const result=await response.json();if(response.ok&&result.success!==false)return result;
+   const detail=String(result.error?.message||result.error||result.message||result.code||'').replace(/fc-[\w-]+/g,'[redacted]');
+   const proxyFailure=path==='scrape'&&response.status>=500&&/ERR_TUNNEL_CONNECTION_FAILED|internal proxy error/i.test(detail);
+   if(proxyFailure&&attempt===0&&(metrics.proxyRetries||0)<2&&fallbackReserved<availableFallback()){
+    guard();fallbackReserved++;metrics.scrapeRequests++;metrics.proxyRetries=(metrics.proxyRetries||0)+1;
+    const cost=result.data?.metadata?.creditsUsed??result.metadata?.creditsUsed;scrapeCredits+=Number.isFinite(cost)?cost:1;
+    if(!Number.isFinite(cost)){scrapeBillingVerified=false;metrics.unconfirmedProxyFailureCredits=(metrics.unconfirmedProxyFailureCredits||0)+1;}
+    console.log(JSON.stringify({phase:'bounded-provider-proxy-retry',attempt:1,runRetries:metrics.proxyRetries,completedCataloguePagesRetained:true}));
+    await new Promise(resolve=>setTimeout(resolve,1500));continue;
+   }
+   throw new SourceError('Firecrawl '+method+' 请求未成功 HTTP '+response.status+(detail?': '+detail.slice(0,180):''),response.status);
+  }
  }
+
  function availableFallback(){if(policy.catalogueTransport==='enhanced-batch'&&!session&&!starting&&!sessionClosed)return Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit));return sessionClosed&&Number.isFinite(browserReceipt?.creditsBilled)?Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-browserReceipt.creditsBilled)):fallbackLimit;}
  async function scrapeRaw(url,{fresh=false}={}){
   guard();if(fresh)fallbackCache.delete(url);if(fallbackCache.has(url))return fallbackCache.get(url);

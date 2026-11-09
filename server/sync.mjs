@@ -22,7 +22,7 @@ export function parseSource(result){
  if(!Array.isArray(d.products)||!Number.isInteger(d.totalResults)||d.products.some(p=>typeof p.newIn!=='boolean'||p.inStock!==true||p.sponsored!==false||!/^\d{1,12}$/.test(String(p.sku))||!Number.isInteger(p.price)))throw new SourceError('Source catalogue has invalid product fields');
  return d;
 }
-export function apiUrl(categoryId,offset=0,filters={in_stock_f:['true']},facets=false){const u=new URL('https://search-lon.therange.co.uk/api/productlist');for(const [k,v] of Object.entries({categoryId,offset,limit:120,sort:'price_lth',filters:JSON.stringify(filters),facets,includePriceFacet:facets}))u.searchParams.set(k,String(v));return u.href;}
+export function apiUrl(categoryId,offset=0,filters={in_stock_f:['true']},facets=false){const u=new URL('https://search-lon.therange.co.uk/api/productlist');for(const [k,v] of Object.entries({categoryId,offset,limit:120,sort:'price_lth',filters:JSON.stringify(filters),facets,includePriceFacet:true,sponsoredProducts:false}))u.searchParams.set(k,String(v));return u.href;}
 export function createReader(){throw Error('逐页Firecrawl抓取已禁用；请使用按时计费的Firecrawl浏览器会话。')}
 export async function collectCategory(id,reader){
  let expected;const raw=[],batches=[],map=new Map(),countDiscrepancies=[],prefetched=new Map();

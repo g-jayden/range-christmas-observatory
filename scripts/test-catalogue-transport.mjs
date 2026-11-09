@@ -41,3 +41,11 @@ assert.equal((await exceptional.fresh(urls[24])).revision,2);assert.equal(batchE
 await assert.rejects(exceptional.fresh(urls[24]),e=>e.retryable);assert.equal(repaired,2,'Direct exceptions have a hard per-observation limit');
 let outageRepairs=0;const outage=createCatalogueTransport(async(fn,urls)=>urls.map(url=>({url,status:0})),{recover:async()=>{outageRepairs++;return {}}});await assert.rejects(outage.many(urls));assert.equal(outageRepairs,0,'A complete provider outage never turns into per-page paid fallback');
 console.log('PASS: partial batches repair only exceptional URLs, fresh counts bypass old direct caches, and route-wide outages do not fan out');
+
+let retryCalls=0;
+const retried=await createFirecrawlBrowserReader({policy:{...defaults,catalogueTransport:'enhanced-batch'},budget:{limit:5},fetcher:async(url,opts)=>{
+ retryCalls++;if(retryCalls===1)return Response.json({success:false,error:'ERR_TUNNEL_CONNECTION_FAILED internal proxy error',metadata:{creditsUsed:0}},{status:500});
+ const batch=JSON.parse(JSON.parse(opts.body).actions[0].script.match(/\)\((\[.*\])\)$/s)[1]);return Response.json({success:true,data:{metadata:{statusCode:200,creditsUsed:1},actions:{javascriptReturns:[{value:batch.map(url=>({url,status:200,body:{totalResults:0,products:[]}}))}]}}});
+}});
+await retried(urls[0]);await retried.close();assert.equal(retryCalls,2);assert.equal(retried.metrics().firecrawlCredits,1);assert.equal(retried.metrics().proxyRetries,1);assert.equal(retried.metrics().billingVerified,true);
+console.log('PASS: a provider-confirmed zero-credit proxy failure retries just its request and keeps authoritative billing');
