@@ -19,7 +19,7 @@ export function asdaMemberships(p){
  else primary='asda-room';
  const ids=[primary],use=String(spec['Indoor / Outdoor']||'').toLowerCase();
  // Indoor-only is stronger than outdoor styling in a photograph.
- const outdoor=!/indoor only/.test(use)&&(/outdoor/.test(use)||/\boutdoor\b/.test(title)||/suitable for (?:indoor and |indoor\/)?outdoor/.test(body));
+ const outdoor=!/indoor only/.test(use)&&(/outdoor|\bboth\b/.test(use)||/\boutdoor\b/.test(title)||/suitable for (?:indoor and |indoor\/)?outdoor/.test(body));
  if(outdoor)ids.push('asda-outdoor');
  return {primary,memberships:[...new Set(ids)],method:'ASDA-exact-SKU-object-description-image',nativeCategory:category,offeredObjectReason:physical.reason};
 }

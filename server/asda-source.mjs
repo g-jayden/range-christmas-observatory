@@ -8,7 +8,7 @@ export function jsonValueAt(text,start){
 }
 export function parseAsdaPage(html,jsonValue=jsonValueAt){
  const result={};
- const product=html.match(/(?:window\.)?productData\s*=\s*/);if(product){const d=jsonValue(html,product.index+product[0].length);if(d.data?.product)result.product=d.data.product;}
+ const product=html.match(/(?:window\.)?productData\s*=\s*/);if(product){const d=jsonValue(html,product.index+product[0].length);if(d.data?.product)result.product={...d.data.product,...(d.data.jsonld?{sourceStructuredData:d.data.jsonld}:{})};}
  const search=html.match(/window\.searchJSON\s*=\s*/);if(search){const d=jsonValue(html,search.index+search[0].length);result.search=d.productSearch;delete result.search.productsBase64Images;result.enriched=[];const rx=/"([A-Z]*\d+)"\s*:\s*\{\s*productData:\s*/g;for(const m of html.matchAll(rx)){const p=jsonValue(html,m.index+m[0].length);if(p.id!==m[1])throw Error('ASDA embedded SKU mismatch');result.enriched.push(p);}}
  if(!result.product&&!result.search)throw Error('ASDA exact product or listing JSON missing');return result;
 }
@@ -19,3 +19,20 @@ export async function fetchAsdaBatch(items){
 }
 export function asdaBatchScript(items){return '('+fetchAsdaBatch.toString().replace('ASDA_PARSER',asdaPageParserSource())+')('+JSON.stringify(items)+')';}
 export const parseSavedAsdaPage=parseAsdaPage;
+
+// A single directory scrape also refreshes the few grouped products. Their
+// own public pricing endpoint identifies every size by its native SKU.
+export async function readAsdaGroups(groups){
+ const batch=ASDA_BATCH,rows=await batch(groups.map(p=>({sku:p.id,url:p.URL})));
+ await Promise.all(rows.map(async row=>{
+  if(row.status!==200||!row.data?.product||row.data.product.productType!=='master')return;
+  try{const url='https://direct.asda.com/on/demandware.store/Sites-ASDA-Site/default/Product-GetPriceData?'+new URLSearchParams({pid:row.sku,countryCode:'UK',currencyCode:'GBP'}),r=await fetch(url,{credentials:'include',cache:'no-store',signal:AbortSignal.timeout(18000)}),d=await r.json();if(!r.ok||d.success!==true||!d.data?.productAvailability)throw Error('Native variant price response missing');row.data.pricing=d.data;row.priceObservedAt=new Date().toISOString();}
+  catch(e){row.pricingError=String(e.message).slice(0,160);}
+ }));return rows;
+}
+export async function readAsdaDirectoryAndGroups(){
+ const parse=ASDA_PARSER,readGroups=ASDA_GROUP_READER,directory=parse(document.documentElement.outerHTML),groups=directory.enriched.filter(p=>/^(?:GEM|SET)\d+$/.test(p.id));directory.groupRows=await readGroups(groups);return directory;
+}
+function asdaGroupReaderSource(){const batch='('+fetchAsdaBatch.toString().replace('ASDA_PARSER',asdaPageParserSource())+')';return '('+readAsdaGroups.toString().replace('ASDA_BATCH',batch)+')';}
+export function asdaGroupsScript(groups){return asdaGroupReaderSource()+'('+JSON.stringify(groups)+')';}
+export function asdaDirectoryScript(){return '('+readAsdaDirectoryAndGroups.toString().replace('ASDA_PARSER',asdaPageParserSource()).replace('ASDA_GROUP_READER',asdaGroupReaderSource())+')()';}

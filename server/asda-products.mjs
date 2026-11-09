@@ -4,6 +4,17 @@ import {normaliseColors,materialFacts,descriptionFacts} from './appearance.mjs';
 import {productDimensions,toCentimetres} from '../web/catalogue-model.mjs';
 const text=s=>String(s||'').replace(/<br\s*\/?\s*>/gi,'\n').replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').replace(/&nbsp;/g,' ').trim();
 export const asdaFingerprint=p=>createHash('sha256').update(JSON.stringify([p.sku,p.variantName,p.listingVariantImageUrl||p.variantImageUrl,p.asdaSource?.primaryCategoryID])).digest('hex');
+export function asdaVariantListings(group,listing,pricing){
+ if(!Array.isArray(group.variants)||!pricing?.productAvailability)throw Error('ASDA variant evidence missing');
+ const ids=new Set(group.variants.map(v=>String(v.ID)));
+ if(Object.keys(pricing.productAvailability).some(id=>!ids.has(id)))throw Error('ASDA variant-price membership mismatch');
+ return group.variants.map(v=>{
+  const sku=String(v.ID),offer=pricing.productAvailability[sku];if(!offer?.price||typeof offer.availability?.instock!=='boolean')throw Error('Exact ASDA variant offer missing: '+sku);
+  const options=Object.values(v.variationAttributes||{}).map(o=>o.displayValue||o.value).filter(Boolean),name=v.name+(options.length?' · '+options.join(' / '):'');
+  const detail={...group,...v,id:sku,name,URL:v.URL,productType:'variant',variants:undefined,parentGroupId:group.id,sourceStructuredData:undefined};
+  return {listing:{...listing,...detail,price:offer.price,productAvailable:offer.availability.instock,badgesInformation:v.badgesInformation,savingsBadge:offer.savingsBadge||null,badge:offer.badge||v.badge||null,recordType:'sku'},detail,options,parentGroupId:group.id};
+ });
+}
 export function normaliseAsdaProduct(listing,detail,{observedAt,previous=null,baseline=false}={}){
  const raw=listing,sku=String(raw.id);if(!/^(?:\d{8,12}|GEM\d{4,12}|SET\d{4,12})$/.test(sku))throw Error('Invalid ASDA SKU');if(detail&&String(detail.id)!==sku)throw Error('ASDA detail SKU mismatch');
  const source=detail||raw,url=source.URL||raw.URL;if(!url||new URL(url).origin!=='https://direct.asda.com'||!new URL(url).pathname.includes('/'+sku+','))throw Error('Exact ASDA product URL missing');
@@ -18,7 +29,11 @@ export function normaliseAsdaProduct(listing,detail,{observedAt,previous=null,ba
  if(originalImages[0])p.originalImageUrl=originalImages[0].url;
  if(!detail&&previous&&previous.detailInputFingerprint!==asdaFingerprint(p)){p.detailsReady=false;delete p.detailEvidence;p.attributeObservedAt=null;}
  if(!detail&&previous?.detailsReady&&previous.detailInputFingerprint===asdaFingerprint(p)){p.variantImageUrl=previous.variantImageUrl;p.images=previous.images;p.originalImages=previous.originalImages;p.originalImageUrl=previous.originalImageUrl;}
- if(!baseline&&!previous&&p.inStock){p.firstNewObservedAt=observedAt;p.arrivalEvidence='observed-after-baseline';p.everNew=true;}
+ p.baselineRecord=previous?.baselineRecord||baseline;
+ if(!baseline&&!previous)p.firstSeenAfterBaselineAt=observedAt;
+ if(!baseline&&p.inStock&&(!previous||!previous.inStock&&!previous.everInStock&&!previous.baselineRecord&&previous.firstSeenAfterBaselineAt)){p.firstNewObservedAt=observedAt;p.arrivalEvidence='observed-after-baseline';p.everNew=true;}
+ p.everInStock=previous?.everInStock||previous?.inStock||p.inStock;
+ if(raw.parentGroupId){p.parentGroupId=raw.parentGroupId;p.priceEvidence={source:'ASDA Product-GetPriceData',selectedSku:sku,parentGroupId:raw.parentGroupId,observedAt};}
  if(detail){
   p.sourceDescription=text(detail.longDescription||detail.productDescriptionAttributes?.longDescription);p.productSummary=p.sourceDescription;
   const specifications=Object.fromEntries((detail.attributes||[]).filter(x=>x.value!==null&&x.value!==undefined&&String(x.value)!=='').map(x=>[x.key,String(x.value)]));
