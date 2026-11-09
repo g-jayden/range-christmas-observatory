@@ -1,5 +1,7 @@
 import {auditTaxonomy} from '../server/taxonomy-audit.mjs';
 import {reconcileVerifiedEvidence,saveVerifiedRegistry} from '../server/verified-evidence.mjs';
+import {restoreObservedImages} from '../server/direct-image-repair.mjs';
+import {productEvidenceHealth} from '../server/product-evidence-health.mjs';
 import {readThemes,loadThemeDetails,publishThemes,borrowThemeEvidence} from '../server/themes.mjs';
 import {restoreOriginalImages} from '../server/original-images.mjs';
 import {applySourceRepairs,applySourceOriginalRepairs} from '../server/source-repairs.mjs';
@@ -48,8 +50,12 @@ const themes=await readThemes();if(themes.products.length){await loadThemeDetail
 // Hydrate saved exact-SKU descriptions before auditing all four source sets.
 await loadDecorationDetails(decorations.products);await loadLightingDetails(lights.products);await loadThemeDetails(themes.products);
 const sharedEvidence=reconcileVerifiedEvidence([d,decorations,lights,themes]);await saveVerifiedRegistry([d,decorations,lights,themes].flatMap(s=>s.products));console.log(JSON.stringify({phase:'shared-verified-product-evidence',...sharedEvidence,records:undefined}));
+const recoveredImages=await restoreObservedImages([d,decorations,lights,themes]);s.browserImageAudit=d.browserImageAudit;console.log(JSON.stringify({phase:'verified-browser-image-recovery',...recoveredImages,records:undefined}));
+const recoveredImageSkus=new Set(recoveredImages.records.map(p=>p.sku));if(recoveredImageSkus.size){await enrichProducts(d.products.filter(p=>recoveredImageSkus.has(p.sku)));await enrichDecorations(decorations.products.filter(p=>recoveredImageSkus.has(p.sku)));}
 const taxonomy=await auditTaxonomy([d,decorations,lights,themes]);
+const evidenceHealth=productEvidenceHealth([d,decorations,lights,themes]);await atomicJson('web/product-evidence-health.json',evidenceHealth);console.log(JSON.stringify({phase:'product-evidence-health',...evidenceHealth,unresolved:undefined}));
 await publishDecorations(decorations);await publishLights(lights);await publishThemes(themes);
+decorationReadiness(decorations);await publishDecorationStatus(decorations,(await fs.readFile('web/decorations-status.json','utf8').then(JSON.parse)).native||{});
 d.revision=digest({observedAt:d.observedAt,products:d.products,sources:d.sources,excluded:d.excluded});s.revision=d.revision;
 await atomicJson('web/catalogue.json',d);await atomicJson('web/status.json',s);
 await atomicJson('web/source-repairs-proof.json',sourceRepairs);console.log(JSON.stringify({phase:'saved-source-repairs',...sourceRepairs}));

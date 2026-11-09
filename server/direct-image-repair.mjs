@@ -2,6 +2,16 @@ import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {atomicJson} from './sync.mjs';
 const allowed=raw=>{try{const u=new URL(raw);return u.protocol==='https:'&&['www.therange.co.uk','kube-media-unpublished.rstore.com'].includes(u.hostname)&&/^\/media\/.+\.(jpg|jpeg|png|webp|avif|gif)$/i.test(u.pathname)}catch{return false}};
+export async function restoreObservedImages(snapshots){
+ const recovery=await fs.readFile('web/browser-image-recovery.json','utf8').then(JSON.parse).catch(e=>{if(e.code!=='ENOENT')throw e;return {entries:{}}}),checked=new Map(),records=[];
+ for(const s of snapshots.filter(Boolean))for(const p of s.products||[]){const url=p.variantImageUrl||p.imageUrl,e=recovery.entries?.[url];if(!e?.ok||!allowed(url)||e.skus&&!e.skus.includes(String(p.sku))||!/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|avif|gif)$/.test(e.cachedImageUrl||'')||!/^[a-f0-9]{64}$/.test(e.hash||''))continue;
+  if(!checked.has(e.cachedImageUrl)){let valid=false;try{valid=createHash('sha256').update(await fs.readFile('web/'+e.cachedImageUrl)).digest('hex')===e.hash;}catch{}checked.set(e.cachedImageUrl,valid);}if(!checked.get(e.cachedImageUrl))continue;
+  if(p.cachedImageUrl!==e.cachedImageUrl||p.imageCacheEvidence?.sha256!==e.hash){records.push({sku:p.sku,url});p.cachedImageUrl=e.cachedImageUrl;p.imageCacheEvidence={sourceUrl:url,sha256:e.hash,observedAt:e.observedAt};p.imageRecoveryEvidence={method:e.method||'normal-browser-observed-official-image',observedAt:e.observedAt,sourceBytesUnchanged:true,firecrawlCredits:0};delete p.imageIssue;}
+  s.browserImageAudit||={};s.browserImageAudit.entries||={};s.browserImageAudit.entries[url]=e;
+ }
+ for(const s of snapshots.filter(Boolean)){const all=[...new Set((s.products||[]).map(p=>p.variantImageUrl||p.imageUrl))],missing=new Set((s.products||[]).filter(p=>!p.cachedImageUrl||!p.imageCacheEvidence?.sha256||p.imageCacheEvidence.sourceUrl!==(p.variantImageUrl||p.imageUrl)).map(p=>p.variantImageUrl||p.imageUrl));s.browserImageAudit={...s.browserImageAudit,checked:all.length,loaded:all.length-missing.size,failed:missing.size,failures:(s.browserImageAudit?.failures||[]).filter(f=>missing.has(f.url))};}
+ const report={completedAt:new Date().toISOString(),recoveredRows:records.length,verifiedFiles:checked.size,records,sourceRequestsMade:false,firecrawlCredits:0};await atomicJson('web/browser-image-repair-proof.json',report);return report;
+}
 export async function repairDirectImages(snapshots,{fetcher=fetch,concurrency=6,timeoutMs=12000}={}){
  const entries={},groups=new Map(),verifiedFiles=new Map();
  for(const s of snapshots.filter(Boolean)){Object.assign(entries,s.browserImageAudit?.entries);for(const p of s.products||[]){const url=p.variantImageUrl||p.imageUrl;if(!groups.has(url))groups.set(url,[]);groups.get(url).push(p);if(p.cachedImageUrl&&p.imageCacheEvidence?.sha256&&p.imageCacheEvidence.sourceUrl===url)entries[url]||={ok:true,hash:p.imageCacheEvidence.sha256,cachedImageUrl:p.cachedImageUrl,observedAt:p.imageCacheEvidence.observedAt};}}
