@@ -16,3 +16,5 @@ assert.throws(()=>normaliseAsdaProduct(listing,{...detail,id:'60186698'},{observ
 console.log('ASDA native source, exact SKU, prices, categories, cache and midnight tests passed');
 
 const masterListing={...listing,id:'GEM859829',productType:'master',name:'Christmas String Lights - Various Lengths',URL:listing.URL.replaceAll('060186698','GEM859829'),price:{type:'range',min:{list:{value:7}}}};const master=normaliseAsdaProduct(masterListing,null,{observedAt:at,baseline:true});assert.equal(master.recordType,'product-family');assert.equal(master.priceFrom,true);assert.equal(master.priceGBP,7);const masterHtml='<script>window.searchJSON = '+JSON.stringify({productSearch:{products:[masterListing],productsBase64Images:{}}})+'; window.dwProducts={"GEM859829":{productData: '+JSON.stringify(masterListing)+'}};</script>';assert.equal(parseAsdaPage(masterHtml).enriched[0].id,'GEM859829');
+
+assert.equal(normaliseAsdaProduct({...listing,productSetProduct:true},detail,{observedAt:at,baseline:true}).recordType,'sku','A sellable member of a product set is still one exact SKU');

@@ -4,6 +4,7 @@ import {analyseAsdaImages} from '../server/visual-model.mjs';
 import {normaliseColors} from '../server/appearance.mjs';
 import {atomicJson} from '../server/sync.mjs';
 const file='web/asda/catalogue.json';let snapshot;try{snapshot=JSON.parse(await fs.readFile(file,'utf8'))}catch(e){if(e.code==='ENOENT'){console.log('ASDA baseline not yet available');process.exit(0);}throw e;}
+for(const p of snapshot.products)p.recordType=p.sku.startsWith('SET')?'product-set':p.sku.startsWith('GEM')?'product-family':'sku';
 const index=await fs.readFile('web/asda/image-index.json','utf8').then(JSON.parse).catch(()=>({})),cache=await fs.readFile('web/asda/visual-cache.json','utf8').then(JSON.parse).catch(()=>({}));
 await fs.mkdir('web/images/asda',{recursive:true});const candidates=new Map();
 for(const p of snapshot.products){for(const g of (p.originalImages?.length?p.originalImages.map(g=>({url:g.thumbnail,original:g.url})):p.images?.map(url=>({url,original:null}))||[]).slice(0,3)){if(!candidates.has(g.url))candidates.set(g.url,g);}}
