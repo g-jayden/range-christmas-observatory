@@ -56,6 +56,7 @@ jobs:
       COLLECTION_HEADLESS: 'false'
       COLLECTION_PROVIDER: firecrawl-browser
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
