@@ -3,6 +3,7 @@ import {createHash} from 'node:crypto';
 import {SourceError,parseSource,atomicJson} from './sync.mjs';
 import {sourceUrl} from './free-source.mjs';
 import {budgetError} from './credit-budget.mjs';
+import {createCatalogueTransport} from './catalogue-transport.mjs';
 import {readPreviewAssets} from './product-previews.mjs';
 
 async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000}){
@@ -84,10 +85,10 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   })();fallbackCache.set(url,promise);return promise;
  }
 
- async function scriptAction(script,{needsImages=false}={}){
+ async function scriptAction(script,{needsImages=false,entryUrl='https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776'}={}){
   guard();if(fallbackReserved>=availableFallback())throw budgetError('批量核验已达到本轮付费请求上限');fallbackReserved++;metrics.scrapeRequests++;
   let charged=false;try{
-   const result=await api('scrape','POST',{url:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776',formats:needsImages?['rawHtml',{type:'screenshot',fullPage:false}]:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,blockAds:false,parsers:[],timeout:90000,actions:[{type:'executeJavascript',script}]});
+   const result=await api('scrape','POST',{url:entryUrl,formats:needsImages?['rawHtml',{type:'screenshot',fullPage:false}]:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,blockAds:false,parsers:[],timeout:90000,actions:[{type:'executeJavascript',script}]});
    const cost=result.data?.metadata?.creditsUsed;scrapeCredits+=Number.isFinite(cost)?cost:1;charged=true;if(!Number.isFinite(cost))scrapeBillingVerified=false;
    if(result.data?.metadata?.statusCode!==200)throw new SourceError('图片批量核验入口失败 HTTP '+result.data?.metadata?.statusCode,result.data?.metadata?.statusCode||0);
    let value=result.data?.actions?.javascriptReturns?.[0]?.value;if(typeof value==='string')value=JSON.parse(value);
@@ -182,10 +183,12 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    const section=page.locator('#variant_container');await section.scrollIntoViewIfNeeded();const bytes=await section.screenshot({type:'png',timeout:20000});metrics.screenshots++;return bytes.toString('base64');
   }finally{release(page)}
  }
+ const catalogueBatch=createCatalogueTransport(async(fn,urls)=>{metrics.catalogueBatchRequests=(metrics.catalogueBatchRequests||0)+1;metrics.catalogueRequests=(metrics.catalogueRequests||0)+urls.length;return scriptAction('('+fn.toString()+')('+JSON.stringify(urls)+')',{entryUrl:'https://www.therange.co.uk/christmas/christmas-decorations/'});},{validate:body=>parseSource({success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200}}})});
  async function raw(input,options={}){
   const url=sourceUrl(input),u=new URL(url),catalogue=u.pathname==='/api/productlist';
   const identifier=JSON.stringify({url,formats:options.formats||[]});if(active.has(identifier))return active.get(identifier);
   const promise=(async()=>{
+   if(catalogue&&policy.catalogueTransport==='enhanced-batch'){const body=await catalogueBatch(url);return {success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200,sourceURL:url,provider:'firecrawl-enhanced-catalogue-batch'}}};}
    if(catalogue){const page=await take();try{let body;metrics.catalogueRequests=(metrics.catalogueRequests||0)+1;
     try{if(page.url().startsWith('https://search-lon.therange.co.uk/')){
      let result;for(let retry=0;retry<2;retry++){result=await page.evaluate(async target=>{try{const r=await fetch(target,{credentials:'include',cache:'no-store',signal:AbortSignal.timeout(25000)});const text=await r.text();let value;try{value=JSON.parse(text)}catch{}return {status:r.status,value,retryAfter:r.headers.get('retry-after')}}catch(e){return {status:0,error:e.message}}},url);if(result.status===200&&result.value)break;if(retry===0)await new Promise(resolve=>setTimeout(resolve,Math.min(6000,Math.max(1500,Number(result.retryAfter||0)*1000))));}
@@ -199,7 +202,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    return {success:true,data};
   })();active.set(identifier,promise);try{return await promise}finally{active.delete(identifier)}
  }
- const reader=async url=>parseSource(await raw(url));reader.raw=raw;
+ const reader=async url=>parseSource(await raw(url));reader.raw=raw;if(policy.catalogueTransport==='enhanced-batch'){reader.many=urls=>Promise.all(urls.map(reader));reader.fresh=url=>catalogueBatch.fresh(sourceUrl(url));}
  reader.batchDocuments=async(fn,payload)=>scriptAction('('+fn.toString()+')('+JSON.stringify(payload)+')');
  reader.previewAssets=async(urls,options={})=>scriptAction('('+readPreviewAssets.toString()+')('+JSON.stringify({urls,maxSide:options.maxSide||320})+')',{needsImages:true});
  reader.prepareNativeCapture=async()=>{if(!sessionClosed)await start();};
