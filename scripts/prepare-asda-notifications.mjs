@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';import {createHash} from 'node:crypto';
 import {control} from '../server/cloud-client.mjs';import {buildMailAssets} from '../server/mail-assets.mjs';import {atomicJson} from '../server/sync.mjs';
 let snapshot;try{snapshot=JSON.parse(await fs.readFile('web/asda/catalogue.json','utf8'));}catch(e){if(e.code==='ENOENT')process.exit(0);throw e;}
 if(!snapshot.baselineReady)throw Error('ASDA complete baseline required before notifications');
-const plan=await control('/internal/asda-sync',{complete:true,observedAt:snapshot.observedAt,products:snapshot.products.map(p=>({retailerId:'asda',sku:p.sku,variantName:p.variantName,sourceUrl:p.sourceUrl,inStock:p.inStock,department:p.department,departmentIds:p.departmentIds,arrivalEvidence:p.arrivalEvidence,firstNewObservedAt:p.firstNewObservedAt}))});
+const plan=await control('/internal/asda-sync',{complete:true,observedAt:snapshot.observedAt,products:snapshot.products.filter(p=>p.recordType==='sku').map(p=>({retailerId:'asda',sku:p.sku,variantName:p.variantName,sourceUrl:p.sourceUrl,inStock:p.inStock,department:p.department,departmentIds:p.departmentIds,arrivalEvidence:p.arrivalEvidence,firstNewObservedAt:p.firstNewObservedAt}))});
 const events=[];for(const candidate of plan.candidates){const p=snapshot.products.find(p=>p.sku===candidate.sku);if(!p?.detailsReady||!p.inStock||!p.originalImageUrl)continue;
  const u=new URL(p.originalImageUrl);if(u.origin!=='https://asda.scene7.com'||!p.originalImages.some(g=>g.url===u.href&&g.selectedSku===p.sku))throw Error('ASDA original image identity failed');
  let bytes,cache=p.originalCachedImageUrl;try{if(cache)bytes=await fs.readFile('web/'+cache);}catch{}

@@ -16,7 +16,7 @@ if(!config.nextRunAt)config=firstRun(config);
 let daily=await readDailyMonitor();await saveDailyMonitor(daily);
 const cloudState=apiBase&&(!blocked||process.env.CONTROL_TOKEN)?await control('/public/status'):null,pendingDelivery=hasReadyDeliveries(cloudState?.monitor);
 if(sourceRetryDue(cloudState?.monitor)||evidenceRetryDue(cloudState?.monitor)||dailyDue(daily))blocked=false;
-if(event!=='push'&&!['probe','catalogue-probe','repair','monitor-probe','lights-init','themes-init','previews'].includes(mode)&&!blocked){
+if(event!=='push'&&!['probe','catalogue-probe','repair','monitor-probe','lights-init','themes-init','previews','asda'].includes(mode)&&!blocked){
  if(apiBase){
   const savedConfig=config;const state=cloudState;config=state.config;
   if(!state.baselineReady){const d=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));await control('/internal/seed',{config:savedConfig,records:d.products.map(p=>({sku:p.sku,everNew:Boolean(p.everNew||p.newStatus)}))});config=(await control('/public/status')).config;}
@@ -29,7 +29,9 @@ if(event!=='push'&&!['probe','catalogue-probe','repair','monitor-probe','lights-
  }else full=Date.now()>=Date.parse(config.nextRunAt);
  if(event==='workflow_dispatch'&&process.env.MANUAL_REFRESH!=='false'&&!monitor)full=true;
 }
-const work=full||monitor,publish=!['probe','catalogue-probe'].includes(mode)&&(work||pendingDelivery||event==='push'||event==='workflow_dispatch');
-await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/tick.json',JSON.stringify({config,full,monitor,lease,fullLease,monitorLease:monitor?lease:null,evidenceRecovery,evidenceRepair,daily}));
-if(process.env.GITHUB_OUTPUT)await fs.appendFile(process.env.GITHUB_OUTPUT,`full=${full}\nmonitor=${monitor}\ndelivery=${pendingDelivery||monitor}\nwork=${work}\npublish=${publish}\nevidence_repair=${evidenceRepair}\nfull_lease=${fullLease||''}\n`);
-console.log(JSON.stringify({schedule:scheduleLabel(config),full,monitor,work,publish,pendingDelivery,sourceCircuitOpen:blocked,provider:'firecrawl-browser',sourceRequestsMade:false}));
+const asdaRequest=await fs.readFile('web/asda/request.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return {};throw e;});
+const asda=mode==='asda'||event==='push'&&asdaRequest.state==='pending'||full||monitor;
+const work=full||monitor,publish=!['probe','catalogue-probe'].includes(mode)&&(work||asda||pendingDelivery||event==='push'||event==='workflow_dispatch');
+await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/tick.json',JSON.stringify({config,full,monitor,asda,lease,fullLease,monitorLease:monitor?lease:null,evidenceRecovery,evidenceRepair,daily}));
+if(process.env.GITHUB_OUTPUT)await fs.appendFile(process.env.GITHUB_OUTPUT,`asda=${asda}\nfull=${full}\nmonitor=${monitor}\ndelivery=${pendingDelivery||monitor}\nwork=${work}\npublish=${publish}\nevidence_repair=${evidenceRepair}\nfull_lease=${fullLease||''}\n`);
+console.log(JSON.stringify({schedule:scheduleLabel(config),full,monitor,asda,work,publish,pendingDelivery,sourceCircuitOpen:blocked,provider:'firecrawl-browser',sourceRequestsMade:false}));

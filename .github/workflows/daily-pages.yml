@@ -16,7 +16,7 @@ on:
       mode:
         description: Source collection mode
         type: choice
-        options: [verify-all, catalogue, catalogue-probe, probe, repair, monitor-probe, mail-recovery, lights-init, themes-init, previews]
+        options: [verify-all, catalogue, catalogue-probe, probe, repair, monitor-probe, mail-recovery, lights-init, themes-init, previews, asda]
         default: verify-all
       checkNew:
         description: Check NEW now without changing the regular schedule
@@ -78,6 +78,7 @@ jobs:
             /web/status.json
             /web/monitor-state.json
             /web/catalogue.json
+            /web/asda/request.json
             /web/asda-model.mjs
             /web/catalogue-model.mjs
             /web/collection-policy.json
@@ -216,6 +217,16 @@ jobs:
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
         run: node scripts/optimise-product-previews.mjs
+      - name: Collect ASDA within the remaining shared run budget
+        id: asda
+        if: steps.tick.outputs.asda == 'true'
+        continue-on-error: true
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: |
+          node scripts/update-asda.mjs
+          node scripts/enrich-asda.mjs
+          node scripts/prepare-asda-notifications.mjs
       - name: Complete the selected interval
         if: always() && steps.tick.outputs.full == 'true' && steps.refresh.outcome != 'skipped'
         env:
@@ -302,3 +313,6 @@ jobs:
       - name: Report unsuccessful source collection
         if: steps.evidence_repair.outcome == 'failure' || steps.catalogue_probe.outcome == 'failure' || steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure' || steps.repair.outcome == 'failure' || steps.lights.outcome == 'failure' || steps.themes.outcome == 'failure' || steps.previews.outcome == 'failure'
         run: exit 1
+      - name: Send newly observed ASDA products from published original attachments
+        if: steps.asda.outcome == 'success' && steps.deployment.outcome == 'success'
+        run: node scripts/deliver-asda-notifications.mjs
