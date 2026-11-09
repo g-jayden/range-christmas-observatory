@@ -23,3 +23,13 @@ const reader=await createFirecrawlBrowserReader({policy:{...defaults,catalogueTr
 }});
 await reader.many(urls);await reader.close();assert.equal(paid,2);assert.equal(reader.metrics().firecrawlCredits,2);assert.equal(reader.metrics().browserCredits,0);assert.equal(reader.metrics().billingVerified,true);
 console.log('PASS: 25 real reader requests share two billed batches and never open native QUIC transport');
+
+const tiny=await createFirecrawlBrowserReader({policy:{...defaults,catalogueTransport:'enhanced-batch'},budget:{limit:2},fetcher:async(url,opts)=>{assert(url.endsWith('/scrape'));const batch=JSON.parse(JSON.parse(opts.body).actions[0].script.match(/\)\((\[.*\])\)$/s)[1]);return Response.json({success:true,data:{metadata:{statusCode:200,creditsUsed:1},actions:{javascriptReturns:[{value:batch.map(url=>({url,status:200,body:{totalResults:0,products:[]}}))}]}}})}});
+await tiny(urls[0]);await assert.rejects(tiny.prepareNativeCapture(),e=>e.status===402);await tiny.close();assert.equal(tiny.metrics().firecrawlCredits,1);assert.equal(tiny.metrics().browserCredits,0);
+console.log('PASS: small remaining budgets pay only for real catalogue batches; native sessions never exceed the balance');
+
+const {fetchCataloguePages}=await import('../server/catalogue-transport.mjs');
+const {Script}=await import('node:vm');
+const direct=await new Script('('+fetchCataloguePages.toString()+')('+JSON.stringify([urls[0]])+')').runInNewContext({document:{querySelector:()=>({textContent:'{"totalResults":0,"products":[]}'})},location:{href:urls[0]},fetch:()=>{throw Error('The rendered first API page must not be requested twice')},URL,AbortSignal,Date});
+assert.equal(direct.length,1);assert.equal(direct[0].source,'enhanced-navigation');assert.equal(direct[0].status,200);
+console.log('PASS: enhanced API navigation supplies the first official JSON page without a cross-origin request');

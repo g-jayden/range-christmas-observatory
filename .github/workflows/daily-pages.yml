@@ -79,6 +79,7 @@ jobs:
             /web/catalogue-model.mjs
             /web/collection-policy.json
             /web/collection-ledger.json
+            /web/collection-diagnostics.json
             /web/service.json
       - uses: actions/setup-node@v7.1.0
         with:
@@ -90,14 +91,17 @@ jobs:
           FORCE_MONITOR: ${{ inputs.checkNew && 'true' || 'false' }}
         run: node scripts/schedule-tick.mjs
       - name: Load image files only for a real collection or publication
-        if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || (inputs.mode == 'probe' || inputs.mode == 'catalogue-probe') || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
+        if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
         run: git sparse-checkout disable
       - name: Install collection and local image analysis clients
-        if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || (inputs.mode == 'probe' || inputs.mode == 'catalogue-probe') || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
+        if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
         run: npm install --no-audit --no-fund
       - name: Verify source integrity, SKU matching and credit limits
-        if: steps.tick.outputs.publish == 'true' || (inputs.mode == 'probe' || inputs.mode == 'catalogue-probe')
+        if: steps.tick.outputs.publish == 'true' || inputs.mode == 'probe'
         run: npm test
+      - name: Verify catalogue-only transport without loading product assets
+        if: inputs.mode == 'catalogue-probe'
+        run: node scripts/test-catalogue-transport.mjs
       - name: Restore reusable local vision model
         if: steps.tick.outputs.publish == 'true'
         uses: actions/cache@v6.1.0

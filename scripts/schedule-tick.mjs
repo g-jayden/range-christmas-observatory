@@ -26,7 +26,7 @@ if(event!=='push'&&!['probe','catalogue-probe','repair','monitor-probe','lights-
  }else full=Date.now()>=Date.parse(config.nextRunAt);
  if(event==='workflow_dispatch'&&process.env.MANUAL_REFRESH!=='false')full=true;
 }
-const work=full||monitor,publish=mode!=='probe'&&(work||pendingDelivery||event==='push'||event==='workflow_dispatch');
+const work=full||monitor,publish=!['probe','catalogue-probe'].includes(mode)&&(work||pendingDelivery||event==='push'||event==='workflow_dispatch');
 await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/tick.json',JSON.stringify({config,full,monitor,lease,fullLease,monitorLease:monitor?lease:null,daily}));
 if(process.env.GITHUB_OUTPUT)await fs.appendFile(process.env.GITHUB_OUTPUT,`full=${full}\nmonitor=${monitor}\ndelivery=${pendingDelivery||monitor}\nwork=${work}\npublish=${publish}\nfull_lease=${fullLease||''}\n`);
 console.log(JSON.stringify({schedule:scheduleLabel(config),full,monitor,work,publish,pendingDelivery,sourceCircuitOpen:blocked,provider:'firecrawl-browser',sourceRequestsMade:false}));

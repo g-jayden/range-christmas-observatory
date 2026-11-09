@@ -59,8 +59,8 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  const key=process.env.FIRECRAWL_API_KEY;if(!key)throw new SourceError('Firecrawl服务器密钥尚未配置',401);
  let session,browser,context,starting,closed=false,created=0,deadline=0,allocatedPages=0,browserReceipt,sessionClosed=false,browserEndedAt=0;const runDeadline=now()+(policy.maxRunSeconds||1800)*1000;
  const pages=[],waiting=[],families=new Map(),familyFailures=new Map(),partialFamilies=new Map(),active=new Map(),verifiedCaptures=new Map(),priorityRepairs=new Map(),nativeTransportFailures=new Set();
- const parallel=policy.browserConcurrency||4,ttl=Math.min(1800,policy.maxSessionSeconds||1800,Math.floor(Math.min(budget.limit,policy.browserCreditsPerRun||20)*30));
- const fallbackLimit=Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-Math.ceil(ttl/30))),fallbackCache=new Map(),captureOriginals=new Map();let fallbackReserved=0,scrapeCredits=0,scrapeBillingVerified=true;
+ const parallel=policy.browserConcurrency||4;let ttl=Math.min(1800,policy.maxSessionSeconds||1800,Math.floor(Math.min(budget.limit,policy.browserCreditsPerRun||20)*30));
+ let fallbackLimit=Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-Math.ceil(ttl/30))),fallbackCache=new Map(),captureOriginals=new Map();let fallbackReserved=0,scrapeCredits=0,scrapeBillingVerified=true;
  if(ttl<60)throw budgetError('本轮积分不足以创建一个浏览器会话');
  const metrics={provider:'firecrawl-browser',billingMode:'code-session-time',firecrawlRequests:0,scrapeRequests:0,firecrawlCredits:0,creditsEstimatedUpperBound:ttl/30+fallbackLimit,browserCreditUpperBound:ttl/30,fallbackLimit,browserPages:0,familyReads:0,familyReuse:0,screenshots:0,sourceImageChecks:0};
  async function api(path,method,body){
@@ -69,7 +69,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   const result=await response.json();if(!response.ok||result.success===false){const detail=String(result.error?.message||result.error||result.message||result.code||'').replace(/fc-[\w-]+/g,'[redacted]').slice(0,180);throw new SourceError('Firecrawl '+method+' 请求未成功 HTTP '+response.status+(detail?': '+detail:''),response.status);}
   return result;
  }
- function availableFallback(){return sessionClosed&&Number.isFinite(browserReceipt?.creditsBilled)?Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-browserReceipt.creditsBilled)):fallbackLimit;}
+ function availableFallback(){if(policy.catalogueTransport==='enhanced-batch'&&!session&&!starting&&!sessionClosed)return Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit));return sessionClosed&&Number.isFinite(browserReceipt?.creditsBilled)?Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-browserReceipt.creditsBilled)):fallbackLimit;}
  async function scrapeRaw(url){
   guard();if(fallbackCache.has(url))return fallbackCache.get(url);
   if(fallbackReserved>=availableFallback())throw budgetError('受阻地址的定额抓取已达本轮上限，未启动更多付费请求');
@@ -101,7 +101,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  async function start(){
   if(sessionClosed)throw Error('本轮浏览器已完成并关闭，不能重新创建付费会话');
   if(!starting)starting=(async()=>{
-   guard();created=now();deadline=created+ttl*1000;
+   guard();if(policy.catalogueTransport==='enhanced-batch'){ttl=Math.min(ttl,Math.floor((budget.limit-fallbackReserved)*30));if(ttl<60)throw budgetError('剩余额度不足以开启浏览器；已保留目录结果，不超额创建会话');fallbackLimit=Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-ttl/30));metrics.browserCreditUpperBound=ttl/30;metrics.fallbackLimit=fallbackLimit;}created=now();deadline=created+ttl*1000;
    try{session=await api('interact','POST',{ttl,activityTtl:120,streamWebView:false,blockAds:policy.blockAds===true,location:{country:'GB'}});}
    catch(error){metrics.creationUncertain=![400,401,402,403,429].includes(error.status);throw error;}
    if(!session.id||!session.cdpUrl)throw Error('Firecrawl没有返回浏览器会话');
@@ -183,7 +183,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    const section=page.locator('#variant_container');await section.scrollIntoViewIfNeeded();const bytes=await section.screenshot({type:'png',timeout:20000});metrics.screenshots++;return bytes.toString('base64');
   }finally{release(page)}
  }
- const catalogueBatch=createCatalogueTransport(async(fn,urls)=>{metrics.catalogueBatchRequests=(metrics.catalogueBatchRequests||0)+1;metrics.catalogueRequests=(metrics.catalogueRequests||0)+urls.length;return scriptAction('('+fn.toString()+')('+JSON.stringify(urls)+')',{entryUrl:'https://www.therange.co.uk/christmas/christmas-decorations/'});},{validate:body=>parseSource({success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200}}})});
+ const catalogueBatch=createCatalogueTransport(async(fn,urls)=>{metrics.catalogueBatchRequests=(metrics.catalogueBatchRequests||0)+1;metrics.catalogueRequests=(metrics.catalogueRequests||0)+urls.length;const rows=await scriptAction('('+fn.toString()+')('+JSON.stringify(urls)+')',{entryUrl:urls[0]});console.log(JSON.stringify({phase:'catalogue-batch',requests:urls.length,failures:rows.filter(r=>r.status!==200||!r.body).map(({url,status,error})=>({url,status,error}))}));return rows;},{validate:body=>parseSource({success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200}}})});
  async function raw(input,options={}){
   const url=sourceUrl(input),u=new URL(url),catalogue=u.pathname==='/api/productlist';
   const identifier=JSON.stringify({url,formats:options.formats||[]});if(active.has(identifier))return active.get(identifier);
