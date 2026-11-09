@@ -275,6 +275,7 @@ jobs:
           compression-level: 9
           if-no-files-found: error
       - name: Preserve data and source status
+        id: evidence
         if: always() && (steps.tick.outputs.publish == 'true' || (inputs.mode == 'probe' || inputs.mode == 'catalogue-probe'))
         run: |
           git config user.name github-actions[bot]
@@ -283,6 +284,19 @@ jobs:
           git add web
           git diff --cached --quiet || git commit -m "Update free-source catalogue and verification status"
           node scripts/push-evidence.mjs
+      - name: Send verified NEW emails from committed, accessible native attachments
+        id: delivery
+        continue-on-error: true
+        if: steps.evidence.outcome == 'success' && steps.tick.outputs.publish == 'true'
+        run: |
+          mail_status=0
+          node scripts/deliver-committed-notifications.mjs || mail_status=$?
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add web/monitor-state.json web/status.json web/collection-ledger.json web/notification-readiness.json
+          git diff --cached --quiet || git commit -m "Record durable NEW delivery result"
+          node scripts/push-evidence.mjs
+          exit "$mail_status"
       - uses: actions/configure-pages@v6.0.0
         if: steps.tick.outputs.publish == 'true'
       - name: Build site
@@ -300,16 +314,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           PAGES_ARTIFACT_NAME: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
         run: node scripts/publish-pages.mjs
-      - name: Send verified NEW emails after download files are published
-        if: steps.deployment.outcome == 'success'
-        run: |
-          node scripts/deliver-outbox.mjs
-          node scripts/mail-readiness.mjs
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add web/monitor-state.json web/status.json web/collection-ledger.json web/notification-readiness.json
-          git diff --cached --quiet || git commit -m "Record durable NEW delivery result"
-          node scripts/push-evidence.mjs
       - name: Save the real source and credit proof
         if: always() && ((inputs.mode == 'probe' || inputs.mode == 'catalogue-probe') || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init'))
         uses: actions/upload-artifact@v7.0.2
@@ -323,8 +327,5 @@ jobs:
             runtime/daily-new-screenshot.png
           retention-days: 3
       - name: Report unsuccessful source collection
-        if: steps.evidence_repair.outcome == 'failure' || steps.catalogue_probe.outcome == 'failure' || steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure' || steps.repair.outcome == 'failure' || steps.lights.outcome == 'failure' || steps.themes.outcome == 'failure' || steps.previews.outcome == 'failure'
+        if: steps.delivery.outcome == 'failure' || steps.evidence_repair.outcome == 'failure' || steps.catalogue_probe.outcome == 'failure' || steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure' || steps.repair.outcome == 'failure' || steps.lights.outcome == 'failure' || steps.themes.outcome == 'failure' || steps.previews.outcome == 'failure'
         run: exit 1
-      - name: Send newly observed ASDA products from published original attachments
-        if: steps.asda.outcome == 'success' && steps.deployment.outcome == 'success'
-        run: node scripts/deliver-asda-notifications.mjs

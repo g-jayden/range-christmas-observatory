@@ -1,4 +1,5 @@
 import {dispatchAsdaDue} from './asda-clock.mjs';
+import {catalogueMirror,FALLBACK_CATALOGUE_REVISION} from './catalogue-mirror.mjs';
 import {endedMonitorOwner,githubRunReader} from './monitor-owner.mjs';
 import {sourceRetryDue,sourceRecovery} from './source-recovery.mjs';
 import {evidenceRetryDue,evidenceDeadline,completeMonitorState,MONITOR_PIPELINE_VERSION} from './evidence-recovery.mjs';
@@ -80,6 +81,7 @@ export class Control{
  }
  async route(req){
   const url=new URL(req.url),route=url.pathname;
+  if(route==='/public/published-site'&&req.method==='GET')return response(await this.db.get('published-site')||{commit:FALLBACK_CATALOGUE_REVISION});
   if(route==='/public/status'&&req.method==='GET'){
    const config=await this.config(),monitor=await this.monitorState(),clock=await this.db.get('dispatch-clock');
    const dispatchClock={enabled:Boolean(this.env.GITHUB_DISPATCH_TOKEN),pipelineVersion:MONITOR_PIPELINE_VERSION,lastAttemptAt:clock?.lastAttemptAt||null,lastAcceptedAt:clock?.lastAcceptedAt||null,lastStatus:clock?.lastStatus||null,attempts:clock?.attempts||0};
@@ -172,6 +174,7 @@ export class Control{
   }
   if(route.startsWith('/internal/')){
    checkAuth(req,this.env.CONTROL_TOKEN);
+   if(route==='/internal/published-site'&&req.method==='POST'){const b=await req.json();if(!/^[a-f0-9]{40}$/.test(b.commit||''))throw Error('Invalid published revision');await this.db.put('published-site',{commit:b.commit,updatedAt:new Date().toISOString()});return response({published:true,commit:b.commit,firecrawlCredits:0});}
    if(route==='/internal/clock-tick'&&req.method==='POST'){await this.recoverAbandonedMonitor();const asda=await dispatchAsdaDue({storage:this.db,env:this.env});return response({...await dispatchDue({storage:this.db,env:this.env,config:await this.config(),monitor:{...await this.monitorState(),...await this.deliveryStatus()},fullLease:await this.db.get('lease/full'),monitorLease:await this.db.get('lease/monitor'),initialized:Boolean(await this.db.get('seeded'))}),asda});}
    if(route==='/internal/test-email'&&req.method==='POST'){
     const b=await req.json(),email=String(b.email||'').trim().toLowerCase(),sub=validEmail(email)&&await this.db.get('sub/'+await hash(email));
@@ -331,7 +334,8 @@ export class Control{
  }
 }
 export default {async fetch(req,env){
- const origin=req.headers.get('origin'),target=new URL(req.url),sameOriginForm=origin===target.origin&&['/confirm','/unsubscribe'].includes(target.pathname);if(origin&&origin!==SITE&&!sameOriginForm)return response({error:'Origin not allowed'},403);
+ const mirror=await catalogueMirror(req,{getRevision:()=>env.CONTROL.getByName('main').fetch(new Request('https://range-control.internal/public/published-site')).then(r=>r.json())});if(mirror)return mirror;
+ const origin=req.headers.get('origin'),target=new URL(req.url),sameOriginForm=origin===target.origin&&['/confirm','/unsubscribe','/subscribe','/unsubscribe-by-email','/admin/schedule'].includes(target.pathname);if(origin&&origin!==SITE&&!sameOriginForm)return response({error:'Origin not allowed'},403);
  const headers={'access-control-allow-origin':SITE,'access-control-allow-methods':'GET,POST,OPTIONS','access-control-allow-headers':'Content-Type,Authorization','vary':'Origin','cache-control':'no-store','x-content-type-options':'nosniff'};
  if(req.method==='OPTIONS')return new Response(null,{status:204,headers});
  const size=Number(req.headers.get('content-length')||0);if(size>8000000)return response({error:'Request too large'},413);
