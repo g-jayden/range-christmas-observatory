@@ -132,7 +132,7 @@ jobs:
           node scripts/claim-evidence-repair.mjs
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add web/evidence-repair-request.json
+          git add web/evidence-repair-request.json web/notification-readiness.json web/monitor-state.json web/collection-ledger.json
           git commit -m "Claim bounded existing-product evidence repair [skip ci]"
           node scripts/push-evidence.mjs
       - name: Reserve the run budget before opening a paid session
