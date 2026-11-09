@@ -88,6 +88,11 @@ export function christmasEligibility(p,object=offeredObject(p),visual=p.taxonomy
  if(explicit&&!christmasOrnamentFinish&&!dualChristmasUse)return {disposition:'exclude',reason:'other-season-or-holiday',evidence:explicit[0]};
  const describedHoliday=/\b(?:halloween|easter|thanksgiving|valentines?|eid|ramadan|diwali|hanukkah|baby shower|gender reveal)\b/i.exec(lead);
  if(!positiveTitle&&describedHoliday&&!/\b(?:christmas|xmas|santa|noel|nativity|advent)\b/i.test(lead))return {disposition:'exclude',reason:'SKU-description-identifies-another-holiday',evidence:describedHoliday[0]};
+ // A Christmas-biased image score cannot establish Christmas use for a
+ // distinctive Easter, autumn or spring floral object. Exact-image reviews
+ // may exclude it; otherwise require product-specific Christmas evidence.
+ const otherSeasonBody=/\b(?:rabbit[ -]shaped|(?:wool )?pumpkin)\b.*\b(?:wreath|garland)\b|\btwig flower.*butterfly.*wreath\b/i.test(title);
+ if(otherSeasonBody&&!positiveTitle&&!(p.detailEvidence?.verifiedProductSection&&/\b(?:christmas|xmas|santa|noel|nativity|advent)\b/i.test(lead)))return {disposition:'review',reason:'distinct-other-season-object-needs-specific-Christmas-use-evidence',evidence:title};
  if(/\b(?:removable micro hooks?|hanger hooks?)\b/i.test(title)&&!/\b(?:christmas|xmas|wreath|bauble|tree decoration)\b/i.test(title)&&/\b(?:wardrobe|clothes|self[ -]adhesive|removable wall hooks?)\b/i.test(lead))return {disposition:'exclude',reason:'general-household-hook-not-a-Christmas-product',evidence:title};
  if(/\b(?:hardy|live plant|photinia|live succulent|9cm plant)\b/i.test(title)&&!/\b(?:plant pot|pot cover|ornament|silhouette|artificial)\b/i.test(title)&&!/\b(?:artificial|faux|christmas|xmas)\b/i.test(title))return {disposition:'exclude',reason:'non-christmas-live-plant',evidence:title};
  if(/\b(?:batteries?|alkaline|agfa photo|extension (?:cable|lead)|battery box|light connector|timer plug)\b/i.test(title)&&!/\b(?:christmas|xmas|festive|decorat|wreath|garland|santa|snowman|battery (?:powered|operated)|(?:icicle|fairy|string|net|curtain|cluster) lights?)\b/i.test(title))return {disposition:'exclude',reason:'general-electrical-accessory-not-a-christmas-product',evidence:title};
