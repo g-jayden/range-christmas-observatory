@@ -182,7 +182,9 @@ export class Control{
     for(const a of b.products){if(!/^\d{1,12}$/.test(a.sku)||!['include','exclude','review'].includes(a.disposition)||!Array.isArray(a.memberships))throw Error('Invalid SKU classification');
      for(const [prefix,records]of [['event/',events],['pending/',pending]]){const key=prefix+a.sku,p=records.get(key);if(!p)continue;
       p.taxonomyAudit={version:b.version,disposition:a.disposition,primary:a.primary,memberships:a.memberships};p.department=a.primary;p.departmentIds=a.memberships;
-      if(a.mailAssets&&a.mailAssets.sku===p.sku&&a.mailAssets.sourceUrl===p.sourceUrl){mailAssets({...p,mailAssets:a.mailAssets});p.mailAssets=a.mailAssets;p.priceGBP=a.mailAssets.priceGBP;p.originalPrice=a.mailAssets.originalPrice;p.promoText=a.mailAssets.promoText;p.colorValues=a.mailAssets.colors;p.material=a.mailAssets.material;p.style=a.mailAssets.style;}
+      // A queued, published event retains its exact evidence version. A later
+      // catalogue sync must not replace it with mutable main/Pages assets.
+      if(!p.mailAssets?.publishedRevision&&a.mailAssets&&a.mailAssets.sku===p.sku&&a.mailAssets.sourceUrl===p.sourceUrl){mailAssets({...p,mailAssets:a.mailAssets});p.mailAssets=a.mailAssets;p.priceGBP=a.mailAssets.priceGBP;p.originalPrice=a.mailAssets.originalPrice;p.promoText=a.mailAssets.promoText;p.colorValues=a.mailAssets.colors;p.material=a.mailAssets.material;p.style=a.mailAssets.style;}
       if(prefix==='pending/'){pendingUpdated++;if(a.disposition!=='include'){p.unavailableSince||=new Date().toISOString();excludedPending++;}}else eventsUpdated++;
       await this.db.put(key,p);
      }
