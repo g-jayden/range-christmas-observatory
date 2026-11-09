@@ -5,7 +5,10 @@ import {productDimensions,toCentimetres} from '../web/catalogue-model.mjs';
 const text=s=>String(s||'').replace(/<br\s*\/?\s*>/gi,'\n').replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').replace(/&nbsp;/g,' ').trim();
 export const asdaFingerprint=p=>createHash('sha256').update(JSON.stringify([p.sku,p.variantName,p.listingVariantImageUrl||p.variantImageUrl,p.asdaSource?.primaryCategoryID])).digest('hex');
 export function asdaDimensionFacts(specifications={},description='',title=''){
- const specs={...specifications},raw=specs['Dimensions (WxDxH in cm)'];if(!raw)return {specifications:specs,dimensions:productDimensions(specs,description)};
+ const specs={...specifications},raw=specs['Dimensions (WxDxH in cm)'];if(!raw){
+  const line=description.split(/\n/).find(s=>/\bmeasures\b/i.test(s)),found=[];if(line)for(const m of line.matchAll(/([\d.]+)\s*(cm|mm|m|ft|inches?)\s*(?:\([^)]*\)\s*)?(high|tall|wide|deep|long)\b/ig)){const key=({high:'Height',tall:'Height',wide:'Width',deep:'Depth',long:'Length'})[m[3].toLowerCase()];if(!specs[key]){specs[key]=m[1]+m[2];found.push(key);}}
+  const dimensions=productDimensions(specs,description);for(const key of found)dimensions.evidence[key]={value:line,source:'SKU description'};return {specifications:specs,dimensions};
+ }
  // Keep the original complete string, including mixed sizes, in every export.
  if(!/^\s*(?:#n\/a|n\/a|not specified)\s*$/i.test(raw))specs.Dimensions=raw;
  const unit='(?:cm|mm|m|ft|feet|inches?|in)',defaultUnit=[...raw.matchAll(new RegExp('('+unit+')\\b','ig'))].at(-1)?.[1]||'cm',axes={W:'Width',D:'Depth',H:'Height',L:'Length'};
