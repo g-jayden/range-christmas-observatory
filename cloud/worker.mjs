@@ -8,6 +8,7 @@ import {DEPARTMENTS,DEPARTMENT_MAP,colourLabel,STYLE_EN,sourcePrice} from '../we
 import {firstRun,advanceRun,scheduleLabel,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';
 import {dispatchDue} from './dispatch-clock.mjs';
 import {payloadIdentity,retryState,deliveryFailure} from './delivery-policy.mjs';
+import {NOTIFICATION_CONTRACT,verifyPublishedNotification} from './notification-evidence.mjs';
 const SITE='https://g-jayden.github.io';
 const HOME=SITE+'/range-christmas-observatory/';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -85,11 +86,12 @@ export class Control{
   if(route==='/public/status'&&req.method==='GET'){
    const config=await this.config(),monitor=await this.monitorState(),clock=await this.db.get('dispatch-clock');
    const dispatchClock={enabled:Boolean(this.env.GITHUB_DISPATCH_TOKEN),pipelineVersion:MONITOR_PIPELINE_VERSION,lastAttemptAt:clock?.lastAttemptAt||null,lastAcceptedAt:clock?.lastAcceptedAt||null,lastStatus:clock?.lastStatus||null,attempts:clock?.attempts||0};
-   const pending=[...(await this.db.list({prefix:'pending/'})).values()];return response({config,schedule:scheduleLabel(config),asdaMonitor:await this.db.get('asda-monitor')||null,asdaClock:await this.db.get('asda-clock')||null,dispatchClock,baselineReady:Boolean(await this.db.get('seeded')),monitor:{...monitor,...await this.deliveryStatus(),pendingScreenshots:pending.filter(p=>!p.unavailableSince).length,pendingUnavailable:pending.filter(p=>p.unavailableSince).length},mailReady:Boolean(this.env.BREVO_API_KEY&&this.env.MAIL_FROM),recent:await this.db.get('recent')||[]});
+   const pending=[...(await this.db.list({prefix:'pending/'})).values()];return response({notificationContract:NOTIFICATION_CONTRACT,config,schedule:scheduleLabel(config),asdaMonitor:await this.db.get('asda-monitor')||null,asdaClock:await this.db.get('asda-clock')||null,dispatchClock,baselineReady:Boolean(await this.db.get('seeded')),monitor:{...monitor,...await this.deliveryStatus(),pendingScreenshots:pending.filter(p=>!p.unavailableSince).length,pendingUnavailable:pending.filter(p=>p.unavailableSince).length},mailReady:Boolean(this.env.BREVO_API_KEY&&this.env.MAIL_FROM),recent:await this.db.get('recent')||[]});
   }
   if(route.startsWith('/shots/')&&req.method==='GET'){
    const access=route.slice(7);if(!/^[a-f\d]{64}$/.test(access))return response({error:'Not found'},404);
    const sku=await this.db.get('image-access/'+access),event=sku&&await this.db.get('event/'+sku);if(!event)return response({error:'Image expired; use email attachment'},404);
+   if(event.notificationTransport===NOTIFICATION_CONTRACT&&event.mailAssets?.card?.url)return Response.redirect(mailAssetUrl(event.mailAssets.card.url,assetId(event)),302);
    const chunks=[];for(let i=0;i<event.screenshotParts;i++)chunks.push(await this.db.get('shot/'+sku+'/'+i));
    return new Response(Uint8Array.from(atob(chunks.join('')),c=>c.charCodeAt(0)),{headers:{'content-type':'image/png','cache-control':'public,max-age=86400'}});
   }
@@ -199,7 +201,16 @@ export class Control{
     return response({synced:true,eventsUpdated,pendingUpdated,excludedPending,sent:0,seenHistoryChanged:false});
    }
    if(route==='/internal/mail-status'&&req.method==='GET'){
-    const subs=[...(await this.db.list({prefix:'sub/'})).values()];return response({...await this.deliveryStatus(),confirmedSubscriptions:subs.filter(s=>s.confirmedAt).length,pendingSubscriptions:subs.filter(s=>!s.confirmedAt).length,pendingScreenshots:(await this.db.list({prefix:'pending/'})).size});
+    const subs=[...(await this.db.list({prefix:'sub/'})).values()];return response({notificationContract:NOTIFICATION_CONTRACT,...await this.deliveryStatus(),confirmedSubscriptions:subs.filter(s=>s.confirmedAt).length,pendingSubscriptions:subs.filter(s=>!s.confirmedAt).length,pendingScreenshots:(await this.db.list({prefix:'pending/'})).size});
+   }
+   if(route==='/internal/pending-evidence'&&req.method==='GET'){
+    const pending=[...(await this.db.list({prefix:'pending/'})).values()],active=pending.filter(p=>!p.unavailableSince&&(!p.taxonomyAudit||p.taxonomyAudit.disposition==='include'));
+    return response({notificationContract:NOTIFICATION_CONTRACT,candidates:active.slice(0,128),totalActive:active.length,unavailable:pending.length-active.length,monitor:await this.monitorState()});
+   }
+   if(route==='/internal/evidence-recovered'&&req.method==='POST'){
+    const b=await req.json(),m=await this.monitorState(),pending=[...(await this.db.list({prefix:'pending/'})).values()];
+    if(b.sourceObservedAt!==m.lastDiscoverySuccess||!Number.isInteger(b.scanned)||b.scanned<0||pending.some(p=>p.retailerId!=='asda'&&!p.unavailableSince&&(!p.taxonomyAudit||p.taxonomyAudit.disposition==='include')))return response({error:'仍有待核验新品，不能把本轮标为完成'},409);
+    const delivery=await this.deliveryStatus();await this.db.put('monitor',{...completeMonitorState(m,{success:true,catalogueReady:true,sourceObservedAt:b.sourceObservedAt,scanned:b.scanned,newCount:b.queued||0},delivery),nextRunAt:m.nextRunAt});return response({recovered:true,sourceObservedAt:m.lastDiscoverySuccess,firecrawlCredits:0});
    }
    if(route==='/internal/seed'&&req.method==='POST'){
     if(await this.db.get('seeded'))return response({seeded:true,changed:false});
@@ -258,7 +269,7 @@ export class Control{
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
     if(!Array.isArray(b.products)||b.products.length>30000)throw Error('Invalid scan');
     for(const p of b.products){if(!/^\d{1,12}$/.test(p.sku))throw Error('Invalid SKU');verifyProductUrl(p);if(p.newStatus&&!await this.db.get('seen/'+storageSku(p))){const pending=await this.db.get('pending/'+storageSku(p));if(!pending)await this.db.put('pending/'+storageSku(p),{...p,firstDetectedAt:new Date().toISOString()});else if(pending.unavailableSince){delete pending.unavailableSince;await this.db.put('pending/'+storageSku(p),pending);}}}
-    return response({candidates:[...(await this.db.list({prefix:'pending/'})).values()].filter(p=>p.retailerId!=='asda'&&(!p.taxonomyAudit||p.taxonomyAudit.disposition==='include'))});
+    return response({candidates:[...(await this.db.list({prefix:'pending/'})).values()].filter(p=>p.retailerId!=='asda'&&!p.unavailableSince&&(!p.taxonomyAudit||p.taxonomyAudit.disposition==='include'))});
    }
    if(['/internal/event','/internal/recover-event','/internal/asda-event'].includes(route)&&req.method==='POST'){
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(route==='/internal/event'&&lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
@@ -266,11 +277,13 @@ export class Control{
     if(await this.db.get('seen/'+storageSku(p)))return response({alreadyRecorded:true});
     if(route==='/internal/recover-event'||route==='/internal/asda-event'){
      const pending=await this.db.get('pending/'+storageSku(p));
-     if(!pending||p.newStatus!==true||p.sourceUrl!==pending.sourceUrl||p.detailEvidence?.selectedSku!==p.sku||!p.detailEvidence?.verifiedProductSection||!(p.mailAssets?.proof?.url||p.retailerId==='asda'&&p.mailAssets?.evidenceMode==='verified-information-card'))return response({error:'只能恢复已有待处理且证据完整的真实新品'},409);
+     if(!pending||pending.unavailableSince||p.newStatus!==true||p.sourceUrl!==pending.sourceUrl||p.detailEvidence?.selectedSku!==p.sku||!p.detailEvidence?.verifiedProductSection||!(p.mailAssets?.proof?.url||p.mailAssets?.evidenceMode==='verified-information-card'&&(p.retailerId==='asda'||b.notificationTransport===NOTIFICATION_CONTRACT)))return response({error:'只能恢复已有待处理且证据完整的真实新品'},409);
      mailAssets(p);
     }
-    if(!b.screenshotBase64||b.screenshotBase64.length>7000000||!/^[A-Za-z0-9+/=]+$/.test(b.screenshotBase64))return response({error:'原站截图尚未取得，等待重试；不会用主图冒充截图。'},422);
-    const pending=await this.db.get('pending/'+storageSku(p)),parts=b.screenshotBase64.match(/.{1,60000}/g),imageAccess=await hash(token()),record={...p,imageAccess,screenshotParts:parts.length,detectedAt:pending?.firstDetectedAt||new Date().toISOString(),screenshotVerifiedAt:b.screenshotVerifiedAt};
+    let evidence;
+    if(b.notificationTransport===NOTIFICATION_CONTRACT){const pending=await this.db.get('pending/'+storageSku(p));if(!pending||pending.unavailableSince||p.newStatus!==true||pending.sourceUrl!==p.sourceUrl)return response({error:'只能接收已有待处理的同一SKU新品'},409);evidence=await verifyPublishedNotification(p);p.mailAssets=evidence.manifest;}
+    else if(!b.screenshotBase64||b.screenshotBase64.length>7000000||!/^[A-Za-z0-9+/=]+$/.test(b.screenshotBase64))return response({error:'新品图像内容未随请求提交，且没有可验证的已发布附件清单。'},422);
+    const pending=await this.db.get('pending/'+storageSku(p)),parts=evidence?[]:b.screenshotBase64.match(/.{1,60000}/g),imageAccess=await hash(token()),record={...p,imageAccess,screenshotParts:parts.length,notificationTransport:evidence?.contract,attachmentVerifiedAt:evidence?.verifiedAt,detectedAt:pending?.firstDetectedAt||new Date().toISOString(),screenshotVerifiedAt:b.screenshotVerifiedAt};
     const values={};parts.forEach((part,i)=>values['shot/'+storageSku(p)+'/'+i]=part);const entries=Object.entries(values);for(let i=0;i<entries.length;i+=100)await this.db.put(Object.fromEntries(entries.slice(i,i+100)));await this.db.put({['event/'+storageSku(p)]:record,['seen/'+storageSku(p)]:true,['image-access/'+imageAccess]:storageSku(p)});
     await this.db.delete('pending/'+storageSku(p));const recent=await this.db.get('recent')||[];recent.unshift({sku:p.sku,retailerId:p.retailerId||'the-range',name:p.variantName,kind:p.kind,imageUrl:p.variantImageUrl||p.imageUrl,sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,detectedAt:record.detectedAt});await this.db.put('recent',recent.slice(0,30));
     return response({recorded:true});

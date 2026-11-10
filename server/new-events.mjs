@@ -9,6 +9,7 @@ import {productKey,detailFingerprint,failedAttempt,verified} from './collection-
 import {cacheProduct,saveState} from './incremental.mjs';
 import {retryableEvidence} from '../cloud/evidence-recovery.mjs';
 import {pinMailAssets} from '../cloud/published-mail-assets.mjs';
+import {NOTIFICATION_CONTRACT} from '../cloud/notification-evidence.mjs';
 import {publishCollectionCheckpoint} from './collection-checkpoints.mjs';
 export async function deliverVerifiedEvents(controlCall=control){let delivery,accepted=0;for(let batch=0;batch<100;batch++){delivery=await controlCall('/internal/deliver',{});accepted+=Number(delivery.accepted||0);if(!delivery.morePending)return {...delivery,accepted};}throw Error('仍有待发邮件，已保留云端队列');}
 export function reusableNewDetails(p,policy,now=Date.now()){
@@ -93,8 +94,17 @@ export async function finishNewEvents(result,{snapshot,lease,controlCall=control
  // to that exact commit, independently of Pages or later product updates.
  const publication=ready.length&&publishCheckpoint?await publishCheckpoint({stage:'new-assets'}):null;
  if(publication?.published)for(const event of ready)event.product.mailAssets=pinMailAssets(event.product.mailAssets,publication.revision);
- if(!result.queuePersisted)for(const event of ready)await controlCall('/internal/event',event);
- result.events=ready;result.captured=ready.length;result.queuePersisted=true;
+ const identity=e=>(e.product.retailerId||'the-range')+':'+e.product.sku,queued=new Set(result.queuedSkus||[]);
+ if(result.queuePersisted)for(const event of ready)queued.add(identity(event));
+ for(const event of ready){
+  if(queued.has(identity(event)))continue;
+  try{
+   const request=event.product.mailAssets?.publishedRevision?{...event,notificationTransport:NOTIFICATION_CONTRACT,screenshotBase64:undefined}:event;
+   const receipt=await controlCall('/internal/event',request);if(!receipt.recorded&&!receipt.alreadyRecorded)throw Error('Cloud did not acknowledge the NEW event');
+   queued.add(identity(event));
+  }catch(e){result.success=false;result.deferred=(result.deferred||0)+1;result.issues||=[];result.issues.push({sku:event.product.sku,status:e.status||0,reason:'新品入队待恢复 · NEW queue pending',error:String(e.message).slice(0,250)});}
+ }
+ result.events=ready;result.queuedSkus=[...queued];result.captured=ready.filter(e=>queued.has(identity(e))).length;result.queuePersisted=result.captured===ready.length;
  if(!result.monitorCompleted){await controlCall('/internal/monitor-complete',{lease,success:result.success,catalogueReady:true,sourceObservedAt,evidenceRetryable:!result.success&&retryableEvidence(result),error:result.success?undefined:'部分新品资料未通过核验，已隔离并安排对应阶段恢复',scanned:result.scanned,newCount:result.captured,unavailableSkus:result.unavailableSkus||[]});result.monitorCompleted=true;}
  if(process.env.GITHUB_ACTIONS==='true'&&process.env.NOTIFICATION_PHASE!=='deliver'){
   let delivery;if(publication?.published)try{delivery=await deliverVerifiedEvents(controlCall)}catch(e){delivery={pending:true,error:String(e.message).slice(0,160)};}
