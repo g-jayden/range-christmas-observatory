@@ -1,0 +1,61 @@
+name: M&S Christmas exact SKU collection
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [collect, enrich, activate]
+        default: collect
+permissions:
+  contents: write
+concurrency:
+  group: range-source-and-pages-production
+  cancel-in-progress: false
+jobs:
+  ms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      COLLECTION_CHECKPOINTS: '1'
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci
+      - run: node scripts/test-ms.mjs
+      - uses: actions/cache@v6.1.0
+        with:
+          path: |
+            runtime/models
+            runtime/fonts
+          key: local-clip-vit-base-patch32-q8-v1
+      - name: Read six M&S directories and each exact product family once
+        if: inputs.mode == 'collect'
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: node scripts/update-ms.mjs
+      - name: Verify whole-product photos and colours locally
+        if: inputs.mode == 'enrich' || inputs.mode == 'activate'
+        run: node scripts/enrich-ms.mjs
+      - name: Prepare only first-observed NEW after the initial baseline
+        if: inputs.mode == 'activate'
+        run: node scripts/prepare-ms-notifications.mjs
+      - name: Preserve M&S evidence without recollecting other retailers
+        if: always()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          mkdir -p web/ms web/images/ms web/mail-assets
+          git add web/ms web/images/ms web/mail-assets web/collection-ledger.json
+          git diff --cached --quiet || git commit -m "Save verified M&S exact SKU catalogue and image evidence [skip ci]"
+          node scripts/push-evidence.mjs
+      - name: Deliver verified published M&S attachments
+        if: inputs.mode == 'activate'
+        run: node scripts/deliver-ms-notifications.mjs
