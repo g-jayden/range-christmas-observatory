@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "retailerId": "ms",
+  "verifiedAt": "2026-11-10T06:53:44.255Z",
+  "sourceObservedAt": "2026-11-10T06:11:49.222Z",
+  "sourceSkus": 293,
+  "inStockSkus": 279,
+  "requestedSixCategoriesInStockUniqueSkus": 272,
+  "relatedSourceInStockSkus": 7,
+  "categoryCounts": {
+    "ms-baubles": 151,
+    "ms-lights": 17,
+    "ms-garland": 16,
+    "ms-wreath": 20,
+    "ms-stockings": 20,
+    "ms-tree": 49
+  },
+  "categoryOverlap": "One exact SKU contains both trees and a wreath; category counts cannot be added as a unique total.",
+  "images": {
+    "verifiedSkus": 293,
+    "failedSkus": 0,
+    "unresolvedClassificationReviews": 0,
+    "nativeDownloads": 693,
+    "sourceBytesUnchanged": true,
+    "upscaled": false,
+    "reviewMethod": "assistant-native-image-and-exact-SKU-description-review"
+  },
+  "notifications": {
+    "ownerConfigured": true,
+    "initialBaselineExcluded": true,
+    "dailyCheckBeijing": "07:00",
+    "sendAfterVerificationOnlyWhenNew": true,
+    "beijingMidnightRollover": true,
+    "retailerSkuNamespace": true
+  },
+  "publication": {
+    "activationRun": 42769587091,
+    "automaticUpdateRun": 42770670901,
+    "automaticallyTriggeredSiteRun": 42771051314,
+    "automaticSiteRunConclusion": "success",
+    "canonicalWebsite": "https://g-jayden.github.io/range-christmas-observatory/"
+  },
+  "firecrawl": {
+    "initialDiagnosticCredits": 3,
+    "initialFailedCollectionCredits": 2,
+    "totalIntegrationCredits": 5,
+    "successfulFullCollectionCredits": 0,
+    "originalImageAndLocalAnalysisCredits": 0,
+    "replayUpdateCredits": 0,
+    "monthlyAccountedProjectCredits": 1204,
+    "maxCreditsPerRun": 60,
+    "maxCreditsPerMonth": 1500,
+    "accountReserveCredits": 5000,
+    "paidFallback": "Only failed official pages, within shared policy and using actual provider receipts."
+  },
+  "checks": {
+    "suites": 32,
+    "productionRunnerDirectoryProductAndNativePhotoRead": true,
+    "desktopAndMobileNavigation": true,
+    "allNewTodayViews": true,
+    "missingSourceMeasurementsAndMaterials": "Explicitly marked; not inferred from photographs."
+  }
+}
