@@ -1,0 +1,34 @@
+name: Recover saved NEW attachments without source collection
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: range-saved-notification-recovery
+  cancel-in-progress: false
+jobs:
+  recover:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    env:
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci
+      - name: Check the deployed attachment contract
+        run: node scripts/mail-readiness.mjs
+      - name: Verify large-file transport and per-SKU recovery
+        run: node scripts/test-published-notifications.mjs
+      - name: Recover only saved native original files and deliver pending NEW
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          node scripts/deliver-committed-notifications.mjs
