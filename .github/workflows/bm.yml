@@ -1,4 +1,4 @@
-name: B&M Christmas verified catalogue
+name: B&M Christmas exact SKU collection
 on:
   workflow_dispatch:
     inputs:
@@ -20,35 +20,49 @@ jobs:
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
       COLLECTION_CHECKPOINTS: '1'
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
     steps:
       - uses: actions/checkout@v7.0.1
         with:
           ref: main
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /package.json
-            /package-lock.json
-            /scripts/
-            /server/
-            /cloud/
-            /web/*.mjs
-            /web/*.json
-            /web/bm/
-            /web/asda/catalogue.json
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
-      - name: Collect all five native directories once, sharing the wreath/garland source
+      - run: npm ci
+      - run: node scripts/test-bm.mjs
+      - uses: actions/cache@v6.1.0
+        with:
+          path: |
+            runtime/models
+            runtime/fonts
+          key: local-clip-vit-base-patch32-q8-v1
+      - name: Read five B&M directories in one paid request; share wreath and garland data
         if: inputs.mode == 'collect' || inputs.mode == 'daily'
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
         run: node scripts/update-bm.mjs
-      - name: Preserve paid source evidence even when a later stage fails
+      - name: Verify whole-product photos and colours locally
+        if: inputs.mode == 'enrich' || inputs.mode == 'activate' || inputs.mode == 'daily'
+        run: node scripts/enrich-bm.mjs
+      - name: Prepare only first-observed NEW after the initial baseline
+        if: inputs.mode == 'activate' || inputs.mode == 'daily'
+        run: node scripts/prepare-bm-notifications.mjs
+      - name: Preserve B&M evidence without recollecting other retailers
+        id: evidence
         if: always()
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          mkdir -p web/bm
-          git add web/bm web/collection-ledger.json
-          git diff --cached --quiet || git commit -m "Save B&M verified public catalogue source [skip ci]"
+          mkdir -p web/bm web/images/bm web/mail-assets
+          git add web/bm web/images/bm web/mail-assets web/collection-ledger.json web/preview-quality-cache.json.gz
+          git diff --cached --quiet || git commit -m "Save verified B&M exact SKU catalogue and image evidence [skip ci]"
           node scripts/push-evidence.mjs
+      - name: Deliver verified published B&M attachments
+        if: always() && (inputs.mode == 'activate' || inputs.mode == 'daily')
+        run: node scripts/deliver-bm-notifications.mjs
+      - name: Refresh the canonical website from committed B&M data without source requests
+        if: always() && steps.evidence.outcome == 'success' && (inputs.mode == 'enrich' || inputs.mode == 'activate' || inputs.mode == 'daily')
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/request-bm-site-publish.mjs

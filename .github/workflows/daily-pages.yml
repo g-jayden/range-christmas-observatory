@@ -80,6 +80,7 @@ jobs:
             /web/catalogue.json
             /web/asda/request.json
             /web/asda-model.mjs
+            /web/bm-model.mjs
             /web/ms-model.mjs
             /web/retailers.mjs
             /web/catalogue-model.mjs

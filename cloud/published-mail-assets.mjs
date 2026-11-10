@@ -2,7 +2,7 @@ import {retailerAssetId} from '../web/retailers.mjs';
 const REPO='g-jayden/range-christmas-observatory';
 const PAGES='https://g-jayden.github.io/range-christmas-observatory/';
 export function mailAssetUrl(raw,sku){
- if(!/^(?:(?:asda|ms)-)?\d{1,12}$/.test(String(sku)))throw Error('Invalid mail SKU');
+ if(!/^(?:(?:asda|ms|bm)-)?\d{1,12}$/.test(String(sku)))throw Error('Invalid mail SKU');
  const u=new URL(raw),prefix='mail-assets/'+sku+'/';
  const page=u.href.startsWith(PAGES+prefix);
  const repo=u.origin==='https://raw.githubusercontent.com'&&new RegExp('^/'+REPO+'/(?:main|[a-f0-9]{40})/web/'+prefix).test(u.pathname);

@@ -1,10 +1,11 @@
+import {BM_DEPARTMENTS,isBmScope} from './bm-model.mjs';
 import {MS_DEPARTMENTS,isMsScope} from './ms-model.mjs';
 import {ASDA_DEPARTMENTS,isAsdaScope} from './asda-model.mjs';
 import {TAXONOMY_VERSION,productBody,offeredObject,objectMemberships,isPublishedProduct} from './taxonomy.mjs';
 export {isPublishedProduct} from './taxonomy.mjs';
 import {THEME_DEFINITIONS,isThemeScope} from './theme-model.mjs';
 export {THEME_DEFINITIONS,isThemeScope} from './theme-model.mjs';
-export const DEPARTMENTS=[...ASDA_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...MS_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),
+export const DEPARTMENTS=[...BM_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...ASDA_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...MS_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),
  ['tree','圣诞树','Christmas Trees'],['skirt','圣诞树裙','Christmas Tree Skirts'],
  ['ornaments','圣诞装饰品','Christmas Ornaments'],['standing','立式装饰品','Standing Decorations'],
  ['wreath','圣诞圈','Christmas Wreaths'],['garland','圣诞长藤','Christmas Garlands'],
@@ -22,15 +23,15 @@ export const DEPARTMENTS=[...ASDA_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...MS_DEP
  ['christmas-tree-lights','圣诞树彩灯','Christmas Tree Lights','lights'],
  ['themes','按主题分类','Christmas Themes'],
  ...THEME_DEFINITIONS.map(t=>[t.id,t.zh,t.en,'themes'])
-].map(([id,zh,en,parentId])=>({id,zh,en,label:zh+' · '+en,...(parentId?{parentId}:{}),...((id==='lights'||id==='asda-lights'||id==='ms-lights'||parentId==='lights'||isThemeScope(id))?{charts:false}:{} )}));
+].map(([id,zh,en,parentId])=>({id,zh,en,label:zh+' · '+en,...(parentId?{parentId}:{}),...((id==='lights'||id==='asda-lights'||id==='ms-lights'||id==='bm-lights'||parentId==='lights'||isThemeScope(id))?{charts:false}:{} )}));
 export const DEPARTMENT_MAP=Object.fromEntries(DEPARTMENTS.map(d=>[d.id,d]));
 // Keep products from the official theme collections without counting actual
 // bed linen as ornaments or adding an unrequested navigation category.
 DEPARTMENT_MAP['home-textiles']={id:'home-textiles',zh:'家纺床品',en:'Christmas Home Textiles',label:'家纺床品 · Christmas Home Textiles'};
 export const ROOT_DEPARTMENTS=DEPARTMENTS.filter(d=>!d.parentId);
 export const LIGHT_DEPARTMENTS=DEPARTMENTS.filter(d=>d.parentId==='lights');
-export const isLightingScope=id=>id==='asda-lights'||id==='ms-lights'||id==='lights'||DEPARTMENT_MAP[id]?.parentId==='lights';
-export const decorationDepartments=DEPARTMENTS.filter(d=>!isAsdaScope(d.id)&&!isMsScope(d.id)&&!['tree','skirt'].includes(d.id)&&!isLightingScope(d.id)&&!isThemeScope(d.id));
+export const isLightingScope=id=>id==='asda-lights'||id==='ms-lights'||id==='bm-lights'||id==='lights'||DEPARTMENT_MAP[id]?.parentId==='lights';
+export const decorationDepartments=DEPARTMENTS.filter(d=>!isAsdaScope(d.id)&&!isMsScope(d.id)&&!isBmScope(d.id)&&!['tree','skirt'].includes(d.id)&&!isLightingScope(d.id)&&!isThemeScope(d.id));
 // Prices come from the retailer's integer-pence fields, never historical changes.
 export function sourcePrice(p){
  const current=Number.isFinite(p.priceGBP)?Math.round(p.priceGBP*100):Number.isInteger(p.price)?p.price:null;
@@ -40,8 +41,8 @@ export function sourcePrice(p){
 export const COLOUR_EN={'绿色':'Green','白色':'White / Cream','黑色':'Black','深空灰色':'Dark Charcoal Grey','灰色':'Grey','粉色':'Pink','红色':'Red / Burgundy','褐色':'Brown / Beige','金色':'Gold','银色':'Silver','蓝色':'Blue / Navy','青色':'Teal / Turquoise','紫色':'Purple','橙色':'Orange','黄色':'Yellow','透明色':'Clear','古铜色':'Bronze','铜色':'Copper','多色':'Multicolour','颜色待核验':'Colour unconfirmed','颜色未确认':'Colour unconfirmed'};
 export const colourLabel=c=>c+' · '+(COLOUR_EN[c]||c);
 export const STYLE_EN={'圣诞树盆栽':'Potted','折叠式圣诞树':'Pop-up','纤细圣诞树':'Slim','雪景款':'Snow / Flocked','预亮灯款':'Pre-lit','标准款':'Standard','其它树形类别':'Other tree shapes'};
-export const FIELD_ZH={Height:'高度',Width:'宽度',Depth:'深度',Length:'长度',Diameter:'直径','Base Diameter':'底部直径','Bottom Diameter':'底部直径','Top Diameter':'顶部直径','Christmas Tree Height':'树高',Size:'尺寸',Dimensions:'尺寸',Max:'最大尺寸',Material:'材质','Material Composition':'材质组成',Colour:'颜色',Color:'颜色',Weight:'重量','Shipping Weight':'运输重量','Pack Size':'包装数量','Light Colour':'灯光颜色','Number of LEDs':'灯珠数量','Indoor/Outdoor':'使用场景','Power Source':'电源','Cable Length':'线缆长度',Occasion:'适用节日',Design:'设计',Shape:'形状',Finish:'表面处理',Type:'类型','Model Number':'型号','Assembly Required':'需要组装','Batteries Required':'电池要求',Waterproof:'防水',Fabric:'织物','IP Rating':'防护等级','Decoration Type':'装饰类型','Mains Operated':'市电供电','Batteries Included':'是否包含电池',Voltage:'电压',Wattage:'功率',Timer:'定时器','Bulb Type':'灯泡类型','Power Type':'供电类型','Colour Temperature':'色温','Number of Bulbs':'灯泡数量','Light Functions':'灯光模式'};
-Object.assign(FIELD_ZH,{'Dimensions (WxDxH in cm)':'尺寸（宽×深×高，厘米）','Indoor / Outdoor':'室内／户外用途','Assembly Information':'组装说明','Assembly Required':'是否需要组装',Warranty:'保修期','Colour Family':'颜色系列','Cable Length':'线缆长度',"No. of LED's":'灯珠数量','Power Source':'供电方式',Gender:'适用系列',Sale:'促销标识','Source Height':'原站标注高度','Source Width':'原站标注宽度','Source Depth':'原站标注深度','Dimension column Height':'尺寸栏原高度'});
+export const FIELD_ZH={Height:'高度',Width:'宽度',Depth:'深度',Length:'长度',Diameter:'直径','Base Diameter':'底部直径','Bottom Diameter':'底部直径','Top Diameter':'顶部直径','Christmas Tree Height':'树高',Size:'尺寸',Dimensions:'尺寸',Max:'最大尺寸',Material:'材质','Material Composition':'材质组成',Colour:'颜色',Color:'颜色',Weight:'重量','Shipping Weight':'运输重量','Pack Size':'包装数量','Tree Type':'树类型',Composition:'材质组成','Source Image':'来源图片','Light Colour':'灯光颜色','Number of LEDs':'灯珠数量','Indoor/Outdoor':'使用场景','Power Source':'电源','Cable Length':'线缆长度',Occasion:'适用节日',Design:'设计',Shape:'形状',Finish:'表面处理',Type:'类型','Model Number':'型号','Assembly Required':'需要组装','Batteries Required':'电池要求',Waterproof:'防水',Fabric:'织物','IP Rating':'防护等级','Decoration Type':'装饰类型','Mains Operated':'市电供电','Batteries Included':'是否包含电池',Voltage:'电压',Wattage:'功率',Timer:'定时器','Bulb Type':'灯泡类型','Power Type':'供电类型','Colour Temperature':'色温','Number of Bulbs':'灯泡数量','Light Functions':'灯光模式'};
+Object.assign(FIELD_ZH,{'Dimensions (WxDxH in cm)':'尺寸（宽×深×高，厘米）','Indoor / Outdoor':'室内／户外用途','Assembly Information':'组装说明','Assembly Required':'是否需要组装',Warranty:'保修期','Colour Family':'颜色系列','Cable Length':'线缆长度',"No. of LED's":'灯珠数量','Power Source':'供电方式',Gender:'适用系列',Sale:'促销标识','Source Height':'原站标注高度','Tree Type':'树木类型','Composition':'材质组成','Source Image':'官网图片说明','Source Width':'原站标注宽度','Source Depth':'原站标注深度','Dimension column Height':'尺寸栏原高度'});
 export const fieldLabel=k=>(FIELD_ZH[k]||'原站属性')+' · '+k;
 export function heightCategoryLabel(raw){const s=String(raw||'').trim();if(/^(?:less than|under|below)\s+\d/i.test(s))return '低于 '+s.replace(/^(?:less than|under|below)\s+/i,'')+' · '+s;if(/^(?:more than|over|above)\s+\d/i.test(s))return '高于 '+s.replace(/^(?:more than|over|above)\s+/i,'')+' · '+s;if(/^\d+(?:\.\d+)?\s*(?:ft|cm|m|in)?\s*(?:to|[-–])\s*\d/i.test(s))return '原站高度范围 · Source height range: '+s;return '';}
 export function beijingDay(value=Date.now()){return new Date(new Date(value).getTime()+28800000).toISOString().slice(0,10)}
