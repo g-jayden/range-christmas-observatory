@@ -9,6 +9,7 @@ permissions:
 concurrency:
   group: range-source-and-pages-production
   cancel-in-progress: false
+  queue: max
 jobs:
   apply:
     runs-on: ubuntu-latest

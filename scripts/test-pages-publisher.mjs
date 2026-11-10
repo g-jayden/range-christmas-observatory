@@ -8,3 +8,11 @@ const timeout=harness();await assert.rejects(publishPages({...timeout.options,ma
 const network=harness({failPoll:true});await assert.rejects(publishPages(network.options),/five bounded API errors/);assert.equal(network.calls.filter(c=>c.url.endsWith('/cancel')).length,1);
 await assert.rejects(publishPages({...slow.options,env:{...env,ACTIONS_ID_TOKEN_REQUEST_URL:'https://attacker.invalid/steal'}}),/Untrusted/);
 console.log('PASS: one official artifact and OIDC deployment, slow successful sync beyond ten minutes, terminal errors, bounded cancellation, no repeated source requests or logged credentials.');
+
+// Newly finalised artifacts can lag their upload acknowledgement in the REST index.
+const lag=harness({statuses:['succeed']}),originalFetch=lag.options.fetcher;let reads=0;
+lag.options.fetcher=async(url,opts)=>url.includes('/artifacts?')&&reads++<3?Response.json({artifacts:[]}):originalFetch(url,opts);
+const indexed=await publishPages(lag.options);assert.equal(reads,4);assert.equal(indexed.artifactId,8);assert.equal(lag.calls.filter(c=>c.url.endsWith('/pages/deployments')).length,1);assert(lag.logs.some(l=>l.phase==='pages-artifact-index-pending'));assert(lag.logs.every(l=>l.firecrawlCredits===undefined||l.firecrawlCredits===0));
+const missing=harness();missing.options.fetcher=async()=>Response.json({artifacts:[]});await assert.rejects(publishPages({...missing.options,artifactWaitMs:10000}),/artifact discovery exceeded/);assert(!missing.calls.some(c=>c.url.endsWith('/pages/deployments')));
+const ambiguous=harness();ambiguous.options.fetcher=async()=>Response.json({artifacts:[{id:1,name:'github-pages-123-1'},{id:2,name:'github-pages-123-1'}]});await assert.rejects(publishPages(ambiguous.options),/Exactly one/);
+console.log('PASS: delayed artifact indexing is retried by GET only, while missing or ambiguous artifacts stop within a bounded wait without recollecting sources.');
