@@ -72,7 +72,7 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
   snapshot.products=notificationSnapshot(gathered.snapshot,decorations,lights,themes).products;
   if(!probe&&result.attempted){await atomicJson('web/catalogue.json',gathered.snapshot);if(decorations)await publishDecorations(structuredClone(decorations));if(lights)await publishLights(structuredClone(lights));if(themes)await publishThemes(structuredClone(themes));await publishCheckpoint({stage:'new-details'});}
   const candidates=snapshot.products.filter(p=>result.events.some(e=>e.product.sku===p.sku));
-  await selectGalleryImages(candidates);if(!probe)result=await captureNewScreenshots(result,{reader,state,policy,now});await reader.closeBrowser?.();
+  await selectGalleryImages(candidates);if(!probe)result=await captureNewScreenshots(result,{reader,state,policy,now});
   for(const event of result.events||[]){const p=snapshot.products.find(p=>p.sku===event.product.sku);if(p&&event.product.originalImageUrl)p.originalImageUrl=event.product.originalImageUrl;}
   let screenshotProbe,validationCredits=0,probeProduct,probeScreenshot;
   if(probe&&reader.captureVerified){const p=snapshot.products.find(p=>p.kind==='decoration'&&p.newStatus&&/\/m\d+\//.test(p.sourceUrl||''))||snapshot.products.find(p=>p.sku==='515142')||snapshot.products[0];const before=reader.metrics().scrapeCredits||0;probeScreenshot=await reader.captureVerified(p.sourceUrl,{preferredThumbnail:p.variantImageUrl});probeProduct=p;const original=reader.originalsFor?.(p.sourceUrl)?.[0];if(original)p.originalImageUrl=original.url;
@@ -84,6 +84,7 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
   }
   const imageAudit=candidates.length?await auditNotificationImages(reader,candidates,{entries:{...previous.browserImageAudit?.entries,...previousDecorations.browserImageAudit?.entries,...previousLights.browserImageAudit?.entries}}):null;
   if(!probe&&imageAudit){await atomicJson('web/new-image-audit.json',imageAudit);retainVerifiedNewImages(result,snapshot,imageAudit);}
+  await reader.closeBrowser?.();
   if(probeProduct&&probeScreenshot){await enrichProducts([probeProduct]);await buildMailAssets(probeProduct,probeScreenshot);}
   // Only the actual NEW SKU is allowed to block its own message. Work on old
   // products and the full taxonomy index begins after verified mail is durable.

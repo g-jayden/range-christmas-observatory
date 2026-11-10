@@ -284,9 +284,12 @@ export class Control{
     if(b.notificationTransport===NOTIFICATION_CONTRACT){const pending=await this.db.get('pending/'+storageSku(p));if(!pending||pending.unavailableSince||p.newStatus!==true||pending.sourceUrl!==p.sourceUrl)return response({error:'只能接收已有待处理的同一SKU新品'},409);evidence=await verifyPublishedNotification(p);p.mailAssets=evidence.manifest;}
     else if(!b.screenshotBase64||b.screenshotBase64.length>7000000||!/^[A-Za-z0-9+/=]+$/.test(b.screenshotBase64))return response({error:'新品图像内容未随请求提交，且没有可验证的已发布附件清单。'},422);
     const pending=await this.db.get('pending/'+storageSku(p)),parts=evidence?[]:b.screenshotBase64.match(/.{1,60000}/g),imageAccess=await hash(token()),record={...p,imageAccess,screenshotParts:parts.length,notificationTransport:evidence?.contract,attachmentVerifiedAt:evidence?.verifiedAt,detectedAt:pending?.firstDetectedAt||new Date().toISOString(),screenshotVerifiedAt:b.screenshotVerifiedAt};
-    const values={};parts.forEach((part,i)=>values['shot/'+storageSku(p)+'/'+i]=part);const entries=Object.entries(values);for(let i=0;i<entries.length;i+=100)await this.db.put(Object.fromEntries(entries.slice(i,i+100)));await this.db.put({['event/'+storageSku(p)]:record,['seen/'+storageSku(p)]:true,['image-access/'+imageAccess]:storageSku(p)});
-    await this.db.delete('pending/'+storageSku(p));const recent=await this.db.get('recent')||[];recent.unshift({sku:p.sku,retailerId:p.retailerId||'the-range',name:p.variantName,kind:p.kind,imageUrl:p.variantImageUrl||p.imageUrl,sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,detectedAt:record.detectedAt});await this.db.put('recent',recent.slice(0,30));
-    return response({recorded:true});
+    const values={};parts.forEach((part,i)=>values['shot/'+storageSku(p)+'/'+i]=part);const entries=Object.entries(values);for(let i=0;i<entries.length;i+=100)await this.db.put(Object.fromEntries(entries.slice(i,i+100)));
+    const recorded=await this.db.transaction(async db=>{if(await db.get('seen/'+storageSku(p)))return false;
+     if(evidence){const pending=await db.get('pending/'+storageSku(p));if(!pending||pending.unavailableSince||pending.sourceUrl!==p.sourceUrl)throw Object.assign(Error('待处理新品在附件校验期间发生变化'),{status:409});}
+     await db.put({['event/'+storageSku(p)]:record,['seen/'+storageSku(p)]:true,['image-access/'+imageAccess]:storageSku(p)});await db.delete('pending/'+storageSku(p));
+     const recent=await db.get('recent')||[];recent.unshift({sku:p.sku,retailerId:p.retailerId||'the-range',name:p.variantName,kind:p.kind,imageUrl:p.variantImageUrl||p.imageUrl,sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,detectedAt:record.detectedAt});await db.put('recent',recent.slice(0,30));return true;});
+    return response(recorded?{recorded:true}:{alreadyRecorded:true});
    }
    if(route==='/internal/monitor-complete'&&req.method==='POST'){
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);

@@ -50,7 +50,11 @@ export async function buildMailAssets(p,pdpBase64=null,{verifiedCardOnly=false}=
 }
 export async function auditNotificationImages(reader,products,previous){
  const originals=products.filter(p=>p.originalImageUrl).map(p=>({sku:p.sku+'-original',variantImageUrl:p.originalImageUrl}));
- const audit=await reader.auditImages([...products,...originals],previous,{bodyBatchSize:10});
+ let audit;try{audit=await reader.auditImages([...products,...originals],previous,{bodyBatchSize:10});}catch(e){if(!reader.recoverOriginalImages)throw e;audit={entries:{},failures:[],initialImageIssue:String(e.message).slice(0,180)};}
+ const missing=products.filter(p=>![p.variantImageUrl||p.imageUrl,p.originalImageUrl].every(url=>audit.entries?.[url]?.ok));
+ if(missing.length&&reader.recoverOriginalImages){const recovered=await reader.recoverOriginalImages(missing);audit.entries={...audit.entries,...recovered.entries};audit.failures=[...(audit.failures||[]),...recovered.failures].filter(f=>!audit.entries[f.url]?.ok);for(const p of originals){const e=audit.entries[p.variantImageUrl];if(e?.ok){p.cachedImageUrl=e.cachedImageUrl;p.imageCacheEvidence={sourceUrl:e.url,sha256:e.hash,observedAt:e.observedAt};}}}
+ audit.failed=[...new Set([...products,...originals].map(p=>p.variantImageUrl||p.imageUrl))].filter(url=>!audit.entries?.[url]?.ok).length;
+ for(const p of products){const e=audit.entries?.[p.variantImageUrl||p.imageUrl];if(e?.ok){p.cachedImageUrl=e.cachedImageUrl;p.imageCacheEvidence={sourceUrl:e.url,sha256:e.hash,observedAt:e.observedAt};}}
  for(const p of products){const origin=originals.find(o=>o.sku===p.sku+'-original');if(origin?.cachedImageUrl){p.originalCachedImageUrl=origin.cachedImageUrl;p.originalImageEvidence={...origin.imageCacheEvidence,width:audit.entries[p.originalImageUrl]?.width,height:audit.entries[p.originalImageUrl]?.height};}}
  return audit;
 }

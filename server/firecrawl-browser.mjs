@@ -5,6 +5,7 @@ import {sourceUrl} from './free-source.mjs';
 import {budgetError} from './credit-budget.mjs';
 import {createCatalogueTransport} from './catalogue-transport.mjs';
 import {readPreviewAssets} from './product-previews.mjs';
+import {captureProductImageResponses} from './native-image-context.mjs';
 
 export async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000,anchors=[]}){
  const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch(error){return {status:0,error:String(error.message).slice(0,180)}}};
@@ -273,7 +274,8 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  reader.auditImages=async (products,previous={},options={})=>{
   const checkpoint=policy.imageCheckpoint?await fs.readFile(policy.imageCheckpoint,'utf8').then(JSON.parse).catch(()=>({})):{};
   const browserRecovery=await fs.readFile('web/browser-image-recovery.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return {};throw e;});
-  previous={...previous,entries:{...checkpoint.entries,...previous.entries,...browserRecovery.entries}};
+  const originalRecovery=await fs.readFile('web/new-original-recovery.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return {};throw e;});
+  previous={...previous,entries:{...checkpoint.entries,...previous.entries,...browserRecovery.entries,...originalRecovery.entries}};
   const allUrls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))],results=[],known=[],newUrls=[],validPrior={};
   for(const url of allUrls){
    let u;try{u=new URL(url)}catch{}if(!u||u.protocol!=='https:'||!['www.therange.co.uk','kube-media-unpublished.rstore.com'].includes(u.hostname)||!u.pathname.startsWith('/media/')){results.push({url,ok:false,error:/placeholder/i.test(url)?'source-placeholder-no-product-photo':'source-image-URL-not-verified'});continue;}
@@ -311,6 +313,20 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   const byUrl=new Map(results.map(r=>[r.url,r]));for(const p of products){const r=byUrl.get(p.variantImageUrl||p.imageUrl);if(r?.ok){p.cachedImageUrl=r.cachedImageUrl;p.imageCacheEvidence={sourceUrl:r.url,sha256:r.hash,observedAt:r.observedAt};}}
   metrics.sourceImageChecks+=rechecked;const loaded=results.filter(r=>r.ok).length;
   return {mode:'live-enhanced-batches-and-original-image-cache',checked:results.length,rechecked,retained:results.filter(r=>r.ok&&r.retained).length,changed,loaded,failed:results.length-loaded,failures:results.filter(r=>!r.ok),entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString(),perImageScrapeRequests:0,batchScrapeRequests:metrics.imageBatchRequests||0};
+ };
+ // Only failed NEW photos reach this path. Load their own product page in a
+ // normal browser and retain its original network response bytes. A direct
+ // /media fetch returning 403 does not mean the displayed photo is missing.
+ let contextImageRepairs=0;
+ reader.recoverOriginalImages=async products=>{
+  if(!session&&!starting)ttl=Math.min(ttl,120);
+  const entries={},failures=[],selected=products.slice(0,Math.max(0,12-contextImageRepairs)),sharp=(await import('sharp')).default;let cursor=0;
+  await fs.mkdir('web/images/source',{recursive:true});
+  await Promise.all(Array.from({length:Math.min(2,selected.length)},async()=>{while(cursor<selected.length){const p=selected[cursor++];let page;try{contextImageRepairs++;guard();page=await take();metrics.browserPages++;metrics.nativeImageContextPages=(metrics.nativeImageContextPages||0)+1;const capture=await captureProductImageResponses(page,p);failures.push(...capture.failures);
+    for(const image of capture.images){const m=await sharp(image.bytes).metadata();if(!m.width||m.width<64||!m.height||m.height<64)throw Error('Native browser response is not a real product photo');const hash=createHash('sha256').update(image.bytes).digest('hex'),ext=m.format==='jpeg'?'jpg':m.format;if(!['jpg','png','webp','avif','gif'].includes(ext))throw Error('Unsupported native browser photo');const cachedImageUrl='images/source/'+hash+'.'+ext;await fs.writeFile('web/'+cachedImageUrl,image.bytes);entries[image.url]={url:image.url,ok:true,hash,cachedImageUrl,width:m.width,height:m.height,bytes:image.bytes.length,mime:'image/'+m.format,observedAt:new Date(now()).toISOString(),selectedSku:p.sku,sourceContextUrl:p.sourceUrl,method:'normal-product-page-native-response-bytes'};}
+   }catch(e){failures.push({sku:p.sku,url:p.originalImageUrl,status:e.status||0,error:String(e.message).slice(0,180)});}finally{if(page)release(page);}}}));
+  for(const p of products.slice(selected.length))failures.push({sku:p.sku,url:p.originalImageUrl,deferred:true,error:'Bounded native-image recovery limit reached'});
+  console.log(JSON.stringify({phase:'targeted-native-image-context',products:selected.length,loaded:Object.keys(entries).length,failed:failures.length}));return {entries,failures};
  };
  reader.metrics=()=>({...metrics,scrapeCredits,sessionSeconds:created?Math.ceil(((browserEndedAt||now())-created)/1000):0});
  reader.closeBrowser=async()=>{
