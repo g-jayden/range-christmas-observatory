@@ -1,0 +1,16 @@
+// Run only inside the real B&M page. Its public search service requires the
+// actual browser origin; no Referer/Origin header is forged by this client.
+export async function readBmDirectoryInsideSite(){
+ if(location.origin!=='https://www.bmstores.co.uk')throw Error('B&M browser origin required');
+ const config=JSON.parse(document.querySelector('[data-config="algolia"]').textContent);
+ if(!/^[A-Z0-9]+$/.test(config.appId)||!/^prod_bmstores$/.test(config.index))throw Error('Unexpected B&M public search configuration');
+ const request=async params=>{const r=await fetch('https://'+config.appId.toLowerCase()+'-dsn.algolia.net/1/indexes/'+config.index+'_title_asc/query',{method:'POST',headers:{'content-type':'application/json','x-algolia-application-id':config.appId,'x-algolia-api-key':config.restrictedApiKey},body:JSON.stringify(params),signal:AbortSignal.timeout(25000)});if(!r.ok)throw Error('Official B&M search HTTP '+r.status);const d=await r.json();if(!Number.isInteger(d.nbHits)||!Array.isArray(d.hits))throw Error('B&M search totals missing');return d;};
+ const root=await request({query:'',hitsPerPage:1,page:0,filters:'acategoryhierarchical.lvl0:"Christmas"',facets:['acategoryhierarchical.lvl1','acategoryhierarchical.lvl2','acategoryhierarchical.lvl3'],maxValuesPerFacet:1000,attributesToRetrieve:['*']});
+ const paths=[...new Set(Object.values(root.facets||{}).flatMap(f=>Object.keys(f)))],definitions=[['trees',/^Christmas > Christmas Trees$/i],['baubles',/^Christmas > Christmas Decorations > Baubles (?:&|and) Tree Decorations$/i],['lights',/^Christmas > Christmas Lights$/i],['wreaths-garlands',/^Christmas > Christmas Decorations > Wreaths (?:&|and) Garlands$/i],['outdoor',/^Christmas > Christmas Decorations > Outdoor Decorations$/i]],categories=[];
+ for(const [id,pattern]of definitions){const path=paths.find(p=>pattern.test(p));if(!path)throw Error('B&M official category not found: '+id+'; paths: '+JSON.stringify(paths));const attribute='acategoryhierarchical.lvl'+(path.split(' > ').length-1),filter=attribute+':'+JSON.stringify(path),rows=[];let total,pages;
+  for(let page=0;page==0||page<pages;page++){const d=await request({query:'',hitsPerPage:100,page,filters:filter,attributesToRetrieve:['*'],clickAnalytics:false});total??=d.nbHits;pages??=d.nbPages;if(total!==d.nbHits||total>1000||!Number.isInteger(pages))throw Error('B&M pagination changed or exceeds verified window: '+id);rows.push(...d.hits.map(({_highlightResult,_snippetResult,...hit})=>hit));}
+  if(new Set(rows.map(h=>h.objectID)).size!==total)throw Error('B&M category not complete: '+id);categories.push({id,path,declared:total,rows});
+ }
+ return {sourceUrl:location.href,observedAt:new Date().toISOString(),rootTotal:root.nbHits,categories,complete:true,transport:'official-B&M-public-search-from-real-site-origin'};
+}
+export const bmDirectoryScript=()=> '('+readBmDirectoryInsideSite.toString()+')()';

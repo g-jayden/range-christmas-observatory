@@ -1,0 +1,54 @@
+name: B&M Christmas verified catalogue
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [collect, enrich, activate, daily]
+        default: collect
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: range-source-and-pages-production
+  cancel-in-progress: false
+jobs:
+  bm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      COLLECTION_CHECKPOINTS: '1'
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /package.json
+            /package-lock.json
+            /scripts/
+            /server/
+            /cloud/
+            /web/*.mjs
+            /web/*.json
+            /web/bm/
+            /web/asda/catalogue.json
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - name: Collect all five native directories once, sharing the wreath/garland source
+        if: inputs.mode == 'collect' || inputs.mode == 'daily'
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: node scripts/update-bm.mjs
+      - name: Preserve paid source evidence even when a later stage fails
+        if: always()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          mkdir -p web/bm
+          git add web/bm web/collection-ledger.json
+          git diff --cached --quiet || git commit -m "Save B&M verified public catalogue source [skip ci]"
+          node scripts/push-evidence.mjs
