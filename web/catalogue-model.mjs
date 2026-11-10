@@ -23,6 +23,9 @@ export const DEPARTMENTS=[...ASDA_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),
  ...THEME_DEFINITIONS.map(t=>[t.id,t.zh,t.en,'themes'])
 ].map(([id,zh,en,parentId])=>({id,zh,en,label:zh+' · '+en,...(parentId?{parentId}:{}),...((id==='lights'||id==='asda-lights'||parentId==='lights'||isThemeScope(id))?{charts:false}:{} )}));
 export const DEPARTMENT_MAP=Object.fromEntries(DEPARTMENTS.map(d=>[d.id,d]));
+// Keep products from the official theme collections without counting actual
+// bed linen as ornaments or adding an unrequested navigation category.
+DEPARTMENT_MAP['home-textiles']={id:'home-textiles',zh:'家纺床品',en:'Christmas Home Textiles',label:'家纺床品 · Christmas Home Textiles'};
 export const ROOT_DEPARTMENTS=DEPARTMENTS.filter(d=>!d.parentId);
 export const LIGHT_DEPARTMENTS=DEPARTMENTS.filter(d=>d.parentId==='lights');
 export const isLightingScope=id=>id==='asda-lights'||id==='lights'||DEPARTMENT_MAP[id]?.parentId==='lights';

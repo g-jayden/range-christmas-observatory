@@ -14,7 +14,7 @@ function extent(p){const v=p.dimensions?.values||p.specifications||{};const ns=[
 export function offeredObject(p,{visual=p.taxonomyVisual}={}){
  const title=String(p.variantName||p.name||''),body=productBody(p),nounBody=productBody(p).split(/\b(?:with|holding|carrying|wearing|featuring)\b/i)[0],description=productDescription(p),lead=description.slice(0,650),crumbs=(p.detailEvidence?.breadcrumbs||[]).join(' '),size=extent(p);
  const r=(id,reason,extra)=>hit(id,reason,body,extra);
- if(/\b(?:bedding|duvets?|pillowcases?|bed linen|bed ?sheets?|quilt covers?|bedspreads?|mattress covers?)\b/i.test(nounBody))return r('ornaments','offered-bed-linen-not-its-printed-Christmas-tree',{subtype:'homeware-or-accessory'});
+ if(/\b(?:bedding|duvets?|pillowcases?|bed linen|bed ?sheets?|quilt covers?|bedspreads?|mattress covers?)\b/i.test(nounBody))return r('home-textiles','offered-bed-linen-not-its-printed-Christmas-tree',{subtype:'homeware-or-accessory'});
  if(/\b(?:hanging ornament|tree decoration|tree ornament)\b/i.test(body)&&/\b(?:stocking|sack|bag|cushion|mug|bowl|plate)\b/i.test(body)&&size!==null&&size<=22)return r('tree-decorations','miniature-ornament-shaped-as-a-stocking-or-accessory');
  if(/\bstorage bags?\b/i.test(nounBody))return r('ornaments','actual-seasonal-storage-bag-not-its-contents',{subtype:'accessory'});
  if(/\b(?:snow spray|spray snow|tree stand)(?! cover)\b/i.test(nounBody))return r('ornaments','tree-accessory-not-a-whole-tree',{subtype:'accessory'});
@@ -83,7 +83,7 @@ export function offeredObject(p,{visual=p.taxonomyVisual}={}){
 export function christmasEligibility(p,object=offeredObject(p),visual=p.taxonomyVisual){
  // A Christmas motif does not turn a duvet or bed linen into an ornament.
  // These products fall outside the requested decoration categories.
- if(object.subtype==='homeware-or-accessory'&&/\b(?:bedding|duvets?|pillowcases?|bed linen|bed ?sheets?|quilt covers?|bedspreads?|mattress covers?)\b/i.test(productBody(p)))return {disposition:'exclude',reason:'home-textile-outside-requested-decoration-scope',evidence:productBody(p)};
+ if(object.id==='home-textiles')return {disposition:(p.themeIds||[]).some(id=>id.startsWith('theme-'))?'include':'exclude',reason:(p.themeIds||[]).some(id=>id.startsWith('theme-'))?'official-theme-home-textile-not-an-ornament':'home-textile-outside-requested-decoration-scope',evidence:productBody(p)};
  const rawTitle=productBody(p),brand=String(p.brand||'').trim(),title=brand&&rawTitle.toLowerCase().startsWith(brand.toLowerCase()+' ')?rawTitle.slice(brand.length).trim():rawTitle,description=productDescription(p),lead=description.slice(0,1000),specs=p.specifications||{},occasion=String(specs.Occasion||specs.Season||'');
  const titleSeason=/\b(?:halloween|easter|thanksgiving|valentine|cupids? arrow|spring|summer|harvest|autumn(?:al)?|eid|ramadan|diwali|hanukkah|birthday|wedding|baby shower|graduation)\b/i.exec(title),occasionSeason=/\b(?:halloween|easter|thanksgiving|valentine|spring|summer|harvest|autumn(?:al)?|eid|ramadan|diwali|hanukkah|birthday|wedding|baby shower|graduation)\b/i.exec(occasion),positiveTitle=/\b(?:christmas|xmas|santa|noel|gingerbread|nutcracker|candy cane|jingle bell)\b/i.test(title),explicit=titleSeason||(!positiveTitle?occasionSeason:null);
  // Autumn can name a Christmas bauble's colour/finish. Its object and actual
