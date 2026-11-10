@@ -1,7 +1,7 @@
 import {offeredObject} from './taxonomy.mjs';
 export const ASDA_DEPARTMENTS=[['asda-tree','圣诞树','Christmas Trees'],['asda-tree-decorations','圣诞树装饰品','Christmas Tree Decorations'],['asda-lights','圣诞灯','Christmas Lights'],['asda-room','圣诞节房间装饰','Christmas Room Decorations'],['asda-wreath','圣诞圈','Christmas Wreaths'],['asda-garland','圣诞节长藤','Christmas Garlands'],['asda-outdoor','户外圣诞装饰品','Outdoor Decorations']].map(([id,zh,en])=>({id,zh,en,label:zh+' · '+en,retailerId:'asda',...(id==='asda-lights'?{charts:false}:{})}));
 export const isAsdaScope=id=>ASDA_DEPARTMENTS.some(d=>d.id===id);
-export const retailerProductKey=p=>(p.retailerId==='asda'?'asda:':'the-range:')+String(p.sku);
+export const retailerProductKey=p=>(p.retailerId==='ms'?'ms:':p.retailerId==='asda'?'asda:':'the-range:')+String(p.sku);
 export function asdaMemberships(p){
  const title=String(p.variantName||p.name||'').toLowerCase(),body=String(p.sourceDescription||'').toLowerCase(),spec=p.specifications||{},category=p.asdaSource?.primaryCategoryID||'',type=String(p.asdaSource?.customType||'').toLowerCase();let primary;const physical=offeredObject({...p,kind:category==='D18M2G1C4'?'tree':'decoration'});
  const smallHanging=/\bbaubles?\b|\btree toppers?\b|hanging (?:tree |christmas )?(?:decoration|ornament)|\btinsel\b(?!.*\btree\b)/.test(title);

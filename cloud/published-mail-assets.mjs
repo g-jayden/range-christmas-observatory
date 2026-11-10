@@ -1,7 +1,8 @@
+import {retailerAssetId} from '../web/retailers.mjs';
 const REPO='g-jayden/range-christmas-observatory';
 const PAGES='https://g-jayden.github.io/range-christmas-observatory/';
 export function mailAssetUrl(raw,sku){
- if(!/^(?:asda-)?\d{1,12}$/.test(String(sku)))throw Error('Invalid mail SKU');
+ if(!/^(?:(?:asda|ms)-)?\d{1,12}$/.test(String(sku)))throw Error('Invalid mail SKU');
  const u=new URL(raw),prefix='mail-assets/'+sku+'/';
  const page=u.href.startsWith(PAGES+prefix);
  const repo=u.origin==='https://raw.githubusercontent.com'&&new RegExp('^/'+REPO+'/(?:main|[a-f0-9]{40})/web/'+prefix).test(u.pathname);
@@ -20,7 +21,7 @@ export function pinMailAssets(manifest,revision){
  return m;
 }
 export function publishedManifestUrl(p){
- const m=p.mailAssets,assetId=p.retailerId==='asda'?'asda-'+p.sku:String(p.sku);
+ const m=p.mailAssets,assetId=retailerAssetId(p);
  if(m?.publishedRevision){const expected='https://raw.githubusercontent.com/'+REPO+'/'+m.publishedRevision+'/web/mail-assets/'+assetId+'/manifest.json';if(!/^[a-f0-9]{40}$/.test(m.publishedRevision)||m.manifestUrl!==expected)throw Error('Published manifest identity mismatch');return mailAssetUrl(expected,assetId);}
  return PAGES+'mail-assets/'+assetId+'/manifest.json';
 }

@@ -5,7 +5,10 @@ export const MS_SOURCES=[['ms-baubles','christmas-decorations/christmas-baubles'
 // their actual object shape is stated separately, never labelled spherical.
 export function msMemberships(p){
  const title=String(p.baseName||p.variantName||'').toLowerCase(),description=String(p.sourceDescription||'').toLowerCase(),native=(p.msSource?.categoryIds||[]).filter(isMsScope);let primary;
- if(/\b(?:stockings?|christmas sacks?)\b/.test(title)&&!/stocking (?:holder|hanger|filler)/.test(title))primary='ms-stockings';
+ const outside=/\btree (?:storage bag|stand|skirt|collar)\b|\bdoor swag\b/.test(title)||/\bsack\b/.test(title)&&!/stocking/.test(title)||native.includes('ms-wreath')&&/hanging bow decoration/.test(title)&&!/wreath/.test(title);if(outside)return {primary:null,memberships:[],nativeMemberships:native,shape:'官网关联商品 · Related source product',disposition:'exclude',reason:'商品本体不属于指定六类 · Physical object is outside the requested six categories',method:'M&S-object-description-image-review'};
+ if(/tree.*wreath|wreath.*tree/.test(title)&&/set of|pack of/.test(title))return {primary:'ms-wreath',memberships:['ms-tree','ms-wreath'],nativeMemberships:native,shape:'树与花圈组合 · Tree and wreath set',method:'M&S-exact-set-components'};
+ if(/^(?:100 LED Light Up Warm White Garland|200 Pre-Lit Wire Cluster Garland)$/i.test(p.baseName||''))primary='ms-lights';
+ else if(/\b(?:stockings?|christmas sacks?)\b/.test(title)&&!/stocking (?:holder|hanger|filler)/.test(title))primary='ms-stockings';
  else if(/\bgarlands?\b/.test(title)&&!/garland (?:string )?lights/.test(title))primary='ms-garland';
  else if(/\bwreaths?\b/.test(title)&&!/wreath (?:hanger|hook|holder)|bauble|tree decoration|hanging ornament/.test(title))primary='ms-wreath';
  else if(/\b(?:string|fairy|cluster|icicle|net|tree|curtain|christmas) lights?\b|\blight strings?\b/.test(title))primary='ms-lights';

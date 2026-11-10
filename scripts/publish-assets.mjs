@@ -23,7 +23,7 @@ export async function copyPublishedAssets(source='web',destination='public',{rep
  }
  const mailRoot=path.join(source,'mail-assets');
  for(const dir of await fs.readdir(mailRoot,{withFileTypes:true}).catch(e=>{if(e.code==='ENOENT')return[];throw e;})){
-  if(!dir.isDirectory()||!/^(?:asda-)?\d+$/.test(dir.name))continue;
+  if(!dir.isDirectory()||!/^(?:(?:asda|ms)-)?\d+$/.test(dir.name))continue;
   const input=path.join(mailRoot,dir.name),manifest=await fs.readFile(path.join(input,'manifest.json'),'utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return null;throw e;});
   if(!manifest)continue;
   if((manifest.assetId||String(manifest.sku))!==dir.name)throw Error('Mail manifest SKU mismatch: '+dir.name);

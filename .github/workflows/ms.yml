@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [collect, enrich, activate]
+        options: [collect, enrich, activate, daily]
         default: collect
 permissions:
   contents: write
@@ -37,15 +37,18 @@ jobs:
             runtime/fonts
           key: local-clip-vit-base-patch32-q8-v1
       - name: Read six M&S directories and each exact product family once
-        if: inputs.mode == 'collect'
+        if: inputs.mode == 'collect' || inputs.mode == 'daily'
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
         run: node scripts/update-ms.mjs
       - name: Verify whole-product photos and colours locally
-        if: inputs.mode == 'enrich' || inputs.mode == 'activate'
+        if: inputs.mode == 'enrich' || inputs.mode == 'activate' || inputs.mode == 'daily'
         run: node scripts/enrich-ms.mjs
-      - name: Prepare only first-observed NEW after the initial baseline
+      - name: Verify the production runner can read real M&S products and native photos
         if: inputs.mode == 'activate'
+        run: node scripts/verify-ms-live-channel.mjs
+      - name: Prepare only first-observed NEW after the initial baseline
+        if: inputs.mode == 'activate' || inputs.mode == 'daily'
         run: node scripts/prepare-ms-notifications.mjs
       - name: Preserve M&S evidence without recollecting other retailers
         if: always()
@@ -57,5 +60,5 @@ jobs:
           git diff --cached --quiet || git commit -m "Save verified M&S exact SKU catalogue and image evidence [skip ci]"
           node scripts/push-evidence.mjs
       - name: Deliver verified published M&S attachments
-        if: inputs.mode == 'activate'
+        if: always() && (inputs.mode == 'activate' || inputs.mode == 'daily')
         run: node scripts/deliver-ms-notifications.mjs

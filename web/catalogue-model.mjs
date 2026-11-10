@@ -1,9 +1,10 @@
+import {MS_DEPARTMENTS,isMsScope} from './ms-model.mjs';
 import {ASDA_DEPARTMENTS,isAsdaScope} from './asda-model.mjs';
 import {TAXONOMY_VERSION,productBody,offeredObject,objectMemberships,isPublishedProduct} from './taxonomy.mjs';
 export {isPublishedProduct} from './taxonomy.mjs';
 import {THEME_DEFINITIONS,isThemeScope} from './theme-model.mjs';
 export {THEME_DEFINITIONS,isThemeScope} from './theme-model.mjs';
-export const DEPARTMENTS=[...ASDA_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),
+export const DEPARTMENTS=[...ASDA_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...MS_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),
  ['tree','圣诞树','Christmas Trees'],['skirt','圣诞树裙','Christmas Tree Skirts'],
  ['ornaments','圣诞装饰品','Christmas Ornaments'],['standing','立式装饰品','Standing Decorations'],
  ['wreath','圣诞圈','Christmas Wreaths'],['garland','圣诞长藤','Christmas Garlands'],
@@ -21,15 +22,15 @@ export const DEPARTMENTS=[...ASDA_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),
  ['christmas-tree-lights','圣诞树彩灯','Christmas Tree Lights','lights'],
  ['themes','按主题分类','Christmas Themes'],
  ...THEME_DEFINITIONS.map(t=>[t.id,t.zh,t.en,'themes'])
-].map(([id,zh,en,parentId])=>({id,zh,en,label:zh+' · '+en,...(parentId?{parentId}:{}),...((id==='lights'||id==='asda-lights'||parentId==='lights'||isThemeScope(id))?{charts:false}:{} )}));
+].map(([id,zh,en,parentId])=>({id,zh,en,label:zh+' · '+en,...(parentId?{parentId}:{}),...((id==='lights'||id==='asda-lights'||id==='ms-lights'||parentId==='lights'||isThemeScope(id))?{charts:false}:{} )}));
 export const DEPARTMENT_MAP=Object.fromEntries(DEPARTMENTS.map(d=>[d.id,d]));
 // Keep products from the official theme collections without counting actual
 // bed linen as ornaments or adding an unrequested navigation category.
 DEPARTMENT_MAP['home-textiles']={id:'home-textiles',zh:'家纺床品',en:'Christmas Home Textiles',label:'家纺床品 · Christmas Home Textiles'};
 export const ROOT_DEPARTMENTS=DEPARTMENTS.filter(d=>!d.parentId);
 export const LIGHT_DEPARTMENTS=DEPARTMENTS.filter(d=>d.parentId==='lights');
-export const isLightingScope=id=>id==='asda-lights'||id==='lights'||DEPARTMENT_MAP[id]?.parentId==='lights';
-export const decorationDepartments=DEPARTMENTS.filter(d=>!isAsdaScope(d.id)&&!['tree','skirt'].includes(d.id)&&!isLightingScope(d.id)&&!isThemeScope(d.id));
+export const isLightingScope=id=>id==='asda-lights'||id==='ms-lights'||id==='lights'||DEPARTMENT_MAP[id]?.parentId==='lights';
+export const decorationDepartments=DEPARTMENTS.filter(d=>!isAsdaScope(d.id)&&!isMsScope(d.id)&&!['tree','skirt'].includes(d.id)&&!isLightingScope(d.id)&&!isThemeScope(d.id));
 // Prices come from the retailer's integer-pence fields, never historical changes.
 export function sourcePrice(p){
  const current=Number.isFinite(p.priceGBP)?Math.round(p.priceGBP*100):Number.isInteger(p.price)?p.price:null;

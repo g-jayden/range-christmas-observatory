@@ -1,3 +1,4 @@
+import {retailerName,retailerAssetId} from '../web/retailers.mjs';
 import {DEPARTMENT_MAP,colourLabel,STYLE_EN,sourcePrice,treeHeightConflict} from '../web/catalogue-model.mjs';
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';
 import {ensureMailImageFormat} from './mail-format.mjs';
@@ -13,7 +14,7 @@ async function renderer(){
  return (await import('sharp')).default;
 }
 export function verifyCardOnlyEvidence(p,original){
-  const selected=String(p.sku),mapped=p.originalImages?.some(g=>g.url===p.originalImageUrl&&(p.retailerId==='asda'&&g.selectedSku===selected&&new URL(g.url).origin==='https://asda.scene7.com'||g.variantId!=null&&p.variantId!=null&&String(g.variantId)===String(p.variantId)||p.originalSourceEvidence?.selectedSku===selected&&p.originalSourceEvidence?.sourceUrl===p.sourceUrl));
+  const selected=String(p.sku),mapped=p.originalImages?.some(g=>g.url===p.originalImageUrl&&(p.retailerId==='asda'&&g.selectedSku===selected&&new URL(g.url).origin==='https://asda.scene7.com'||p.retailerId==='ms'&&g.selectedSku===selected&&String(g.variantId)===String(p.variantId)&&new URL(g.url).origin==='https://assets.digitalcontent.marksandspencer.app'||g.variantId!=null&&p.variantId!=null&&String(g.variantId)===String(p.variantId)||p.originalSourceEvidence?.selectedSku===selected&&p.originalSourceEvidence?.sourceUrl===p.sourceUrl));
   if(!p.detailEvidence?.verifiedProductSection||String(p.detailEvidence.selectedSku)!==selected||!p.attributeObservedAt||!mapped||p.originalImageEvidence?.sourceUrl!==p.originalImageUrl||createHash('sha256').update(original).digest('hex')!==p.originalImageEvidence?.sha256)throw Error('具体SKU详情、官网图库对应关系或原图字节未通过核验，不能生成替代截图的信息卡');
  return true;
 }
@@ -29,14 +30,14 @@ export async function buildMailAssets(p,pdpBase64=null,{verifiedCardOnly=false}=
  const imageY=Math.round(y+15);y=imageY+displayH+bodySize*1.5;
  const bodyColours=(p.colorValues||[]).map(colourLabel).join(' / ')||'未确认 · Unconfirmed';
  const price=sourcePrice(p);
- const info=[`连锁店 · Retailer：${p.retailerId==='asda'?'ASDA · George':'The Range'}`,`SKU：${p.sku}`,`价格 · Price：£${Number(p.priceGBP).toFixed(2)}`,...(price.reduced?[`原站划线原价 · Source original price：£${(price.originalPence/100).toFixed(2)}`]:[]),...(price.promoText?[price.promoText]:[]),...(p.kind==='tree'?[`高度 · Height：${mailHeightLabel(p)||'未确认 · Unconfirmed'}`]:[]),`本体颜色 · Body colours：${bodyColours}`,...(p.kind==='tree'?[`分类 · Shape：${p.style} · ${STYLE_EN[p.style]||'Other'}`]:p.kind==='decoration'?[`尺寸 · Size：${p.dimensions?.label||'未注明 · Not specified'}`]:[]),`材质 · Material：${p.material||'未注明 · Not specified'}`];
+ const info=[`连锁店 · Retailer：${retailerName(p.retailerId)}`,`SKU：${p.sku}`,`价格 · Price：£${Number(p.priceGBP).toFixed(2)}`,...(price.reduced?[`原站划线原价 · Source original price：£${(price.originalPence/100).toFixed(2)}`]:[]),...(price.promoText?[price.promoText]:[]),...(p.kind==='tree'?[`高度 · Height：${mailHeightLabel(p)||'未确认 · Unconfirmed'}`]:[]),`本体颜色 · Body colours：${bodyColours}`,...(p.kind==='tree'?[`分类 · Shape：${p.style} · ${STYLE_EN[p.style]||'Other'}`]:p.kind==='decoration'?[`尺寸 · Size：${p.dimensions?.label||'未注明 · Not specified'}`]:[]),`材质 · Material：${p.material||'未注明 · Not specified'}`];
  const heightConflict=treeHeightConflict(p);if(heightConflict)info.push('官网原高度与标题不一致 · Source height conflicts with title：'+heightConflict.sourceValue);
  for(const item of info)for(const line of lines(item,W-100,bodySize)){text.push(`<text x="50" y="${y}" font-size="${bodySize}">${esc(line)}</text>`);y+=bodySize*1.7;}
  y+=25;const noteSize=Math.round(bodySize*.65),notes=[`官网原图 · Source original：${meta.width} × ${meta.height} px；原文件未放大或二次压缩 · No enlargement or recompression`,`价格／NEW 核验 · Price / NEW verified：${p.newEvidence?.observedAt||p.observedAt?new Date(p.newEvidence?.observedAt||p.observedAt).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'}):'见商品证据 · See source evidence'}（北京时间 · Beijing）`,'完整信息卡与官网原图均为邮件图片附件，可直接保存到相册。','Save the full product card and original photo directly from the image attachments.'];
  for(const item of notes)for(const line of lines(item,W-100,noteSize)){text.push(`<text x="50" y="${y}" font-size="${noteSize}" fill="#5c6b63">${esc(line)}</text>`);y+=noteSize*1.6;}
  const H=Math.ceil(y+40),imageUri='data:'+({'jpeg':'image/jpeg',png:'image/png',webp:'image/webp',avif:'image/avif'}[meta.format]||'image/jpeg')+';base64,'+original.toString('base64');
  const svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}"><rect width="100%" height="100%" fill="white"/><g font-family="Noto Sans CJK SC" fill="#173c32">${text.join('')}</g><image x="${left}" y="${imageY}" width="${displayW}" height="${displayH}" xlink:href="${imageUri}"/></svg>`;
- const assetId=p.retailerId==='asda'?'asda-'+p.sku:String(p.sku);const dir='web/mail-assets/'+assetId;await fs.mkdir(dir,{recursive:true});const card=await sharp(Buffer.from(svg)).png({compressionLevel:9}).toBuffer();await fs.writeFile(dir+'/card.png',card);
+ const assetId=retailerAssetId(p);const dir='web/mail-assets/'+assetId;await fs.mkdir(dir,{recursive:true});const card=await sharp(Buffer.from(svg)).png({compressionLevel:9}).toBuffer();await fs.writeFile(dir+'/card.png',card);
  const ext=meta.format==='jpeg'?'jpg':meta.format;await fs.writeFile(dir+'/original.'+ext,original);let combined=card;
  if(pdpBase64){const pdp=Buffer.from(pdpBase64,'base64'),pm=await sharp(pdp).metadata(),pw=Math.min(pm.width,W),ph=Math.round(pm.height*pw/pm.width),proof=await sharp(pdp).resize({width:pw,withoutEnlargement:true}).png().toBuffer();await fs.writeFile(dir+'/proof.png',pm.format==='png'?pdp:await sharp(pdp).png().toBuffer());
   const divider=Buffer.from(`<svg width="${W}" height="110"><rect width="100%" height="100%" fill="#edf2ed"/><text x="50" y="75" font-family="Noto Sans CJK SC" font-size="38" fill="#173c32">以下为同一 SKU 的原站商品页真实截图</text></svg>`);
