@@ -6,12 +6,13 @@ export function bmMemberships(p){
  if(outside)return {primary:null,memberships:[],disposition:'exclude',reason:'非指定圣诞商品本体或安装附件 · Outside Christmas scope or installation accessory'};
  if(/\btinsel\b/.test(title))primary='bm-garland';
  else if(groups.includes('baubles'))primary='bm-baubles';
+ else if(/\blight up christmas (?:heart|star) with foliage\b/.test(title))primary='bm-lights';
  else if(/\b(?:garlands?|tinsel)\b/.test(title))primary='bm-garland';
  else if(/\bwreaths?\b/.test(title))primary='bm-wreath';
  else if(groups.includes('trees')&&!/\b(?:tree lights?|topper|hanging|decoration pack)\b/.test(title))primary='bm-tree';
  else if(groups.includes('lights'))primary='bm-lights';
  else if(groups.includes('outdoor'))primary='bm-outdoor';
- else if(groups.includes('wreaths-garlands')&&/foliage/.test(title)&&/heart|star/.test(title))primary='bm-wreath';
+
  if(primary)memberships.push(primary);
  if(groups.includes('outdoor')&&!memberships.includes('bm-outdoor'))memberships.push('bm-outdoor');
  return {primary:primary||memberships[0]||null,memberships,method:'B&M-exact-product-record-type-description-and-image',descriptionChecked:Boolean(p.sourceDescription)};
