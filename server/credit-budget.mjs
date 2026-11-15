@@ -19,7 +19,7 @@ export async function reserveCredits(policy,{now=Date.now(),key=runKey(),account
  if(p.reservations[key])return {ledger,period,key,limit:p.reservations[key].amount};
  const reserved=Object.values(p.reservations).reduce((n,r)=>n+r.amount,0);
  const limit=Math.floor(Math.min(policy.maxCreditsPerRun,policy.maxCreditsPerCalendarMonth-p.used-reserved,accountRemaining-policy.accountReserveCredits));
- if(limit<2)throw budgetError('本项目积分上限或账户保留额度不足，尚未创建付费会话');
+ if(limit<(policy.minimumReservationCredits===1?1:2))throw budgetError('本项目积分上限或账户保留额度不足，尚未创建付费会话');
  p.reservations[key]={amount:limit,createdAt:new Date(now).toISOString()};
  ledger.provider='firecrawl-browser';await atomicJson(file,ledger);
  return {ledger,period,key,limit};

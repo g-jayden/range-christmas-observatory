@@ -38,5 +38,14 @@
     "m1549656",
     "m4068651"
   ],
-  "catalogueTransport": "enhanced-batch"
+  "catalogueTransport": "enhanced-batch",
+  "oneOffAuthorizations": [
+    {
+      "id": "hb-onboarding-2026-11",
+      "retailerId": "hb",
+      "period": "2026-11",
+      "additionalCredits": 2,
+      "purpose": "Home Bargains initial Firecrawl source acceptance only"
+    }
+  ]
 }
