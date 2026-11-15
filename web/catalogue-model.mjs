@@ -91,7 +91,7 @@ export function treeHeightConflict(p){
  const readings=[...title.matchAll(new RegExp('(\\d+(?:\\.\\d+)?)\\s*('+unit+')(?![a-z])','ig'))].map(m=>toCentimetres(m[1]+m[2]));
  if(!readings.length||readings.some(n=>!(n>0))||readings.some(n=>Math.abs(n-readings[0])>Math.max(2,readings[0]*.05)))return null;
  const titleCm=readings[0],s=p.specifications||{},sourceValue=s.Height||s['Christmas Tree Height']||p.heightLabel,sourceCm=toCentimetres(sourceValue)||p.heightCm||p.dimensions?.values?.Height;
- if(!(sourceCm>0)||Math.abs(sourceCm-titleCm)<=Math.max(5,titleCm*.12))return null;
+ if(!(sourceCm>0)||Math.abs(sourceCm-titleCm)<=Math.max(5,titleCm*(p.retailerId==='du'?.03:.12)))return null;
  const length=toCentimetres(s.Length)||p.dimensions?.values?.Length,skuHeight=p.retailerId==='du'?toCentimetres(s['Christmas Tree Height']):null,dedicatedAgrees=skuHeight>0&&Math.abs(skuHeight-titleCm)<=Math.max(2,titleCm*.02),agrees=dedicatedAgrees||length>0&&Math.abs(length-titleCm)<=Math.max(2,titleCm*.02);
  return {titleHeightCm:titleCm,sourceHeightCm:sourceCm,sourceValue:String(sourceValue||sourceCm+'cm'),titleEvidence:title,sourceUrl:p.sourceUrl,verifiedAt:p.attributeObservedAt,resolution:dedicatedAgrees?'title-and-SKU-height-agree':agrees?'title-and-length-agree':'unresolved',usableHeightCm:agrees?titleCm:null};
 }
