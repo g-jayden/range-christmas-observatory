@@ -1,0 +1,11 @@
+// Map only customer-facing fields from Dunelm's public storefront SKU API.
+// Supplier, logistics, stock quantities, tracking and payment data are discarded.
+export function duApiFamilies(records,requested){
+ if(!Array.isArray(records)||!records.length)throw Error('Dunelm public SKU API returned no records');const grouped=new Map();
+ const labels={ProductDimensions:'Product Dimensions',Composition:'Composition',Material:'Material',CareInstructions:'Care Instructions',PackContents:'Pack Contents',Season:'Season',BulbColour:'Bulb Colour',PowerSupply:'Power Supply',NumberOfBulbs:'Number of Bulbs',BatteriesRequired:'Batteries Required',ElectricalClassification:'Electrical Classification',Use:'Use',TreeHeight:'Christmas Tree Height',Guarantee:'Guarantee'};
+ for(const r of records){if(!requested.includes(r.productId)||!/^\d{8}$/.test(r.id)||!Number.isFinite(r.price?.priceTaxed)||r.price.currency!=='GBP')throw Error('Dunelm API exact SKU identity or price mismatch');const a=r.attributes?.primaryAttributes||{},d=r.attributes?.productDescriptiveAttributes||{},features=Object.entries(labels).filter(([k])=>d[k]!=null).map(([k,property])=>({property,value:Array.isArray(d[k])?d[k].join(' / '):String(d[k])}));
+  const v={id:r.id,inStock:r.inStock===true,media:{image:r.media?.image||[]},price:{now:r.price.priceTaxed,was:r.price.wasNowPriceTaxed,history:r.price.wasNowHistory},colourGroup:Array.isArray(d.ColourGroup)?d.ColourGroup.join(' / '):d.ColourGroup,definingAttributes:r.attributes?.skuDefiningAttributes||{},name:a.skuName||a.productName,features,hideWws:a.hideWws,badge:r.sticker?.label||d.Badge||'',sourceNew:r.itemNew===true};
+  let h=grouped.get(r.productId);if(!h){h={productId:r.productId,productUrl:r.productUrl,productName:a.productName,primaryWebCategory:a.primaryWebCategory,categories:[],categoryLabels:r.categories||[],brand:d.Brand||'Dunelm',department:d.Department,type:d.Type,description:a.productLongDescription||{},features,hideWws:a.hideWws,sticker:r.sticker,skus:[]};grouped.set(r.productId,h);}if(h.productUrl!==r.productUrl)throw Error('Dunelm API conflicting family URLs');h.skus.push(v);
+ }
+ for(const id of requested)if(!grouped.has(id))throw Error('Dunelm API family missing: '+id);return [...grouped.values()];
+}

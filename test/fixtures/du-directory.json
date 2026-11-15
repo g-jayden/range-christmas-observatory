@@ -1,0 +1,1656 @@
+{
+  "complete": true,
+  "sourceUrl": "https://www.dunelm.com/category/christmas",
+  "observedAt": "2026-11-15T17:58:46.799Z",
+  "categories": [
+    {
+      "id": "trees",
+      "path": "/category/christmas/christmas-trees",
+      "declared": 3,
+      "pages": 3,
+      "rows": [
+        {
+          "url": "/product/7ft-abies-christmas-tree-1000270294",
+          "productId": "1000270294",
+          "skuId": "30978609",
+          "name": "7ft Abies Christmas Tree",
+          "price": {
+            "now": 79,
+            "was": 129,
+            "range": {
+              "wasMin": 129,
+              "wasMax": 129,
+              "min": 79,
+              "max": 79
+            }
+          },
+          "images": [
+            "30978609.jpg",
+            "30978609_alt01.jpg"
+          ],
+          "sticker": {
+            "label": "Offer",
+            "colour": "red"
+          },
+          "hideWws": false,
+          "colours": [
+            "Green"
+          ],
+          "skuCount": 1,
+          "primaryCategory": "Christmas_Trees",
+          "options": {},
+          "features": {},
+          "reviews": {
+            "total": 11,
+            "avgRating": 4.73
+          },
+          "isSkuSelected": true,
+          "isM2M": false
+        },
+        {
+          "url": "/product/set-of-2-4ft-pre-lit-potted-porch-trees-1000294766",
+          "productId": "1000294766",
+          "skuId": "31049672",
+          "name": "Set of 2 4ft Pre Lit Potted Porch Trees",
+          "price": {
+            "now": 69,
+            "was": null,
+            "range": {
+              "wasMin": null,
+              "wasMax": null,
+              "min": 69,
+              "max": 69
+            }
+          },
+          "images": [
+            "31049672.jpg",
+            "31049672_alt01.jpg",
+            "31049672_alt02.jpg",
+            "31049672_alt03.jpg",
+            "31049672_alt06.jpg"
+          ],
+          "sticker": {
+            "label": "New",
+            "colour": "blue"
+          },
+          "hideWws": true,
+          "colours": [
+            "Green"
+          ],
+          "skuCount": 1,
+          "primaryCategory": "Christmas_Trees",
+          "options": {},
+          "features": {},
+          "reviews": {
+            "total": 2,
+            "avgRating": 2.5
+          },
+          "isSkuSelected": true,
+          "isM2M": false
+        },
+        {
+          "url": "/product/3ft-pre-lit-tinsel-tree-1000294765",
+          "productId": "1000294765",
+          "skuId": "31049681",
+          "name": "3ft Pre Lit Tinsel Tree",
+          "price": {
+            "now": 18,
+            "was": null,
+            "range": {
+              "wasMin": null,
+              "wasMax": null,
+              "min": 18,
+              "max": 18
+            }
+          },
+          "images": [
+            "31049681.jpg",
+            "31049681_alt01.jpg",
+            "31049681_alt06.jpg"
+          ],
+          "sticker": {
+            "label": "New",
+            "colour": "blue"
+          },
+          "hideWws": true,
+          "colours": [
+            "White"
+          ],
+          "skuCount": 1,
+          "primaryCategory": "Christmas_Trees",
+          "options": {},
+          "features": {},
+          "reviews": {
+            "total": 0,
+            "avgRating": 0
+          },
+          "isSkuSelected": true,
+          "isM2M": false
+        }
+      ]
+    },
+    {
+      "id": "skirts",
+      "path": "/category/christmas/christmas-decorations/christmas-tree-skirts",
+      "declared": 1,
+      "pages": 1,
+      "rows": [
+        {
+          "url": "/product/chunky-faux-rattan-tree-skirt-1000297065",
+          "productId": "1000297065",
+          "skuId": "31042867",
+          "name": "Chunky Faux Rattan Tree Skirt",
+          "price": {
+            "now": 20,
+            "was": null,
+            "range": {
+              "wasMin": null,
+              "wasMax": null,
+              "min": 20,
+              "max": 20
+            }
+          },
+          "images": [
+            "31042867.jpg",
+            "31042867_alt02.jpg",
+            "31042867_alt08.jpg"
+          ],
+          "hideWws": true,
+          "colours": [
+            "Natural"
+          ],
+          "skuCount": 1,
+          "primaryCategory": "Christmas_Home_Decor",
+          "options": {},
+          "features": {},
+          "reviews": {
+            "total": 0,
+            "avgRating": 0
+          },
+          "isSkuSelected": true,
+          "isM2M": false
+        }
+      ]
+    },
+    {
+      "id": "baubles",
+      "path": "/category/christmas/christmas-decorations/christmas-baubles-and-tree-decorations",
+      "declared": 2,
+      "pages": 5,
+      "rows": [
+        {
+          "url": "/product/faux-fur-christmas-stocking-1000246424",
+          "productId": "1000246424",
+          "skuId": "30905087",
+          "name": "Faux Fur Christmas Stocking",
+          "price": {
+            "now": 10,
+            "was": null,
+            "range": {
+              "wasMin": null,
+              "wasMax": null,
+              "min": 10,
+              "max": 10
+            }
+          },
+          "images": [
+            "30905087.jpg",
+            "30905087_alt01.jpg",
+            "30905087_alt02.jpg"
+          ],
+          "hideWws": false,
+          "colours": [
+            "Ivory",
+            "Red"
+          ],
+          "skuCount": 2,
+          "primaryCategory": "Christmas_Decorations",
+          "options": {},
+          "features": {},
+          "reviews": {
+            "total": 14,
+            "avgRating": 4.93
+          },
+          "isSkuSelected": false,
+          "isM2M": false
+        },
+        {
+          "url": "/product/personalised-pet-glass-bauble-1000226752",
+          "productId": "1000226752",
+          "skuId": "30877896",
+          "name": "Personalised Pet Glass Bauble",
+          "price": {
+            "now": 12,
+            "was": null,
+            "range": {
+              "wasMin": null,
+              "wasMax": null,
+              "min": 12,
+              "max": 12
+            }
+          },
+          "images": [
+            "30877896.jpg",
+            "30877896_alt01.jpg",
+            "30877896_alt09.jpg"
+          ],
+          "hideWws": true,
+          "colours": [
+            "Clear"
+          ],
+          "skuCount": 1,
+          "primaryCategory": "Baubles_and_Tree_Decorations",
+          "options": {},
+          "features": {},
+          "reviews": {
+            "total": 1,
+            "avgRating": 5
+          },
+          "isSkuSelected": true,
+          "isM2M": false
+        }
+      ]
+    },
+    {
+      "id": "lights",
+      "path": "/category/christmas/christmas-decorations/christmas-lights",
+      "declared": 1,
+      "pages": 4,
+      "rows": [
+        {
+          "url": "/product/led-cluster-lights-door-garland-1000300360",
+          "productId": "1000300360",
+          "skuId": "31065822",
+          "name": "LED Cluster Lights Door Garland",
+          "price": {
+            "now": 25,
+            "was": null,
+            "range": {
+              "wasMin": null,
+              "wasMax": null,
+              "min": 25,
+              "max": 25
+            }
+          },
+          "images": [
+            "31065822.jpg",
+            "31065822_alt01.jpg",
+            "31065822_alt02.jpg",
+            "31065822_alt03.jpg",
+            "31065822_alt04.jpg"
+          ],
+          "sticker": {
+            "label": "New",
+            "colour": "blue"
+          },
+          "hideWws": true,
+          "colours": [
+            "Warm White",
+            "Cool White",
+            "Multicoloured"
+          ],
+          "skuCount": 3,
+          "primaryCategory": "Christmas_Lights",
+          "options": {},
+          "features": {},
+          "reviews": {
+            "total": 0,
+            "avgRating": 0
+          },
+          "isSkuSelected": false,
+          "isM2M": false
+        }
+      ]
+    },
+    {
+      "id": "foliage",
+      "path": "/category/christmas/christmas-decorations/christmas-garlands-and-wreaths",
+      "declared": 3,
+      "pages": 4,
+      "rows": [
+        {
+          "url": "/product/spiced-cinnamon-wreath-garland-set-1000250117",
+          "productId": "1000250117",
+          "skuId": "30959992",
+          "name": "Artificial Spiced Cinnamon Wreath & Garland Set",
+          "price": {
+            "now": 48,
+            "was": null,
+            "range": {
+              "wasMin": null,
+              "wasMax": null,
+              "min": 48,
+              "max": 48
+            }
+          },
+          "images": [
+            "30959992.jpg",
+            "30959992_alt01.jpg",
+            "30959992_alt02.jpg",
+            "30959992_alt03.jpg",
+            "30959992_alt04.jpg"
+          ],
+          "hideWws": true,
+          "colours": [
+            "Red"
+          ],
+          "skuCount": 1,
+          "primaryCategory": "Garlands_and_Wreaths",
+          "options": {},
+          "features": {},
+          "reviews": {
+            "total": 0,
+            "avgRating": 0
+          },
+          "isSkuSelected": true,
+          "isM2M": false
+        },
+        {
+          "url": "/product/frosted-berry-6ft-pre-lit-garland-1000272054",
+          "productId": "1000272054",
+          "skuId": "30985725",
+          "name": "6ft Pre-Lit Frosted Mixed Berry Artificial Garland",
+          "price": {
+            "now": 49,
+            "was": null,
+            "range": {
+              "wasMin": null,
+              "wasMax": null,
+              "min": 49,
+              "max": 49
+            }
+          },
+          "images": [
+            "30985725.jpg",
+            "30985725_alt01.jpg"
+          ],
+          "sticker": {
+            "label": "New",
+            "colour": "blue"
+          },
+          "hideWws": true,
+          "colours": [
+            "Green"
+          ],
+          "skuCount": 1,
+          "primaryCategory": "Christmas_Artificial_Flowers",
+          "options": {},
+          "features": {},
+          "reviews": {
+            "total": 2,
+            "avgRating": 3
+          },
+          "isSkuSelected": true,
+          "isM2M": false
+        },
+        {
+          "url": "/product/kitschmas-merry-christmas-hoop-wreath-1000299202",
+          "productId": "1000299202",
+          "skuId": "30973031",
+          "name": "Kitschmas Merry Christmas Hoop Wreath",
+          "price": {
+            "now": 5,
+            "was": null,
+            "range": {
+              "wasMin": null,
+              "wasMax": null,
+              "min": 5,
+              "max": 5
+            }
+          },
+          "images": [
+            "30973031.jpg",
+            "30973031_alt01.jpg",
+            "30973031_alt02.jpg"
+          ],
+          "sticker": {
+            "label": "New",
+            "colour": "blue"
+          },
+          "hideWws": true,
+          "colours": [
+            "Multicoloured"
+          ],
+          "skuCount": 1,
+          "primaryCategory": "Christmas_Home_Decor",
+          "options": {},
+          "features": {},
+          "reviews": {
+            "total": 0,
+            "avgRating": 0
+          },
+          "isSkuSelected": true,
+          "isM2M": false
+        }
+      ]
+    }
+  ],
+  "products": [
+    {
+      "productId": "1000270294",
+      "productUrl": "7ft-abies-christmas-tree-1000270294",
+      "productName": "7ft Abies Christmas Tree",
+      "primaryWebCategory": "Christmas_Trees",
+      "categories": [],
+      "categoryLabels": [
+        "1000270294",
+        "Offers",
+        "All Offers",
+        "Sale",
+        "All Sale",
+        "Christmas",
+        "Christmas Trees",
+        "Home and Furniture",
+        "Offers and Special Buys",
+        "Press Show",
+        "Shop All Christmas",
+        "Winter Woodland"
+      ],
+      "brand": "Dunelm",
+      "department": "Christmas",
+      "type": "Christmas Trees",
+      "description": {
+        "formatted": "\n\n* Artificial Christmas Tree\n* 7ft High - Tall & Grand\n* Realistic Branch Tips\n\nMake a grand seasonal statement with the 7ft Abies Christmas Tree. Its 2,562 realistic branch tips create a full, natural look, whilst the upward-bending branches make styling ornaments a breeze. Measuring 51\" at the base, this classic green tree offers plenty of presence without overwhelming your space. Finished with a sturdy metal stand.",
+        "html": "<ul><li>Artificial Christmas Tree</li><li>7ft High - Tall &amp; Grand</li><li>Realistic Branch Tips</li></ul><p>Make a grand seasonal statement with the 7ft Abies Christmas Tree. Its 2,562 realistic branch tips create a full, natural look, whilst the upward-bending branches make styling ornaments a breeze. Measuring 51\" at the base, this classic green tree offers plenty of presence without overwhelming your space. Finished with a sturdy metal stand.</p>"
+      },
+      "features": [
+        {
+          "property": "Product Dimensions",
+          "value": "H 210cm x W 129cm x D 129cm"
+        },
+        {
+          "property": "Material",
+          "value": "Plastic"
+        },
+        {
+          "property": "Care Instructions",
+          "value": "Wipe Clean With A Soft Cloth"
+        },
+        {
+          "property": "Pack Contents",
+          "value": "1 x Christmas Tree"
+        },
+        {
+          "property": "Christmas Tree Height",
+          "value": "7ft"
+        }
+      ],
+      "hideWws": "N",
+      "sticker": {
+        "label": "Offer",
+        "color": "red"
+      },
+      "skus": [
+        {
+          "id": "30978609",
+          "inStock": true,
+          "media": {
+            "image": [
+              "30978609.jpg",
+              "30978609_alt01.jpg"
+            ]
+          },
+          "price": {
+            "now": 79,
+            "was": 129,
+            "history": [
+              {
+                "date": "July 2026",
+                "value": 129
+              }
+            ]
+          },
+          "colourGroup": "Green",
+          "definingAttributes": {
+            "colour": "Green"
+          },
+          "name": "7ft Abies Tree",
+          "features": [
+            {
+              "property": "Product Dimensions",
+              "value": "H 210cm x W 129cm x D 129cm"
+            },
+            {
+              "property": "Material",
+              "value": "Plastic"
+            },
+            {
+              "property": "Care Instructions",
+              "value": "Wipe Clean With A Soft Cloth"
+            },
+            {
+              "property": "Pack Contents",
+              "value": "1 x Christmas Tree"
+            },
+            {
+              "property": "Christmas Tree Height",
+              "value": "7ft"
+            }
+          ],
+          "badge": "Offer"
+        }
+      ]
+    },
+    {
+      "productId": "1000294766",
+      "productUrl": "set-of-2-4ft-pre-lit-potted-porch-trees-1000294766",
+      "productName": "Set of 2 4ft Pre Lit Potted Porch Trees",
+      "primaryWebCategory": "Christmas_Trees",
+      "categories": [],
+      "categoryLabels": [
+        "1000294766",
+        "Christmas",
+        "Alpine Cabin",
+        "Christmas Decorations",
+        "Christmas Trees",
+        "Home and Furniture",
+        "New",
+        "Shop All Christmas"
+      ],
+      "brand": "Dunelm",
+      "department": "Christmas",
+      "type": "Christmas Trees",
+      "description": {
+        "formatted": "\n\n* Set of 2 matching trees\n* Alpine style design\n* Pre-lit LED lights\n* Warm ambient glow\n\nAdd a welcoming festive touch to your entrance with this set of two 4ft pre-lit porch trees. The alpine-inspired design brings a natural look, ideal for placing either side of your front door. Each tree comes pre-lit with warm LED lights, creating a soft glow as guests arrive. The flexible branches can be shaped to suit your space and packed away neatly after use. Set in pots and battery operated, they’re easy to position without needing a nearby socket. A great option for creating a balanced, seasonal display outdoors or in sheltered areas.",
+        "html": "<ul><li>Set of 2 matching trees</li><li>Alpine style design</li><li>Pre-lit LED lights</li><li>Warm ambient glow</li></ul><p>Add a welcoming festive touch to your entrance with this set of two 4ft pre-lit porch trees. The alpine-inspired design brings a natural look, ideal for placing either side of your front door. Each tree comes pre-lit with warm LED lights, creating a soft glow as guests arrive. The flexible branches can be shaped to suit your space and packed away neatly after use. Set in pots and battery operated, they’re easy to position without needing a nearby socket. A great option for creating a balanced, seasonal display outdoors or in sheltered areas.</p>"
+      },
+      "features": [
+        {
+          "property": "Product Dimensions",
+          "value": "<p>H 28.58cm x W 27.31cm x D 101.7cm</p>"
+        },
+        {
+          "property": "Composition",
+          "value": "Copper, Paper, Plastic"
+        },
+        {
+          "property": "Material",
+          "value": "Plastic"
+        },
+        {
+          "property": "Pack Contents",
+          "value": "2 x Tree"
+        },
+        {
+          "property": "Season",
+          "value": "Christmas"
+        },
+        {
+          "property": "Power Supply",
+          "value": "Battery Operated"
+        },
+        {
+          "property": "Christmas Tree Height",
+          "value": "4ft"
+        }
+      ],
+      "hideWws": "Y",
+      "sticker": {
+        "label": "New",
+        "color": "blue"
+      },
+      "skus": [
+        {
+          "id": "31049672",
+          "inStock": true,
+          "media": {
+            "image": [
+              "31049672.jpg",
+              "31049672_alt01.jpg",
+              "31049672_alt02.jpg",
+              "31049672_alt03.jpg",
+              "31049672_alt06.jpg"
+            ]
+          },
+          "price": {
+            "now": 69,
+            "was": null,
+            "history": []
+          },
+          "colourGroup": "Green",
+          "definingAttributes": {
+            "colour": "Green"
+          },
+          "name": "2 4ft Pre Lit Potted Porch Trees Alpine",
+          "features": [
+            {
+              "property": "Product Dimensions",
+              "value": "<p>H 28.58cm x W 27.31cm x D 101.7cm</p>"
+            },
+            {
+              "property": "Composition",
+              "value": "Copper, Paper, Plastic"
+            },
+            {
+              "property": "Material",
+              "value": "Plastic"
+            },
+            {
+              "property": "Pack Contents",
+              "value": "2 x Tree"
+            },
+            {
+              "property": "Season",
+              "value": "Christmas"
+            },
+            {
+              "property": "Power Supply",
+              "value": "Battery Operated"
+            },
+            {
+              "property": "Christmas Tree Height",
+              "value": "4ft"
+            }
+          ],
+          "badge": "New"
+        }
+      ]
+    },
+    {
+      "productId": "1000294765",
+      "productUrl": "3ft-pre-lit-tinsel-tree-1000294765",
+      "productName": "3ft Pre Lit Tinsel Tree",
+      "primaryWebCategory": "Christmas_Trees",
+      "categories": [],
+      "categoryLabels": [
+        "1000294765",
+        "Christmas",
+        "Christmas Decorations",
+        "Christmas Trees",
+        "Home and Furniture",
+        "New",
+        "Shop All Christmas"
+      ],
+      "brand": "Dunelm",
+      "department": "Christmas",
+      "type": "Christmas Trees",
+      "description": {
+        "formatted": "\n\n* Rose gold tinsel finish\n* Pre-lit with LED lights\n* 3ft compact size\n* Mains operated\n\nAdd a festive touch to smaller spaces with this 3ft pre-lit tinsel tree. The rose gold finish brings a fresh, on-trend look while catching the light beautifully. Built-in LED lights create a warm glow straight out of the box, so there’s no need for extra decorating. Its compact 3ft height works well on floors, tabletops or tucked into corners. Mains powered for consistent lighting throughout the season. A quick way to get a Christmas setup in place with minimal effort.",
+        "html": "<ul><li>Rose gold tinsel finish</li><li>Pre-lit with LED lights</li><li>3ft compact size</li><li>Mains operated</li></ul><p>Add a festive touch to smaller spaces with this 3ft pre-lit tinsel tree. The rose gold finish brings a fresh, on-trend look while catching the light beautifully. Built-in LED lights create a warm glow straight out of the box, so there’s no need for extra decorating. Its compact 3ft height works well on floors, tabletops or tucked into corners. Mains powered for consistent lighting throughout the season. A quick way to get a Christmas setup in place with minimal effort.</p>"
+      },
+      "features": [
+        {
+          "property": "Product Dimensions",
+          "value": "<p>H 12.7cm x W 10.16cm x D 86.38cm</p>"
+        },
+        {
+          "property": "Composition",
+          "value": "Copper, Plastic"
+        },
+        {
+          "property": "Material",
+          "value": "Plastic"
+        },
+        {
+          "property": "Pack Contents",
+          "value": "1 x Tree"
+        },
+        {
+          "property": "Season",
+          "value": "Christmas"
+        },
+        {
+          "property": "Power Supply",
+          "value": "Mains Operated"
+        },
+        {
+          "property": "Christmas Tree Height",
+          "value": "3ft"
+        }
+      ],
+      "hideWws": "Y",
+      "sticker": {
+        "label": "New",
+        "color": "blue"
+      },
+      "skus": [
+        {
+          "id": "31049681",
+          "inStock": true,
+          "media": {
+            "image": [
+              "31049681.jpg",
+              "31049681_alt01.jpg",
+              "31049681_alt06.jpg"
+            ]
+          },
+          "price": {
+            "now": 18,
+            "was": null,
+            "history": []
+          },
+          "colourGroup": "White",
+          "definingAttributes": {
+            "colour": "White"
+          },
+          "name": "3ft Pre Lit Rose Gold WW Tinsel Tree",
+          "features": [
+            {
+              "property": "Product Dimensions",
+              "value": "<p>H 12.7cm x W 10.16cm x D 86.38cm</p>"
+            },
+            {
+              "property": "Composition",
+              "value": "Copper, Plastic"
+            },
+            {
+              "property": "Material",
+              "value": "Plastic"
+            },
+            {
+              "property": "Pack Contents",
+              "value": "1 x Tree"
+            },
+            {
+              "property": "Season",
+              "value": "Christmas"
+            },
+            {
+              "property": "Power Supply",
+              "value": "Mains Operated"
+            },
+            {
+              "property": "Christmas Tree Height",
+              "value": "3ft"
+            }
+          ],
+          "badge": "New"
+        }
+      ]
+    },
+    {
+      "productId": "1000297065",
+      "productUrl": "chunky-faux-rattan-tree-skirt-1000297065",
+      "productName": "Chunky Faux Rattan Tree Skirt",
+      "primaryWebCategory": "Christmas_Home_Decor",
+      "categories": [],
+      "categoryLabels": [
+        "1000297065",
+        "Christmas",
+        "Christmas Decorations",
+        "Christmas Tree Skirts",
+        "Home and Furniture",
+        "Shop All Christmas"
+      ],
+      "brand": "Dunelm",
+      "department": "Christmas",
+      "type": "Christmas Decorations",
+      "description": {
+        "formatted": "\n\n* Natural chunky rattan look\n* Handcrafted design\n* 60cm diameter\n* 1 x Tree Skirt\n\nAdd natural texture to your Christmas setup with this Chunky Faux Rattan Tree Skirt. Handcrafted with a beautiful chunky weave in natural tones, this tree skirt elegantly covers tree stands while bringing rustic, earthy charm to your festive décor.",
+        "html": "<ul><li>Natural chunky rattan look</li><li>Handcrafted design</li><li>60cm diameter</li><li>1 x Tree Skirt</li></ul><p>Add natural texture to your Christmas setup with this Chunky Faux Rattan Tree Skirt. Handcrafted with a beautiful chunky weave in natural tones, this tree skirt elegantly covers tree stands while bringing rustic, earthy charm to your festive décor.</p>"
+      },
+      "features": [
+        {
+          "property": "Product Dimensions",
+          "value": "<p>H 25cm x W 60cm x D 60cm</p>"
+        },
+        {
+          "property": "Composition",
+          "value": "PE Plastic, Iron Wire"
+        },
+        {
+          "property": "Material",
+          "value": "Iron"
+        },
+        {
+          "property": "Care Instructions",
+          "value": "Wipe Clean With A Soft Cloth"
+        },
+        {
+          "property": "Pack Contents",
+          "value": "1 x Tree Skirt"
+        },
+        {
+          "property": "Season",
+          "value": "Christmas"
+        }
+      ],
+      "hideWws": "Y",
+      "sticker": null,
+      "skus": [
+        {
+          "id": "31042867",
+          "inStock": false,
+          "media": {
+            "image": [
+              "31042867.jpg",
+              "31042867_alt02.jpg",
+              "31042867_alt08.jpg"
+            ]
+          },
+          "price": {
+            "now": 20,
+            "was": null,
+            "history": []
+          },
+          "colourGroup": "Natural",
+          "definingAttributes": {
+            "colour": "Natural"
+          },
+          "name": "Chunky Faux Rattan Tree Skirt",
+          "features": [
+            {
+              "property": "Product Dimensions",
+              "value": "<p>H 25cm x W 60cm x D 60cm</p>"
+            },
+            {
+              "property": "Composition",
+              "value": "PE Plastic, Iron Wire"
+            },
+            {
+              "property": "Material",
+              "value": "Iron"
+            },
+            {
+              "property": "Care Instructions",
+              "value": "Wipe Clean With A Soft Cloth"
+            },
+            {
+              "property": "Pack Contents",
+              "value": "1 x Tree Skirt"
+            },
+            {
+              "property": "Season",
+              "value": "Christmas"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "productId": "1000246424",
+      "productUrl": "faux-fur-christmas-stocking-1000246424",
+      "productName": "Faux Fur Christmas Stocking",
+      "primaryWebCategory": "Christmas_Decorations",
+      "categories": [],
+      "categoryLabels": [
+        "1000246424",
+        "Home Decor",
+        "All Home Decor",
+        "Christmas",
+        "Christmas Decorations",
+        "Christmas Baubles and Tree Decorations",
+        "Gifts",
+        "Home and Furniture",
+        "Shop All Christmas",
+        "Winter Woodland"
+      ],
+      "brand": "Dunelm",
+      "department": "Home Decor",
+      "type": "Christmas Decorations",
+      "description": {
+        "formatted": "\n\n* Made from faux fur\n* Soft feel\n* Pom pom detail\n* Includes hanging loop\n\nHang this Faux Fur Christmas Stocking by the fireplace to add the finishing touch to your Christmas decorations. Made from soft faux fur this stocking features an adorable pom pom detail and hanging loop, ready for easy placement. Perfect for stashing small gifts and trinkets, this stocking is sure to bring smiles on Christmas morning.",
+        "html": "<ul><li>Made from faux fur</li><li>Soft feel</li><li>Pom pom detail</li><li>Includes hanging loop</li></ul><p>Hang this Faux Fur Christmas Stocking by the fireplace to add the finishing touch to your Christmas decorations. Made from soft faux fur this stocking features an adorable pom pom detail and hanging loop, ready for easy placement. Perfect for stashing small gifts and trinkets, this stocking is sure to bring smiles on Christmas morning.</p>"
+      },
+      "features": [
+        {
+          "property": "Product Dimensions",
+          "value": "<p>H33cm × W49cm</p>"
+        },
+        {
+          "property": "Composition",
+          "value": "100% Recycled Polyester"
+        },
+        {
+          "property": "Material",
+          "value": "Polyester"
+        },
+        {
+          "property": "Pack Contents",
+          "value": "1 x Stocking"
+        }
+      ],
+      "hideWws": "N",
+      "sticker": null,
+      "skus": [
+        {
+          "id": "30905087",
+          "inStock": true,
+          "media": {
+            "image": [
+              "30905087.jpg",
+              "30905087_alt01.jpg",
+              "30905087_alt02.jpg"
+            ]
+          },
+          "price": {
+            "now": 10,
+            "was": null,
+            "history": []
+          },
+          "colourGroup": "Red",
+          "definingAttributes": {
+            "colour": "Red"
+          },
+          "name": "Red Faux Fur Stocking",
+          "features": [
+            {
+              "property": "Product Dimensions",
+              "value": "<p>H33cm × W49cm</p>"
+            },
+            {
+              "property": "Composition",
+              "value": "100% Recycled Polyester"
+            },
+            {
+              "property": "Material",
+              "value": "Polyester"
+            },
+            {
+              "property": "Pack Contents",
+              "value": "1 x Stocking"
+            }
+          ]
+        },
+        {
+          "id": "30905086",
+          "inStock": true,
+          "media": {
+            "image": [
+              "30905086.jpg",
+              "30905086_alt01.jpg",
+              "30905086_alt02.jpg"
+            ]
+          },
+          "price": {
+            "now": 10,
+            "was": null,
+            "history": []
+          },
+          "colourGroup": "Cream",
+          "definingAttributes": {
+            "colour": "Ivory"
+          },
+          "name": "Ivory Faux Fur Stocking",
+          "features": [
+            {
+              "property": "Product Dimensions",
+              "value": "<p>H33cm × W49cm</p>"
+            },
+            {
+              "property": "Composition",
+              "value": "100% Recycled Polyester"
+            },
+            {
+              "property": "Material",
+              "value": "Polyester"
+            },
+            {
+              "property": "Pack Contents",
+              "value": "1 x Stocking"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "productId": "1000226752",
+      "productUrl": "personalised-pet-glass-bauble-1000226752",
+      "productName": "Personalised Pet Glass Bauble",
+      "primaryWebCategory": "Baubles_and_Tree_Decorations",
+      "categories": [],
+      "categoryLabels": [
+        "1000226752",
+        "Gifts",
+        "All Gifts",
+        "Home Decor",
+        "All Home Decor",
+        "Christmas",
+        "Christmas Decorations",
+        "Christmas Baubles and Tree Decorations",
+        "Home and Furniture",
+        "Shop All Christmas"
+      ],
+      "brand": "Personalised Memento Co.",
+      "department": "Home Decor",
+      "type": "Christmas Decorations",
+      "description": {
+        "formatted": "\n\n* Please see below on how to personalise your Christmas decoration\n* Personalise this bauble with a name up to 12 characters long.\n* The personalisation will appear as entered. Please avoid using fixed upper case as this may make the personalisation hard to read.\n\nThis Personalised Pet Glass Bauble is a great way to add a personal touch to the Christmas tree. Inside the glass bauble is a paw print printed onto an acetate insert which can be personalised with the name of your pet.**How to personalise your product:**\n\n1. Place your order\n2. You will receive an email from dunelm@personalisedmemento.co.uk within 1 hour to add your personalised message. If not received, please check your junk folder.\n3. Once received, follow the link within the email.\n4. Type your message into the fields on screen and click on the preview button to review the personalisation.\n5. Once checked and happy, click submit.\n6. Production of the order will commence.\n\n**Please note:**\n\n* The content on a personalised product will be produced exactly as you enter it, including spelling and capitalisation. Please ensure that all details, especially the personalised text, are correct before clicking submit.\n* Accents, special characters and emojis are not accepted.\n* Once the personalisation has been submitted, the order cannot be amended or cancelled.\n* If the personalisation is not submitted within 3 days, the order will be automatically cancelled.\n* We do not permit personalisation that infringes copyright laws, is indecent or offensive, or contains language deemed to be abusive, threatening, or defamatory. Full content rules can be viewed on the personalisation terms and conditions page. Orders that do not follow these rules will be refused.\n\nBy ordering a personalised product, you are agreeing that your details (name and contact details, including address) and the details that you provide of any other party, such as the recipient of the personalised product, can be shared with our third party supplier who provides the personalisation service only for the purposes of completing the personalisation service and delivering the product to you or the recipient.",
+        "html": "<ul><li>Please see below on how to personalise your Christmas decoration</li><li>Personalise this bauble with a name up to 12 characters long.</li><li>The personalisation will appear as entered. Please avoid using fixed upper case as this may make the personalisation hard to read.</li></ul><p>This Personalised Pet Glass Bauble is a great way to add a personal touch to the Christmas tree. Inside the glass bauble is a paw print printed onto an acetate insert which can be personalised with the name of your pet.</p><p><span style=\"font-weight: bold;\">How to personalise your product:</span></p><ol><li>Place your order</li><li>You will receive an email from dunelm@personalisedmemento.co.uk within 1 hour to add your personalised message. If not received, please check your junk folder.</li><li>Once received, follow the link within the email.</li><li>Type your message into the fields on screen and click on the preview button to review the personalisation.</li><li>Once checked and happy, click submit.</li><li>Production of the order will commence.</li></ol><p><span style=\"font-weight: bold;\">Please note:</span></p><ul><li>The content on a personalised product will be produced exactly as you enter it, including spelling and capitalisation. Please ensure that all details, especially the personalised text, are correct before clicking submit.</li><li>Accents, special characters and emojis are not accepted.</li><li>Once the personalisation has been submitted, the order cannot be amended or cancelled.</li><li>If the personalisation is not submitted within 3 days, the order will be automatically cancelled.</li><li>We do not permit personalisation that infringes copyright laws, is indecent or offensive, or contains language deemed to be abusive, threatening, or defamatory. Full content rules can be viewed on the personalisation terms and conditions page. Orders that do not follow these rules will be refused.</li></ul><p>By ordering a personalised product, you are agreeing that your details (name and contact details, including address) and the details that you provide of any other party, such as the recipient of the personalised product, can be shared with our third party supplier who provides the personalisation service only for the purposes of completing the personalisation service and delivering the product to you or the recipient.</p>"
+      },
+      "features": [
+        {
+          "property": "Product Dimensions",
+          "value": "H 10cm x W 8cm x D 8cm"
+        },
+        {
+          "property": "Composition",
+          "value": "Glass and Acetate"
+        },
+        {
+          "property": "Material",
+          "value": "Glass"
+        },
+        {
+          "property": "Care Instructions",
+          "value": "Wipe Clean With A Soft Cloth"
+        },
+        {
+          "property": "Pack Contents",
+          "value": "1 x Tree Decoration"
+        },
+        {
+          "property": "Season",
+          "value": "Christmas"
+        }
+      ],
+      "hideWws": "Y",
+      "sticker": null,
+      "skus": [
+        {
+          "id": "30877896",
+          "inStock": true,
+          "media": {
+            "image": [
+              "30877896.jpg",
+              "30877896_alt01.jpg",
+              "30877896_alt09.jpg"
+            ]
+          },
+          "price": {
+            "now": 12,
+            "was": null,
+            "history": []
+          },
+          "colourGroup": "Clear",
+          "definingAttributes": {
+            "colour": "Clear"
+          },
+          "name": "PMC Personalised Pet Glass Bauble",
+          "features": [
+            {
+              "property": "Product Dimensions",
+              "value": "H 10cm x W 8cm x D 8cm"
+            },
+            {
+              "property": "Composition",
+              "value": "Glass and Acetate"
+            },
+            {
+              "property": "Material",
+              "value": "Glass"
+            },
+            {
+              "property": "Care Instructions",
+              "value": "Wipe Clean With A Soft Cloth"
+            },
+            {
+              "property": "Pack Contents",
+              "value": "1 x Tree Decoration"
+            },
+            {
+              "property": "Season",
+              "value": "Christmas"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "productId": "1000300360",
+      "productUrl": "led-cluster-lights-door-garland-1000300360",
+      "productName": "LED Cluster Lights Door Garland",
+      "primaryWebCategory": "Christmas_Lights",
+      "categories": [],
+      "categoryLabels": [
+        "1000300360",
+        "Christmas",
+        "Christmas Decorations",
+        "Christmas Lights",
+        "Home and Furniture",
+        "Lighting",
+        "LED Lights",
+        "Inspiration",
+        "Modern Style",
+        "New",
+        "Outdoor Lighting",
+        "Shop All Christmas"
+      ],
+      "brand": "Christow",
+      "department": "Christmas",
+      "type": "Decorative Lights",
+      "description": {
+        "formatted": "\n\n* Choice of coloured micro LEDs\n* 8 light sequences with memory function\n* 6-hour timer function\n* 5m clear mains cable\n* 5.5m lit length\n\nGive your doorway a bright festive finish with this LED Cluster Lights Door Garland. The 5.5m lit length is ideal for framing a standard-sized front door, with a choice of cool white, warm white or multicoloured micro LEDs. Choose from 8 light sequences, with a handy memory function that remembers your last setting. Suitable for indoor and outdoor displays, the timer provides 6 hours of light before switching off for 18 hours, while the UK mains plug is designed for indoor sockets only.",
+        "html": "<ul><li>Choice of coloured micro LEDs</li><li>8 light sequences with memory function</li><li>6-hour timer function</li><li>5m clear mains cable</li><li>5.5m lit length</li></ul><p>Give your doorway a bright festive finish with this LED Cluster Lights Door Garland. The 5.5m lit length is ideal for framing a standard-sized front door, with a choice of cool white, warm white or multicoloured micro LEDs. Choose from 8 light sequences, with a handy memory function that remembers your last setting. Suitable for indoor and outdoor displays, the timer provides 6 hours of light before switching off for 18 hours, while the UK mains plug is designed for indoor sockets only.</p>"
+      },
+      "features": [
+        {
+          "property": "Product Dimensions",
+          "value": "<p>Lit length: 5.5m</p><p>Total length: 10.5m</p>"
+        },
+        {
+          "property": "Composition",
+          "value": "PVC"
+        },
+        {
+          "property": "Material",
+          "value": "PVC"
+        },
+        {
+          "property": "Care Instructions",
+          "value": "Wipe Clean With A Soft Cloth"
+        },
+        {
+          "property": "Pack Contents",
+          "value": "1 x Garland"
+        },
+        {
+          "property": "Season",
+          "value": "Christmas"
+        },
+        {
+          "property": "Power Supply",
+          "value": "Mains Operated"
+        },
+        {
+          "property": "Use",
+          "value": "Indoor / Outdoor"
+        }
+      ],
+      "hideWws": "Y",
+      "sticker": {
+        "label": "New",
+        "color": "blue"
+      },
+      "skus": [
+        {
+          "id": "31065795",
+          "inStock": false,
+          "media": {
+            "image": [
+              "31065795.jpg",
+              "31065795_alt01.jpg",
+              "31065795_alt02.jpg",
+              "31065795_alt03.jpg",
+              "31065795_alt04.jpg"
+            ]
+          },
+          "price": {
+            "now": 25,
+            "was": null,
+            "history": []
+          },
+          "colourGroup": "White",
+          "definingAttributes": {
+            "colour": "Cool White"
+          },
+          "name": "LED Door Garland Cluster Lights Mains W",
+          "features": [
+            {
+              "property": "Product Dimensions",
+              "value": "<p>Lit length: 5.5m</p><p>Total length: 10.5m</p>"
+            },
+            {
+              "property": "Composition",
+              "value": "PVC"
+            },
+            {
+              "property": "Material",
+              "value": "PVC"
+            },
+            {
+              "property": "Care Instructions",
+              "value": "Wipe Clean With A Soft Cloth"
+            },
+            {
+              "property": "Pack Contents",
+              "value": "1 x Garland"
+            },
+            {
+              "property": "Season",
+              "value": "Christmas"
+            },
+            {
+              "property": "Power Supply",
+              "value": "Mains Operated"
+            },
+            {
+              "property": "Use",
+              "value": "Indoor / Outdoor"
+            }
+          ],
+          "badge": "New"
+        },
+        {
+          "id": "31065822",
+          "inStock": false,
+          "media": {
+            "image": [
+              "31065822.jpg",
+              "31065822_alt01.jpg",
+              "31065822_alt02.jpg",
+              "31065822_alt03.jpg",
+              "31065822_alt04.jpg"
+            ]
+          },
+          "price": {
+            "now": 25,
+            "was": null,
+            "history": []
+          },
+          "colourGroup": "Multicoloured",
+          "definingAttributes": {
+            "colour": "Multicoloured"
+          },
+          "name": "Door Garland Cluster Lights Mains Multi",
+          "features": [
+            {
+              "property": "Product Dimensions",
+              "value": "<p>Lit length: 5.5m</p><p>Total length: 10.5m</p>"
+            },
+            {
+              "property": "Composition",
+              "value": "PVC"
+            },
+            {
+              "property": "Material",
+              "value": "PVC"
+            },
+            {
+              "property": "Care Instructions",
+              "value": "Wipe Clean With A Soft Cloth"
+            },
+            {
+              "property": "Pack Contents",
+              "value": "1 x Garland"
+            },
+            {
+              "property": "Season",
+              "value": "Christmas"
+            },
+            {
+              "property": "Power Supply",
+              "value": "Mains Operated"
+            },
+            {
+              "property": "Use",
+              "value": "Indoor / Outdoor"
+            }
+          ],
+          "badge": "New"
+        },
+        {
+          "id": "31065675",
+          "inStock": false,
+          "media": {
+            "image": [
+              "31065675.jpg",
+              "31065675_alt01.jpg",
+              "31065675_alt02.jpg",
+              "31065675_alt03.jpg",
+              "31065675_alt09.jpg"
+            ]
+          },
+          "price": {
+            "now": 25,
+            "was": null,
+            "history": []
+          },
+          "colourGroup": "White",
+          "definingAttributes": {
+            "colour": "Warm White"
+          },
+          "name": "LED Door Garland Cluster Lights Mains WW",
+          "features": [
+            {
+              "property": "Product Dimensions",
+              "value": "<p>Lit length: 5.5m</p><p>Total length: 10.5m</p>"
+            },
+            {
+              "property": "Composition",
+              "value": "PVC"
+            },
+            {
+              "property": "Material",
+              "value": "PVC"
+            },
+            {
+              "property": "Care Instructions",
+              "value": "Wipe Clean With A Soft Cloth"
+            },
+            {
+              "property": "Pack Contents",
+              "value": "1 x Garland"
+            },
+            {
+              "property": "Season",
+              "value": "Christmas"
+            },
+            {
+              "property": "Power Supply",
+              "value": "Mains Operated"
+            },
+            {
+              "property": "Use",
+              "value": "Indoor / Outdoor"
+            }
+          ],
+          "badge": "New"
+        }
+      ]
+    },
+    {
+      "productId": "1000250117",
+      "productUrl": "spiced-cinnamon-wreath-garland-set-1000250117",
+      "productName": "Artificial Spiced Cinnamon Wreath & Garland Set",
+      "primaryWebCategory": "Garlands_and_Wreaths",
+      "categories": [],
+      "categoryLabels": [
+        "1000250117",
+        "Home Decor",
+        "All Home Decor",
+        "Flowers and Plants",
+        "Artificial Flowers and Plants",
+        "Christmas",
+        "Christmas Decorations",
+        "Christmas Garlands and Wreaths",
+        "Home and Furniture",
+        "Shop All Christmas"
+      ],
+      "brand": "Dibor",
+      "department": "Home Decor",
+      "type": "Artificial Flowers & Plants",
+      "description": {
+        "formatted": "\n\n* Hand-crafted\n* Includes gently scented cinnamon stick bundle\n* Suitable for indoor & outdoor use\n* Features large pine cones\n\nBring rustic charm to your home with our Spiced Cinnamon Wreath and Garland Set. Featuring large pine cones, scented cinnamon stick bundles, and wooden bark, this set adds a traditional festive look. Perfect for your mantelpiece, shelf, or banister, it complements your Christmas decor with a touch of warmth and nostalgia.",
+        "html": "<ul><li>Hand-crafted</li><li>Includes gently scented cinnamon stick bundle</li><li>Suitable for indoor &amp; outdoor use</li><li>Features large pine cones</li></ul><p>Bring rustic charm to your home with our Spiced Cinnamon Wreath and Garland Set. Featuring large pine cones, scented cinnamon stick bundles, and wooden bark, this set adds a traditional festive look. Perfect for your mantelpiece, shelf, or banister, it complements your Christmas decor with a touch of warmth and nostalgia.</p>"
+      },
+      "features": [
+        {
+          "property": "Product Dimensions",
+          "value": "<p>38cm x H38cm x D8cm</p>"
+        },
+        {
+          "property": "Composition",
+          "value": "wood"
+        },
+        {
+          "property": "Material",
+          "value": "Wood"
+        },
+        {
+          "property": "Pack Contents",
+          "value": "1x wreath, 1x garland"
+        }
+      ],
+      "hideWws": "Y",
+      "sticker": null,
+      "skus": [
+        {
+          "id": "30959992",
+          "inStock": true,
+          "media": {
+            "image": [
+              "30959992.jpg",
+              "30959992_alt01.jpg",
+              "30959992_alt02.jpg",
+              "30959992_alt03.jpg",
+              "30959992_alt04.jpg"
+            ]
+          },
+          "price": {
+            "now": 48,
+            "was": null,
+            "history": []
+          },
+          "colourGroup": "Red",
+          "definingAttributes": {
+            "colour": "Red"
+          },
+          "name": "Dibor Cinnamon Pine Wreath Garland Set",
+          "features": [
+            {
+              "property": "Product Dimensions",
+              "value": "<p>38cm x H38cm x D8cm</p>"
+            },
+            {
+              "property": "Composition",
+              "value": "wood"
+            },
+            {
+              "property": "Material",
+              "value": "Wood"
+            },
+            {
+              "property": "Pack Contents",
+              "value": "1x wreath, 1x garland"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "productId": "1000272054",
+      "productUrl": "frosted-berry-6ft-pre-lit-garland-1000272054",
+      "productName": "6ft Pre-Lit Frosted Mixed Berry Artificial Garland",
+      "primaryWebCategory": "Christmas_Artificial_Flowers",
+      "categories": [],
+      "categoryLabels": [
+        "1000272054",
+        "Home Decor",
+        "All Home Decor",
+        "Christmas",
+        "Christmas Decorations",
+        "Christmas Garlands and Wreaths",
+        "Home and Furniture",
+        "New",
+        "Shop All Christmas"
+      ],
+      "brand": "Bosk",
+      "department": "Home Decor",
+      "type": "Artificial Flowers & Plants",
+      "description": {
+        "formatted": "\n\n* Frosted mixed foliage design.\n* Red and white berry detailing.\n* Warm white LED lights.\n* 8 functions with handy timer.\n\nBring a touch of winter magic to your festive decor with the 6ft Pre-Lit Frosted Mixed Berry Artificial Garland. Beautifully arranged with lush artificial foliage, a snowy flocked finish and clusters of red and white berries, this garland creates a wonderfully wintry look across mantelpieces, staircases or shelving. Warm white LEDs are nestled throughout the foliage for a cosy seasonal glow, with 8 lighting functions allowing you to switch up the ambience. Battery operated for flexible placement around your home, the handy timer keeps the lights on for 6 hours before switching off for 18 hours. Requires 6 x AA batteries, not included.",
+        "html": "<ul><li>Frosted mixed foliage design.</li><li>Red and white berry detailing.</li><li>Warm white LED lights.</li><li>8 functions with handy timer.</li></ul><p>Bring a touch of winter magic to your festive decor with the 6ft Pre-Lit Frosted Mixed Berry Artificial Garland. Beautifully arranged with lush artificial foliage, a snowy flocked finish and clusters of red and white berries, this garland creates a wonderfully wintry look across mantelpieces, staircases or shelving. Warm white LEDs are nestled throughout the foliage for a cosy seasonal glow, with 8 lighting functions allowing you to switch up the ambience. Battery operated for flexible placement around your home, the handy timer keeps the lights on for 6 hours before switching off for 18 hours. Requires 6 x AA batteries, not included.</p>"
+      },
+      "features": [
+        {
+          "property": "Product Dimensions",
+          "value": "<p>182.8cm x 25.4cm x 15cm</p>"
+        },
+        {
+          "property": "Material",
+          "value": "PVC"
+        },
+        {
+          "property": "Pack Contents",
+          "value": "1 x Artificial Garland"
+        },
+        {
+          "property": "Bulb Colour",
+          "value": "Warm White"
+        },
+        {
+          "property": "Power Supply",
+          "value": "Battery Operated"
+        },
+        {
+          "property": "Number of Bulbs",
+          "value": "100"
+        },
+        {
+          "property": "Batteries Required",
+          "value": "6 x AA"
+        },
+        {
+          "property": "Electrical Classification",
+          "value": "Class 3"
+        },
+        {
+          "property": "Guarantee",
+          "value": "5 Years"
+        }
+      ],
+      "hideWws": "Y",
+      "sticker": {
+        "label": "New",
+        "color": "blue"
+      },
+      "skus": [
+        {
+          "id": "30985725",
+          "inStock": true,
+          "media": {
+            "image": [
+              "30985725.jpg",
+              "30985725_alt01.jpg"
+            ]
+          },
+          "price": {
+            "now": 49,
+            "was": null,
+            "history": []
+          },
+          "colourGroup": "Green",
+          "definingAttributes": {
+            "colour": "Green"
+          },
+          "name": "Frstd Berry 6ft x 10 Inch Lit WW Garl",
+          "features": [
+            {
+              "property": "Product Dimensions",
+              "value": "<p>182.8cm x 25.4cm x 15cm</p>"
+            },
+            {
+              "property": "Material",
+              "value": "PVC"
+            },
+            {
+              "property": "Pack Contents",
+              "value": "1 x Artificial Garland"
+            },
+            {
+              "property": "Bulb Colour",
+              "value": "Warm White"
+            },
+            {
+              "property": "Power Supply",
+              "value": "Battery Operated"
+            },
+            {
+              "property": "Number of Bulbs",
+              "value": "100"
+            },
+            {
+              "property": "Batteries Required",
+              "value": "6 x AA"
+            },
+            {
+              "property": "Electrical Classification",
+              "value": "Class 3"
+            },
+            {
+              "property": "Guarantee",
+              "value": "5 Years"
+            }
+          ],
+          "badge": "New",
+          "sourceNew": true
+        }
+      ]
+    },
+    {
+      "productId": "1000299202",
+      "productUrl": "kitschmas-merry-christmas-hoop-wreath-1000299202",
+      "productName": "Kitschmas Merry Christmas Hoop Wreath",
+      "primaryWebCategory": "Christmas_Home_Decor",
+      "categories": [],
+      "categoryLabels": [
+        "1000299202",
+        "Christmas",
+        "Christmas Decorations",
+        "Christmas Garlands and Wreaths",
+        "Home and Furniture",
+        "Inspiration",
+        "Modern Style",
+        "New",
+        "Shop All Christmas"
+      ],
+      "brand": "Dunelm",
+      "department": "Christmas",
+      "type": "Christmas Decorations",
+      "description": {
+        "formatted": "\n\n* Hoop-style wreath\n* 'Merry Christmas' text\n* Colourful house design\n* Includes hanging string\n\nAdd a playful festive touch to your décor with the Kitschmas Merry Christmas Hoop Wreath. Featuring a hoop-style design with bold \"Merry Christmas\" lettering and a bright house motif, it brings a cheerful seasonal look to walls, doors or mantel displays. Complete with an attached hanging string, it's easy to display wherever you'd like a pop of Christmas colour.",
+        "html": "<ul><li>Hoop-style wreath</li><li>'Merry Christmas' text</li><li>Colourful house design</li><li>Includes hanging string</li></ul><p>Add a playful festive touch to your décor with the Kitschmas Merry Christmas Hoop Wreath. Featuring a hoop-style design with bold \"Merry Christmas\" lettering and a bright house motif, it brings a cheerful seasonal look to walls, doors or mantel displays. Complete with an attached hanging string, it's easy to display wherever you'd like a pop of Christmas colour.</p>"
+      },
+      "features": [
+        {
+          "property": "Product Dimensions",
+          "value": "<p>H 25.8cm x W 25.8cm x D 3.8cm</p>"
+        },
+        {
+          "property": "Composition",
+          "value": "Wood"
+        },
+        {
+          "property": "Material",
+          "value": "Wood"
+        },
+        {
+          "property": "Pack Contents",
+          "value": "1 x Decoration"
+        },
+        {
+          "property": "Season",
+          "value": "Christmas"
+        }
+      ],
+      "hideWws": "Y",
+      "sticker": {
+        "label": "New",
+        "color": "blue"
+      },
+      "skus": [
+        {
+          "id": "30973031",
+          "inStock": false,
+          "media": {
+            "image": [
+              "30973031.jpg",
+              "30973031_alt01.jpg",
+              "30973031_alt02.jpg"
+            ]
+          },
+          "price": {
+            "now": 5,
+            "was": null,
+            "history": []
+          },
+          "colourGroup": "Multicoloured",
+          "definingAttributes": {
+            "colour": "Multicoloured"
+          },
+          "name": "Kitschmas Hoop Wreath",
+          "features": [
+            {
+              "property": "Product Dimensions",
+              "value": "<p>H 25.8cm x W 25.8cm x D 3.8cm</p>"
+            },
+            {
+              "property": "Composition",
+              "value": "Wood"
+            },
+            {
+              "property": "Material",
+              "value": "Wood"
+            },
+            {
+              "property": "Pack Contents",
+              "value": "1 x Decoration"
+            },
+            {
+              "property": "Season",
+              "value": "Christmas"
+            }
+          ],
+          "badge": "New"
+        }
+      ]
+    }
+  ],
+  "failures": [],
+  "sourceRequests": 61,
+  "elapsedSeconds": 81,
+  "transport": "Dunelm-official-SSR-directories-and-batched-public-exact-SKU-API",
+  "firecrawlCredits": 0,
+  "revision": "50c83d1ff8ee92a2a8798cba5cf99885ad644473670e792c786b5c7bc5c3e395"
+}

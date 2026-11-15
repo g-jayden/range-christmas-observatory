@@ -1,0 +1,72 @@
+name: Dunelm Christmas exact SKU collection
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [collect, enrich, activate, daily]
+        default: collect
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: range-source-and-pages-production
+  cancel-in-progress: false
+  queue: max
+jobs:
+  du:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      COLLECTION_CHECKPOINTS: '1'
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci
+      - run: node scripts/test-du.mjs
+      - uses: actions/cache@v6.1.0
+        with:
+          path: |
+            runtime/models
+            runtime/fonts
+          key: local-clip-vit-base-patch32-q8-v1
+      - name: Read five public Dunelm directories once; share wreath and garland source
+        if: inputs.mode == 'collect' || inputs.mode == 'daily'
+        run: node scripts/update-du.mjs
+      - name: Rebuild saved exact SKU evidence without source requests
+        if: inputs.mode == 'enrich' || inputs.mode == 'activate'
+        env:
+          DU_REBUILD_ONLY: 'true'
+        run: node scripts/update-du.mjs
+      - name: Verify whole-product photos and colours locally
+        if: inputs.mode == 'enrich' || inputs.mode == 'activate' || inputs.mode == 'daily'
+        run: node scripts/enrich-du.mjs
+      - name: Prepare only first-observed NEW after the initial baseline
+        if: inputs.mode == 'activate' || inputs.mode == 'daily'
+        run: node scripts/prepare-du-notifications.mjs
+      - name: Preserve Dunelm evidence without recollecting other retailers
+        id: evidence
+        if: always()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          mkdir -p web/du web/images/du web/mail-assets
+          git add web/du web/images/du web/mail-assets web/collection-ledger.json web/preview-quality-cache.json.gz
+          git diff --cached --quiet || git commit -m "Save verified Dunelm exact SKU catalogue and image evidence [skip ci]"
+          node scripts/push-evidence.mjs
+      - name: Deliver verified published Dunelm attachments
+        if: always() && (inputs.mode == 'activate' || inputs.mode == 'daily')
+        run: node scripts/deliver-du-notifications.mjs
+      - name: Refresh the canonical website from committed Dunelm data without source requests
+        if: always() && steps.evidence.outcome == 'success' && (inputs.mode == 'enrich' || inputs.mode == 'activate' || inputs.mode == 'daily')
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/request-du-site-publish.mjs
