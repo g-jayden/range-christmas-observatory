@@ -46,6 +46,11 @@ jobs:
           HB_NATIVE_ONLY: ${{ inputs.mode == 'native' }}
           HB_FORCE: ${{ inputs.mode == 'native' }}
         run: node scripts/update-hb.mjs
+      - name: Rebuild from saved exact-family evidence without source requests
+        if: inputs.mode == 'enrich' || inputs.mode == 'activate'
+        env:
+          HB_REBUILD_ONLY: 'true'
+        run: node scripts/update-hb.mjs
       - name: Verify whole-product photos and colours locally
         if: inputs.mode == 'enrich' || inputs.mode == 'activate' || inputs.mode == 'daily'
         run: node scripts/enrich-hb.mjs
