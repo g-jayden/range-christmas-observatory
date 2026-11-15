@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [collect, enrich, activate, daily]
+        options: [collect, native, enrich, activate, daily]
         default: collect
 permissions:
   contents: write
@@ -39,10 +39,12 @@ jobs:
             runtime/fonts
           key: local-clip-vit-base-patch32-q8-v1
       - name: Read nine Home Bargains directories and exact variants in one Firecrawl browser request
-        if: inputs.mode == 'collect' || inputs.mode == 'daily'
+        if: inputs.mode == 'collect' || inputs.mode == 'native' || inputs.mode == 'daily'
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
           HB_ONBOARDING_FIRECRAWL: ${{ inputs.mode == 'collect' }}
+          HB_NATIVE_ONLY: ${{ inputs.mode == 'native' }}
+          HB_FORCE: ${{ inputs.mode == 'native' }}
         run: node scripts/update-hb.mjs
       - name: Verify whole-product photos and colours locally
         if: inputs.mode == 'enrich' || inputs.mode == 'activate' || inputs.mode == 'daily'
