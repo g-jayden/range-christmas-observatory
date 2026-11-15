@@ -19,3 +19,5 @@ assert.equal(duImageFresh({file:'a',error:'HTTP 503',checkedAt:'2026-11-15T18:00
 const{duMaterialFacts}=await import('../server/du-materials.mjs');assert.match(duMaterialFacts({Material:'Water Hycainth'}).label,/水葫芦.*Water Hyacinth/);assert.match(duMaterialFacts({Material:'Polystrene, Plywwod, 10% Styrofoam, 5% Light'}).label,/聚苯乙烯泡沫/);assert(!duMaterialFacts({Material:'PVC'},'realistic eucalyptus leaves').label.includes('尤加利'));
 
 assert.equal(treeHeightConflict({retailerId:'du',kind:'tree',variantName:'8.5ft Pre-Lit Rivington Fir Christmas Tree',specifications:{Height:'8ft','Christmas Tree Height':'8.5ft'}}).usableHeightCm,259.08,'A source 8ft dimension must not silently replace the matching 8.5ft title and independent SKU height');
+
+const collar=duSpecs({features:[{property:'Product Dimensions',value:'H 25cm, Base Dia. 60cm, Cut Out Dia. 44cm'}]},{definingAttributes:{},features:[]});assert.equal(collar['Base Diameter'],'60cm');assert.equal(collar['Top Diameter'],'44cm');assert.equal(get(initial,'31042867').skirtSizeCm,60);assert.equal(get(initial,'31042867').dimensions.values.Diameter,60);
