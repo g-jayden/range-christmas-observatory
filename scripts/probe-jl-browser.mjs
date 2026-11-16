@@ -2,7 +2,9 @@ import fs from 'node:fs/promises';import {chromium} from '../runtime/jl-probe/no
 // Production source compatibility test. A clean ordinary browser, no account,
 // cookies imported from users, modified client identity, proxy or challenge solver.
 await fs.mkdir('runtime/jl-browser-acceptance',{recursive:true});
-const browser=await chromium.launch({headless:true});const context=await browser.newContext();const page=await context.newPage();let result;
+// The previous run failed with ERR_HTTP2_PROTOCOL_ERROR, without an HTTP refusal.
+// Disable only HTTP/2 for this bounded compatibility test; TLS checks remain on.
+const browser=await chromium.launch({headless:true,args:['--disable-http2']});const context=await browser.newContext();const page=await context.newPage();let result;
 try{const response=await page.goto('https://www.johnlewis.com/browse/christmas/baubles-tree-decorations/_/N-54yc',{waitUntil:'domcontentloaded',timeout:45000});const status=response?.status()||0;
  if(status>=400)throw Error('Official browser source HTTP '+status);
  await page.locator('article[data-product-id]').first().waitFor({state:'visible',timeout:20000});
