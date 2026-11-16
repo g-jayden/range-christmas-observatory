@@ -1,0 +1,22 @@
+name: John Lewis public source acceptance
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - name: Verify seven official categories with no paid calls
+        run: node scripts/probe-jl-source.mjs
+      - uses: actions/upload-artifact@v6.0.0
+        if: always()
+        with:
+          name: john-lewis-public-source-acceptance
+          path: runtime/jl-source-acceptance
+          retention-days: 3

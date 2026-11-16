@@ -264,6 +264,25 @@
       "period": "2026-11",
       "credits": 1,
       "refunded": 0
+    },
+    {
+      "id": "mcp-01a1e578-20b7-768d-8aa6-8d0e58542e48",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "nx-source-access-20261117",
+      "endpoint": "scrape"
+    },
+    {
+      "id": "mcp-01a1e579-f44a-7447-9af2-23d1ed5c8c99",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "nx-source-access-20261117",
+      "endpoint": "interact",
+      "sessionDurationMs": 19000
     }
   ],
   "unreceipted": [

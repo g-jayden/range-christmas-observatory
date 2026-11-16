@@ -46,6 +46,14 @@
       "period": "2026-11",
       "additionalCredits": 2,
       "purpose": "Home Bargains initial Firecrawl source acceptance only"
+    },
+    {
+      "id": "nx-source-access-20261117",
+      "retailerId": "nx",
+      "period": "2026-11",
+      "additionalCredits": 3,
+      "purpose": "User-authorized one-time Next restricted source access acceptance; no automatic paid retry",
+      "closed": true
     }
   ]
 }
