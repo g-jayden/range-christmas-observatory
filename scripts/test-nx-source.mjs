@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';import fs from 'node:fs/promises';
+import {nextPlpState,nextListingPage,nextExactPrice,assertNextCoverage} from '../server/nx-source.mjs';
+import {NX_DEPARTMENTS,validNextItemCode} from '../web/nx-model.mjs';import {JL_DEPARTMENTS,JL_DIRECTORIES} from '../web/jl-model.mjs';
+const fixture=JSON.parse(await fs.readFile('test/fixtures/nx-plp.json','utf8'));
+const html='<script id="next-plp-script">window.ssrClientSettings.plp={_STATE_:'+JSON.stringify(fixture)+'};throw Error("must never execute")</script>';
+const page=nextListingPage(nextPlpState(html));assert.equal(page.declared,1997);assert.equal(page.displayed,10);assert.equal(page.prefetched,90);assert.equal(page.rows.filter(r=>r.summaryReady).length,12);
+const range=page.rows.find(r=>r.itemCode==='Y40576');assert.equal(range.exactPricePence,null);assert.equal(range.sizeSpecificPriceRequired,true);assert.equal(range.detailsReady,false);
+assert.equal(page.rows.find(r=>r.itemCode==='V52416').exactPricePence,1600);
+assert.throws(()=>assertNextCoverage([page]),/missing|incomplete/,'Prefetched IDs without their product details are not a complete catalogue');
+assert.equal(nextExactPrice('£1,299.95'),129995);assert.equal(nextExactPrice('£12 – £150'),null);assert.equal(nextExactPrice('From £16'),null);
+for(const id of ['V52416','AP5116','123456'])assert(validNextItemCode(id));for(const id of ['../123456','v52416','SV024193','1234567'])assert(!validNextItemCode(id));
+assert.throws(()=>nextPlpState('<script id="next-plp-script">_STATE_:{"broken":</script>'),/incomplete/);
+const wrong=structuredClone(fixture);wrong.productSummary.summaryItemsData.V52416.colourways.find(c=>c.id==='V52416').url='https://other.invalid/style/SV024193/V52416';assert.throws(()=>nextListingPage(wrong),/mismatch/);
+assert.equal(NX_DEPARTMENTS.length,5);assert.equal(JL_DEPARTMENTS.length,7);assert.equal(JL_DIRECTORIES.length,6);
+assert(NX_DEPARTMENTS.every(d=>d.zh&&d.en));assert(JL_DEPARTMENTS.every(d=>d.zh&&d.en));
+console.log('Next official JSON parsed without executing scripts; 10 displayed / 90 prefetched / 1,997 declared kept distinct; ranged prices and incomplete source rejected; five Next and seven John Lewis bilingual category definitions passed.');

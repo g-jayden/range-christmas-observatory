@@ -1,0 +1,29 @@
+name: John Lewis clean browser source acceptance
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          sparse-checkout: scripts/probe-jl-browser.mjs
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - name: Install the official public browser runtime
+        run: |
+          npm install --prefix runtime/jl-probe --no-audit --no-fund --ignore-scripts playwright@1.64.1
+          node runtime/jl-probe/node_modules/playwright/cli.js install --with-deps chromium
+      - name: Test the official category without credentials or paid collection
+        run: node scripts/probe-jl-browser.mjs
+      - uses: actions/upload-artifact@v6.0.0
+        if: always()
+        with:
+          name: john-lewis-browser-source-acceptance
+          path: runtime/jl-browser-acceptance
+          retention-days: 3
