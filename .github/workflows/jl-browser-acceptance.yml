@@ -18,7 +18,7 @@ jobs:
       - name: Install the official public browser runtime
         run: |
           npm install --prefix runtime/jl-probe --no-audit --no-fund --ignore-scripts playwright@1.64.1
-          node runtime/jl-probe/node_modules/playwright/cli.js install --with-deps chromium
+          node runtime/jl-probe/node_modules/playwright/cli.js install --with-deps firefox
       - name: Test the official category without credentials or paid collection
         run: node scripts/probe-jl-browser.mjs
       - uses: actions/upload-artifact@v6.0.0
