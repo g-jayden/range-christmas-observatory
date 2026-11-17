@@ -12,6 +12,7 @@ jobs:
         with:
           sparse-checkout: |
             server/jl-source.mjs
+            server/jl-list-dom.mjs
             web/jl-model.mjs
             web/jl-physical.mjs
             scripts/collect-jl-source.mjs

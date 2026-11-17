@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import {readJlDirectoryDom} from './jl-list-dom.mjs';
 import {JL_DIRECTORIES} from '../web/jl-model.mjs';
 const pick=(o,keys)=>Object.fromEntries(keys.filter(k=>o?.[k]!==undefined).map(k=>[k,o[k]]));
 export function sanitiseJlFamily(p){
@@ -7,14 +8,21 @@ export function sanitiseJlFamily(p){
 }
 export async function collectJl({checkpointDir='runtime/jl-family',onBatch=()=>{}}={}){
  const {firefox}=await import('../runtime/jl-probe/node_modules/playwright/index.mjs');
- await fs.mkdir(checkpointDir,{recursive:true});const browser=await firefox.launch({headless:true}),context=await browser.newContext(),page=await context.newPage();
+ await fs.mkdir(checkpointDir,{recursive:true});const browser=await firefox.launch({headless:true}),context=await browser.newContext(),page=await context.newPage(),listingPage=await context.newPage();
  const result={observedAt:new Date().toISOString(),transport:'John-Lewis-clean-Firefox-public-HTML',firecrawlCredits:0,sourceRequests:0,categories:[],families:{},failures:[],complete:false};
  try{
   const first='https://www.johnlewis.com'+JL_DIRECTORIES[0][1],response=await page.goto(first,{waitUntil:'domcontentloaded',timeout:45000});result.sourceRequests++;
   if(response.status()!==200)throw Error('John Lewis landing HTTP '+response.status());
   await page.locator('article[data-product-id]').first().waitFor({timeout:20000});
   const request=async(url,kind)=>{for(let attempt=0;attempt<3;attempt++){result.sourceRequests++;try{
-   let suppliedHtml=null;if(kind==='directory'){if(page.url()!==url){const response=await page.goto(url,{waitUntil:'domcontentloaded',timeout:35000});if([401,403,429].includes(response.status()))throw Object.assign(Error('John Lewis official refusal HTTP '+response.status()),{stop:true});if(response.status()!==200)throw Error('John Lewis directory HTTP '+response.status());await page.locator('article[data-product-id]').first().waitFor({timeout:15000});}suppliedHtml=await page.content();}
+   if(kind==='directory'){
+    const current=page.url()===url?page:listingPage;
+    if(current===listingPage){const response=await current.goto(url,{waitUntil:'domcontentloaded',timeout:35000});if([401,403,429].includes(response.status()))throw Object.assign(Error('John Lewis official refusal HTTP '+response.status()),{stop:true});if(response.status()!==200)throw Error('John Lewis directory HTTP '+response.status());}
+    await current.locator('article[data-product-id]').first().waitFor({timeout:15000});const row=await current.evaluate(readJlDirectoryDom);
+    if(!row.count||!row.rows.length||!/John Lewis/i.test(await current.title())||/Technical Problem|Access Denied/i.test(await current.title()))throw Error('John Lewis directory content incomplete: '+await current.title());
+    return {...row,status:200};
+   }
+   const suppliedHtml=null;
    const data=await page.evaluate(async({url,kind,suppliedHtml})=>{
     let html=suppliedHtml;if(!html){const r=await fetch(url,{signal:AbortSignal.timeout(20000)});if(r.status!==200)return {status:r.status};html=await r.text();}const d=new DOMParser().parseFromString(html,'text/html');
     if(kind==='family'){const s=d.querySelector('#__NEXT_DATA__');return {status:200,product:s?JSON.parse(s.textContent).props?.pageProps?.product:null};}
