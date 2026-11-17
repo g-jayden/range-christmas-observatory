@@ -1,11 +1,17 @@
 name: John Lewis clean browser source acceptance
 on:
   workflow_dispatch:
+    inputs:
+      runner:
+        description: Standard runtime compatibility platform
+        type: choice
+        options: [ubuntu-latest, macos-latest]
+        default: ubuntu-latest
 permissions:
   contents: read
 jobs:
   browser-source:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v7.0.1
