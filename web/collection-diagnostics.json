@@ -294,6 +294,56 @@
       "endpoint": "scrape",
       "billingVerified": true,
       "githubRun": 43986784198
+    },
+    {
+      "id": "next-01a1e6e3-97bc-755b-9f06-410e8cfd20d7",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e6e8-22dc-72bc-b3bb-6a6fa6327359",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e6ec-ce38-7083-9c7c-684db168780b",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e6f0-7c35-76fb-b417-8d0fdf23698d",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e6f5-2191-702e-b2bb-1183f9660403",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
     }
   ],
   "unreceipted": [
