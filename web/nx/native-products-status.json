@@ -1,7 +1,1 @@
-{
-  "failures": [],
-  "expected": 803,
-  "requests": 803,
-  "complete": true,
-  "firecrawlCredits": 0
-}
+{"expected":799,"requests":799,"complete":true,"failures":[],"freeFailures":[],"firecrawlCredits":1}
