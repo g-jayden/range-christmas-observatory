@@ -8,6 +8,10 @@ on:
         description: Recheck sources even if today's complete scan is saved
         type: boolean
         default: false
+      rebuildOnly:
+        description: Apply saved exact-SKU image reviews without any source re-scan or paid request
+        type: boolean
+        default: false
 permissions:
   contents: write
   actions: write
@@ -58,6 +62,7 @@ jobs:
         id: source
         env:
           NX_FORCE: ${{ inputs.force == true && 'true' || 'false' }}
+          NX_REBUILD_ONLY: ${{ inputs.rebuildOnly == true && 'true' || 'false' }}
         run: node scripts/update-next.mjs
       - uses: actions/cache@v6.1.0
         if: steps.source.outcome == 'success'
