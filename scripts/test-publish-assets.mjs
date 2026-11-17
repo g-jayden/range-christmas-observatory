@@ -19,7 +19,7 @@ try{
  await fs.writeFile(out+'/broken.json',JSON.stringify({cachedImageUrl:'images/source/missing.jpg'}));await assert.rejects(copyPublishedAssets(web,out),/ENOENT/,'A referenced image must never be silently omitted');
  // Exercise the actual build with small data: JS modules must be copied as
  // code, never added to the JSON validation list or omitted from the artifact.
- const fixture=path.join(tmp,'build-smoke');await fs.mkdir(fixture+'/web',{recursive:true});
+ const fixture=path.join(tmp,'build-smoke');await fs.mkdir(fixture+'/web/bq/departments',{recursive:true});await fs.mkdir(fixture+'/web/bq/details',{recursive:true});await fs.writeFile(fixture+'/web/bq/catalogue.json',JSON.stringify({format:'department-shards-v1',departmentShards:{},products:[]}));
  for(const file of await fs.readdir('web')){if(file.endsWith('.json'))await fs.writeFile(fixture+'/web/'+file,'{}');else if(/\.(?:mjs|js|css|html)$/.test(file))await fs.copyFile('web/'+file,fixture+'/web/'+file);}
  await fs.mkdir(fixture+'/web/images/source',{recursive:true});await fs.writeFile(fixture+'/web/images/source/native.jpg',original);await fs.writeFile(fixture+'/web/catalogue.json',JSON.stringify({products:[{sku:'123',cachedImageUrl:'images/source/native.jpg'}]}));
  execFileSync(process.execPath,[fileURLToPath(new URL('./build-static.mjs',import.meta.url))],{cwd:fixture,encoding:'utf8'});

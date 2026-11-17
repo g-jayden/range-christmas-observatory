@@ -62,6 +62,11 @@ jobs:
         with:
           node-version: '24'
       - run: npm ci
+      - uses: actions/cache@v6.1.0
+        with:
+          path: runtime/bq-source
+          key: bq-source-checkpoints-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: bq-source-checkpoints-
       - run: node scripts/test-bq.mjs
       - name: Read all ten official directories, NEW badges and exact variant offers free
         env:
@@ -83,8 +88,8 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          mkdir -p web/mt web/images/mt web/mail-assets
-          git add web/mt web/images/mt
+          mkdir -p web/bq web/images/bq web/mail-assets
+          git add web/bq web/images/bq
           for retailer_mail_dir in web/mail-assets/bq-*/; do
             [ -d "$retailer_mail_dir" ] && git add "$retailer_mail_dir"
           done

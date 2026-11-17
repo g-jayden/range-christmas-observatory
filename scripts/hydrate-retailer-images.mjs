@@ -14,6 +14,9 @@ if(process.env.GITHUB_EVENT_NAME!=='workflow_dispatch'||process.env.COLLECTION_M
 }
 const retailerId=request.retailerId;
 if(!['nx','jl','mt','bq'].includes(retailerId)||!/^[a-f0-9]{64}$/.test(request.catalogueSha256))throw Error('Invalid reviewed retailer release');
+if(retailerId==='bq'&&request.photoMode==='source-hosted-native-export-v1'){
+ const {installBqReviewedRelease}=await import('../server/bq-release.mjs');if(!Array.isArray(request.payloadParts)||!request.payloadParts.length||request.payloadParts.length>40||request.payloadParts.some(p=>!/^release-\d{3}\.b64$/.test(p)))throw Error('Invalid B&Q release parts');let packed='';for(const part of request.payloadParts)packed+=await fs.readFile('web/bq/'+part,'utf8');const report=await installBqReviewedRelease(request,packed);const file='web/retailer-activation.mjs',activation=await fs.readFile(file,'utf8');if(!activation.includes('bq:false'))throw Error('B&Q release must begin inactive');await fs.writeFile(file,activation.replace('bq:false','bq:true'));await atomicJson(requestFile,{...request,state:'complete',completedAt:new Date().toISOString(),...report,firecrawlCredits:0});if(process.env.GITHUB_OUTPUT)await fs.appendFile(process.env.GITHUB_OUTPUT,'bq=true\n');console.log(JSON.stringify({phase:'reviewed-B&Q-source-hosted-release-accepted',...report,firecrawlCredits:0}));process.exit(0);
+}
 const packed=await fs.readFile('web/'+retailerId+'/release-payload.b64','utf8');
 if(createHash('sha256').update(packed).digest('hex')!==request.payloadSha256)throw Error('Reviewed release payload changed');
 const files=JSON.parse(gunzipSync(Buffer.from(packed,'base64'),{maxOutputLength:32000000}));

@@ -1,0 +1,2 @@
+export function bqUnchangedSourceVersion(previous,current){return Boolean(previous?.sha256&&previous.sourceVersion!=null&&current?.sourceVersion!=null&&String(previous.sourceVersion)===String(current.sourceVersion)&&previous.width===current.width&&previous.height===current.height);}
+export function bqVersionCheckedRecord(previous,current,checkedAt=new Date().toISOString()){return{...previous,...current,previewBytesObservedAt:previous.previewBytesObservedAt||previous.checkedAt,sourceVersionCheckedAt:checkedAt,checkedAt};}

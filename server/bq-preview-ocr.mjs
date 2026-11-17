@@ -1,0 +1,3 @@
+import fs from'node:fs/promises';import sharp from'sharp';let worker;
+export async function bqPreviewOcr(file){if(!worker)worker=(async()=>{await fs.mkdir('runtime/models/bq-ocr',{recursive:true});const{default:Tesseract}=await import('tesseract.js');const w=await Tesseract.createWorker('eng',1,{cachePath:'runtime/models/bq-ocr'});await w.setParameters({tessedit_pageseg_mode:'11'});return w;})();const w=await worker,bytes=await sharp(file).resize({width:1100,height:1100,fit:'inside'}).png().toBuffer(),r=await w.recognize(bytes);return{text:r.data.text,confidence:r.data.confidence,method:'local-english-OCR-on-verified-preview; recognition-only-resize'};}
+export async function closeBqPreviewOcr(){if(worker){await(await worker).terminate();worker=null;}}
