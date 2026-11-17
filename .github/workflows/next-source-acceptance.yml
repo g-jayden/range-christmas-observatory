@@ -15,7 +15,7 @@ jobs:
         with:
           sparse-checkout: |
             scripts/probe-next-source.mjs
-            server/nx-paid-request.mjs
+            server/nx-bulk-request.mjs
             server/nx-source.mjs
             web/nx-model.mjs
             web/next-integration-authorization.json

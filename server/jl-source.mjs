@@ -14,14 +14,15 @@ export async function collectJl({checkpointDir='runtime/jl-family',onBatch=()=>{
   if(response.status()!==200)throw Error('John Lewis landing HTTP '+response.status());
   await page.locator('article[data-product-id]').first().waitFor({timeout:20000});
   const request=async(url,kind)=>{for(let attempt=0;attempt<3;attempt++){result.sourceRequests++;try{
-   const data=await page.evaluate(async({url,kind})=>{
-    const r=await fetch(url,{signal:AbortSignal.timeout(20000)});if(r.status!==200)return {status:r.status};const html=await r.text(),d=new DOMParser().parseFromString(html,'text/html');
+   let suppliedHtml=null;if(kind==='directory'){if(page.url()!==url){const response=await page.goto(url,{waitUntil:'domcontentloaded',timeout:35000});if([401,403,429].includes(response.status()))throw Object.assign(Error('John Lewis official refusal HTTP '+response.status()),{stop:true});if(response.status()!==200)throw Error('John Lewis directory HTTP '+response.status());await page.locator('article[data-product-id]').first().waitFor({timeout:15000});}suppliedHtml=await page.content();}
+   const data=await page.evaluate(async({url,kind,suppliedHtml})=>{
+    let html=suppliedHtml;if(!html){const r=await fetch(url,{signal:AbortSignal.timeout(20000)});if(r.status!==200)return {status:r.status};html=await r.text();}const d=new DOMParser().parseFromString(html,'text/html');
     if(kind==='family'){const s=d.querySelector('#__NEXT_DATA__');return {status:200,product:s?JSON.parse(s.textContent).props?.pageProps?.product:null};}
     d.querySelectorAll('script,style,noscript').forEach(n=>n.remove());const text=n=>(n?.textContent||'').trim(),href=a=>a?new URL(a.getAttribute('href'),url).href:null;
     const rows=[...d.querySelectorAll('article[data-product-id]')].map(c=>{const links=[...c.querySelectorAll('a[href]')],isProduct=a=>/\/p\d+$/.test(new URL(href(a)).pathname),p=links.find(a=>isProduct(a)&&text(a)&&!text(a).startsWith('£'))||links.find(isProduct),range=!p&&links.find(a=>text(a)==='View range');return {pageProductId:c.getAttribute('data-product-id'),type:range?'range-navigation':'product',name:text(p)||text(c.querySelector('h2,h3')),sourceUrl:href(p||range)?.split('#')[0],sponsored:/\bSponsored\b/.test(text(c)),unavailable:/Email when available/.test(text(c))};});
     const body=text(d.body),count=body.match(/(\d+)\s*[-–]\s*(\d+)\s*of\s*([\d,]+)/)?.slice(1).map(v=>+v.replaceAll(',',''));
     const next=[...d.querySelectorAll('a[href]')].find(a=>text(a)==='Next'&&href(a).includes('page='));return {status:200,url,title:text(d.querySelector('h1')),count,next:href(next),rows};
-   },{url,kind});
+   },{url,kind,suppliedHtml});
    if([401,403,429].includes(data.status))throw Object.assign(Error('John Lewis official refusal HTTP '+data.status),{stop:true});
    if(data.status!==200)throw Error('John Lewis official source HTTP '+data.status);
    if(kind==='family'&&!data.product)throw Error('John Lewis family JSON absent');return data;
