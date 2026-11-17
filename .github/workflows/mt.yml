@@ -75,7 +75,7 @@ jobs:
           mkdir -p web/mt web/images/mt web/mail-assets
           git add web/mt web/images/mt
           for retailer_mail_dir in web/mail-assets/mt-*/; do
-            [ -d "$retailer_mail_dir" ] && git add "$retailer_mail_dir"
+            if [ -d "$retailer_mail_dir" ]; then git add "$retailer_mail_dir"; fi
           done
           git diff --cached --quiet || git commit -m "Save Matalan exact SKU source and reviewed native evidence [skip ci]"
           node scripts/push-evidence.mjs

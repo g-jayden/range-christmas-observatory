@@ -82,6 +82,12 @@ jobs:
         run: node scripts/enrich-bq.mjs
       - name: Prepare verified first-observed arrivals after the initial baseline
         run: node scripts/prepare-retailer-notifications.mjs bq
+      - name: Save resumable source checkpoints after any outcome
+        if: always()
+        uses: actions/cache/save@v6.1.0
+        with:
+          path: runtime/bq-source
+          key: bq-source-checkpoints-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Preserve source checkpoints and native evidence even on partial failure
         id: evidence
         if: always()
@@ -91,7 +97,7 @@ jobs:
           mkdir -p web/bq web/images/bq web/mail-assets
           git add web/bq web/images/bq
           for retailer_mail_dir in web/mail-assets/bq-*/; do
-            [ -d "$retailer_mail_dir" ] && git add "$retailer_mail_dir"
+            if [ -d "$retailer_mail_dir" ]; then git add "$retailer_mail_dir"; fi
           done
           git diff --cached --quiet || git commit -m "Save B&Q exact SKU source and reviewed native evidence [skip ci]"
           node scripts/push-evidence.mjs
