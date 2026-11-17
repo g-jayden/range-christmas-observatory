@@ -29,6 +29,26 @@ jobs:
       - uses: actions/checkout@v7.0.1
         with:
           ref: main
+          sparse-checkout: |
+            /.github/
+            /package.json
+            /package-lock.json
+            /.npmrc
+            /.gitignore
+            /server/
+            /scripts/
+            /cloud/
+            /test/
+            /web/*.mjs
+            /web/settings.json
+            /web/collection-ledger.json
+            /web/collection-diagnostics.json
+            /web/next-collection-authorization.json
+            /web/preview-quality-cache.json.gz
+            /web/nx/
+            /web/images/nx/
+            /web/mail-assets/nx-*/
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
