@@ -5,6 +5,11 @@ import {productDimensions,toCentimetres} from '../web/catalogue-model.mjs';
 import {nextExactPrice} from './nx-source.mjs';
 const hash=v=>createHash('sha256').update(JSON.stringify(v)).digest('hex');
 export const jlAppearanceFingerprint=p=>hash([String(p.variantName||'').replace(/\s+/g,' ').trim(),String(p.sourceDescription||'').replace(/\s+/g,' ').trim(),Object.entries(p.specifications||{}).sort(([a],[b])=>a.localeCompare(b))]);
+export function jlTreeStyle(name,specifications={}){
+ const t=String(name||'').toLowerCase(),lighting=String(specifications['Pre-lit']||'').toLowerCase();
+ const unlit=/\bunlit\b/.test(t)||/\bunlit\b/.test(lighting);
+ return /potted|\bin a pot\b/.test(t)?'圣诞树盆栽':/pop.?up|collapsible/.test(t)?'折叠式圣诞树':/slim|pencil/.test(t)?'纤细圣诞树':/flock|frost|snow/.test(t)?'雪景款':/twig|metal|tinsel|paper|acrylic/.test(t)?'其它树形类别':!unlit&&/\b(?:pre[\s-]?lit|lit (?:christmas )?tree)\b/.test(t+' '+lighting)?'预亮灯款':'标准款';
+}
 
 export const jlAllPages=c=>[...c.pages,...(c.ranges||[]).flatMap(r=>r.pages)];
 export function jlDirectoryAudit(directory){
@@ -72,7 +77,7 @@ export function buildJlSnapshot(directory,evidence,{previous={products:[]},allow
   p.colorValues=normaliseColors(p.sourceColour);p.treeColor=p.colorValues.join(' / ');p.appearanceSource={materials:material};if(!department)p.taxonomyAudit={disposition:'exclude',memberships:[],reason:'不属于指定七个圣诞商品本体类目 · Outside the seven requested physical Christmas categories'};
   if(dimensionFacts.notes.length)p.dimensionNotes=dimensionFacts.notes;
   if(!/\d\s*(?:cm|mm|m|ft|inches?)\b|["″]/i.test(String(d.specifications.Dimensions||''))&&d.specifications.Dimensions)p.dimensionSourceNote=/^(?:cm|mm|m|ft|inches?)$/i.test(d.specifications.Dimensions.trim())?'官网尺寸栏仅标单位，没有给出数值 · Source size field gives a unit without numeric measurements':'官网该尺寸栏未标计量单位，保留原文，不推算厘米 · Source dimensions omit units; raw dimensions retained without assuming centimetres';
-  if(p.kind==='tree'){const declared=toCentimetres(specifications['Christmas Tree Height']||''),exact=declared||toCentimetres(d.selectedSize||'')||toCentimetres(specifications.Height||'');p.heightCm=exact||null;p.heightLabel=specifications['Christmas Tree Height']||d.selectedSize||specifications.Height||null;if(declared&&dimensions.values.Height&&Math.abs(declared-dimensions.values.Height)>Math.max(8,declared*.12))p.dimensionSourceNote='官网尺寸字段存在冲突；树高按独立树高字段，原始尺寸保留 · Source dimensions conflict; dedicated tree-height field used; raw dimensions retained';const t=name.toLowerCase();p.style=/potted|\bin a pot\b/.test(t)?'圣诞树盆栽':/pop.?up|collapsible/.test(t)?'折叠式圣诞树':/slim|pencil/.test(t)?'纤细圣诞树':/flock|frost|snow/.test(t)?'雪景款':/twig|metal|tinsel|paper|acrylic/.test(t)?'其它树形类别':/pre.?lit|lit (?:christmas )?tree/.test(t)?'预亮灯款':'标准款';}
+  if(p.kind==='tree'){const declared=toCentimetres(specifications['Christmas Tree Height']||''),exact=declared||toCentimetres(d.selectedSize||'')||toCentimetres(specifications.Height||'');p.heightCm=exact||null;p.heightLabel=specifications['Christmas Tree Height']||d.selectedSize||specifications.Height||null;if(declared&&dimensions.values.Height&&Math.abs(declared-dimensions.values.Height)>Math.max(8,declared*.12))p.dimensionSourceNote='官网尺寸字段存在冲突；树高按独立树高字段，原始尺寸保留 · Source dimensions conflict; dedicated tree-height field used; raw dimensions retained';p.style=jlTreeStyle(name,specifications);}
   if(p.kind==='skirt')p.skirtSizeCm=p.dimensions.values.Diameter||p.dimensions.maxCm||null;
   if(!baseline&&p.inStock&&newStatus&&!prior?.everNew&&!prior?.baselineRecord){p.firstNewObservedAt=d.observedAt;p.arrivalEvidence='observed-after-baseline';}products.push(p);
  }

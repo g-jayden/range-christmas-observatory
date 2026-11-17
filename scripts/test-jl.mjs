@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';import fs from 'node:fs/promises';
-import {buildJlSnapshot,jlDirectoryAudit,jlOriginalGallery,jlPhysicalMemberships,jlSpecs,jlSourcePrices,jlDimensionFacts} from '../server/jl-products.mjs';
+import {buildJlSnapshot,jlDirectoryAudit,jlOriginalGallery,jlPhysicalMemberships,jlSpecs,jlSourcePrices,jlDimensionFacts,jlTreeStyle} from '../server/jl-products.mjs';
 import {mergeJlEvidence} from '../server/jl-evidence.mjs';import {isToday,isNew} from '../web/catalogue-model.mjs';
 const d=JSON.parse(await fs.readFile('test/fixtures/jl-dom-product.json')),groupIds=['baubles','tree','topper','lights','skirt','foliage'],directory={observedAt:d.observedAt,categories:groupIds.map(id=>({id,pages:[{count:[1,1,1],rows:[{pageProductId:d.pageId,sourceUrl:d.sourceUrl,sponsored:false}]}]}))},e={products:{[d.productCode]:d},pending:[],failures:[],conflicts:[]};
 assert.equal(jlDirectoryAudit(directory).length,6);const s=buildJlSnapshot(directory,e),p=s.products[0];assert.equal(p.sku,'76645627');assert.equal(p.parentGroupId,'115617144');assert.equal(p.department,'jl-baubles');assert.equal(p.price,800);assert.equal(p.originalPrice,1000);assert.match(p.material,/Foam/);assert.match(p.material,/泡沫/);assert.equal(p.dimensions.maxCm,null,'Unitless dimensions must never become guessed centimetres');assert(p.dimensionSourceNote);assert.equal(isToday(p,d.observedAt),false);assert.equal(p.sourceDescriptionAbsent,true);
@@ -33,3 +33,9 @@ assert.deepEqual(jlPhysicalMemberships({name:'Light Bulbs Tinsel Wreath',specifi
 assert.deepEqual(jlPhysicalMemberships({name:'60cm Brush Table Tree Decoration',specifications:{Height:'60cm'}},['baubles']),['jl-tree']);
 
 assert(!new URL(buildJlSnapshot(directory,{...e,products:{[d.productCode]:{...d,sourceUrl:d.sourceUrl+'#footer'}}}).products[0].sourceUrl).hash);
+
+// A substring match for "lit Christmas tree" must not turn an unlit tree into a pre-lit one.
+assert.equal(jlTreeStyle('John Lewis Brunswick Spruce Unlit Christmas Tree, 5ft',{'Pre-lit':'Unlit'}),'标准款');
+assert.equal(jlTreeStyle('John Lewis Christmas Tree',{'Pre-lit':'Pre-Lit'}),'预亮灯款');
+assert.equal(jlTreeStyle('John Lewis Christmas Tree',{'Pre-lit':'Unlit'}),'标准款');
+assert.equal(jlTreeStyle('John Lewis Unlit Potted Christmas Tree',{'Pre-lit':'Unlit'}),'圣诞树盆栽');
