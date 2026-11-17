@@ -1,0 +1,81 @@
+name: Next daily exact SKU collection with paid fallback
+on:
+  schedule:
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Recheck sources even if today's complete scan is saved
+        type: boolean
+        default: false
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: range-source-and-pages-production
+  cancel-in-progress: false
+  queue: max
+jobs:
+  next:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci
+      - run: node scripts/test-nx-daily.mjs
+      - name: Reconcile all five official directories; free APIs first, paid batches only when needed
+        id: source
+        env:
+          NX_FORCE: ${{ inputs.force == true && 'true' || 'false' }}
+        run: node scripts/update-next.mjs
+      - uses: actions/cache@v6.1.0
+        if: steps.source.outcome == 'success'
+        with:
+          path: |
+            runtime/models
+            runtime/fonts
+          key: local-clip-vit-base-patch32-q8-v1
+      - name: Verify originals and reuse image-hash-bound classification reviews locally
+        if: steps.source.outcome == 'success'
+        run: node scripts/enrich-nx.mjs
+      - name: Prepare verified first-observed arrivals without resending the baseline
+        if: success()
+        run: node scripts/prepare-nx-notifications.mjs
+      - name: Preserve Next source checkpoints and billing receipts even on partial failure
+        id: evidence
+        if: always()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          mkdir -p web/nx web/images/nx web/mail-assets
+          git add web/nx web/images/nx web/mail-assets web/collection-ledger.json web/preview-quality-cache.json.gz
+          git diff --cached --quiet || git commit -m "Save Next daily reconciliation, original images and paid receipts [skip ci]"
+          node scripts/push-evidence.mjs
+      - name: Deliver only verified committed Next arrivals
+        if: always() && steps.evidence.outcome == 'success'
+        run: node scripts/deliver-nx-notifications.mjs
+      - name: Publish current Next data and honest collection status without collecting other retailers
+        if: always() && steps.evidence.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/request-nx-site-publish.mjs
+      - uses: actions/upload-artifact@v6.0.0
+        if: always()
+        with:
+          name: next-daily-reconciliation-proof
+          path: |
+            web/nx/status.json
+            web/nx/daily-checkpoint.json
+            web/nx/native-products-status.json
+          retention-days: 7

@@ -1,0 +1,16 @@
+{
+  "id": "next-ongoing-collection-20261117",
+  "retailerId": "nx",
+  "enabled": true,
+  "scope": "ongoing-five-category-collection",
+  "authorization": "user-explicit-always-allow-next-paid-fallback-20261117",
+  "authorizedAt": "2026-11-17T15:42:46.733434+00:00",
+  "maxCreditsPerRun": 60,
+  "accountReserveCredits": 5000,
+  "monthlyCreditsLimit": null,
+  "freeFirst": true,
+  "scheduledPaidCollection": true,
+  "automaticPaidRetry": false,
+  "dailyCheckBeijing": "07:00",
+  "scopeRestriction": "Next five official Christmas categories only; no other retailer receives this grant"
+}
