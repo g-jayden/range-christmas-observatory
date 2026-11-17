@@ -1,3 +1,4 @@
+import {nextBodyPalette,nextMaterialFacts} from '../server/nx-appearance.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import {nextProductFromApi,sanitiseNextApi} from '../server/nx-native-source.mjs';
@@ -26,3 +27,10 @@ assert.equal(nextSpecs({colour:'Red',itemDescription:{measurements:[{units:[{typ
 const sample={kind:'decoration',department:'nx-garland',departmentIds:['nx-garland'],inStock:true,sku:'V52416-01',firstNewObservedAt:'2026-11-16T15:59:00Z',arrivalEvidence:'observed-after-baseline',newStatus:false};
 assert.equal(scopeProducts([sample],'nx-garland','today',Date.parse('2026-11-16T15:59:59Z')).length,1);assert.equal(scopeProducts([sample],'nx-garland','today',Date.parse('2026-11-16T16:00:00Z')).length,0);assert.equal(scopeProducts([sample],'nx-garland','new',Date.parse('2026-11-16T16:00:00Z')).length,1);
 console.log('PASS: Next exact item/option price and live stock, authoritative native gallery mapping, bundle/plural/tree-accessory/plush classification, source dimension conflicts, unitless measurements and Beijing midnight rollover.');
+
+const factsTree=nextProductFromApi(await read('L85150'),config),factsSpecs=nextSpecs(factsTree,factsTree.options.options[0]),bodyDimensions=nextDimensionFacts(factsTree,factsTree.options.options[0],factsSpecs);
+assert.equal(factsSpecs.Height,'210cm');assert.equal(factsSpecs.Diameter,'103cm');assert.equal(factsSpecs.Width,undefined,'Folded raw width cannot become full-tree width');assert.equal(factsSpecs['Source Width'],'24cm');assert.equal(bodyDimensions.dimensions.values.Height,210);
+assert.match(nextMaterialFacts({},'172 PVC tips and a mixture of PE needles').label,/聚氯乙烯/);assert.match(nextMaterialFacts({},'172 PVC tips and a mixture of PE needles').label,/聚乙烯/);assert.match(nextMaterialFacts({},'A festive green tree.').label,/Not specified/);
+const greenPalette=nextBodyPalette({department:'nx-tree',variantName:'Green Warm White Pre-Lit Christmas Tree',sourceColour:'Green Warm White',sourceDescription:'Warm white LEDs',specifications:{}},{colors:['透明色'],colourConfidence:.1});assert.deepEqual(greenPalette.colors,['绿色']);assert(greenPalette.evidence.lampColourTextExcluded);
+const blackPalette=nextBodyPalette({department:'nx-tree',variantName:'Black Multi Light Twig Tree',sourceColour:'Black Multi Light',sourceDescription:'Prelit black branches with multicoloured LED lights',specifications:{}},{colors:['紫色'],colourConfidence:.2});assert.deepEqual(blackPalette.colors,['黑色']);
+console.log('PASS: explicit full-tree dimensions replace conflicting folded specifications; documented PE/PVC tips become bilingual materials; warm-white and multicoloured bulbs do not repaint tree branches.');
