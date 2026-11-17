@@ -127,6 +127,9 @@ jobs:
       - name: Register the reviewed Next baseline and prepare verified arrivals
         if: steps.retailer_release.outputs.nx == 'true'
         run: node scripts/prepare-nx-notifications.mjs
+      - name: Register the reviewed John Lewis baseline and prepare verified arrivals
+        if: steps.retailer_release.outputs.jl == 'true'
+        run: node scripts/prepare-jl-notifications.mjs
       - name: Persist the daily claim before opening a paid session
         if: steps.tick.outputs.monitor == 'true'
         run: |

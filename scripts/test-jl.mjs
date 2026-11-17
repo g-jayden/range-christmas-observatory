@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';import fs from 'node:fs/promises';
-import {buildJlSnapshot,jlDirectoryAudit,jlOriginalGallery,jlPhysicalMemberships,jlSpecs,jlSourcePrices} from '../server/jl-products.mjs';
+import {buildJlSnapshot,jlDirectoryAudit,jlOriginalGallery,jlPhysicalMemberships,jlSpecs,jlSourcePrices,jlDimensionFacts} from '../server/jl-products.mjs';
 import {mergeJlEvidence} from '../server/jl-evidence.mjs';import {isToday,isNew} from '../web/catalogue-model.mjs';
 const d=JSON.parse(await fs.readFile('test/fixtures/jl-dom-product.json')),groupIds=['baubles','tree','topper','lights','skirt','foliage'],directory={observedAt:d.observedAt,categories:groupIds.map(id=>({id,pages:[{count:[1,1,1],rows:[{pageProductId:d.pageId,sourceUrl:d.sourceUrl,sponsored:false}]}]}))},e={products:{[d.productCode]:d},pending:[],failures:[],conflicts:[]};
 assert.equal(jlDirectoryAudit(directory).length,6);const s=buildJlSnapshot(directory,e),p=s.products[0];assert.equal(p.sku,'76645627');assert.equal(p.parentGroupId,'115617144');assert.equal(p.department,'jl-baubles');assert.equal(p.price,800);assert.equal(p.originalPrice,1000);assert.match(p.material,/Foam/);assert.match(p.material,/泡沫/);assert.equal(p.dimensions.maxCm,null,'Unitless dimensions must never become guessed centimetres');assert(p.dimensionSourceNote);assert.equal(isToday(p,d.observedAt),false);assert.equal(p.sourceDescriptionAbsent,true);
@@ -17,3 +17,19 @@ assert.deepEqual(jlPhysicalMemberships({name:'Glass Baubles, Autumn Mix'},['baub
 assert.equal(jlSpecs({specifications:{Dimensions:'H120 x W60cm'}}).Height,'120cm');
 const arrival={...d,headerText:'New\n'+d.headerText,observedAt:'2026-11-16T23:01:00Z'},arrived=buildJlSnapshot({...directory,observedAt:arrival.observedAt},{...e,products:{[d.productCode]:arrival}},{previous:{products:[],notificationBaselineReady:true}}).products[0];assert(isToday(arrived,arrival.observedAt));assert(!isToday(arrived,'2026-11-17T16:00:00Z'));assert(isNew(arrived));
 console.log('John Lewis directory reconciliation, exact public product code/gallery binding, true reductions, unavailable offers, variant-only prices, bilingual materials, source unit preservation, physical exclusions, baseline and Beijing midnight passed.');
+
+const examples=JSON.parse(await fs.readFile('test/fixtures/jl-reviewed-examples.json'));const find=code=>examples.find(d=>d.productCode===code);
+assert.deepEqual(jlPhysicalMemberships(find('76645653'),['baubles']),['jl-baubles']);
+assert.deepEqual(jlPhysicalMemberships(find('76645502'),['baubles']),['jl-baubles']);
+assert.deepEqual(jlPhysicalMemberships(find('76661207'),['skirt']),['jl-skirt']);
+assert.deepEqual(jlPhysicalMemberships(find('73073318'),['baubles']),['jl-topper']);
+assert.deepEqual(jlPhysicalMemberships(find('76645867'),['baubles']),['jl-baubles']);
+const star=find('76684720'),starFacts=jlDimensionFacts(star,jlSpecs(star));assert.equal(starFacts.dimensions.maxCm,null);assert(starFacts.notes.length);
+const bigTree=jlSpecs(find('76031139'));assert.equal(bigTree.Height,'7ft');assert.equal(bigTree.Width,'54inches');
+
+assert.deepEqual(jlPhysicalMemberships({name:'Knitting Mouse Tree Decoration'},['baubles']),['jl-baubles']);
+assert.deepEqual(jlPhysicalMemberships({name:'Chinese Lantern Wreath',description:'Perfect for decorating your home this autumn.'},['foliage']),[]);
+assert.deepEqual(jlPhysicalMemberships({name:'Light Bulbs Tinsel Wreath',specifications:{Dimensions:'H50 x W50cm'}},['foliage']),['jl-wreath']);
+assert.deepEqual(jlPhysicalMemberships({name:'60cm Brush Table Tree Decoration',specifications:{Height:'60cm'}},['baubles']),['jl-tree']);
+
+assert(!new URL(buildJlSnapshot(directory,{...e,products:{[d.productCode]:{...d,sourceUrl:d.sourceUrl+'#footer'}}}).products[0].sourceUrl).hash);

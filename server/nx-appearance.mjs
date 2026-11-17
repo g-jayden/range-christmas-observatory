@@ -3,7 +3,7 @@ import {duMaterialFacts} from './du-materials.mjs';
 export function nextBodyPalette(p,visual){
  const lit=/pre.?lit|\bLED\b|\blights?\b/i.test(p.variantName+' '+p.sourceDescription);
  const clean=t=>lit?String(t||'').replace(/(?:warm\s+white|white\s+warm|cool\s+white|bright\s+white|multi(?:.?colou?red)?\s+lights?)/ig,' '):String(t||'');
- const colour=clean(p.sourceColour),facts=sourceColours({...p,department:p.department?.replace(/^nx-/,''),variantName:clean(p.variantName),sourceColour:colour,specifications:{...p.specifications,Colour:colour,Color:colour}});
+ const colour=clean(p.sourceColour),facts=sourceColours({...p,department:p.department?.replace(/^(?:nx|jl)-/,''),variantName:clean(p.variantName),sourceColour:colour,specifications:{...p.specifications,Colour:colour,Color:colour}});
  const seen=visual.colors||[],family=c=>/灰/.test(c)?'grey':c,agree=facts.named.some(c=>seen.some(v=>family(c)===family(v)));
  let colors=facts.conflict&&agree?seen:facts.explicitTitleColours?facts.named:facts.reliable?facts.specified:facts.described.length?facts.described:facts.named.length?facts.named:seen;
  if(/snow|frost|flock/i.test(p.variantName)&&seen.length>1&&colors.every(c=>seen.includes(c)))colors=seen;
