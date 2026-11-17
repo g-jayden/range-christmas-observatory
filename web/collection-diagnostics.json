@@ -283,6 +283,17 @@
       "authorizationId": "nx-source-access-20261117",
       "endpoint": "interact",
       "sessionDurationMs": 19000
+    },
+    {
+      "id": "next-01a1e6e0-42e0-719d-903b-ffaf4c9b25fd",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true,
+      "githubRun": 43986784198
     }
   ],
   "unreceipted": [
