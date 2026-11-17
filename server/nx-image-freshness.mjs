@@ -3,9 +3,10 @@ export function nxImageFresh(prior,observedAt,{maxAgeDays=7,now=Date.now()}={}){
  return Boolean(prior?.file&&!prior.error&&!(prior.status>=400)&&Number.isFinite(checked)&&Number.isFinite(source)&&checked>=source&&checked<=now&&now-checked<maxAgeDays*86400000);
 }
 
+export const nextReviewMatches=(review,fingerprint,hash)=>review?.sourceFingerprint===fingerprint&&(review.imageHash===hash||review.reviewedImageHashes?.includes(hash));
 export function nextReviewedPreview(pool,review,fingerprint){
  if(!review||review.sourceFingerprint!==fingerprint)return null;
- return pool.find(p=>p.url===review.previewSourceUrl&&p.hash===review.previewImageHash)||pool.find(p=>p.hash===review.imageHash)||null;
+ return pool.find(p=>p.url===review.previewSourceUrl&&p.hash===review.previewImageHash)||pool.find(p=>p.hash===review.imageHash)||pool.find(p=>review.reviewedImageHashes?.includes(p.hash))||null;
 }
 // Retry transient transport failures on the exact original only. A 403/404 is
 // returned immediately; it must never trigger a complete paid source re-scan.
