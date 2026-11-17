@@ -1,0 +1,11 @@
+{
+  "id": "next-current-integration-20261117",
+  "retailerId": "nx",
+  "enabled": true,
+  "scope": "current-five-category-integration",
+  "authorization": "user-explicit-accuracy-over-cost-20261117",
+  "maxCreditsPerRun": 60,
+  "accountReserveCredits": 5000,
+  "automaticPaidRetry": false,
+  "scheduledPaidCollection": false
+}
