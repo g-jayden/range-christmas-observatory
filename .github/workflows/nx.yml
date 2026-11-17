@@ -79,7 +79,12 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           mkdir -p web/nx web/images/nx web/mail-assets
-          git add web/nx web/images/nx web/mail-assets web/collection-ledger.json web/preview-quality-cache.json.gz
+          git add web/nx web/images/nx web/collection-ledger.json web/preview-quality-cache.json.gz
+          for next_mail_dir in web/mail-assets/nx-*/; do
+            if test -d "$next_mail_dir"; then
+              git add -- "$next_mail_dir"
+            fi
+          done
           git diff --cached --quiet || git commit -m "Save Next daily reconciliation, original images and paid receipts [skip ci]"
           node scripts/push-evidence.mjs
       - name: Deliver only verified committed Next arrivals
