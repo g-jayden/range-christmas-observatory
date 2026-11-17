@@ -7,7 +7,7 @@ export function buildNextSourceRequest(phase='directories'){
  const action=async()=>{
   const results=[],requests=[];
   const paths=['/shop/home/christmas-decorations/baubles','/shop/home/christmas-decorations/wreath','/shop/home/christmas-decorations/garland','/shop/home/christmas-decorations/christmas-trees','/shop/home/christmas-decorations/f/type-ornaments'];
-  for(const path of paths){const u=new URL('https://api.nextdirect.com/api/search/next/GB/en/v1/item-aggregation');u.search=new URLSearchParams({url:'https://www.next.co.uk'+path,type:'Category',start:'0',pageSize:'900'});requests.push({kind:'directory-api',url:u.href});}
+  for(const path of paths){const u=new URL('https://api.nextdirect.com/api/search/next/GB/en/v1/item-aggregation');u.search=new URLSearchParams({criteria:'www.next.co.uk'+path,type:'Category',start:'0',pagesize:'900'});requests.push({kind:'directory-api',url:u.href});}
   requests.push({kind:'summary-api',url:'https://api.nextdirect.com/api/edge-aggregator/product-summary/v1/index.json?realm=next&territory=GB&language=en&productIds=V52416%7cproduct'});
   requests.push({kind:'pdp',url:'https://www.next.co.uk/style/sv024193/v52416'});
   for(const request of requests){const r=await fetch(request.url,{signal:AbortSignal.timeout(20000)}),text=await r.text();results.push({...request,status:r.status,text:r.status===200?text:null});if([401,403,429].includes(r.status))return {results,blocked:true};}

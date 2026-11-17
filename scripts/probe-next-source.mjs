@@ -19,5 +19,5 @@ try{
  const encoded=gzipSync(Buffer.from(JSON.stringify(payload))).toString('base64'),chunks=encoded.match(/.{1,12000}/g)||[];
  chunks.forEach((chunk,i)=>console.log('NEXT_SOURCE_GZIP '+(i+1)+'/'+chunks.length+' '+chunk));
  console.log(JSON.stringify({results:action.results.map(d=>({kind:d.kind,url:d.url,status:d.status,bytes:d.text?.length})),creditsUsed:receipt.creditsUsed}));
- if(action.blocked)process.exitCode=1;
+ if(action.blocked||action.results.some(r=>r.status!==200))process.exitCode=1;
 }catch(e){console.log('NEXT_SOURCE_FAILURE '+JSON.stringify({error:e.message,receipt}));process.exitCode=1;}

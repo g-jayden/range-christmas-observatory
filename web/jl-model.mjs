@@ -1,3 +1,7 @@
+import {jlPhysicalObject} from './jl-physical.mjs';
 // Wreaths and garlands share one official source, with separate physical categories.
 export const JL_DEPARTMENTS=[['jl-baubles','圣诞球和圣诞树装饰','Baubles and Tree Decorations'],['jl-tree','圣诞树','Christmas Trees'],['jl-topper','圣诞树顶装饰','Tree Toppers'],['jl-lights','圣诞彩灯','Christmas Lights'],['jl-skirt','圣诞树裙','Christmas Tree Skirts'],['jl-wreath','圣诞圈','Christmas Wreaths'],['jl-garland','圣诞长藤','Christmas Garlands']].map(([id,zh,en])=>({id,zh,en,label:zh+' · '+en,retailerId:'jl'}));
 export const JL_DIRECTORIES=[['baubles','/browse/christmas/baubles-tree-decorations/_/N-54yc'],['tree','/browse/christmas/christmas-trees/_/N-54yh'],['topper','/browse/christmas/christmas-tree-toppers/_/N-7nrq'],['lights','/browse/christmas/christmas-lights/_/N-54yf'],['skirt','/browse/christmas/christmas-tree-skirts/_/N-5miq'],['foliage','/browse/christmas/christmas-wreaths-garlands/_/N-5mix']];
+
+export const isJlScope=id=>JL_DEPARTMENTS.some(d=>d.id===id);
+export function jlMemberships(p){const memberships=jlPhysicalObject({name:p.baseName||p.variantName,description:p.sourceDescription,groups:p.jlSource?.groups||[],maxCm:p.dimensions?.maxCm});return {primary:memberships[0]||null,memberships,method:'John-Lewis-physical-title-description-and-official-scope',...(memberships.length?{}:{disposition:'exclude',reason:'不属于指定七个圣诞商品本体类目 · Outside the seven requested physical Christmas categories'})};}
