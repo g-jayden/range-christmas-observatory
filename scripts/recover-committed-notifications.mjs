@@ -13,8 +13,8 @@ import {publishCollectionCheckpoint} from '../server/collection-checkpoints.mjs'
 const pending=await control('/internal/pending-evidence');
 // Next and John Lewis have dedicated exact-SKU recovery and notification paths.
 // Their pending evidence must not enter the unrelated legacy catalogue lookup.
-const delegated=pending.candidates.filter(p=>['nx','jl'].includes(p.retailerId));
-pending.candidates=pending.candidates.filter(p=>!['nx','jl'].includes(p.retailerId));
+const delegated=pending.candidates.filter(p=>['nx','jl','mt','bq'].includes(p.retailerId));
+pending.candidates=pending.candidates.filter(p=>!['nx','jl','mt','bq'].includes(p.retailerId));
 if(delegated.length)console.log(JSON.stringify({phase:'independent-retailer-recovery',delegated:delegated.map(p=>({retailerId:p.retailerId,sku:p.sku})),sourceRequestsMade:false,firecrawlCredits:0}));
 if(!pending.candidates.length){console.log(JSON.stringify({phase:'recover-committed-notifications',queued:0,firecrawlCredits:0,sourceRequestsMade:false}));process.exit(0);}
 const read=(file,fallback={products:[]})=>fs.readFile('web/'+file+'.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return fallback;throw e;});

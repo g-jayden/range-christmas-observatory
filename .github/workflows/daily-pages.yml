@@ -127,6 +127,11 @@ jobs:
             runtime/models
             runtime/fonts
           key: local-clip-vit-base-patch32-q8-v1
+      - name: Register reviewed Matalan and B&Q baselines with native attachments
+        if: steps.retailer_release.outputs.mt == 'true' || steps.retailer_release.outputs.bq == 'true'
+        run: |
+          if [ '${{ steps.retailer_release.outputs.mt }}' = 'true' ]; then node scripts/prepare-retailer-notifications.mjs mt; fi
+          if [ '${{ steps.retailer_release.outputs.bq }}' = 'true' ]; then node scripts/prepare-retailer-notifications.mjs bq; fi
       - name: Register the reviewed Next baseline and prepare verified arrivals
         if: steps.retailer_release.outputs.nx == 'true'
         run: node scripts/prepare-nx-notifications.mjs

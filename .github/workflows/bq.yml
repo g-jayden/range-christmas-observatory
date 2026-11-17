@@ -1,0 +1,100 @@
+name: B&Q free exact SKU collection and native photos
+on:
+  schedule:
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+    inputs:
+      rebuildOnly:
+        description: Reuse saved complete source without directory or detail requests
+        type: boolean
+        default: false
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: range-source-and-pages-production
+  cancel-in-progress: false
+  queue: max
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    outputs:
+      active: ${{ steps.activation.outputs.active }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          sparse-checkout: web/retailer-activation.mjs
+          sparse-checkout-cone-mode: false
+      - id: activation
+        run: node --input-type=module -e "import fs from 'node:fs';import{retailerEnabled}from './web/retailer-activation.mjs';fs.appendFileSync(process.env.GITHUB_OUTPUT,'active='+retailerEnabled('bq')+'\\n')"
+  bandq:
+    needs: acceptance
+    if: needs.acceptance.outputs.active == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout: |
+            /.github/
+            /package.json
+            /package-lock.json
+            /.npmrc
+            /.gitignore
+            /server/
+            /scripts/
+            /cloud/
+            /test/
+            /web/*.mjs
+            /web/settings.json
+            /web/preview-quality-cache.json.gz
+            /web/bq/
+            /web/images/bq/
+            /web/mail-assets/bq-*/
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci
+      - run: node scripts/test-bq.mjs
+      - name: Read all ten official directories, NEW badges and exact variant offers free
+        env:
+          BQ_REBUILD_ONLY: ${{ inputs.rebuildOnly == true && 'true' || 'false' }}
+        run: node scripts/update-bq.mjs
+      - uses: actions/cache@v6.1.0
+        with:
+          path: |
+            runtime/models
+            runtime/fonts
+          key: local-clip-vit-base-patch32-q8-v1
+      - name: Verify originals and local body colours without paid requests
+        run: node scripts/enrich-bq.mjs
+      - name: Prepare verified first-observed arrivals after the initial baseline
+        run: node scripts/prepare-retailer-notifications.mjs bq
+      - name: Preserve source checkpoints and native evidence even on partial failure
+        id: evidence
+        if: always()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          mkdir -p web/mt web/images/mt web/mail-assets
+          git add web/mt web/images/mt
+          for retailer_mail_dir in web/mail-assets/bq-*/; do
+            [ -d "$retailer_mail_dir" ] && git add "$retailer_mail_dir"
+          done
+          git diff --cached --quiet || git commit -m "Save B&Q exact SKU source and reviewed native evidence [skip ci]"
+          node scripts/push-evidence.mjs
+      - name: Deliver only committed verified B&Q arrivals
+        if: success()
+        run: node scripts/deliver-retailer-notifications.mjs bq
+      - name: Publish without recollecting other retailers
+        if: steps.evidence.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/request-retailer-site-publish.mjs bq

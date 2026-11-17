@@ -1,3 +1,5 @@
+import {MT_DEPARTMENTS,isMtScope} from './mt-model.mjs';
+import {BQ_DEPARTMENTS,isBqScope} from './bq-model.mjs';
 import {retailerEnabled} from './retailer-activation.mjs';
 import {NX_DEPARTMENTS,isNxScope} from './nx-model.mjs';
 import {JL_DEPARTMENTS,isJlScope} from './jl-model.mjs';
@@ -10,7 +12,7 @@ import {TAXONOMY_VERSION,productBody,offeredObject,objectMemberships,isPublished
 export {isPublishedProduct} from './taxonomy.mjs';
 import {THEME_DEFINITIONS,isThemeScope} from './theme-model.mjs';
 export {THEME_DEFINITIONS,isThemeScope} from './theme-model.mjs';
-export const DEPARTMENTS=[...NX_DEPARTMENTS.filter(()=>retailerEnabled('nx')).map(d=>[d.id,d.zh,d.en]),...JL_DEPARTMENTS.filter(()=>retailerEnabled('jl')).map(d=>[d.id,d.zh,d.en]),...DU_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...HB_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...BM_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...ASDA_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...MS_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),
+export const DEPARTMENTS=[...MT_DEPARTMENTS.filter(()=>retailerEnabled('mt')).map(d=>[d.id,d.zh,d.en]),...BQ_DEPARTMENTS.filter(()=>retailerEnabled('bq')).map(d=>[d.id,d.zh,d.en]),...NX_DEPARTMENTS.filter(()=>retailerEnabled('nx')).map(d=>[d.id,d.zh,d.en]),...JL_DEPARTMENTS.filter(()=>retailerEnabled('jl')).map(d=>[d.id,d.zh,d.en]),...DU_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...HB_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...BM_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...ASDA_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...MS_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),
  ['tree','圣诞树','Christmas Trees'],['skirt','圣诞树裙','Christmas Tree Skirts'],
  ['ornaments','圣诞装饰品','Christmas Ornaments'],['standing','立式装饰品','Standing Decorations'],
  ['wreath','圣诞圈','Christmas Wreaths'],['garland','圣诞长藤','Christmas Garlands'],
@@ -36,14 +38,14 @@ DEPARTMENT_MAP['home-textiles']={id:'home-textiles',zh:'家纺床品',en:'Christ
 export const ROOT_DEPARTMENTS=DEPARTMENTS.filter(d=>!d.parentId);
 export const LIGHT_DEPARTMENTS=DEPARTMENTS.filter(d=>d.parentId==='lights');
 export const isLightingScope=id=>id==='asda-lights'||id==='ms-lights'||id==='bm-lights'||id==='hb-lights'||id==='du-lights'||id==='jl-lights'||id==='lights'||DEPARTMENT_MAP[id]?.parentId==='lights';
-export const decorationDepartments=DEPARTMENTS.filter(d=>!isAsdaScope(d.id)&&!isMsScope(d.id)&&!isBmScope(d.id)&&!isHbScope(d.id)&&!isDuScope(d.id)&&!isNxScope(d.id)&&!isJlScope(d.id)&&!['tree','skirt'].includes(d.id)&&!isLightingScope(d.id)&&!isThemeScope(d.id));
+export const decorationDepartments=DEPARTMENTS.filter(d=>!isAsdaScope(d.id)&&!isMsScope(d.id)&&!isBmScope(d.id)&&!isHbScope(d.id)&&!isDuScope(d.id)&&!isMtScope(d.id)&&!isBqScope(d.id)&&!isNxScope(d.id)&&!isJlScope(d.id)&&!['tree','skirt'].includes(d.id)&&!isLightingScope(d.id)&&!isThemeScope(d.id));
 // Prices come from the retailer's integer-pence fields, never historical changes.
 export function sourcePrice(p){
  const current=Number.isFinite(p.priceGBP)?Math.round(p.priceGBP*100):Number.isInteger(p.price)?p.price:null;
  const original=Number.isInteger(p.originalPrice)?p.originalPrice:null;
  return {currentPence:current,originalPence:original,reduced:current!==null&&original!==null&&original>current,promoText:typeof p.promoText==='string'?p.promoText:null};
 }
-export const COLOUR_EN={'绿色':'Green','白色':'White / Cream','黑色':'Black','深空灰色':'Dark Charcoal Grey','灰色':'Grey','粉色':'Pink','红色':'Red / Burgundy','褐色':'Brown / Beige','棕色':'Brown','金色':'Gold','银色':'Silver','蓝色':'Blue / Navy','青色':'Teal / Turquoise','紫色':'Purple','橙色':'Orange','黄色':'Yellow','透明色':'Clear','古铜色':'Bronze','铜色':'Copper','多色':'Multicolour','颜色待核验':'Colour unconfirmed','颜色未确认':'Colour unconfirmed'};
+export const COLOUR_EN={'米色':'Beige','奶油色':'Cream','绿色':'Green','白色':'White / Cream','黑色':'Black','深空灰色':'Dark Charcoal Grey','灰色':'Grey','粉色':'Pink','红色':'Red / Burgundy','褐色':'Brown / Beige','棕色':'Brown','金色':'Gold','银色':'Silver','蓝色':'Blue / Navy','青色':'Teal / Turquoise','紫色':'Purple','橙色':'Orange','黄色':'Yellow','透明色':'Clear','古铜色':'Bronze','铜色':'Copper','多色':'Multicolour','颜色待核验':'Colour unconfirmed','颜色未确认':'Colour unconfirmed'};
 export const colourLabel=c=>c+' · '+(COLOUR_EN[c]||c);
 export const STYLE_EN={'圣诞树盆栽':'Potted','折叠式圣诞树':'Pop-up','纤细圣诞树':'Slim','雪景款':'Snow / Flocked','预亮灯款':'Pre-lit','标准款':'Standard','其它树形类别':'Other tree shapes'};
 export const FIELD_ZH={Height:'高度',Width:'宽度',Depth:'深度',Length:'长度',Diameter:'直径','Base Diameter':'底部直径','Bottom Diameter':'底部直径','Top Diameter':'顶部直径','Christmas Tree Height':'树高',Size:'尺寸',Dimensions:'尺寸',Max:'最大尺寸',Material:'材质','Material Composition':'材质组成',Colour:'颜色',Color:'颜色',Weight:'重量','Shipping Weight':'运输重量','Pack Size':'包装数量','Tree Type':'树类型',Composition:'材质组成','Source Image':'来源图片','Light Colour':'灯光颜色','Number of LEDs':'灯珠数量','Indoor/Outdoor':'使用场景','Power Source':'电源','Cable Length':'线缆长度',Occasion:'适用节日',Design:'设计',Shape:'形状',Finish:'表面处理',Type:'类型','Model Number':'型号','Assembly Required':'需要组装','Batteries Required':'电池要求',Waterproof:'防水',Fabric:'织物','IP Rating':'防护等级','Decoration Type':'装饰类型','Mains Operated':'市电供电','Batteries Included':'是否包含电池',Voltage:'电压',Wattage:'功率',Timer:'定时器','Bulb Type':'灯泡类型','Power Type':'供电类型','Colour Temperature':'色温','Number of Bulbs':'灯泡数量','Light Functions':'灯光模式'};

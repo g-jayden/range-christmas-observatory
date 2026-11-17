@@ -13,11 +13,11 @@ if(process.env.GITHUB_EVENT_NAME!=='workflow_dispatch'||process.env.COLLECTION_M
  console.log('Reviewed release waits for explicit publication; no source collection.');process.exit(0);
 }
 const retailerId=request.retailerId;
-if(!['nx','jl'].includes(retailerId)||!/^[a-f0-9]{64}$/.test(request.catalogueSha256))throw Error('Invalid reviewed retailer release');
+if(!['nx','jl','mt','bq'].includes(retailerId)||!/^[a-f0-9]{64}$/.test(request.catalogueSha256))throw Error('Invalid reviewed retailer release');
 const packed=await fs.readFile('web/'+retailerId+'/release-payload.b64','utf8');
 if(createHash('sha256').update(packed).digest('hex')!==request.payloadSha256)throw Error('Reviewed release payload changed');
 const files=JSON.parse(gunzipSync(Buffer.from(packed,'base64'),{maxOutputLength:32000000}));
-const allowed=new Set(['catalogue.json','status.json','reviews.json','source-directory.json','native-products-status.json','image-path-config.json','visual-cache.json','image-index.json',...(retailerId==='jl'?['source-evidence.json','closing-directory.json']:[])]);
+const allowed=new Set(['catalogue.json','status.json','reviews.json','source-directory.json','native-products-status.json','image-path-config.json','visual-cache.json','image-index.json','gallery-audit.json',...(retailerId==='jl'?['source-evidence.json','closing-directory.json']:[])]);
 if(Object.keys(files).some(f=>!allowed.has(f))||!files['catalogue.json'])throw Error('Unexpected reviewed release file');
 for(const [f,body]of Object.entries(files)){JSON.parse(body);await fs.writeFile('web/'+retailerId+'/'+f,body);}
 const bytes=await fs.readFile('web/'+retailerId+'/catalogue.json');
@@ -28,7 +28,7 @@ const jobs=new Map();
 for(const p of snapshot.products){
  if(p.imageIssue||!p.detailsReady||!p.visualEvidence)throw Error('Unverified source SKU in reviewed release');
  const e=p.originalImageEvidence,u=new URL(e?.sourceUrl||''),file=p.originalCachedImageUrl;
- const origin=retailerId==='nx'?'https://xcdn.next.co.uk':'https://media.johnlewiscontent.com';
+ const origin=retailerId==='mt'?'https://ml.thcdn.com':retailerId==='bq'?'https://media.diy.com':retailerId==='nx'?'https://xcdn.next.co.uk':'https://media.johnlewiscontent.com';
  if(u.origin!==origin||!new RegExp('^images/'+retailerId+'/[a-f0-9]{64}\\.(?:jpg|png|webp|avif|gif)$').test(file||'')||!p.originalImages?.some(g=>g.url===u.href&&g.selectedSku===p.sku&&g.sourceParentId===p.parentGroupId)||!file.includes(e.sha256))throw Error('Native source identity mismatch');
  if(p.cachedImageUrl!==file)throw Error('Preview must have the reviewed native-byte proof');
  jobs.set(file,{file,url:u.href,hash:e.sha256});
