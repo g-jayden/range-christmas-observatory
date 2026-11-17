@@ -12,7 +12,7 @@ permissions:
   contents: write
   actions: write
 concurrency:
-  group: range-source-and-pages-production
+  group: range-bq-source
   cancel-in-progress: false
   queue: max
 jobs:
