@@ -9,3 +9,7 @@ assert.equal((await post('/internal/nx-sync',{complete:true,observedAt:'2026-11-
 const base='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/mail-assets/nx-'+p.sku+'/',manifest={sku:p.sku,assetId:'nx-'+p.sku,retailerId:'nx',card:{url:base+'card.png'},original:{url:base+'original.jpg'}};const pinned=pinMailAssets(manifest,'a'.repeat(40));assert.match(publishedManifestUrl({...p,mailAssets:pinned}),/nx-V52416-01\/manifest.json/);
 await post('/internal/nx-sync',{complete:true,observedAt:'2026-11-10T01:00:00Z',products:[p,{...next,inStock:false}]});assert((await db.get('pending/nx:'+next.sku)).unavailableSince);assert.equal((await post('/internal/nx-sync',{complete:true,observedAt:'2026-11-10T01:01:00Z',products:[p,next]})).candidates.length,1,'A genuinely restored pending SKU is retried once without a second discovery');
 console.log('Next exact-SKU notification baseline, owner opt-in, retailer namespace, cross-category deduplication, unavailable restoration and immutable native asset URLs passed');
+
+const deliveryRegistry=await import('node:fs/promises').then(fs=>fs.readFile('scripts/deliver-committed-notifications.mjs','utf8'));
+for(const [,entry]of deliveryRegistry.matchAll(/'(scripts\/[^']+\.mjs)'/g))await import('node:fs/promises').then(fs=>fs.access(entry));
+console.log('Every registered retailer delivery entrypoint exists in the checked-out repository.');

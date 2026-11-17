@@ -2,6 +2,7 @@ import {retailerEnabled} from '../web/retailer-activation.mjs';
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {copyPublishedAssets} from './publish-assets.mjs';
+await import('./apply-retailer-gallery-audits.mjs');
 await fs.rm('public',{recursive:true,force:true});
 await fs.mkdir('public',{recursive:true});
 for(const name of ['catalogue.json','status.json','settings.json','service.json','collection-policy.json','collection-ledger.json','monitor-state.json','new-arrivals.json','monitor-proof.json'])JSON.parse(await fs.readFile('web/'+name,'utf8'));
