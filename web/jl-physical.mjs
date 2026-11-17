@@ -6,6 +6,7 @@ export function jlPhysicalObject({name,description:body,groups=[],maxCm=null}){
  if(/\b(?:tree topper|treetopper)\b/.test(title)||groups.includes('topper')&&/\btop of (?:your|the|a|my) (?:christmas )?tree\b/.test(description))return ['jl-topper'];
  if(/\bwreath\s*(?:and|&)\s*garland\s*(?:set)?\b/.test(title))return ['jl-wreath','jl-garland'];
  if(/\b(?:garlands?|tinsel)\b/.test(title))return ['jl-garland'];
+ if(/\bwreath\b/.test(title)&&!/\b(?:candle ring|candle holder|hanging tree)\b/.test(title))return groups.includes('baubles')&&maxCm>0&&maxCm<=25||/wreath.{0,20}(?:tree decoration|tree ornament)/.test(title)?['jl-baubles']:['jl-wreath'];
  if(/\b(?:bauble|tree decoration|tree ornament)\b/.test(title))return ['jl-baubles'];
  if(/\bwreath\b/.test(title)&&groups.includes('baubles')&&maxCm>0&&maxCm<=25)return ['jl-baubles'];
  if(/\bwreath\b/.test(title)&&!/\b(?:candle ring|candle holder|bauble|miniature|mini wreath|hanging tree)\b/.test(title))return ['jl-wreath'];

@@ -1,0 +1,19 @@
+import assert from 'node:assert/strict';import fs from 'node:fs/promises';
+import {buildJlSnapshot,jlDirectoryAudit,jlOriginalGallery,jlPhysicalMemberships,jlSpecs,jlSourcePrices} from '../server/jl-products.mjs';
+import {mergeJlEvidence} from '../server/jl-evidence.mjs';import {isToday,isNew} from '../web/catalogue-model.mjs';
+const d=JSON.parse(await fs.readFile('test/fixtures/jl-dom-product.json')),groupIds=['baubles','tree','topper','lights','skirt','foliage'],directory={observedAt:d.observedAt,categories:groupIds.map(id=>({id,pages:[{count:[1,1,1],rows:[{pageProductId:d.pageId,sourceUrl:d.sourceUrl,sponsored:false}]}]}))},e={products:{[d.productCode]:d},pending:[],failures:[],conflicts:[]};
+assert.equal(jlDirectoryAudit(directory).length,6);const s=buildJlSnapshot(directory,e),p=s.products[0];assert.equal(p.sku,'76645627');assert.equal(p.parentGroupId,'115617144');assert.equal(p.department,'jl-baubles');assert.equal(p.price,800);assert.equal(p.originalPrice,1000);assert.match(p.material,/Foam/);assert.match(p.material,/泡沫/);assert.equal(p.dimensions.maxCm,null,'Unitless dimensions must never become guessed centimetres');assert(p.dimensionSourceNote);assert.equal(isToday(p,d.observedAt),false);assert.equal(p.sourceDescriptionAbsent,true);
+for(const g of p.originalImages){assert.equal(g.selectedSku,p.sku);assert.equal(g.sourceParentId,p.parentGroupId);assert(new URL(g.url).origin==='https://media.johnlewiscontent.com');assert(!/wid=|hei=|rsp-pdp/.test(g.url));}
+assert.equal(jlSourcePrices({...d,priceText:null,inStock:false}).sourceOfferUnavailable,true);assert.throws(()=>jlSourcePrices({...d,priceText:'£6.40 – £9.60'}),/selected-variant/);assert.throws(()=>buildJlSnapshot(directory,{...e,pending:[{url:d.sourceUrl}]}),/incomplete/);
+const broken=structuredClone(directory);broken.categories[0].pages[0].count=[1,1,2];assert.throws(()=>jlDirectoryAudit(broken),/incomplete/);
+const rows={products:{},conflicts:[]};assert.equal(mergeJlEvidence(rows,{...d,priceText:'£6.40 – £9.60'}),'family-needs-size-selection');assert.equal(Object.keys(rows.products).length,0);assert.equal(mergeJlEvidence(rows,d),'selected-variant');assert.throws(()=>mergeJlEvidence(rows,{...d,productCode:'7664562712'}),/eight-digit/);
+assert.deepEqual(jlPhysicalMemberships({name:'Christmas Wreath Hanging Tree Decoration',specifications:{Dimensions:'H12cm x W12cm'}},['baubles']),['jl-baubles']);
+assert.deepEqual(jlPhysicalMemberships({name:'Christmas Garland with Pine Wreath Bushy Tips'},['foliage']),['jl-garland']);
+assert.deepEqual(jlPhysicalMemberships({name:'Christmas Door Wreath'},['foliage']),['jl-wreath']);
+assert.deepEqual(jlPhysicalMemberships({name:'Christmas Wreath Hanger with Bells'},['foliage']),[]);
+assert.deepEqual(jlPhysicalMemberships({name:'Velvet Bow Decoration',description:'Hang on a dining chair or front door as an alternative to a Christmas wreath'},['baubles']),[]);
+assert.deepEqual(jlPhysicalMemberships({name:'Autumn Wreath'},['foliage']),[]);
+assert.deepEqual(jlPhysicalMemberships({name:'Glass Baubles, Autumn Mix'},['baubles']),['jl-baubles']);
+assert.equal(jlSpecs({specifications:{Dimensions:'H120 x W60cm'}}).Height,'120cm');
+const arrival={...d,headerText:'New\n'+d.headerText,observedAt:'2026-11-16T23:01:00Z'},arrived=buildJlSnapshot({...directory,observedAt:arrival.observedAt},{...e,products:{[d.productCode]:arrival}},{previous:{products:[],notificationBaselineReady:true}}).products[0];assert(isToday(arrived,arrival.observedAt));assert(!isToday(arrived,'2026-11-17T16:00:00Z'));assert(isNew(arrived));
+console.log('John Lewis directory reconciliation, exact public product code/gallery binding, true reductions, unavailable offers, variant-only prices, bilingual materials, source unit preservation, physical exclusions, baseline and Beijing midnight passed.');

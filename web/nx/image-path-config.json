@@ -1,0 +1,7 @@
+{
+  "ratio": "3/4",
+  "bundle-path": "common/items/default/default/itemimages/3_4Ratio/bundle/lge/__ITEM__.jpg",
+  "default-path": "common/items/default/default/itemimages/3_4Ratio/product/lge/__ITEM__.jpg",
+  "minibag-path": "common/items/default/default/itemimages/3_4Ratio/product_sip/lge/__ITEM__.jpg",
+  "publication-path": "common/items/default/default/publications/3_4Ratio/__OUTLET__/shotzoom/__PAGENO__/__ITEM__.jpg"
+}

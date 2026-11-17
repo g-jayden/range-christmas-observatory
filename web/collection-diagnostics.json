@@ -344,6 +344,78 @@
       "authorizationId": "next-current-integration-20261117",
       "endpoint": "scrape",
       "billingVerified": true
+    },
+    {
+      "id": "next-01a1e6fb-9afd-73fd-95c7-82fe95e09849",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true,
+      "githubRun": 43990812715
+    },
+    {
+      "id": "next-01a1e703-c23f-749e-adb7-4b68aae1898a",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true,
+      "githubRun": 43991951446
+    },
+    {
+      "id": "next-01a1e70a-c184-754b-bfb9-5d28125c99fb",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e72b-e0d3-77b9-a999-3bfa89523db7",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e72c-672c-743d-8494-d45d044fdabe",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e72c-6e52-77c9-8a1e-18b617416522",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e72c-69de-772c-82e1-448387fe289a",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
     }
   ],
   "unreceipted": [

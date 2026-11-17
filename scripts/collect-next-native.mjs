@@ -1,0 +1,2 @@
+import fs from 'node:fs/promises';import {collectNextNativeProducts} from '../server/nx-native-source.mjs';
+const source=JSON.parse(await fs.readFile('web/nx/source-directory.json','utf8')),result=await collectNextNativeProducts(source);await fs.writeFile('web/nx/native-products-status.json',JSON.stringify({...result,products:undefined},null,2));console.log(JSON.stringify({...result,products:Object.keys(result.products).length}));if(!result.complete)process.exitCode=1;

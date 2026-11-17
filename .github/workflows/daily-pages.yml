@@ -106,6 +106,10 @@ jobs:
       - name: Install collection and local image analysis clients
         if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
         run: npm install --no-audit --no-fund
+      - name: Hydrate reviewed native images for an explicitly requested retailer release
+        id: retailer_release
+        if: steps.tick.outputs.publish == 'true'
+        run: node scripts/hydrate-retailer-images.mjs
       - name: Verify source integrity, SKU matching and credit limits
         if: steps.tick.outputs.publish == 'true' || inputs.mode == 'probe'
         run: npm test
@@ -120,6 +124,9 @@ jobs:
             runtime/models
             runtime/fonts
           key: local-clip-vit-base-patch32-q8-v1
+      - name: Register the reviewed Next baseline and prepare verified arrivals
+        if: steps.retailer_release.outputs.nx == 'true'
+        run: node scripts/prepare-nx-notifications.mjs
       - name: Persist the daily claim before opening a paid session
         if: steps.tick.outputs.monitor == 'true'
         run: |

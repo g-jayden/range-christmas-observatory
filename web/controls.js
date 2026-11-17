@@ -1,3 +1,6 @@
+import {retailerEnabled} from './retailer-activation.mjs';
+import {NX_DEPARTMENTS,isNxScope} from './nx-model.mjs';
+import {JL_DEPARTMENTS,isJlScope} from './jl-model.mjs';
 import {DU_DEPARTMENTS,isDuScope} from './du-model.mjs';
 import {HB_DEPARTMENTS,isHbScope} from './hb-model.mjs';
 import {BM_DEPARTMENTS} from './bm-model.mjs';
@@ -7,7 +10,7 @@ import {DEPARTMENTS} from './catalogue-model.mjs';
 import {CATALOGUE_GROUPS} from './catalogue-navigation.mjs';
 import {monitorLabel} from './monitor-labels.mjs';
 (()=>{
- const groups=[...CATALOGUE_GROUPS.map(g=>({...g,zh:'The Range · '+g.zh})),{id:'asda',zh:'ASDA · George 圣诞产品',en:'Christmas products',children:ASDA_DEPARTMENTS.map(d=>d.id)},{id:'du',zh:'Dunelm 圣诞产品',en:'Christmas products',children:DU_DEPARTMENTS.map(d=>d.id)},{id:'hb',zh:'Home Bargains 圣诞产品',en:'Christmas products',children:HB_DEPARTMENTS.map(d=>d.id)},{id:'bm',zh:'B&M 圣诞产品',en:'Christmas products',children:BM_DEPARTMENTS.map(d=>d.id)},{id:'ms',zh:'M&S 圣诞产品',en:'Christmas products',children:MS_DEPARTMENTS.map(d=>d.id)}];
+ const groups=[{id:'nx',zh:'Next 圣诞产品',en:'Christmas products',children:NX_DEPARTMENTS.map(d=>d.id)},{id:'jl',zh:'John Lewis 圣诞产品',en:'Christmas products',children:JL_DEPARTMENTS.map(d=>d.id)},...CATALOGUE_GROUPS.map(g=>({...g,zh:'The Range · '+g.zh})),{id:'asda',zh:'ASDA · George 圣诞产品',en:'Christmas products',children:ASDA_DEPARTMENTS.map(d=>d.id)},{id:'du',zh:'Dunelm 圣诞产品',en:'Christmas products',children:DU_DEPARTMENTS.map(d=>d.id)},{id:'hb',zh:'Home Bargains 圣诞产品',en:'Christmas products',children:HB_DEPARTMENTS.map(d=>d.id)},{id:'bm',zh:'B&M 圣诞产品',en:'Christmas products',children:BM_DEPARTMENTS.map(d=>d.id)},{id:'ms',zh:'M&S 圣诞产品',en:'Christmas products',children:MS_DEPARTMENTS.map(d=>d.id)}].filter(g=>retailerEnabled(g.id));
  document.getElementById('mailScopes').innerHTML=groups.map(g=>'<details class="mailScopeGroup"><summary>'+g.zh+'<small>'+g.en+'</small></summary>'+[...(g.id==='themes'?['themes']:[]),...g.children].map(id=>{const d=DEPARTMENTS.find(d=>d.id===id);return '<label><input type="checkbox" name="mailScope" value="'+d.id+'" checked> '+d.label+'</label>';}).join('')+'</details>').join('');
  const el=id=>document.getElementById(id),local=s=>new Date(s).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'});let api='',dirty=false,config={intervalDays:7,time:'00:00'};
  const message=(id,text)=>{el(id).textContent=text};

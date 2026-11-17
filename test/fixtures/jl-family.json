@@ -1,0 +1,2384 @@
+{
+  "title": "John Lewis Felt Mouse Initial Tree Decoration",
+  "aliases": {
+    "pimProductId": "115617144"
+  },
+  "availability": null,
+  "defaultVariant": {
+    "id": "1e3b2160-802f-5b15-a7fb-bc3597919463"
+  },
+  "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/p115617144",
+  "pdpURL": {
+    "url": "/john-lewis-felt-mouse-initial-tree-decoration/p115617144",
+    "path": "/john-lewis-felt-mouse-initial-tree-decoration/p115617144"
+  },
+  "unitOfMeasure": "EACH",
+  "description": "<br>",
+  "howToUse": null,
+  "productTypeHierarchy": "PRODUCT.Celebrations, Gifts & Flowers.Celebration Decorations & Accessories.Christmas Decorations.Christmas Tree Dec",
+  "sellingProductType": "Baubles & Tree Decorations",
+  "brand": {
+    "name": "John Lewis",
+    "logo": "https://media.johnlewiscontent.com/i/JohnLewis/jl_partners_logo_2line_small_280818",
+    "story": null
+  },
+  "attributes": [
+    {
+      "key": "batteriesincluded",
+      "values": [
+        "No"
+      ],
+      "displayName": "Batteries included",
+      "helpText": null
+    },
+    {
+      "key": "brand",
+      "values": [
+        "John Lewis"
+      ],
+      "displayName": "Brand",
+      "helpText": null
+    },
+    {
+      "key": "baubletheme",
+      "values": [
+        "Alphabet"
+      ],
+      "displayName": "Bauble theme",
+      "helpText": null
+    },
+    {
+      "key": "multipacks",
+      "values": [
+        "1"
+      ],
+      "displayName": "Number in pack",
+      "helpText": null
+    },
+    {
+      "key": "countryoforigin",
+      "values": [
+        "China"
+      ],
+      "displayName": "Country of origin",
+      "helpText": null
+    },
+    {
+      "key": "christmastheme",
+      "values": [
+        "Alphabet"
+      ],
+      "displayName": "Christmas theme",
+      "helpText": null
+    },
+    {
+      "key": "occasion",
+      "values": [
+        "Christmas"
+      ],
+      "displayName": "Occasion",
+      "helpText": null
+    }
+  ],
+  "messaging": [
+    {
+      "description": null,
+      "title": "Save 20%",
+      "type": "promotional",
+      "promotionGroup": "Save",
+      "promotionCategory": "Price",
+      "promotionType": "Save %"
+    }
+  ],
+  "icons": [],
+  "variants": [
+    {
+      "id": "1e3b2160-802f-5b15-a7fb-bc3597919463",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, A",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/a/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/a/p115617144?size=a",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/a/p115617144",
+        "query": {
+          "size": "a"
+        }
+      },
+      "displayCode": "76645627",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115519",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115519alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115519alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115519"
+      },
+      "differentiators": {
+        "colour": "A",
+        "size": "A",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "A"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "9edfb1bf-c39f-5795-8ccb-ac33c639879a",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, B",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/b/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/b/p115617144?size=b",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/b/p115617144",
+        "query": {
+          "size": "b"
+        }
+      },
+      "displayCode": "76645628",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115520",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115520alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115520alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115520"
+      },
+      "differentiators": {
+        "colour": "B",
+        "size": "B",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "B"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "dc97bfa2-fa5a-5c00-90ef-23a325b70357",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, C",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/c/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/c/p115617144?size=c",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/c/p115617144",
+        "query": {
+          "size": "c"
+        }
+      },
+      "displayCode": "76645629",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115521",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115521alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115521alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115521"
+      },
+      "differentiators": {
+        "colour": "C",
+        "size": "C",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "C"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "1437011d-ab89-5820-9424-84487c5ede54",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, D",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/d/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/d/p115617144?size=d",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/d/p115617144",
+        "query": {
+          "size": "d"
+        }
+      },
+      "displayCode": "76645630",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115522",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115522alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115522alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115522"
+      },
+      "differentiators": {
+        "colour": "D",
+        "size": "D",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "D"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "2b02fa83-400f-585b-bb76-13a68f96d550",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, E",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/e/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/e/p115617144?size=e",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/e/p115617144",
+        "query": {
+          "size": "e"
+        }
+      },
+      "displayCode": "76645631",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115523",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115523alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115523alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115523"
+      },
+      "differentiators": {
+        "colour": "E",
+        "size": "E",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "E"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "341d0186-baae-5d23-9a10-8611e038fac4",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, F",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/f/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/f/p115617144?size=f",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/f/p115617144",
+        "query": {
+          "size": "f"
+        }
+      },
+      "displayCode": "76645632",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115524",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115524alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115524alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115524"
+      },
+      "differentiators": {
+        "colour": "F",
+        "size": "F",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "F"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "ee9afff6-6af2-5e60-83fe-53893b8f2d1e",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, G",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/g/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/g/p115617144?size=g",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/g/p115617144",
+        "query": {
+          "size": "g"
+        }
+      },
+      "displayCode": "76645633",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115525",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115525alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115525alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115525"
+      },
+      "differentiators": {
+        "colour": "G",
+        "size": "G",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "G"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "4b49a537-651d-5862-b588-2a7615516030",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, H",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/h/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/h/p115617144?size=h",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/h/p115617144",
+        "query": {
+          "size": "h"
+        }
+      },
+      "displayCode": "76645634",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115526",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115526alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115526alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115526"
+      },
+      "differentiators": {
+        "colour": "H",
+        "size": "H",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "H"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "f64051c6-d498-5cdc-96eb-9132bb36edbc",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, I",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/i/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/i/p115617144?size=i",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/i/p115617144",
+        "query": {
+          "size": "i"
+        }
+      },
+      "displayCode": "76645635",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115528",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115528alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115528alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115528"
+      },
+      "differentiators": {
+        "colour": "I",
+        "size": "I",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "I"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "a2d98c7c-78aa-550d-a6c7-127376569822",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, J",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/j/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/j/p115617144?size=j",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/j/p115617144",
+        "query": {
+          "size": "j"
+        }
+      },
+      "displayCode": "76645636",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115530",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115530alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115530alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115530"
+      },
+      "differentiators": {
+        "colour": "J",
+        "size": "J",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "J"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "98f5aaca-5e09-55f4-98f0-c8d3859441e5",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, K",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/k/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/k/p115617144?size=k",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/k/p115617144",
+        "query": {
+          "size": "k"
+        }
+      },
+      "displayCode": "76645637",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115533",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115533alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115533alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115533"
+      },
+      "differentiators": {
+        "colour": "K",
+        "size": "K",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "K"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "f4c05419-e49e-57da-b176-27c1270194d6",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, L",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/l/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/l/p115617144?size=l",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/l/p115617144",
+        "query": {
+          "size": "l"
+        }
+      },
+      "displayCode": "76645638",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115536",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115536alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115536alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115536"
+      },
+      "differentiators": {
+        "colour": "L",
+        "size": "L",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "L"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "5b00b44b-bc84-5fa1-9161-1b73e5cd6b93",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, M",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/m/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/m/p115617144?size=m",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/m/p115617144",
+        "query": {
+          "size": "m"
+        }
+      },
+      "displayCode": "76645639",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115539",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115539alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115539alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115539"
+      },
+      "differentiators": {
+        "colour": "M",
+        "size": "M",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "M"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "9b7713f7-3334-56bf-bb78-d66d7d41cb76",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, N",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/n/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/n/p115617144?size=n",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/n/p115617144",
+        "query": {
+          "size": "n"
+        }
+      },
+      "displayCode": "76645640",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115543",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115543alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115543alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115543"
+      },
+      "differentiators": {
+        "colour": "N",
+        "size": "N",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "N"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "d13e9c83-2006-549e-a20b-6c997ba3e7eb",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, O",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/o/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/o/p115617144?size=o",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/o/p115617144",
+        "query": {
+          "size": "o"
+        }
+      },
+      "displayCode": "76645641",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115546",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115546alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115546alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115546"
+      },
+      "differentiators": {
+        "colour": "O",
+        "size": "O",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "O"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "232f4edb-e1b7-5079-87f7-abbf26dde7e0",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, P",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/p/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/p/p115617144?size=p",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/p/p115617144",
+        "query": {
+          "size": "p"
+        }
+      },
+      "displayCode": "76645642",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115549",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115549alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115549alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115549"
+      },
+      "differentiators": {
+        "colour": "P",
+        "size": "P",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "P"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "aca41b62-b5c6-5ba2-ba74-58e6c45aa422",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, Q",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/q/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/q/p115617144?size=q",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/q/p115617144",
+        "query": {
+          "size": "q"
+        }
+      },
+      "displayCode": "76645643",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115551",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115551alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115551alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115551"
+      },
+      "differentiators": {
+        "colour": "Q",
+        "size": "Q",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "Q"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "68f6de0b-fa77-5813-82da-7051a5d043d2",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, R",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/r/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/r/p115617144?size=r",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/r/p115617144",
+        "query": {
+          "size": "r"
+        }
+      },
+      "displayCode": "76645644",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115552",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115552alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115552alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115552"
+      },
+      "differentiators": {
+        "colour": "R",
+        "size": "R",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "R"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "0e9ec0c2-f57d-5e3f-89d6-1c0654a0a6c0",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, S",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/s/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/s/p115617144?size=s",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/s/p115617144",
+        "query": {
+          "size": "s"
+        }
+      },
+      "displayCode": "76645645",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115553",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115553alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115553alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115553"
+      },
+      "differentiators": {
+        "colour": "S",
+        "size": "S",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "S"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "327f4ab8-27f6-572d-a83c-5f06afd6eba6",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, T",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/t/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/t/p115617144?size=t",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/t/p115617144",
+        "query": {
+          "size": "t"
+        }
+      },
+      "displayCode": "76645646",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115554",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115554alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115554alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115554"
+      },
+      "differentiators": {
+        "colour": "T",
+        "size": "T",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "T"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "9202d234-a33d-5574-8ace-876804765f08",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, U",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/u/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/u/p115617144?size=u",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/u/p115617144",
+        "query": {
+          "size": "u"
+        }
+      },
+      "displayCode": "76645647",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115555",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115555alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115555alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115555"
+      },
+      "differentiators": {
+        "colour": "U",
+        "size": "U",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "U"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "84ca474b-6ca5-56b4-adaa-7307a78dffa7",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, V",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/v/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/v/p115617144?size=v",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/v/p115617144",
+        "query": {
+          "size": "v"
+        }
+      },
+      "displayCode": "76645648",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115556",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115556alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115556alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115556"
+      },
+      "differentiators": {
+        "colour": "V",
+        "size": "V",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "V"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "27bd2faa-c6cb-5c1e-8e2d-f223f1fa4f77",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, W",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/w/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/w/p115617144?size=w",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/w/p115617144",
+        "query": {
+          "size": "w"
+        }
+      },
+      "displayCode": "76645649",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115557",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115557alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115557alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115557"
+      },
+      "differentiators": {
+        "colour": "W",
+        "size": "W",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "W"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "306eee47-d06f-5ea6-ba3e-a25007886652",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, X",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/x/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/x/p115617144?size=x",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/x/p115617144",
+        "query": {
+          "size": "x"
+        }
+      },
+      "displayCode": "76645650",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115558",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115558alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115558alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115558"
+      },
+      "differentiators": {
+        "colour": "X",
+        "size": "X",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "X"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "3da2c094-caca-519a-a433-c1e6de7bfb53",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, Y",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/y/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/y/p115617144?size=y",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/y/p115617144",
+        "query": {
+          "size": "y"
+        }
+      },
+      "displayCode": "76645651",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115559",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115559alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115559alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115559"
+      },
+      "differentiators": {
+        "colour": "Y",
+        "size": "Y",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "Y"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    },
+    {
+      "id": "e38e06bf-2b07-5414-9dbe-03536f2c9c41",
+      "title": "John Lewis Felt Mouse Initial Tree Decoration, Z",
+      "canonicalURL": "/john-lewis-felt-mouse-initial-tree-decoration/z/p115617144",
+      "pdpURL": {
+        "url": "/john-lewis-felt-mouse-initial-tree-decoration/z/p115617144?size=z",
+        "path": "/john-lewis-felt-mouse-initial-tree-decoration/z/p115617144",
+        "query": {
+          "size": "z"
+        }
+      },
+      "displayCode": "76645652",
+      "messaging": [
+        {
+          "title": "Save 20%",
+          "type": "promotional",
+          "description": null,
+          "promotionGroup": "Save",
+          "promotionCategory": "Price",
+          "promotionType": "Save %"
+        }
+      ],
+      "price": {
+        "for": "ITEM",
+        "value": "8.00",
+        "display": "£8.00",
+        "offerType": "Promotion",
+        "reductionHistory": [
+          {
+            "chronology": 0,
+            "value": "10.00",
+            "display": "£10.00"
+          }
+        ]
+      },
+      "availability": {
+        "availableToOrder": true,
+        "unavailableReason": null,
+        "shipFromStore": false,
+        "futureAvailability": null,
+        "preOrder": null
+      },
+      "images": {
+        "primary": "//media.johnlewiscontent.com/i/JohnLewis/115115560",
+        "alternatives": [
+          "//media.johnlewiscontent.com/i/JohnLewis/115115560alt1",
+          "//media.johnlewiscontent.com/i/JohnLewis/115115560alt2"
+        ]
+      },
+      "aliases": {
+        "skuId": "115115560"
+      },
+      "differentiators": {
+        "colour": "Z",
+        "size": "Z",
+        "sizeHeadline": null
+      },
+      "colour": {
+        "colour": "Multi",
+        "trueColour": "Z"
+      },
+      "attributes": [
+        {
+          "key": "dimensions",
+          "values": [
+            "12 x 5.5 x 8.5"
+          ],
+          "displayName": "Dimensions",
+          "helpText": null
+        },
+        {
+          "key": "weight",
+          "values": [
+            "10.00 g"
+          ],
+          "displayName": "Weight",
+          "helpText": "Unpackaged weight of the product"
+        },
+        {
+          "key": "material",
+          "values": [
+            "Foam & Felt"
+          ],
+          "displayName": "Composition",
+          "helpText": null
+        }
+      ]
+    }
+  ]
+}
