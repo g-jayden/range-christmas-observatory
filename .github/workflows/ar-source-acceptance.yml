@@ -1,0 +1,30 @@
+name: Argos standard public source acceptance
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/probe-argos-source.mjs
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - name: Read only the requested official public entrypoints without paid requests
+        run: node scripts/probe-argos-source.mjs
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: argos-public-source-${{ matrix.os }}
+          path: runtime/argos-source-acceptance
+          retention-days: 1
