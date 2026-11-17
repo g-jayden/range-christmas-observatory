@@ -12,7 +12,11 @@ import {TAXONOMY_VERSION,productBody,offeredObject,objectMemberships,isPublished
 export {isPublishedProduct} from './taxonomy.mjs';
 import {THEME_DEFINITIONS,isThemeScope} from './theme-model.mjs';
 export {THEME_DEFINITIONS,isThemeScope} from './theme-model.mjs';
-export const DEPARTMENTS=[...MT_DEPARTMENTS.filter(()=>retailerEnabled('mt')).map(d=>[d.id,d.zh,d.en]),...BQ_DEPARTMENTS.filter(()=>retailerEnabled('bq')).map(d=>[d.id,d.zh,d.en]),...NX_DEPARTMENTS.filter(()=>retailerEnabled('nx')).map(d=>[d.id,d.zh,d.en]),...JL_DEPARTMENTS.filter(()=>retailerEnabled('jl')).map(d=>[d.id,d.zh,d.en]),...DU_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...HB_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...BM_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...ASDA_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),...MS_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),
+export const EXTERNAL_DEPARTMENT_DEFINITIONS={mt:MT_DEPARTMENTS,bq:BQ_DEPARTMENTS,nx:NX_DEPARTMENTS,jl:JL_DEPARTMENTS,du:DU_DEPARTMENTS,hb:HB_DEPARTMENTS,bm:BM_DEPARTMENTS,asda:ASDA_DEPARTMENTS,ms:MS_DEPARTMENTS};
+export const ALL_EXTERNAL_DEPARTMENTS=Object.values(EXTERNAL_DEPARTMENT_DEFINITIONS).flat();
+export const ACTIVE_EXTERNAL_DEPARTMENTS=Object.entries(EXTERNAL_DEPARTMENT_DEFINITIONS).filter(([id])=>retailerEnabled(id)).flatMap(([,rows])=>rows);
+const externalDepartmentIds=new Set(ALL_EXTERNAL_DEPARTMENTS.map(d=>d.id));
+export const DEPARTMENTS=[...ACTIVE_EXTERNAL_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]),
  ['tree','圣诞树','Christmas Trees'],['skirt','圣诞树裙','Christmas Tree Skirts'],
  ['ornaments','圣诞装饰品','Christmas Ornaments'],['standing','立式装饰品','Standing Decorations'],
  ['wreath','圣诞圈','Christmas Wreaths'],['garland','圣诞长藤','Christmas Garlands'],
@@ -38,7 +42,7 @@ DEPARTMENT_MAP['home-textiles']={id:'home-textiles',zh:'家纺床品',en:'Christ
 export const ROOT_DEPARTMENTS=DEPARTMENTS.filter(d=>!d.parentId);
 export const LIGHT_DEPARTMENTS=DEPARTMENTS.filter(d=>d.parentId==='lights');
 export const isLightingScope=id=>id==='asda-lights'||id==='ms-lights'||id==='bm-lights'||id==='hb-lights'||id==='du-lights'||id==='jl-lights'||id==='lights'||DEPARTMENT_MAP[id]?.parentId==='lights';
-export const decorationDepartments=DEPARTMENTS.filter(d=>!isAsdaScope(d.id)&&!isMsScope(d.id)&&!isBmScope(d.id)&&!isHbScope(d.id)&&!isDuScope(d.id)&&!isMtScope(d.id)&&!isBqScope(d.id)&&!isNxScope(d.id)&&!isJlScope(d.id)&&!['tree','skirt'].includes(d.id)&&!isLightingScope(d.id)&&!isThemeScope(d.id));
+export const decorationDepartments=DEPARTMENTS.filter(d=>!externalDepartmentIds.has(d.id)&&!['tree','skirt'].includes(d.id)&&!isLightingScope(d.id)&&!isThemeScope(d.id));
 // Prices come from the retailer's integer-pence fields, never historical changes.
 export function sourcePrice(p){
  const current=Number.isFinite(p.priceGBP)?Math.round(p.priceGBP*100):Number.isInteger(p.price)?p.price:null;

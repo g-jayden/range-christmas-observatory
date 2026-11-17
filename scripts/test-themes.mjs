@@ -1,7 +1,7 @@
 import {retailerEnabled} from '../web/retailer-activation.mjs';
-const addedDepartments=(retailerEnabled('nx')?5:0)+(retailerEnabled('jl')?7:0);
+const addedDepartments=ACTIVE_EXTERNAL_DEPARTMENTS.length-34;
 import assert from 'node:assert/strict';
-import {THEME_DEFINITIONS,DEPARTMENTS,ROOT_DEPARTMENTS,scopeProducts,decorationDepartments} from '../web/catalogue-model.mjs';
+import {THEME_DEFINITIONS,DEPARTMENTS,ACTIVE_EXTERNAL_DEPARTMENTS,ROOT_DEPARTMENTS,scopeProducts,decorationDepartments} from '../web/catalogue-model.mjs';
 import {mergeThemes,THEME_SOURCES} from '../server/themes.mjs';
 import {notificationSnapshot} from '../server/decorations.mjs';
 import {detailFingerprint} from '../server/collection-policy.mjs';

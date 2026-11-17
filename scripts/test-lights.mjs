@@ -1,7 +1,7 @@
 import {retailerEnabled} from '../web/retailer-activation.mjs';
-const addedDepartments=(retailerEnabled('nx')?5:0)+(retailerEnabled('jl')?7:0);
+const addedDepartments=ACTIVE_EXTERNAL_DEPARTMENTS.length-34;
 import assert from 'node:assert/strict';
-import {DEPARTMENTS,ROOT_DEPARTMENTS,LIGHT_DEPARTMENTS,isLightingScope,sourcePrice,scopeProducts} from '../web/catalogue-model.mjs';
+import {DEPARTMENTS,ACTIVE_EXTERNAL_DEPARTMENTS,ROOT_DEPARTMENTS,LIGHT_DEPARTMENTS,isLightingScope,sourcePrice,scopeProducts} from '../web/catalogue-model.mjs';
 import {LIGHT_SOURCES,mergeLights,borrowLightingEvidence,enrichLighting,publishLights,loadLightingDetails,inheritLightingArrivals,recoverLightingImages,updateLightingDetails} from '../server/lights.mjs';
 import fs from 'node:fs/promises';
 import os from 'node:os';
