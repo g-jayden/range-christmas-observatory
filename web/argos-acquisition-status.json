@@ -41,5 +41,13 @@
   "supportDiagnosticPrepared": true,
   "supportDiagnosticSent": false,
   "error": "官网目录访问被拒绝；尚未完成实时全量核验 · Official directory access denied; live full catalogue is unverified",
-  "checkedAt": "2026-11-18T01:29:22.317786+00:00"
+  "checkedAt": "2026-11-18T02:28:51.800370+00:00",
+  "billingPolicy": {
+    "url": "https://docs.firecrawl.dev/billing",
+    "checkedAt": "2026-11-18T02:28:51.800326+00:00",
+    "failedWithoutDocumentCredits": 0,
+    "browserTimeStillCharged": true,
+    "expectedAdditionalFailedScrapeCredits": 0,
+    "accountLevelFailureReceiptsReturned": false
+  }
 }
