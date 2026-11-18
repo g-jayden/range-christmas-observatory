@@ -66,6 +66,17 @@ jobs:
           node scripts/dedupe-mt.mjs
       - name: Prepare verified first-observed arrivals after the initial baseline
         run: node scripts/prepare-retailer-notifications.mjs mt
+      - name: Archive current public product evidence before repository publication
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: mt-source-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            web/mt/
+            web/images/mt/
+          retention-days: 3
+          compression-level: 9
+          if-no-files-found: warn
       - name: Preserve source checkpoints and native evidence even on partial failure
         id: evidence
         if: always()
