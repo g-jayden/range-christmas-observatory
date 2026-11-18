@@ -5,3 +5,9 @@ export function bqRouteField(html,routeName,field){const match=html.match(/strea
 
 export const bqRoute=html=>bqRouteField(html,'routes/plp','lister');
 export function bqPdpProduct(html,expected){const p=bqRouteField(html,'routes/pdp','product');if(String(p?.id)!==String(expected)||String(p?.attributes?.ean)!==String(expected))throw Error('B&Q returned another exact EAN');const a=p.attributes;return{...p,attributes:Object.fromEntries(Object.entries(a).filter(([k])=>!['averageRating','reviews','review'].includes(k)))};}
+
+// This is the same published React Router serverLoader response the site's
+// browser requests on pagination. Read the typed business object, never execute
+// scripts, and keep the human product URL separate from the data transport URL.
+export function bqDataRouteField(text,routeName,field){const a=JSON.parse(String(text).split('\n')[0]);if(!Array.isArray(a))throw Error('B&Q native loader stream absent');const memo=new Map();const decode=i=>{if(i<0)return undefined;if(memo.has(i))return memo.get(i);const v=a[i];if(v&&typeof v==='object'){const out=Array.isArray(v)?[]:{};memo.set(i,out);if(Array.isArray(v))for(const x of v)out.push(decode(x));else for(const[k,n]of Object.entries(v))out[decode(Number(k.slice(1)))]=decode(n);return out;}return v;};const data=decode(0)?.[routeName]?.data?.[field];if(!data)throw Error('Official B&Q loader business field missing');return data;}
+export async function requestBqDirectory(url,{fresh=false}={}){const u=new URL(url);if(u.origin!=='https://www.diy.com'||!u.pathname.endsWith('.cat'))throw Error('Official B&Q category URL required');const api=new URL(u);api.pathname+='.data';const response=await requestBqPage(api.href,{fresh});return{...response,sourceUrl:u.href,sourceApiUrl:api.href,lister:bqDataRouteField(response.html,'routes/plp','lister')};}
