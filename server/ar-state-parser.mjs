@@ -24,3 +24,9 @@ export function arDirectoryPageProps(html){
  }
  if(matches.length!==1)throw Error('Argos listing business props absent or ambiguous');return matches[0];
 }
+
+export function arStructuredProduct(html,expectedSku){
+ const products=[];for(const m of String(html).matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)){try{const v=JSON.parse(m[1]);for(const p of v['@graph']||[v])if(p['@type']==='Product')products.push(p);}catch{}}
+ const selected=products.filter(p=>String(p.sku)===String(expectedSku));if(selected.length!==1)throw Error('Exact Argos public Product identity is absent or ambiguous');
+ const p=selected[0],u=new URL(p.url);if(u.origin!=='https://www.argos.co.uk'||u.pathname!=='/product/'+expectedSku)throw Error('Argos public Product URL identity conflict');return p;
+}

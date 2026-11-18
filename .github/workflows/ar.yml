@@ -1,0 +1,60 @@
+name: Argos exact public product baseline
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Argos authorised shared-session directory acceptance]
+    types: [completed]
+permissions:
+  contents: write
+concurrency:
+  group: argos-exact-public-source
+  cancel-in-progress: false
+jobs:
+  source:
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.id == 44210326302 && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/
+            /server/
+            /web/ar/
+            /web/argos-collection-authorization.json
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - uses: actions/cache@v6.1.0
+        with:
+          path: runtime/ar-source
+          key: ar-exact-source-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: ar-exact-source-
+      - name: Resume only missing exact public product records
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: node scripts/collect-ar-products.mjs
+      - uses: actions/cache/save@v6.1.0
+        if: always()
+        with:
+          path: runtime/ar-source
+          key: ar-exact-source-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: argos-exact-source-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            web/ar/
+            runtime/ar-source/receipt-*.json
+          retention-days: 7
+          compression-level: 9
+      - name: Preserve verified public business records after any outcome
+        if: always()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add web/ar
+          git diff --cached --quiet || git commit -m "Preserve verified Argos exact product evidence [skip ci]"
+          node scripts/push-evidence.mjs
