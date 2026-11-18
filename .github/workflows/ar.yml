@@ -6,6 +6,7 @@ on:
     types: [completed]
 permissions:
   contents: write
+  actions: write
 concurrency:
   group: argos-exact-public-source
   cancel-in-progress: false

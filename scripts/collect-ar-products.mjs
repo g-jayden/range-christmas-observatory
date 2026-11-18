@@ -15,7 +15,7 @@ const valid=(sku,d)=>String(d?.structuredProduct?.sku)===sku&&new URL(d.sourceUr
 for(const sku of Object.keys(records))if(!sourceRows.has(sku)||!valid(sku,records[sku]))delete records[sku];
 async function save(){const pending=[...sourceRows.keys()].filter(sku=>!records[sku]);lastStatus={retailerId:'ar',sourceObservedAt:source.observedAt,checkedAt:new Date().toISOString(),expected:sourceRows.size,verified:Object.keys(records).length,pending,complete:pending.length===0,failures,callsThisRun:calls,confirmedCredits:receipts.receipts.filter(r=>r.billingVerified).reduce((n,r)=>n+r.credits,0)};await write(base+'/source-products.json.gz',records);await write(runtime+'/checkpoint.json.gz',records);await write(base+'/source-detail-status.json',lastStatus);await write(base+'/collection-ledger.json',receipts);console.log(JSON.stringify({phase:'Argos exact source checkpoint',verified:lastStatus.verified,expected:lastStatus.expected,pending:pending.length,callsThisRun:calls,confirmedCredits:lastStatus.confirmedCredits}));return pending;}
 let pending=await save();while(pending.length&&calls<100&&Date.now()-started<70*60000){
- const eligible=pending.filter(sku=>(attempts.get(sku)||0)<2);if(!eligible.length)break;const skus=eligible.slice(0,batchSize),root=skus[0],payload={url:'https://www.argos.co.uk/product/'+root,formats:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'NL',languages:['en-GB']},skipTlsVerification:false,parsers:[],timeout:240000,actions:[{type:'executeJavascript',script:arBatchAction({skus,collectDirectories:false})}]};
+ const eligible=pending.filter(sku=>(attempts.get(sku)||0)<2).sort((a,b)=>(attempts.get(a)||0)-(attempts.get(b)||0));if(!eligible.length)break;const skus=eligible.slice(0,batchSize),root=skus[0],payload={url:'https://www.argos.co.uk/product/'+root,formats:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'NL',languages:['en-GB']},skipTlsVerification:false,parsers:[],timeout:240000,actions:[{type:'executeJavascript',script:arBatchAction({skus,collectDirectories:false})}]};
  calls++;const receipt={operation:'Argos exact product batch',startedAt:new Date().toISOString(),rootSku:root,requested:skus.length,payloadSha256:createHash('sha256').update(JSON.stringify(payload)).digest('hex'),credits:null,billingVerified:false};
  try{const r=await fetch('https://api.firecrawl.dev/v2/scrape',{method:'POST',headers:{authorization:'Bearer '+process.env.FIRECRAWL_API_KEY,'content-type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(270000)}),body=await r.json(),d=body.data||{};receipt.httpStatus=r.status;receipt.scrapeId=d.metadata?.scrapeId||null;receipt.credits=d.metadata?.creditsUsed??null;receipt.billingVerified=Number.isFinite(receipt.credits);receipt.error=body.error||null;
   if(!r.ok||!body.success)throw Error('Source service returned '+r.status+': '+String(body.error?.code||body.error||''));
@@ -24,11 +24,14 @@ let pending=await save();while(pending.length&&calls<100&&Date.now()-started<70*
   for(const f of data.failures){attempts.set(f.sku,(attempts.get(f.sku)||0)+1);failures.push({...f,scrapeId:receipt.scrapeId,observedAt:new Date().toISOString()});}
   if(data.failures.some(f=>f.status===403||f.status===429))batchSize=Math.max(12,Math.floor(batchSize*.75));else if(data.products.length===skus.length)batchSize=Math.min(64,batchSize+8);
   receipt.received=data.products.length;receipt.sourceRequests=data.requests;receipt.failures=data.failures.length;
- }catch(e){attempts.set(root,(attempts.get(root)||0)+1);failures.push({sku:root,error:e.message,observedAt:new Date().toISOString()});receipt.localError=e.message;batchSize=Math.max(12,Math.floor(batchSize*.75));}
+ }catch(e){attempts.set(root,2);failures.push({sku:root,error:e.message,observedAt:new Date().toISOString()});receipt.localError=e.message;batchSize=Math.max(12,Math.floor(batchSize*.75));}
  receipt.completedAt=new Date().toISOString();receipts.receipts.push(receipt);await write(runtime+'/receipt-'+calls+'.json',receipt);pending=await save();
  // Do not keep resubmitting an unchanged unavailable root or assume a failure is
  // a negative catalogue result. Other exact products continue independently.
- if(receipts.receipts.slice(-3).every(r=>r.localError)&&calls>=3)break;
+ // A rejected exact product is not proof that another product is unavailable.
+ // Each unavailable root is attempted once in this run; the finite current
+ // directory bounds the work and all successful records are reused.
+ if(pending.length)await new Promise(r=>setTimeout(r,2000));
 }
 if(pending.length)throw Error('Argos exact detail acceptance pending for '+pending.length+' products; current verified evidence is saved');
 console.log(JSON.stringify({complete:true,products:Object.keys(records).length,sourceCounts:Object.fromEntries(source.categories.map(c=>[c.id,c.expected])),callsThisRun:calls,confirmedCredits:lastStatus.confirmedCredits}));
