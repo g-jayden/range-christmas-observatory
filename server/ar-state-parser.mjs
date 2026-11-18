@@ -30,3 +30,20 @@ export function arStructuredProduct(html,expectedSku){
  const selected=products.filter(p=>String(p.sku)===String(expectedSku));if(selected.length!==1)throw Error('Exact Argos public Product identity is absent or ambiguous');
  const p=selected[0],u=new URL(p.url);if(u.origin!=='https://www.argos.co.uk'||u.pathname!=='/product/'+expectedSku)throw Error('Argos public Product URL identity conflict');return p;
 }
+
+export function arProductFlightFacts(html,sku){
+ const facts={availability:null,pricing:null};
+ const clean=x=>typeof x==='string'&&x==='$undefined'?null:x;
+ const visit=v=>{if(Array.isArray(v)){for(const x of v)visit(x);return;}if(!v||typeof v!=='object')return;
+  if(String(v.sku)===sku&&v.attributes&&typeof v.attributes.globallyOutOfStock==='boolean')facts.availability=v.attributes;
+  if(String(v.product?.partNumber)===sku&&v.product.price&&Number.isFinite(v.product.price.now))facts.pricing=Object.fromEntries(Object.entries(v.product.price).map(([k,x])=>[k,clean(x)]));
+  if(String(v.currentProduct?.sku)===sku&&Number.isFinite(v.currentProduct.price))facts.pricing={...(facts.pricing||{}),now:v.currentProduct.price,was:clean(v.currentProduct.wasPrice),flashText:v.currentProduct.flashText||''};
+  for(const x of Object.values(v))visit(x);
+ };
+ for(const m of String(html).matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)){
+  const match=m[1].trim().match(/^self\.__next_f\.push\((\[[\s\S]*\])\);?$/);if(!match)continue;
+  let outer;try{outer=JSON.parse(match[1]);}catch{continue;}if(outer[0]!==1||typeof outer[1]!=='string')continue;
+  for(const line of outer[1].split('\n')){if(!/^[a-f0-9]+:/.test(line))continue;try{visit(JSON.parse(line.slice(line.indexOf(':')+1)));}catch{}}
+ }
+ return facts;
+}
