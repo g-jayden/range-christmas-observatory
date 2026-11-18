@@ -1,1 +1,1 @@
-{"complete":false,"checkedAt":"2026-11-18T01:52:07.067Z","error":"B&Q category did not close within bounded current membership passes: tree {\"expected\":7763,\"observed\":4900,\"drift\":true}","requests":311,"firecrawlCredits":0,"sourceObservedAt":"2026-11-17T18:29:21.160Z"}
+{"complete":false,"checkedAt":"2026-11-18T02:10:54.944Z","error":"B&Q category did not close within bounded current membership passes: tree-decorations {\"expected\":10620,\"observed\":6664,\"drift\":true}","requests":668,"firecrawlCredits":0,"sourceObservedAt":"2026-11-17T18:29:21.160Z"}
