@@ -9,7 +9,7 @@
   "totalCreditsLimit": null,
   "freeFirst": true,
   "confirmedCredits": 4,
-  "billingUnconfirmedRequests": 5,
+  "billingUnconfirmedRequests": 0,
   "confirmedReceipts": [
     {
       "id": "01a1ec03-63a8-776c-9365-bf73651325ec",
@@ -39,15 +39,38 @@
   "noPartialCataloguePublished": true,
   "sourceFreshnessEstablished": false,
   "supportDiagnosticPrepared": true,
-  "supportDiagnosticSent": false,
-  "error": "官网目录访问被拒绝；尚未完成实时全量核验 · Official directory access denied; live full catalogue is unverified",
-  "checkedAt": "2026-11-18T02:28:51.800370+00:00",
+  "supportDiagnosticSent": true,
+  "error": "官网目录仍拒绝访问；已发诊断至官方支持，等待通道修复 · Official category still denied; diagnostic submitted to official support",
+  "checkedAt": "2026-11-18T17:02:43.473422+00:00",
   "billingPolicy": {
     "url": "https://docs.firecrawl.dev/billing",
     "checkedAt": "2026-11-18T02:28:51.800326+00:00",
     "failedWithoutDocumentCredits": 0,
     "browserTimeStillCharged": true,
     "expectedAdditionalFailedScrapeCredits": 0,
-    "accountLevelFailureReceiptsReturned": false
-  }
+    "accountLevelFailureReceiptsReturned": true,
+    "failureBillingSource": "authenticated activity log; six matching failed scrapes billed zero"
+  },
+  "supportSubmission": {
+    "channel": "official-support-email",
+    "recipient": "help@firecrawl.com",
+    "state": "provider-responded-engineering-review-requested",
+    "submittedBeijingDate": "2026-11-19",
+    "ticketReference": null
+  },
+  "latestLiveProbe": {
+    "checkedAt": "2026-11-18T16:51:00.925499+00:00",
+    "url": "https://www.argos.co.uk/browse/gifts-and-occasions/christmas-decorations/christmas-tree-decorations/c:1055244/",
+    "maxAge": 0,
+    "proxy": "enhanced",
+    "location": "GB",
+    "mobile": true,
+    "engineResult": "SCRAPE_ALL_ENGINES_FAILED",
+    "status": 500,
+    "documentReturned": false,
+    "expectedCreditsPerOfficialPolicy": 0,
+    "billingReceiptReturned": false
+  },
+  "verifiedZeroCreditFailedScrapes": 6,
+  "confirmedTotalCredits": 4
 }
