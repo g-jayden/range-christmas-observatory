@@ -1,1 +1,1 @@
-{"complete":false,"checkedAt":"2026-11-18T01:36:10.493Z","error":"B&Q category did not close within bounded current membership passes: baubles {\"expected\":3856,\"observed\":384,\"drift\":true}","requests":341,"firecrawlCredits":0,"sourceObservedAt":"2026-11-17T18:29:21.160Z"}
+{"complete":false,"checkedAt":"2026-11-18T01:52:07.067Z","error":"B&Q category did not close within bounded current membership passes: tree {\"expected\":7763,\"observed\":4900,\"drift\":true}","requests":311,"firecrawlCredits":0,"sourceObservedAt":"2026-11-17T18:29:21.160Z"}
