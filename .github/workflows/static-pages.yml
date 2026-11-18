@@ -1,0 +1,46 @@
+name: Publish committed catalogues without source collection
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: range-readonly-pages-publication
+  cancel-in-progress: false
+  queue: single
+jobs:
+  website:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci --no-audit --no-fund
+      - name: Verify committed catalogue and publication logic without source requests
+        run: npm test
+      - uses: actions/configure-pages@v6.0.0
+      - name: Build directly from the committed current catalogue
+        run: node scripts/build-static.mjs
+      - uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          name: github-pages-static-${{ github.run_id }}-${{ github.run_attempt }}
+          path: public
+      - name: Publish one immutable artifact with the shared deployment lease
+        id: deployment
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+          CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+          PAGES_ARTIFACT_NAME: github-pages-static-${{ github.run_id }}-${{ github.run_attempt }}
+        run: node scripts/publish-pages.mjs

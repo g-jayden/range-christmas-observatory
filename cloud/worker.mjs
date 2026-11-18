@@ -1,3 +1,5 @@
+import{markRetailerPublished}from'./retailer-published.mjs';
+import{pagesLease}from'./pages-lease.mjs';
 import {MT_DEPARTMENTS} from '../web/mt-model.mjs';
 import {BQ_DEPARTMENTS} from '../web/bq-model.mjs';
 import {syncAdditionalRetailer} from './retailer-sync.mjs';
@@ -191,6 +193,8 @@ export class Control{
   }
   if(route.startsWith('/internal/')){
    checkAuth(req,this.env.CONTROL_TOKEN);
+   if(route==='/internal/retailer-published'&&req.method==='POST')return response(await markRetailerPublished({storage:this.db,body:await req.json()}));
+   if(route==='/internal/pages-publication-lease'&&req.method==='POST')return response(await pagesLease({storage:this.db,body:await req.json()}));
    if(route==='/internal/published-site'&&req.method==='POST'){const b=await req.json();if(!/^[a-f0-9]{40}$/.test(b.commit||''))throw Error('Invalid published revision');await this.db.put('published-site',{commit:b.commit,updatedAt:new Date().toISOString()});return response({published:true,commit:b.commit,firecrawlCredits:0});}
    if(route==='/internal/clock-tick'&&req.method==='POST'){await this.recoverAbandonedMonitor();const productionQueue=await productionQueueState({env:this.env});await this.db.put('production-queue',{...productionQueue,checkedAt:new Date().toISOString()});const mt=await dispatchAdditionalDue({id:'mt',storage:this.db,env:this.env,productionQueue}),bq=await dispatchAdditionalDue({id:'bq',storage:this.db,env:this.env,productionQueue});if(!productionQueue.clear)return response({enabled:Boolean(this.env.GITHUB_DISPATCH_TOKEN),waiting:true,productionQueue,mt,bq,firecrawlCredits:0,sourceRequestsMade:false,mailSent:false});const nx=await dispatchNxDue({storage:this.db,env:this.env}),du=await dispatchDuDue({storage:this.db,env:this.env}),hb=await dispatchHbDue({storage:this.db,env:this.env}),bm=await dispatchBmDue({storage:this.db,env:this.env}),asda=await dispatchAsdaDue({storage:this.db,env:this.env}),ms=await dispatchMsDue({storage:this.db,env:this.env});return response({...await dispatchDue({storage:this.db,env:this.env,config:await this.config(),monitor:{...await this.monitorState(),...await this.deliveryStatus()},fullLease:await this.db.get('lease/full'),monitorLease:await this.db.get('lease/monitor'),initialized:Boolean(await this.db.get('seeded'))}),asda,ms,bm,hb,du,nx,mt,bq});}
    if(route==='/internal/test-email'&&req.method==='POST'){

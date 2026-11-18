@@ -49,7 +49,7 @@ concurrency:
 jobs:
   website:
     runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
-    timeout-minutes: 60
+    timeout-minutes: 120
     env:
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
