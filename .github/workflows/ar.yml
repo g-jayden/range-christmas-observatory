@@ -59,3 +59,59 @@ jobs:
           git add web/ar
           git diff --cached --quiet || git commit -m "Preserve verified Argos exact product evidence [skip ci]"
           node scripts/push-evidence.mjs
+
+  images:
+    needs: source
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/
+            /server/
+            /cloud/public-image.mjs
+            /web/*.mjs
+            /web/ar/
+            /web/images/ar/
+            /package.json
+            /package-lock.json
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - uses: actions/cache@v6.1.0
+        with:
+          path: |
+            runtime/models
+            runtime/ar-previews
+          key: ar-native-images-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: ar-native-images-
+      - name: Verify every saved exact product gallery through free native media
+        run: node scripts/enrich-ar.mjs
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: argos-native-gallery-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            web/ar/gallery-audit.json
+            web/ar/staged-catalogue.json.gz
+            web/ar/image-index.json.gz
+            web/ar/visual-cache.json.gz
+            runtime/ar-previews/
+          retention-days: 7
+      - name: Preserve reviewed source images without activating an incomplete catalogue
+        if: always()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add web/ar web/images/ar
+          git diff --cached --quiet || git commit -m "Preserve Argos free native gallery and local review evidence [skip ci]"
+          node scripts/push-evidence.mjs

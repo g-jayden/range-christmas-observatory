@@ -1,0 +1,65 @@
+import{createHash}from'node:crypto';
+
+import{duMaterialFacts}from'./du-materials.mjs';
+import{normaliseColors}from'./appearance.mjs';
+import{productDimensions,toCentimetres}from'../web/catalogue-model.mjs';
+import{jlTreeStyle}from'./jl-products.mjs';
+import{arMemberships,AR_DEPARTMENTS}from'../web/ar-model.mjs';
+const hash=v=>createHash('sha256').update(JSON.stringify(v)).digest('hex');
+export function arPlainText(value){
+ const entities={amp:'&',quot:'"',apos:"'",nbsp:' ',bull:'•',middot:'·',times:'×',deg:'°',Phi:'Φ',phi:'φ',Oslash:'Ø',oslash:'ø',ndash:'–',mdash:'—',lt:'<',gt:'>'};
+ return String(value||'').replace(/<\/(?:p|li|div)>|<br\s*\/?>/gi,'\n').replace(/<[^>]*>/g,' ').replace(/&#(x[0-9a-f]+|\d+);/ig,(_,n)=>{const v=n[0].toLowerCase()==='x'?parseInt(n.slice(1),16):Number(n);return v>0&&v<=0x10ffff?String.fromCodePoint(v):'';}).replace(/&([a-z]+);/ig,(all,k)=>entities[k]??all).replace(/[ \t]+/g,' ').trim();
+}
+export const arValidSku=sku=>/^(?:\d{7}|[a-z0-9]{8})$/.test(String(sku));
+export function arGallery(d,sku){
+ const native=d.legacy?.media?.images||d.structuredProduct.image||[];
+ const rows=[...new Set((Array.isArray(native)?native:[native]).map(v=>typeof v==='string'?v:v.url).filter(Boolean))];
+ if(!rows.length)throw Error('Argos original gallery absent: '+sku);
+ return rows.map(url=>{const u=new URL(url);if(u.origin!=='https://media.4rgos.it'||!u.pathname.startsWith('/i/Argos/'))throw Error('Unexpected Argos original image source');
+  const meta=d.legacy?.media?.meta?.[url]||{};return{url:u.href,selectedSku:sku,variantId:sku,sourceParentId:sku,sourceUrl:d.sourceUrl,sourceWidth:Number(meta.width)||null,sourceHeight:Number(meta.height)||null,verification:'exact-public-Product-SKU-and-official-gallery'};
+ });
+}
+export function arSpecifications(d){
+ const a=d.legacy?.dimensions?.attributes||{},s={},description=arPlainText(d.structuredProduct.description||'');
+ for(const[k,v]of Object.entries(a))if(v!==null&&v!==undefined&&v!=='')s[k[0].toUpperCase()+k.slice(1)]=String(v);
+ const boundary='(?:Colour|Color|Material|Tree width|Total height|Tree height|Stand size|Overall dimensions|Dimensions|Size|With \\d+|Assembly required|Power source|Number of|Voltage|Suitable for)';
+ const field=label=>description.match(new RegExp('\\b'+label+'\\s*:\\s*(.{1,160}?)(?=\\s+'+boundary+'\\s*:|[\\n•]|$)','i'))?.[1]?.trim();
+ if(field('Colou?r'))s.Colour=field('Colou?r');if(field('Material'))s.Material=field('Material');
+ const measure='(\\d+(?:\\.\\d+)?)\\s*(cm|mm|m|ft|inches?)\\b';
+ for(const [label,key]of [['Total height','Height'],['Tree height','Height'],['Tree width','Width'],['Height','Height'],['Width','Width'],['Diameter','Diameter'],['Length','Length'],['Depth','Depth']]){const match=description.match(new RegExp('\\b'+label+'\\s*:\\s*'+measure,'i'));if(match&&!/\b(?:cable|cord|wire|lead)\s*$/i.test(description.slice(Math.max(0,match.index-12),match.index)))s[key]||=match[1]+match[2];}
+ const explicit=description.match(/\bSize\s+((?:H|W|D|L)\d[^\n•]*?)(?:\.\s|$)/i)?.[1];if(!s.Size&&explicit)s.Size=explicit;
+ const shared=s.Size?.match(/(cm|mm|m|ft|inches?)\s*$/i)?.[1];
+ for(const m of String(s.Size||'').matchAll(/\b([HWDL])\s*(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)?/ig))if(m[3]||shared)s[({H:'Height',W:'Width',D:'Depth',L:'Length'})[m[1].toUpperCase()]]||=m[2]+(m[3]||shared);
+ const dimension=field('Overall dimensions')||field('Dimensions');if(dimension&&!s.Size)s.Size=dimension;
+ // A multi-size family description cannot donate the first member's dimensions
+ // to another selected SKU. Only an explicitly matching size block is usable.
+ const title=arPlainText(d.structuredProduct.name),titleHeight=title.match(/\b(\d+(?:\.\d+)?)\s*(cm|ft)\b/i),familyBlocks=[...description.matchAll(/\b(\d+(?:\.\d+)?)\s*(?:FT|ft)\s*[:：]/g)];
+ if(familyBlocks.length>1&&titleHeight){const selectedCm=toCentimetres(titleHeight[1]+titleHeight[2]),block=familyBlocks.find(m=>Math.abs(Number(m[1])*30.48-selectedCm)<3);if(block){const next=familyBlocks.find(m=>m.index>block.index),text=description.slice(block.index,next?.index),height=text.match(/(?:height|size)[^\n]{0,35}?(\d+(?:\.\d+)?)\s*cm/i),diameter=text.match(/[ΦφØø]\s*(\d+(?:\.\d+)?)\s*cm/i);if(height&&Math.abs(Number(height[1])-selectedCm)<5)s.Height=height[1]+'cm';if(diameter)s.Diameter=diameter[1]+'cm';}}
+ return s;
+}
+export function arDirectoryAudit(source){
+ const required=['tree','baubles','tree-decorations','wreath-garland','skirt-stand','inflatables-search'];
+ for(const id of required){const c=source.categories.find(c=>c.id===id);if(!c?.complete)throw Error('Argos official directory not complete: '+id);}
+ return source.categories.map(c=>{const rows=c.pages.flatMap(p=>p.props.productData),ids=new Set(rows.map(r=>String(r.id)));if(!c.complete||c.unique!==c.expected||ids.size!==c.expected)throw Error('Argos exact directory coverage mismatch: '+c.id);return{id:c.id,expected:c.expected,observed:ids.size,unique:ids.size,complete:true};});
+}
+export function buildArSnapshot(source,details,{previous={products:[]},allowIncomplete=false}={}){
+ const sourceAudits=arDirectoryAudit(source),sourceRows=new Map(),old=new Map(previous.products.map(p=>[p.sku,p]));
+ for(const c of source.categories)for(const page of c.pages)for(const r of page.props.productData){const sku=String(r.id);if(!arValidSku(sku))throw Error('Invalid Argos public product ID');const saved=sourceRows.get(sku)||{row:r,groups:[]};saved.groups.push(c.id);sourceRows.set(sku,saved);}
+ const baseline=!previous.notificationBaselineReady,products=[],pending=[];
+ for(const[sku,{row,groups}]of sourceRows){
+  const d=details[sku];if(!d){pending.push(sku);continue;}
+  const structured=d.structuredProduct,legacy=d.legacy,offer=structured?.offers;
+  if(String(structured?.sku)!==sku||new URL(d.sourceUrl).pathname!=='/product/'+sku)throw Error('Argos selected detail identity conflict: '+sku);
+  if(offer?.priceCurrency!=='GBP')throw Error('Argos GBP source offer required: '+sku);
+  const current=Number(offer.price),lp=legacy?.prices?.attributes||d.flight?.pricing,prior=old.get(sku);if(!Number.isFinite(current)||current<0||lp&&Number(lp.now)!==current)throw Error('Argos exact source price conflict: '+sku);
+  const sourceDescription=arPlainText(structured.description||legacy?.attributes?.description||''),specifications=arSpecifications(d),dimensions=productDimensions(specifications),materials=duMaterialFacts(specifications,sourceDescription),gallery=arGallery(d,sku),a=legacy?.attributes||d.flight?.availability||{},listing=row.attributes||{},newStatus=(legacy?.badges||[]).some(b=>b.attributes?.badgeReference==='new_badge')||listing.badge?.BADGE_PRODUCT?.includes('new_badge')===true;
+  const was=Number(lp?.was??listing.wasPrice),sourceColour=specifications.Colour||'',p={...prior,retailerId:'ar',retailerName:'Argos',recordType:'sku',sku,sourceSku:sku,variantId:sku,parentGroupId:sku,baseName:structured.name,variantName:structured.name,brand:structured.brand?.name||listing.brand||'Argos',sourceUrl:d.sourceUrl,sourceDescription,productSummary:sourceDescription,sourceDescriptionAbsent:!sourceDescription,detailsReady:true,observedAt:d.observedAt,attributeObservedAt:d.observedAt,detailEvidence:{selectedSku:sku,sourceParentId:sku,sourceUrl:d.sourceUrl,verifiedProductSection:true,sourceTransport:legacy?'Argos-selected-Product-JSON-LD-and-legacy-business-state':'Argos-selected-Product-JSON-LD-and-app-router-page',descriptionHash:hash(sourceDescription),specificationHash:hash(specifications),observedAt:d.observedAt},arSource:{groups:[...new Set(groups)],listedPrice:listing.price,listedWasPrice:listing.wasPrice,marketplace:listing.soldByTrustedSeller===true,sourceProductId:sku},priceGBP:current,price:Math.round(current*100),originalPrice:Number.isFinite(was)&&was>current?Math.round(was*100):null,originalPriceKind:Number.isFinite(was)&&was>current?'WAS':null,sourcePriceBadge:lp?.flashText||listing.specialOfferText||'',inStock:a.globallyOutOfStock!==true&&a.endOfLineOutOfStock!==true&&(a.deliverable===true||a.collectable===true||listing.deliverable===true||listing.reservable===true),newStatus,everNew:prior?.everNew||newStatus,baselineRecord:prior?.baselineRecord||baseline,specifications,dimensions,material:materials.label,appearanceSource:{materials},sourceColour,colorValues:normaliseColors(sourceColour),images:gallery.map(g=>g.url),originalImages:gallery,imageUrl:gallery[0].url,variantImageUrl:gallery[0].url,originalImageUrl:gallery[0].url};
+  const c=arMemberships(p);p.department=c.primary;p.departmentIds=c.memberships;p.classificationEvidence=c;p.kind=p.department==='ar-tree'?'tree':p.department==='ar-skirt-stand'?'skirt':'decoration';p.treeColor=p.colorValues.join(' / ');
+  if(p.kind==='tree'){p.heightCm=toCentimetres(specifications.Height)||null;p.heightLabel=specifications.Height||specifications.Size||'';p.style=jlTreeStyle(p.baseName,specifications);}if(p.kind==='skirt')p.skirtSizeCm=dimensions.values.Diameter||dimensions.maxCm||null;
+  if(!p.department)p.taxonomyAudit={disposition:'exclude',memberships:[],reason:c.reason};
+  if(!baseline&&p.inStock&&newStatus&&!prior?.everNew&&!prior?.baselineRecord){p.firstNewObservedAt=d.observedAt;p.arrivalEvidence='observed-after-baseline';}
+  products.push(p);
+ }
+ if(pending.length&&!allowIncomplete)throw Error('Argos exact details remain incomplete: '+pending.length);
+ return{retailerId:'ar',sourceUrl:'https://www.argos.co.uk/events/christmas-gifts',observedAt:source.observedAt,collectionComplete:!pending.length,baselineReady:!pending.length,notificationBaselineReady:previous.notificationBaselineReady||false,sourceCounts:Object.fromEntries(sourceAudits.map(a=>[a.id,a.expected])),sourceAudits,sourceProductIds:sourceRows.size,products,pendingDetails:pending,revision:hash(products)};
+}
