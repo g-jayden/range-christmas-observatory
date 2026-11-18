@@ -1,1 +1,1 @@
-{"complete":false,"checkedAt":"2026-11-18T00:22:23.799Z","error":"B&Q official page HTTP 503","requests":813,"firecrawlCredits":0,"sourceObservedAt":"2026-11-17T18:29:21.160Z"}
+{"complete":false,"checkedAt":"2026-11-18T00:48:07.409Z","error":"B&Q category did not close within bounded current membership passes: tree {\"expected\":7763,\"observed\":7761,\"drift\":true}","requests":598,"firecrawlCredits":0,"sourceObservedAt":"2026-11-17T18:29:21.160Z"}
