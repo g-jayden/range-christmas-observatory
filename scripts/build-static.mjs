@@ -36,7 +36,7 @@ for(const page of ['index.html','image-check.html']){
  await fs.writeFile('public/'+page,html);
 }
 for(const name of ['asda','product-evidence-health.json','product-evidence-repair.json','browser-image-repair-proof.json','preview-status.json','classified','taxonomy-status.json','taxonomy-audit.json','decorations.json','decorations-status.json','decoration-details','lights.json','lights-status.json','light-details','themes.json','themes-status.json','theme-details'])try{const source='web/'+name;const st=await fs.stat(source);if(st.isDirectory())await fs.cp(source,'public/'+name,{recursive:true});else await fs.copyFile(source,'public/'+name)}catch(e){if(e.code!=='ENOENT')throw e;}
-if(retailerEnabled('bq')){const manifest=JSON.parse(await fs.readFile('web/bq/catalogue.json','utf8'));if(manifest.format==='department-shards-v1'){for(const dir of ['departments','details'])await fs.cp('web/bq/'+dir,'public/bq/'+dir,{recursive:true});}}
+if(retailerEnabled('bq')){const{publishBqCommittedEvidence}=await import('../server/bq-committed-evidence.mjs');console.log(JSON.stringify({phase:'B&Q derive corrected analysis from saved source without recollection',...await publishBqCommittedEvidence()}));}
 await copyPublishedAssets('web','public',{repositoryImages:true});
 // ASDA productSetProduct marks a set member; numeric members remain individual SKUs.
 try{const p='public/asda/catalogue.json',d=JSON.parse(await fs.readFile(p,'utf8'));for(const item of d.products)item.recordType=item.sku.startsWith('SET')?'product-set':item.sku.startsWith('GEM')?'product-family':'sku';await fs.writeFile(p,JSON.stringify(d));}catch(e){if(e.code!=='ENOENT')throw e;}
