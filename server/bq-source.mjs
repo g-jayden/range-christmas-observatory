@@ -27,7 +27,17 @@ export function bqPdpProduct(html,expected){const p=bqRouteField(html,'routes/pd
 // browser requests on pagination. Read the typed business object, never execute
 // scripts, and keep the human product URL separate from the data transport URL.
 export function bqDataRouteField(text,routeName,field){const a=JSON.parse(String(text).split('\n')[0]);if(!Array.isArray(a))throw Error('B&Q native loader stream absent');const memo=new Map();const decode=i=>{if(i<0)return undefined;if(memo.has(i))return memo.get(i);const v=a[i];if(v&&typeof v==='object'){const out=Array.isArray(v)?[]:{};memo.set(i,out);if(Array.isArray(v))for(const x of v)out.push(decode(x));else for(const[k,n]of Object.entries(v))out[decode(Number(k.slice(1)))]=decode(n);return out;}return v;};const data=decode(0)?.[routeName]?.data?.[field];if(!data)throw Error('Official B&Q loader business field missing');return data;}
-export async function requestBqDirectory(url,{fresh=false,session=null}={}){const u=new URL(url);if(u.origin!=='https://www.diy.com'||!u.pathname.endsWith('.cat'))throw Error('Official B&Q category URL required');const api=new URL(u);api.pathname+='.data';api.searchParams.set('_routes','routes/plp');const response=await requestBqPage(api.href,{fresh,cookieFile:session?.cookieFile});return{...response,sourceUrl:u.href,sourceApiUrl:api.href,lister:bqDataRouteField(response.html,'routes/plp','lister')};}
+export async function requestBqDirectory(url,{fresh=false,session=null,requestPage=requestBqPage}={}){
+ const u=new URL(url);if(u.origin!=='https://www.diy.com'||!u.pathname.endsWith('.cat'))throw Error('Official B&Q category URL required');
+ const api=new URL(u);api.pathname+='.data';api.searchParams.set('_routes','routes/plp');
+ let response;try{response=await requestPage(api.href,{fresh,cookieFile:session?.cookieFile});}
+ catch(e){
+  if(![500,502,503,504].includes(e.status))throw e;
+  const htmlResponse=await requestPage(u.href,{attempts:1,fresh,cookieFile:session?.cookieFile});
+  return{...htmlResponse,sourceUrl:u.href,sourceApiUrl:u.href,sourceTransport:'official-html-loader',nativeTransportError:{status:e.status,attempts:e.attempts||null},lister:bqRoute(htmlResponse.html)};
+ }
+ return{...response,sourceUrl:u.href,sourceApiUrl:api.href,sourceTransport:'official-native-loader',lister:bqDataRouteField(response.html,'routes/plp','lister')};
+}
 
 // Vary: Cookie is part of the official response contract. Keep one clean,
 // anonymous visit across pagination; never load the user's browser/login state.
