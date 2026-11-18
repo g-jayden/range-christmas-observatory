@@ -1,0 +1,15 @@
+{
+  "id": "argos-ongoing-collection-20261118",
+  "retailerId": "ar",
+  "enabled": true,
+  "scope": "ongoing-seven-category-collection",
+  "authorization": "user-explicit-first-and-ongoing-argos-paid-fallback-20261118",
+  "authorizedAt": "2026-11-18T00:15:24.198547+00:00",
+  "monthlyCreditsLimit": null,
+  "totalCreditsLimit": null,
+  "freeFirst": true,
+  "scheduledPaidCollection": true,
+  "automaticPurchaseOrPlanUpgrade": false,
+  "dailyCheckBeijing": "07:00",
+  "scopeRestriction": "Argos seven requested Christmas physical categories only; no other retailer receives this grant"
+}
