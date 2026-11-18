@@ -1,4 +1,5 @@
-import {retailerEnabled} from '../web/retailer-activation.mjs';
+import{pathToFileURL}from'node:url';import path from'node:path';
+const{retailerEnabled}=await import(pathToFileURL(path.resolve('web/retailer-activation.mjs')).href);
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {copyPublishedAssets} from './publish-assets.mjs';

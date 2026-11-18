@@ -21,6 +21,8 @@ try{
  // code, never added to the JSON validation list or omitted from the artifact.
  const fixture=path.join(tmp,'build-smoke');await fs.mkdir(fixture+'/web/bq/departments',{recursive:true});await fs.mkdir(fixture+'/web/bq/details',{recursive:true});await fs.writeFile(fixture+'/web/bq/catalogue.json',JSON.stringify({format:'department-shards-v1',departmentShards:{},products:[]}));
  for(const file of await fs.readdir('web')){if(file.endsWith('.json'))await fs.writeFile(fixture+'/web/'+file,'{}');else if(/\.(?:mjs|js|css|html)$/.test(file))await fs.copyFile('web/'+file,fixture+'/web/'+file);}
+ // This smoke build has no real retailer caches; exact B&Q active-data publication is covered in test-bq.
+ const fixtureActivation=await fs.readFile(fixture+'/web/retailer-activation.mjs','utf8');await fs.writeFile(fixture+'/web/retailer-activation.mjs',fixtureActivation.replace(/bq\s*:\s*(?:true|false)/,'bq:false'));
  await fs.mkdir(fixture+'/web/images/source',{recursive:true});await fs.writeFile(fixture+'/web/images/source/native.jpg',original);await fs.writeFile(fixture+'/web/catalogue.json',JSON.stringify({products:[{sku:'123',cachedImageUrl:'images/source/native.jpg'}]}));
  execFileSync(process.execPath,[fileURLToPath(new URL('./build-static.mjs',import.meta.url))],{cwd:fixture,encoding:'utf8'});
  assert.equal(JSON.parse(await fs.readFile(fixture+'/public/catalogue.json')).products[0].cachedImageUrl,'https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/images/source/native.jpg');await assert.rejects(fs.access(fixture+'/public/images/source/native.jpg'));
