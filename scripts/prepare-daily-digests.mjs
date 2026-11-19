@@ -1,3 +1,6 @@
+import {restoreReviewedNativeFiles} from '../server/reviewed-native-files.mjs';
+import {nativeSourceUrl} from '../web/product-facts.mjs';
+import {exactNativeGalleryMember} from '../server/native-gallery-identity.mjs';
 import {rebuildStoredRangeViews} from '../server/rebuild-range-views.mjs';
 import {reportProductEvidence,mergeReportProduct} from '../server/report-product-evidence.mjs';
 import {digestNativeOriginal} from '../server/digest-native-original.mjs';
@@ -6,6 +9,7 @@ import {applyRangeNativeIndex} from '../server/range-native-index.mjs';
 import {publishBqCommittedEvidence} from '../server/bq-committed-evidence.mjs';
 import fs from 'node:fs/promises';import {createHash} from 'node:crypto';
 import {control} from '../server/cloud-client.mjs';import {createCatalogueReport} from '../server/catalogue-report.mjs';import {productSize,productRetailer} from '../web/product-facts.mjs';
+await restoreReviewedNativeFiles(JSON.parse(await fs.readFile('web/taxonomy-overrides.json','utf8')));
 const range=await rebuildStoredRangeViews({persist:false,includeProducts:true}),rangeBySku=new Map((range.products||[]).map(p=>[String(p.sku),p]));
 const prepared=[],failures=[],cache=new Map();let bqPrepared=false;
 async function json(relative,root='web'){const key=root+'/'+relative;if(!cache.has(key))cache.set(key,fs.readFile(key,'utf8').then(JSON.parse));return cache.get(key);}
@@ -25,6 +29,7 @@ async function exactProduct(candidate){
  if(id==='the-range')for(const name of ['new-original-recovery.json','range-native-index.json'])applyRangeNativeIndex([p],await json(name).catch(e=>{if(e.code==='ENOENT')return {entries:{}};throw e;}));
  return p;
 }
+const nativeIndex=await json('range-native-index.json').catch(()=>({entries:{}})),nativeGaps=[];for(const p of range.products||[]){if(p.taxonomyAudit?.disposition!=='include')continue;const url=nativeSourceUrl(p);if(p.originalImages?.some(g=>g.url===url&&exactNativeGalleryMember(p,g))&&!nativeIndex.entries?.[url]?.ok)nativeGaps.push({sku:p.sku,url,sourceUrl:p.sourceUrl});}console.log(JSON.stringify({phase:'Read-only exact native gap diagnosis',missing:[...new Map(nativeGaps.map(p=>[p.url,p])).values()].slice(0,25),sourceRequests:0,firecrawlCredits:0}));
 let plan;
 if(process.env.DIGEST_TEST_OWNER==='true'){
  const d=await json('du/catalogue.json'),selected=[];
