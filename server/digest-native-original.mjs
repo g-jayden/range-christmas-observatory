@@ -8,7 +8,7 @@ import {exactNativeGalleryMember} from './native-gallery-identity.mjs';
 // Only the report's actual NEW products need native response bytes. A missing
 // disk mirror must not force a full catalogue or gallery to be collected again.
 export async function digestNativeOriginal(p,{readFile=fs.readFile,fetcher=fetch}={}) {
-  const prior=p.originalImageEvidence,source=nativeSourceUrl(p)||prior?.sourceUrl;
+  const declared=p.originalImageEvidence,source=nativeSourceUrl(p)||declared?.sourceUrl,exported=p.nativeExportEvidence,validExport=exported?.sourceUrl===source&&String(exported.selectedSku)===String(p.sku)&&exported.width===declared?.width&&exported.height===declared?.height&&exported.sourceVersion===declared?.sourceVersion,prior=validExport?{...declared,sha256:exported.sha256}:declared;
   if(prior?.sha256&&p.originalCachedImageUrl&&prior.sourceUrl===source){
     let bytes;
     try{bytes=await readFile('web/'+p.originalCachedImageUrl);}catch(e){
@@ -18,7 +18,8 @@ export async function digestNativeOriginal(p,{readFile=fs.readFile,fetcher=fetch
       bytes=Buffer.from(await response.arrayBuffer());if(bytes.length>25000000)throw Error('Native original exceeds individual file guard');
     }
     if(createHash('sha256').update(bytes).digest('hex')!==prior.sha256)throw Error('Native original digest mismatch');
-    return {bytes,source,sha256:prior.sha256};
+    if(validExport){const m=await sharp(bytes).metadata();if(m.width!==exported.width||m.height!==exported.height)throw Error('Native export dimensions changed');}
+    return {bytes,source:validExport?exported.exportUrl:source,sha256:prior.sha256};
   }
   const g=p.originalImages?.find(g=>g.url===source&&exactNativeGalleryMember(p,g));
   if(!g||!allowedPublicImage(source)||p.previewReviewRequired||p.imageIssue)throw Error('Exact reviewed native gallery mapping unavailable for '+p.sku+'; '+(!g?'SKU/variant mapping':p.previewReviewRequired?'whole-product preview review':'source photo evidence'));

@@ -1,3 +1,4 @@
+import {applySavedRetailerReview} from '../server/saved-retailer-reviews.mjs';
 import {nativeSourceUrl} from '../web/product-facts.mjs';
 import {exactNativeGalleryMember} from '../server/native-gallery-identity.mjs';
 import {rebuildStoredRangeViews} from '../server/rebuild-range-views.mjs';
@@ -23,6 +24,7 @@ async function exactProduct(candidate){
   if(p?.detailsUrl)p=mergeReportProduct(p,(await json(p.detailsUrl,root))[p.sku]);
  }
  if(!p)throw Error('Current exact product absent: '+id+':'+candidate.sku);
+ if(id==='asda'||id==='du')applySavedRetailerReview(p,(await json(id+'/reviews.json'))[p.sku],id);
  const acceptance=reportProductEvidence(p,candidate,source,{retailerId:id});if(!acceptance.accepted)throw Error('Exact-SKU evidence '+id+':'+candidate.sku+'; '+acceptance.reasons.join(', '));
  if(id==='the-range')for(const name of ['new-original-recovery.json','range-native-index.json'])applyRangeNativeIndex([p],await json(name).catch(e=>{if(e.code==='ENOENT')return {entries:{}};throw e;}));
  return p;
