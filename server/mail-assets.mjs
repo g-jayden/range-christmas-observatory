@@ -7,7 +7,7 @@ export const MAIL_CARD_VERSION='bilingual-card-v4-source-prices';
 export function mailHeightLabel(p){const c=treeHeightConflict(p);return !c?p.heightLabel:c.usableHeightCm?c.usableHeightCm+(c.resolution==='title-and-SKU-height-agree'?'cm（商品名与官网独立树高一致 · Title / SKU tree height agree）':'cm（标题与官网长度一致 · Title / source length agree）'):'高度冲突，未确认 · Conflicting height, unconfirmed';}
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 function lines(text,width,font){const out=[];let line='',used=0;const units=String(text).match(/[A-Za-z0-9]+|[ \t]+|[\s\S]/g)||[];for(const unit of units){const size=[...unit].reduce((n,c)=>n+(/[\u0000-\u00ff]/.test(c)?.55:1),0);if((used+size)*font>width&&line){out.push(line.trimEnd());line='';used=0;}if(!line&&!unit.trim())continue;line+=unit;used+=size;}if(line)out.push(line.trimEnd());return out;}
-async function renderer(){
+export async function renderer(){
  const dir=path.resolve('runtime/fonts');await fs.mkdir(dir,{recursive:true});const font=path.join(dir,'NotoSansCJKsc-Regular.otf');
  try{await fs.access(font)}catch{const r=await fetch('https://raw.githubusercontent.com/notofonts/noto-cjk/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf',{signal:AbortSignal.timeout(60000)});if(!r.ok)throw Error('CJK font download failed');const b=Buffer.from(await r.arrayBuffer());if(b.length<1000000||b.subarray(0,4).toString()!=='OTTO')throw Error('Invalid CJK font');await fs.writeFile(font,b);}
  const config=path.join(dir,'fonts.conf');await fs.writeFile(config,`<?xml version="1.0"?><!DOCTYPE fontconfig SYSTEM "fonts.dtd"><fontconfig><dir>${esc(dir)}</dir><cachedir>${esc(dir+'/cache')}</cachedir></fontconfig>`);process.env.FONTCONFIG_FILE=config;

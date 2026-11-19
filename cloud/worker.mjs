@@ -1,3 +1,4 @@
+import{publicImage}from'./public-image.mjs';
 import{markRetailerPublished}from'./retailer-published.mjs';
 import{pagesLease}from'./pages-lease.mjs';
 import {MT_DEPARTMENTS} from '../web/mt-model.mjs';
@@ -429,9 +430,10 @@ export class Control{
   return response({error:'Not found'},404);
  }
 }
-export default {async fetch(req,env){
+export default {async fetch(req,env,ctx){
  const mirror=await catalogueMirror(req,{getRevision:()=>env.CONTROL.getByName('main').fetch(new Request('https://range-control.internal/public/published-site')).then(r=>r.json())});if(mirror)return mirror;
  const origin=req.headers.get('origin'),target=new URL(req.url),sameOriginForm=origin===target.origin&&['/confirm','/unsubscribe','/subscribe','/unsubscribe-by-email','/admin/schedule'].includes(target.pathname);if(origin&&origin!==SITE&&!sameOriginForm)return response({error:'Origin not allowed'},403);
+ const image=await publicImage(req,{waitUntil:p=>ctx.waitUntil(p)});if(image)return image;
  const headers={'access-control-allow-origin':SITE,'access-control-allow-methods':'GET,POST,OPTIONS','access-control-allow-headers':'Content-Type,Authorization','vary':'Origin','cache-control':'no-store','x-content-type-options':'nosniff'};
  if(req.method==='OPTIONS')return new Response(null,{status:204,headers});
  const size=Number(req.headers.get('content-length')||0);if(size>8000000)return response({error:'Request too large'},413);
