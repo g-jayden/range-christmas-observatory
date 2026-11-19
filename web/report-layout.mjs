@@ -13,3 +13,5 @@ export function reportPages(products){
  return pages;
 }
 export function reportCells(){const p=REPORT_PAGE,w=(p.width-p.margin*2-p.gap)/2,h=(p.height-p.margin*2-p.header-p.gap*3)/4;return Array.from({length:8},(_,i)=>({x:p.margin+i%2*(w+p.gap),top:p.margin+p.header+Math.floor(i/2)*(h+p.gap),width:w,height:h,imageHeight:h-p.caption,captionHeight:p.caption}));}
+
+export function wrapReportText(value,width,measure){const lines=[];for(const part of String(value).split('\n')){let line='';for(let token of part.match(/\S+|\s+/g)||[]){if(line&&measure(line+token)>width){lines.push(line.trimEnd());line='';}if(!line)token=token.trimStart();while(token&&measure(token)>width){let cut=1;while(cut<token.length&&measure(token.slice(0,cut+1))<=width)cut++;lines.push(token.slice(0,cut));token=token.slice(cut);}line+=token;}if(line.trim())lines.push(line.trimEnd());}return lines;}
