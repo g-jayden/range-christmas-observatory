@@ -48,3 +48,4 @@ assert.equal(await jlDirectoryTransport({navigate:async()=>{throw Error('page.go
 assert.equal(fallbackCalls,1);
 for(const e of [Object.assign(Error('HTTP 403'),{stop:true}),Error('John Lewis directory content incomplete')])await assert.rejects(jlDirectoryTransport({navigate:async()=>{throw e;},fetchHtml:async()=>{fallbackCalls++;}}));
 assert.equal(fallbackCalls,1,'Explicit refusal and invalid content cannot trigger alternate transport');
+

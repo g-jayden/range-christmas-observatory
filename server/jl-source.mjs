@@ -17,8 +17,8 @@ export async function jlDirectoryTransport({navigate,fetchHtml}){
 }
 export async function collectJl({checkpointDir='runtime/jl-family',onBatch=()=>{}}={}){
  const {firefox}=await import('../runtime/jl-probe/node_modules/playwright/index.mjs');
- await fs.mkdir(checkpointDir,{recursive:true});const browser=await firefox.launch({headless:true}),context=await browser.newContext(),page=await context.newPage();let listingPage=await context.newPage();
- const result={observedAt:new Date().toISOString(),transport:'John-Lewis-clean-Firefox-public-HTML',firecrawlCredits:0,sourceRequests:0,categories:[],families:{},failures:[],complete:false};
+ await fs.mkdir(checkpointDir,{recursive:true});const browser=await firefox.launch({headless:true,firefoxUserPrefs:{'network.http.http2.enabled':false}}),context=await browser.newContext(),page=await context.newPage();let listingPage=await context.newPage();
+ const result={observedAt:new Date().toISOString(),transport:'John-Lewis-clean-Firefox-public-HTTPS-over-HTTP1',firecrawlCredits:0,sourceRequests:0,categories:[],families:{},failures:[],complete:false};
  try{
   const first='https://www.johnlewis.com'+JL_DIRECTORIES[0][1],response=await page.goto(first,{waitUntil:'domcontentloaded',timeout:45000});result.sourceRequests++;
   if(response.status()!==200)throw Error('John Lewis landing HTTP '+response.status());
