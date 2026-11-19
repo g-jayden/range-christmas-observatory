@@ -12,7 +12,7 @@ export async function digestNativeOriginal(p,{readFile=fs.readFile,fetcher=fetch
   if(prior?.sha256&&p.originalCachedImageUrl&&prior.sourceUrl===source){
     let bytes;
     try{bytes=await readFile('web/'+p.originalCachedImageUrl);}catch(e){
-      if(e.code!=='ENOENT'||!/^images\/source\/[a-f0-9]{64}\.(?:jpg|png|webp|avif|gif)$/.test(p.originalCachedImageUrl)||!p.originalCachedImageUrl.includes(prior.sha256+'.'))throw e;
+      if(e.code!=='ENOENT'||!/^images\/(?:source|asda|du|ms|bm|hb|nx|jl|mt|ar)\/[a-f0-9]{64}\.(?:jpg|png|webp|avif|gif)$/.test(p.originalCachedImageUrl)||!p.originalCachedImageUrl.includes(prior.sha256+'.'))throw e;
       const mirror='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/'+p.originalCachedImageUrl,response=await fetcher(mirror,{signal:AbortSignal.timeout(30000)});
       if(!response.ok)throw Error('Verified repository native mirror HTTP '+response.status+' for '+p.sku);
       bytes=Buffer.from(await response.arrayBuffer());if(bytes.length>25000000)throw Error('Native original exceeds individual file guard');
