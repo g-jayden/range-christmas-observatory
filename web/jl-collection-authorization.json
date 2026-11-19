@@ -1,0 +1,16 @@
+{
+  "id": "john-lewis-ongoing-unlimited-20261119",
+  "retailerId": "jl",
+  "enabled": true,
+  "scope": "ongoing-seven-category-collection",
+  "authorization": "user-explicit-always-allow-paid-without-credit-limit-20261119",
+  "authorizedAt": "2026-11-19",
+  "maxCreditsPerRun": null,
+  "accountReserveCredits": 5000,
+  "monthlyCreditsLimit": null,
+  "freeFirst": true,
+  "scheduledPaidCollection": true,
+  "automaticPaidRetry": false,
+  "dailyCheckBeijing": "07:00",
+  "scopeRestriction": "John Lewis seven requested Christmas categories only; authenticated live source, exact SKU and complete pagination required"
+}

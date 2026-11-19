@@ -1,3 +1,5 @@
+import {mergeCollectorLedgers,mergeCollectorImageCaches} from '../server/collector-merge.mjs';
+import {gunzipSync,gzipSync} from 'node:zlib';
 import {execFileSync} from 'node:child_process';
 import fs from 'node:fs';
 import {control,apiBase} from '../server/cloud-client.mjs';
@@ -15,7 +17,13 @@ const knownUntracked=execFileSync('git',['ls-files','--others','--exclude-standa
 if(dirty.length||knownUntracked.length){if(dirty.some(p=>!sharedCacheFiles.has(p)))throw Error('Uncommitted collector output needs an explicit publication path: '+dirty.join(', '));git('add','--',...dirty,...knownUntracked);git('commit','-m','Preserve shared source-photo quality evidence [skip ci]');}
 let saved=false;for(let attempt=1;attempt<=4;attempt++){
  try{
-  git('pull','--rebase');
+  try{git('pull','--rebase');}catch(error){
+   const conflicts=read('diff','--name-only','--diff-filter=U').split('\n').filter(Boolean),allowed=new Set(['web/collection-ledger.json','web/preview-quality-cache.json.gz']);
+   if(!conflicts.length||conflicts.some(p=>!allowed.has(p)))throw error;
+   for(const file of conflicts){const packed=file.endsWith('.gz'),stages=[1,2,3].map(n=>{const raw=execFileSync('git',['show',':'+n+':'+file]);return JSON.parse((packed?gunzipSync(raw):raw).toString('utf8'));}),merged=file.endsWith('collection-ledger.json')?mergeCollectorLedgers(...stages):mergeCollectorImageCaches(...stages),bytes=Buffer.from(JSON.stringify(merged));fs.writeFileSync(file,packed?gzipSync(bytes):bytes);git('add','--',file);}
+   git('-c','core.editor=true','rebase','--continue');
+   console.log(JSON.stringify({collectorReceiptConflictsReconciled:conflicts,sourceRequests:0,firecrawlCredits:0}));
+  }
   const changed=read('diff','--name-only','origin/main..HEAD').split('\n').filter(Boolean);
   if(changed.some(p=>!p.startsWith('web/')))throw Object.assign(Error('Collector publication contains non-data files; refused'),{nonData:true});
   git('push','origin','HEAD:refs/heads/main');saved=true;break;
@@ -30,4 +38,4 @@ if(apiBase&&process.env.CONTROL_TOKEN){try{const p=JSON.parse(fs.readFileSync('w
 // A completed private scan is not a saved public catalogue. Announce each
 // retailer only after its exact files reached main, so a failed push cannot
 // suppress the next bounded clock attempt. Sparse collectors need no other store.
-if(apiBase&&process.env.CONTROL_TOKEN)for(const id of ['mt','bq'])try{const s=JSON.parse(fs.readFileSync('web/'+id+'/catalogue.json','utf8'));if(s.baselineReady&&s.notificationBaselineReady){const result=await control('/internal/retailer-published',{id,observedAt:s.observedAt,commit:read('rev-parse','HEAD')});console.log(JSON.stringify({retailerCommitAnnounced:id,marked:result.marked,firecrawlCredits:0}));}}catch(e){if(e.code!=='ENOENT')console.log(JSON.stringify({retailerCommitAnnouncementPending:id,status:e.status||0,firecrawlCredits:0}));}
+if(apiBase&&process.env.CONTROL_TOKEN)for(const id of ['nx','jl','mt','bq'])try{const s=JSON.parse(fs.readFileSync('web/'+id+'/catalogue.json','utf8'));if(s.baselineReady&&s.notificationBaselineReady){const result=await control('/internal/retailer-published',{id,observedAt:s.observedAt,commit:read('rev-parse','HEAD')});console.log(JSON.stringify({retailerCommitAnnounced:id,marked:result.marked,firecrawlCredits:0}));}}catch(e){if(e.code!=='ENOENT')console.log(JSON.stringify({retailerCommitAnnouncementPending:id,status:e.status||0,firecrawlCredits:0}));}

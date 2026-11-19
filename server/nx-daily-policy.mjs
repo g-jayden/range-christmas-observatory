@@ -1,7 +1,7 @@
 export function nextDailyPolicy(grant){
  if(grant?.retailerId!=='nx'||grant.enabled!==true||grant.scheduledPaidCollection!==true||grant.scope!=='ongoing-five-category-collection')throw Error('Ongoing Next-only paid fallback is not authorised');
- if(!Number.isInteger(grant.maxCreditsPerRun)||grant.maxCreditsPerRun<5||grant.maxCreditsPerRun>60||!Number.isInteger(grant.accountReserveCredits)||grant.accountReserveCredits<5000)throw Error('Next operational credit guard is invalid');
- return {retailerId:'nx',authorizationId:grant.id,maxCreditsPerRun:grant.maxCreditsPerRun,accountReserveCredits:grant.accountReserveCredits,freeFirst:true,monthlyLimit:null,maxPaidAttemptsPerRequest:1};
+ if(grant.maxCreditsPerRun!==null&&(!Number.isInteger(grant.maxCreditsPerRun)||grant.maxCreditsPerRun<5||grant.maxCreditsPerRun>60)||!Number.isInteger(grant.accountReserveCredits)||grant.accountReserveCredits<5000)throw Error('Next operational credit guard is invalid');
+ return {retailerId:'nx',authorizationId:grant.id,maxCreditsPerRun:grant.maxCreditsPerRun===null?Infinity:grant.maxCreditsPerRun,accountReserveCredits:grant.accountReserveCredits,freeFirst:true,monthlyLimit:null,maxPaidAttemptsPerRequest:1};
 }
 export function nextPaidRequestAllowed(policy,{spent=0,accountRemaining,reservation=5}={}){if(!Number.isFinite(accountRemaining)||accountRemaining-policy.accountReserveCredits<reservation||spent+reservation>policy.maxCreditsPerRun)throw Error('Next run credit bound or account reserve reached');return true;}
 export function nextBeijingDay(now=Date.now()){return new Date(now+28800000).toISOString().slice(0,10);}

@@ -5,7 +5,7 @@ const eligible=(sub,p)=>!p.unavailableSince&&(!p.taxonomyAudit||p.taxonomyAudit.
 export async function digestSourceBarrier(db,scopes,now=Date.now()){
  const day=dayAt(now),start=Date.parse(day+'T07:00:00+08:00'),waiting=[];
  for(const id of new Set(scopes.map(retailerForScope))){const m=await db.get(id==='the-range'?'monitor':id+'-monitor'),at=id==='the-range'?m?.lastDiscoverySuccess:m?.observedAt;
-  if(!Number.isFinite(Date.parse(at))||Date.parse(at)<start||Date.parse(at)>now)waiting.push({retailerId:id,lastVerifiedSourceAt:at||null});
+  if(['nx','jl'].includes(id)&&(!m?.automaticArrivalChecks||m.collectionComplete!==true||!/^[a-f0-9]{40}$/.test(m.committedRevision||''))||!Number.isFinite(Date.parse(at))||Date.parse(at)<start||Date.parse(at)>now)waiting.push({retailerId:id,lastVerifiedSourceAt:at||null});
  }
  return {ready:!waiting.length,day,waiting};
 }
