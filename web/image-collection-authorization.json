@@ -1,0 +1,1 @@
+{"id":"all-retailers-free-first-native-originals-20261119","enabled":true,"scope":"failed-native-originals-all-retailers","freeFirst":true,"maxCredits":null,"accountReserveCredits":5000,"authorizedAt":"2026-11-19","notes":"用户持续授权所有连锁店的图片采集在免费通道失败后使用不限积分的Firecrawl。仅取已绑定具体SKU的官网原始图片，不扩大其它目录采集的授权。"}

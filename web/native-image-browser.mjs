@@ -1,13 +1,14 @@
 import {wrapReportText} from './report-layout.mjs';
 import{downloadNativeImage}from'./image-download.mjs';
-import {nativeImageCandidates,productPrice,productSize,assertProductPhoto} from './product-facts.mjs';
+import {nativeImageCandidates,nativeSourceUrl,productKey,productPrice,productSize,assertProductPhoto} from './product-facts.mjs';
 const cache=new Map();
-let service;
+let service;let paidMirrors;
+async function recoveredNative(p){try{paidMirrors??=fetch('paid-native-index.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{entries:{}}).catch(()=>{paidMirrors=undefined;return {entries:{}};});const source=nativeSourceUrl(p),e=(await paidMirrors).entries?.[source];return e?.ok&&e.sourceBytesUnchanged===true&&e.bindings?.includes(productKey(p))&&e.cachedImageUrl?.includes(e.hash+'.')?e.cachedImageUrl:null;}catch{return null;}}
 async function download(url){return downloadNativeImage(url,{proxyForUrl:async source=>{service??=fetch('service.json').then(r=>{if(!r.ok)throw Error('Image service configuration unavailable');return r.json();});const api=(await service).apiBase;if(!api)throw Error('Image proxy unavailable');return api.replace(/\/$/,'')+'/public/image?url='+encodeURIComponent(source);}});}
 export async function nativeImage(p,item){
  const candidates=nativeImageCandidates(p,item);if(!candidates.length)throw Error('官网原图尚未提供 · Native source image unavailable');
  const key=candidates.join('\n');if(cache.has(key))return cache.get(key);
- const work=(async()=>{let last;for(const url of candidates)try{const blob=await download(url),bitmap=await createImageBitmap(blob),result={blob,width:bitmap.width,height:bitmap.height,sourceUrl:url};bitmap.close();if(!(result.width>0&&result.height>0))throw Error('Image pixels missing');return result;}catch(e){last=e;}throw last;})();cache.set(key,work);work.catch(()=>cache.delete(key));while(cache.size>8)cache.delete(cache.keys().next().value);return work;
+ const work=(async()=>{let last;for(const url of candidates)try{const blob=await download(url),bitmap=await createImageBitmap(blob),result={blob,width:bitmap.width,height:bitmap.height,sourceUrl:url};bitmap.close();if(!(result.width>0&&result.height>0))throw Error('Image pixels missing');return result;}catch(e){last=e;}const recovered=await recoveredNative(p);if(recovered){const blob=await download(recovered),bitmap=await createImageBitmap(blob),result={blob,width:bitmap.width,height:bitmap.height,sourceUrl:recovered};bitmap.close();return result;}throw last;})();cache.set(key,work);work.catch(()=>cache.delete(key));while(cache.size>8)cache.delete(cache.keys().next().value);return work;
 }
 function wrap(ctx,text,width){return wrapReportText(text,width,t=>ctx.measureText(t).width);}
 const toBlob=canvas=>new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(Error('Image export failed')),'image/png'));

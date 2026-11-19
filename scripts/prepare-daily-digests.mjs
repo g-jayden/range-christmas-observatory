@@ -3,14 +3,14 @@ import {nativeSourceUrl} from '../web/product-facts.mjs';
 import {exactNativeGalleryMember} from '../server/native-gallery-identity.mjs';
 import {rebuildStoredRangeViews} from '../server/rebuild-range-views.mjs';
 import {reportProductEvidence,mergeReportProduct} from '../server/report-product-evidence.mjs';
-import {digestNativeOriginal} from '../server/digest-native-original.mjs';
+import {createPaidNativeOriginals} from '../server/paid-native-originals.mjs';
 import {catalogueIdentityIndex} from '../server/catalogue-identities.mjs';
 import {applyRangeNativeIndex} from '../server/range-native-index.mjs';
 import {publishBqCommittedEvidence} from '../server/bq-committed-evidence.mjs';
 import fs from 'node:fs/promises';import {createHash} from 'node:crypto';
 import {control} from '../server/cloud-client.mjs';import {createCatalogueReport} from '../server/catalogue-report.mjs';import {productSize,productRetailer} from '../web/product-facts.mjs';
 const range=await rebuildStoredRangeViews({persist:false,includeProducts:true,verifyImageFiles:false}),rangeBySku=new Map((range.products||[]).map(p=>[String(p.sku),p]));
-const prepared=[],failures=[],cache=new Map();let bqPrepared=false;
+const prepared=[],failures=[],cache=new Map();let bqPrepared=false;const nativeRecovery=await createPaidNativeOriginals();
 async function json(relative,root='web'){const key=root+'/'+relative;if(!cache.has(key))cache.set(key,fs.readFile(key,'utf8').then(JSON.parse));return cache.get(key);}
 async function exactProduct(candidate){
  const id=productRetailer(candidate),dep=candidate.taxonomyAudit?.primary||candidate.department||candidate.kind;let source,p;
@@ -29,7 +29,7 @@ async function exactProduct(candidate){
  if(id==='the-range')for(const name of ['new-original-recovery.json','range-native-index.json'])applyRangeNativeIndex([p],await json(name).catch(e=>{if(e.code==='ENOENT')return {entries:{}};throw e;}));
  return p;
 }
-const nativeIndex=await json('range-native-index.json').catch(()=>({entries:{}})),nativeRecovery=await json('new-original-recovery.json').catch(()=>({entries:{}})),nativeGaps=[];Object.assign(nativeIndex.entries,nativeRecovery.entries);for(const p of range.products||[]){if(p.taxonomyAudit?.disposition!=='include')continue;const url=nativeSourceUrl(p);if(p.originalImages?.some(g=>g.url===url&&exactNativeGalleryMember(p,g))&&!nativeIndex.entries?.[url]?.ok)nativeGaps.push({sku:p.sku,url,sourceUrl:p.sourceUrl});}console.log(JSON.stringify({phase:'Read-only exact native gap diagnosis',missing:[...new Map(nativeGaps.map(p=>[p.url,p])).values()].slice(0,25),sourceRequests:0,firecrawlCredits:0}));
+const nativeIndex=await json('range-native-index.json').catch(()=>({entries:{}})),nativeRecoveryIndex=await json('new-original-recovery.json').catch(()=>({entries:{}})),nativeGaps=[];Object.assign(nativeIndex.entries,nativeRecoveryIndex.entries);for(const p of range.products||[]){if(p.taxonomyAudit?.disposition!=='include')continue;const url=nativeSourceUrl(p);if(p.originalImages?.some(g=>g.url===url&&exactNativeGalleryMember(p,g))&&!nativeIndex.entries?.[url]?.ok)nativeGaps.push({sku:p.sku,url,sourceUrl:p.sourceUrl});}console.log(JSON.stringify({phase:'Read-only exact native gap diagnosis',missing:[...new Map(nativeGaps.map(p=>[p.url,p])).values()].slice(0,25),sourceRequests:0,firecrawlCredits:0}));
 let plan;
 if(process.env.DIGEST_REPAIR_COMBINED==='true'){
  const parents=['a1cc4ca4c82fdafee1d7bd315b92e2bf93d7cf91444bfd79dbd2f5815372021a','ec753a24530cbe8914a6190c9ddd2fe0609b88b9e4f5e57818384439626879ce','ae27288802b6b22134701dfde8fa16a0955b3724c8d333f7b2deeb1f31ecf60f'],manifests=await Promise.all(parents.map(id=>json('reports/'+id+'/manifest.json')));
@@ -50,7 +50,7 @@ for(const originalGroup of plan.plans){
   // remains queued without discarding the other verified native photos.
   for(const candidate of originalGroup.products){
    try{
-    const p=await exactProduct(candidate),{bytes,source,sha256}=await digestNativeOriginal(p);
+    const p=await exactProduct(candidate),{bytes,source,sha256}=await nativeRecovery.read(p);
     native.set(p,bytes);products.push(p);verifiedKeys.push(candidate.digestProductKey);
     items.push({key:candidate.digestProductKey,sku:candidate.sku,retailerId:productRetailer(p),sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,size:productSize(p),imageSourceUrl:source,imageSha256:sha256,sourceObservedAt:p.observedAt});
    }catch(e){failures.push({plan:originalGroup.id,key:candidate.digestProductKey,error:String(e.message).slice(0,250)});}
@@ -64,6 +64,7 @@ for(const originalGroup of plan.plans){
   await fs.writeFile(dir+'/manifest.json',JSON.stringify(manifest));prepared.push({id:group.id,products:items.length,bytes:bytes.length,deferred:group.deferredProducts||0});
  }catch(e){failures.push({plan:originalGroup.id,error:String(e.message).slice(0,250)});}
 }
+await nativeRecovery.close();
 await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/daily-digest-outbox.private.json',JSON.stringify({prepared,failures}));
 if(failures.length)console.log('::warning::Some product evidence is still queued; verified products can be delivered without marking failed products sent.');
 console.log(JSON.stringify({phase:'Prepare consolidated native PDF',prepared:prepared.map(({products,bytes,deferred})=>({products,bytes,deferred})),sourceWaits:plan.waiting.length,failures,firecrawlCredits:0}));

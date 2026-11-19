@@ -1,0 +1,46 @@
+import fs from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import sharp from 'sharp';
+import {atomicJson} from './sync.mjs';
+import {readLedger,periodKey,runKey} from './credit-budget.mjs';
+import {digestNativeOriginal} from './digest-native-original.mjs';
+import {nativeSourceUrl,productRetailer,assertProductPhoto} from '../web/product-facts.mjs';
+import {allowedPublicImage} from '../cloud/public-image.mjs';
+import {exactNativeGalleryMember} from './native-gallery-identity.mjs';
+const STORES={ 'the-range':'www.therange.co.uk',asda:'direct.asda.com',ms:'www.marksandspencer.com',bm:'www.bmstores.co.uk',hb:'home.bargains',du:'www.dunelm.com',nx:'www.next.co.uk',jl:'www.johnlewis.com',mt:'www.matalan.co.uk',bq:'www.diy.com',ar:'www.argos.co.uk'};
+export function nativePaidPolicy(grant){if(grant?.enabled!==true||grant.scope!=='failed-native-originals-all-retailers'||grant.freeFirst!==true||grant.maxCredits!==null||grant.accountReserveCredits<5000)throw Error('All-retailer free-first native image grant required');return grant;}
+export function exactPaidNativeTarget(p){assertProductPhoto(p);const retailer=productRetailer(p),source=nativeSourceUrl(p),page=new URL(p.sourceUrl);if(page.protocol!=='https:'||page.hostname!==STORES[retailer]||page.username||page.password||page.port||!allowedPublicImage(source)||new URL(source).hostname==='raw.githubusercontent.com')throw Error('Exact official public image target required');if(!p.originalImages?.some(g=>g.url===source&&exactNativeGalleryMember(p,g)))throw Error('Paid original must belong to this exact SKU gallery');return {retailer,source,page:page.href};}
+// One lazily opened, shared ordinary browser session. Never invoked by a public
+// website endpoint; only the repository's owner-authenticated collectors use it.
+export async function createPaidNativeOriginals({key=process.env.FIRECRAWL_API_KEY,fetcher=fetch,freeRead=digestNativeOriginal,connect,root='web',grant,index}={}){
+ grant=nativePaidPolicy(grant||JSON.parse(await fs.readFile(root+'/image-collection-authorization.json','utf8')));
+ index??=await fs.readFile(root+'/paid-native-index.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return {version:1,entries:{}};throw e;});
+ const file=root+'/paid-native-index.json',tasks=new Map(),started=Date.now(),ttl=600;let session,browser,context,opening,closed=false,receipt;
+ const save=()=>atomicJson(file,index);
+ async function api(path,method,body){const r=await fetcher('https://api.firecrawl.dev/v2/'+path,{method,headers:{authorization:'Bearer '+key,...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(45000)}),b=await r.json();if(!r.ok||b.success===false)throw Error('Native-image provider HTTP '+r.status);return b;}
+ async function start(){if(closed)throw Error('Native recovery session closed');return opening??=(async()=>{
+  if(!key)throw Error('Approved native-image fallback credential not configured');
+  const balance=await api('team/credit-usage','GET'),left=balance.data?.remainingCredits??balance.remainingCredits;if(!Number.isFinite(left)||left-grant.accountReserveCredits<ttl/30)throw Error('Native-image account reserve reached');
+  session=await api('interact','POST',{ttl,activityTtl:90,streamWebView:false,blockAds:false,location:{country:'GB'}});if(!session.id||!session.cdpUrl)throw Error('Native browser session not confirmed');
+  browser=await(connect||((url)=>import('playwright').then(p=>p.chromium.connectOverCDP(url))))(session.cdpUrl);context=browser.contexts()[0]||await browser.newContext();
+ })();}
+ async function existing(source,p){const e=index.entries[source];if(p.originalImageEvidence?.sourceUrl===source&&p.originalImageEvidence?.sha256&&p.originalImageEvidence.sha256!==e?.hash)return null;if(!e?.ok||!e.bindings?.includes(productRetailer(p)+':'+p.sku))return null;try{const bytes=await fs.readFile(root+'/'+e.cachedImageUrl);if(createHash('sha256').update(bytes).digest('hex')===e.hash)return {bytes,source,sha256:e.hash};}catch{}try{const r=await fetcher('https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/'+e.cachedImageUrl,{signal:AbortSignal.timeout(30000)});if(r.ok){const bytes=Buffer.from(await r.arrayBuffer());if(createHash('sha256').update(bytes).digest('hex')===e.hash)return {bytes,source,sha256:e.hash};}}catch{}return null;}
+ async function read(p){assertProductPhoto(p);const source=nativeSourceUrl(p);const reused=source&&await existing(source,p);if(reused)return reused;
+  try{return await freeRead(p);}catch(freeError){
+   // Unresolved source identity/price/image contradictions need evidence repair,
+   // never an arbitrary replacement photo or a charge for a different product.
+   const target=exactPaidNativeTarget(p);const taskKey=target.retailer+':'+p.sku+'|'+source;if(tasks.has(taskKey))return tasks.get(taskKey);
+   const task=(async()=>{await start();if(Date.now()-started>540000)throw Error('Native recovery checkpoint required before session expiry');
+    let bytes;
+    try{const response=await context.request.get(source,{timeout:25000,failOnStatusCode:false});if(response.status()===200&&allowedPublicImage(response.url?.()||source))bytes=await response.body();}catch{}
+    if(!bytes){const page=await context.newPage(),captures=[];const response=r=>{if(r.url()===source&&r.status()===200)captures.push(r.body());};page.on('response',response);try{await page.goto(target.page,{waitUntil:'networkidle',timeout:35000});}catch{}finally{const bodies=await Promise.allSettled(captures);bytes=bodies.find(b=>b.status==='fulfilled')?.value;await page.close();}}
+    if(!bytes||bytes.length>25000000)throw Error('Official exact native response unavailable after free and paid channels for '+p.sku);
+    const m=await sharp(bytes).metadata(),expected=p.originalImageEvidence?.sourceUrl===source?p.originalImageEvidence:null;if(!m.width||m.width<64||!m.height||m.height<64)throw Error('Native response is not a usable product photo');if(expected?.width&&m.width!==expected.width||expected?.height&&m.height!==expected.height)throw Error('Native response dimensions changed; exact-SKU recheck required');
+    const hash=createHash('sha256').update(bytes).digest('hex'),ext=m.format==='jpeg'?'jpg':m.format;if(!['jpg','png','webp','avif','gif'].includes(ext))throw Error('Unsupported native image encoding');const cachedImageUrl='images/source/'+hash+'.'+ext;await fs.mkdir(root+'/images/source',{recursive:true});await fs.writeFile(root+'/'+cachedImageUrl,bytes);
+    index.entries[source]={url:source,ok:true,bindings:[...new Set([...(index.entries[source]?.bindings||[]),target.retailer+':'+p.sku])],selectedSkus:[...new Set([...(index.entries[source]?.selectedSkus||[]),String(p.sku)])],retailerId:target.retailer,sourceContextUrl:target.page,hash,cachedImageUrl,width:m.width,height:m.height,bytes:bytes.length,observedAt:new Date().toISOString(),sourceBytesUnchanged:true,method:'free-failed-official-native-response-shared-paid-browser'};await save();return {bytes,source,sha256:hash};
+   })();tasks.set(taskKey,task);return task;
+  }
+ }
+ async function close(){if(closed)return;closed=true;if(!session)return;try{receipt=await api('interact/'+encodeURIComponent(session.id),'DELETE');}catch{receipt=undefined;}finally{await browser?.close().catch(()=>{});const credits=Number.isFinite(receipt?.creditsBilled)?receipt.creditsBilled:ttl/30;const record={id:'native-session-'+session.id,credits,billingVerified:Number.isFinite(receipt?.creditsBilled),authorizationId:grant.id,sessionDurationMs:receipt?.sessionDurationMs,completedAt:new Date().toISOString()};const ledger=await readLedger(),p=ledger.periods[periodKey()]||={used:0,reservations:{},runs:[]};p.runs||=[];if(!p.runs.some(r=>r.receipt?.id===record.id)){p.used+=credits;p.runs.push({key:'native-'+runKey(),credits,receipt:record,completedAt:record.completedAt});}ledger.nativeImageFallback={...record,monthlyLimit:null,sourceCatalogueRequests:0};await atomicJson('web/collection-ledger.json',ledger);index.lastReceipt=record;await save();}}
+ return {read,close,index,metrics:()=>({paidSessionStarted:Boolean(session),credits:receipt?.creditsBilled??(session?null:0)})};
+}

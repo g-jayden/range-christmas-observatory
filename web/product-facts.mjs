@@ -13,8 +13,10 @@ export function productSize(p){
  if(conflict&&!conflict.usableHeightCm)return '官网尺寸冲突 · Conflicting source dimensions';
  if(conflict)return conflict.usableHeightCm+'cm';
  const d=p.dimensions?.label?p.dimensions:productDimensions(p.specifications||{});
- if(d.axes?.length||d.sourceSize||d.categoryLabel)return d.sourceSize||d.label;
- return p.heightLabel||p.specifications?.Dimensions||p.specifications?.Size||(p.skirtDiameterCm?p.skirtDiameterCm+'cm':'官网未注明尺寸 · Size not specified');
+ if(d.axes?.length)return d.label;
+ const realSize=value=>value&&!/^(?:one(?: size)?|os|n\/?a|not (?:specified|available))$/i.test(String(value).trim());
+ if(realSize(d.sourceSize))return d.categoryLabel||d.sourceSize;
+ return [p.heightLabel,p.specifications?.Dimensions,p.specifications?.Size].find(realSize)||(p.skirtDiameterCm?p.skirtDiameterCm+'cm':'官网未注明尺寸 · Size not specified');
 }
 export const reportRetailer=p=>retailerName(productRetailer(p));
 const usableNativeUrl=raw=>{try{const u=new URL(raw);return u.protocol==='https:'&&(u.hostname!=='www.therange.co.uk'||!u.pathname.startsWith('/media/')||/\.(?:jpe?g|png|webp|gif|avif)$/i.test(u.pathname));}catch{return false;}};

@@ -1,0 +1,4 @@
+import fs from 'node:fs/promises';import {createHash} from 'node:crypto';import {execFileSync} from 'node:child_process';
+const files=['web/collection-ledger.json','web/paid-native-index.json','web/native-original-recovery-status.json'],index=await fs.readFile('web/paid-native-index.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return {entries:{}};throw e;});
+for(const entry of Object.values(index.entries||{})){const name=entry.cachedImageUrl;if(!entry.ok||!/^images\/source\/[a-f0-9]{64}\.(?:jpg|png|webp|gif|avif)$/.test(name||'')||!name.includes(entry.hash+'.'))continue;try{const b=await fs.readFile('web/'+name);if(createHash('sha256').update(b).digest('hex')!==entry.hash)throw Error('Recovered native mirror hash mismatch');files.push('web/'+name);}catch(e){if(e.code!=='ENOENT')throw e;}}
+for(const file of files)try{await fs.access(file);execFileSync('git',['add','--sparse','--',file],{stdio:'pipe'});}catch(e){if(e.code!=='ENOENT')throw e;}

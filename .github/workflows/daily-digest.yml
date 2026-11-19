@@ -25,6 +25,7 @@ on:
       - Matalan free exact SKU collection and native photos
       - B&Q free exact SKU collection and native photos
       - Argos free native gallery review
+      - Recover exact native originals across retailers
       - The Range native originals without catalogue recollection
     types: [completed]
 permissions:
@@ -43,6 +44,7 @@ jobs:
       DIGEST_TEST_OWNER: ${{ inputs.testOwner == true && 'true' || 'false' }}
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
       ONNXRUNTIME_NODE_INSTALL_CUDA: skip
     steps:
@@ -70,6 +72,7 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           mkdir -p web/reports
           git add web/reports
+          node scripts/stage-native-recovery.mjs
           git diff --cached --quiet || git commit -m "Publish grouped native NEW product PDF [skip ci]"
           node scripts/push-evidence.mjs
       - name: Send one PDF per confirmed subscriber without recollection

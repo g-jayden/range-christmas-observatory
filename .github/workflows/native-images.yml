@@ -1,0 +1,62 @@
+name: Recover exact native originals across retailers
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - Credit controlled collection and permanent website
+      - ASDA Christmas exact SKU collection
+      - M&S Christmas exact SKU collection
+      - B&M Christmas exact SKU collection
+      - Home Bargains Christmas exact SKU collection
+      - Dunelm Christmas exact SKU collection
+      - Next daily exact SKU collection with paid fallback
+      - John Lewis Christmas daily exact SKU collection
+      - Matalan free exact SKU collection and native photos
+      - B&Q free exact SKU collection and native photos
+      - Argos free native gallery review
+    types: [completed]
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: approved-native-image-recovery
+  cancel-in-progress: false
+  queue: single
+jobs:
+  native-originals:
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+      GITHUB_TOKEN: ${{ github.token }}
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/images/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Reuse exact committed originals, then free and approved paid recovery
+        run: node scripts/mirror-approved-native-images.mjs
+      - name: Commit original bytes and their exact source bindings
+        if: always()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          node scripts/stage-native-recovery.mjs
+          git diff --cached --quiet || git commit -m "Preserve source-bound native original recovery [skip ci]"
+          node scripts/push-evidence.mjs
+      - name: Publish without catalogue recollection
+        if: success()
+        run: node scripts/request-retailer-site-publish.mjs ar
