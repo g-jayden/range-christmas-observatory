@@ -31,7 +31,7 @@ jobs:
     needs: acceptance
     if: needs.acceptance.outputs.active == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     env:
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
@@ -88,19 +88,6 @@ jobs:
         with:
           path: runtime/bq-source
           key: bq-source-checkpoints-${{ github.run_id }}-${{ github.run_attempt }}
-      - name: Archive current public product evidence before repository publication
-        if: always()
-        uses: actions/upload-artifact@v7.0.2
-        with:
-          name: bq-source-evidence-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            web/bq/
-            web/images/bq/
-            runtime/bq-staged-catalogue.json
-            !web/bq/release-*.b64
-          retention-days: 3
-          compression-level: 9
-          if-no-files-found: warn
       - name: Preserve source checkpoints and native evidence even on partial failure
         id: evidence
         if: always()
@@ -114,6 +101,21 @@ jobs:
           done
           git diff --cached --quiet || git commit -m "Save B&Q exact SKU source and reviewed native evidence [skip ci]"
           node scripts/push-evidence.mjs
+      - name: Archive current public product evidence after repository publication
+        if: always()
+        continue-on-error: true
+        timeout-minutes: 8
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: bq-source-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            web/bq/
+            web/images/bq/
+            runtime/bq-staged-catalogue.json
+            !web/bq/release-*.b64
+          retention-days: 3
+          compression-level: 9
+          if-no-files-found: warn
       - name: Deliver only committed verified B&Q arrivals
         if: success()
         run: node scripts/deliver-retailer-notifications.mjs bq
