@@ -1,0 +1,23 @@
+name: Verify approved source recovery and consolidated PDF
+on:
+  workflow_run:
+    workflows: [Argos exact public product baseline]
+    types: [completed]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  approved-acceptance:
+    if: github.event.workflow_run.id == 44435110824 && github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /scripts/dispatch-approved-acceptance.mjs
+      - name: Start the owner PDF test and current source checks under existing grants
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/dispatch-approved-acceptance.mjs

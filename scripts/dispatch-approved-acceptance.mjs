@@ -1,0 +1,4 @@
+if(process.env.GITHUB_REPOSITORY!=='g-jayden/range-christmas-observatory'||!process.env.GITHUB_TOKEN)throw Error('Repository Actions identity required');
+for(const[workflow,inputs]of [['daily-digest.yml',{testOwner:true}],['daily-pages.yml',{refresh:true,mode:'verify-all',checkNew:true}],['ms.yml',{mode:'daily'}],['bm.yml',{mode:'daily'}]]){
+ const r=await fetch('https://api.github.com/repos/'+process.env.GITHUB_REPOSITORY+'/actions/workflows/'+workflow+'/dispatches',{method:'POST',headers:{authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json','content-type':'application/json'},body:JSON.stringify({ref:'main',inputs}),signal:AbortSignal.timeout(20000)});if(r.status!==204)throw Error('Approved acceptance dispatch '+workflow+' HTTP '+r.status);console.log(JSON.stringify({requested:workflow,status:r.status,sourceRequestsInThisLauncher:0,firecrawlCreditsInThisLauncher:0}));
+}
