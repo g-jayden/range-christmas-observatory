@@ -25,5 +25,5 @@ globalThis.document={createElement:()=>{const canvas={width:0,height:0,getContex
 const {annotatedImage,cachedAnnotatedImage}=await import('../web/native-image-browser.mjs');
 const named={...product(),priceGBP:10,heightLabel:'30cm'},firstAnnotated=await annotatedImage(named);assert.equal((await annotatedImage(named)),firstAnnotated);assert.equal(draws,1);assert.equal(cachedAnnotatedImage(named),firstAnnotated);
 await annotatedImage({...named,priceGBP:12});assert.equal(draws,2);assert(labels.includes('£12.00'));await annotatedImage({...named,heightLabel:'40cm'});assert.equal(draws,3);assert(labels.includes('40cm'));
-assert.throws(()=>annotatedImage({...named,sourceImageConflict:{note:'conflict'}}),/conflict/);
+await assert.rejects(annotatedImage({...named,sourceImageConflict:{note:'conflict'}}),/conflict/);
 console.log('Annotated native image reuse avoids repeat PNG encoding; changed source price/size and conflicting photos cannot reuse an earlier overlay.');
