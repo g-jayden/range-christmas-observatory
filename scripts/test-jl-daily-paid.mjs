@@ -18,3 +18,14 @@ try{
  assert(!(await collectJlPaid({key:'fixture',fetcher:broken})).complete);assert.equal(failedCalls,1,'An ambiguous provider response cannot start an automatic duplicate purchase');
  console.log('PASS: authorised ongoing JL batches have no run/month quota, reuse exact same-day paid results, reconcile durable receipts once, reject unauthorised scopes, and stop ambiguous duplicate charges.');
 }finally{process.chdir(cwd);await fs.rm(tmp,{recursive:true,force:true});}
+
+const {dispatchAdditionalDue}=await import('../cloud/additional-retailer-clock.mjs');
+class ClockDB{constructor(){this.m=new Map;}async get(k){return this.m.get(k);}async put(k,v){this.m.set(k,v);}async transaction(fn){return fn(this);}}
+const clockDb=new ClockDB;await clockDb.put('baseline/jl-christmas-v1',{});const clockArgs={id:'jl',storage:clockDb,env:{GITHUB_DISPATCH_TOKEN:'fixture'},fetcher:async()=>new Response(null,{status:204})};
+assert(!(await dispatchAdditionalDue({...clockArgs,now:Date.parse('2026-11-18T21:59:00Z')})).due);
+assert((await dispatchAdditionalDue({...clockArgs,now:Date.parse('2026-11-18T22:00:00Z')})).dispatched);
+await clockDb.put('jl-monitor',{automaticArrivalChecks:true,collectionComplete:false,committedRevision:'e'.repeat(40),observedAt:'2026-11-18T22:00:00Z'});
+assert((await dispatchAdditionalDue({...clockArgs,now:Date.parse('2026-11-18T22:21:00Z')})).dispatched,'An incomplete committed source must still receive a bounded recovery');
+await clockDb.put('jl-monitor',{automaticArrivalChecks:true,collectionComplete:true,committedRevision:'e'.repeat(40),observedAt:'2026-11-18T22:00:00Z',evidencePending:30});
+assert(!(await dispatchAdditionalDue({...clockArgs,now:Date.parse('2026-11-18T23:00:00Z')})).due,'Historical per-product review flags must not re-purchase a complete current source at 07:00');
+console.log('PASS: JL sources start at 06:00 Beijing, incomplete scans recover, and a committed complete scan is not purchased again for historical review flags.');
