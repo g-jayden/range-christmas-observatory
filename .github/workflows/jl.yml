@@ -45,6 +45,7 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - name: Install the already accepted official Firefox collection runtime
         if: inputs.resumePaid != true && inputs.rebuildOnly != true
+        continue-on-error: true
         run: |
           npm install --prefix runtime/jl-probe --no-audit --no-fund --ignore-scripts playwright@1.64.1
           node runtime/jl-probe/node_modules/playwright/cli.js install --with-deps firefox
