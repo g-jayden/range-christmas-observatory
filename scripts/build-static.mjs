@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {copyPublishedAssets} from './publish-assets.mjs';
 await import('./apply-retailer-gallery-audits.mjs');
+const{rebuildStoredRangeViews}=await import('../server/rebuild-range-views.mjs');console.log(JSON.stringify({phase:'Rebuild physical views from committed facts and source photos',...await rebuildStoredRangeViews()}));
 await fs.rm('public',{recursive:true,force:true});
 await fs.mkdir('public',{recursive:true});
 for(const name of ['catalogue.json','status.json','settings.json','service.json','next-collection-authorization.json','argos-collection-authorization.json','argos-acquisition-status.json','collection-policy.json','collection-ledger.json','monitor-state.json','new-arrivals.json','monitor-proof.json'])JSON.parse(await fs.readFile('web/'+name,'utf8'));
