@@ -17,6 +17,13 @@ try{process.chdir(tmp);await fs.mkdir('web',{recursive:true});
  time=900000;await rotate.read({...p,sku:'two',originalImageUrl:url+'?two',originalImages:[{url:url+'?two',selectedSku:'two'}]});
  time+=80000;await rotate.read({...p,sku:'three',originalImageUrl:url+'?three',originalImages:[{url:url+'?three',selectedSku:'three'}]});await rotate.close();await rotate.close();
  assert.equal(opened,2);assert.equal(closed,2);assert.equal(rotate.metrics().credits,4);const rotatedLedger=JSON.parse(await fs.readFile('web/collection-ledger.json'));assert.equal(Object.values(rotatedLedger.periods)[0].used,5);assert.equal(Object.values(rotatedLedger.periods)[0].runs.length,3);
+ let failedConnections=0,failedSessionCloses=0;
+ const recoverConnection=await createPaidNativeOriginals({key:'fixture',grant,index:{entries:{}},freeRead:async()=>{throw Error('Official original HTTP 403');},fetcher:async(u,opt)=>{if(u.endsWith('/credit-usage'))return Response.json({data:{remainingCredits:100000}});if(opt.method==='DELETE'){failedSessionCloses++;return Response.json({creditsBilled:1});}return Response.json({id:'connection-attempt-'+(failedConnections+1),cdpUrl:'wss://fixture.invalid/'});},connect:async()=>{if(++failedConnections===1)throw Error('Provider CDP connection interrupted');return {contexts:()=>[{request:{get:async()=>({status:()=>200,body:async()=>bytes})}}],close:async()=>{}};}});
+ await assert.rejects(recoverConnection.read({...p,sku:'connection-one',originalImageUrl:url+'?connection-one',originalImages:[{url:url+'?connection-one',selectedSku:'connection-one'}]}),/CDP connection interrupted/);
+ assert.equal(failedSessionCloses,1,'A created but disconnected paid session must be closed and its real receipt recorded');
+ await recoverConnection.read({...p,sku:'connection-two',originalImageUrl:url+'?connection-two',originalImages:[{url:url+'?connection-two',selectedSku:'connection-two'}]});await recoverConnection.close();
+ assert.equal(failedConnections,2,'A rejected connection promise must not poison every later product');assert.equal(failedSessionCloses,2);assert.equal(recoverConnection.metrics().credits,2);
  console.log('Free-first native recovery, exact SKU/host binding, byte/dimension preservation, persistent reuse, one session and one receipt passed');
  console.log('Long free-channel work does not expire unopened paid sessions; idle sessions rotate lazily and each actual receipt is recorded exactly once.');
+ console.log('Failed paid connections close their confirmed session and receipt; later independent products can connect without repeating the failed product.');
 }finally{process.chdir(cwd);await fs.rm(tmp,{recursive:true,force:true});}
