@@ -1,7 +1,7 @@
 import {DEPARTMENTS,DEPARTMENT_MAP} from './catalogue-model.mjs';
 import {productKey,productRetailer,reportRetailer} from './product-facts.mjs';
 
-export const REPORT_PAGE={width:595.28,height:841.89,margin:24,header:36,columns:2,rows:4,gap:16,caption:38};
+export const REPORT_PAGE={width:595.28,height:841.89,margin:24,header:36,columns:2,rows:4,gap:16,caption:68};
 export function reportPages(products){
  const groups=new Map(),seen=new Set(),physical=['tree','trees','skirt','skirt-stand','baubles','tree-decorations','topper','wreath','garland'],retailers=['the-range','asda','ms','bm','hb','du','nx','jl','mt','bq','ar'],order=new Map(DEPARTMENTS.map((d,i)=>[d.id,i]));
  const categoryRank=id=>{const name=id.replace(/^(?:asda|ms|bm|hb|du|nx|jl|mt|bq|ar)-/,'');const at=physical.indexOf(name);return at<0?100+(order.get(id)??999):at;};

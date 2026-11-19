@@ -1,3 +1,4 @@
+import {productNames,PDF_LAYOUT_VERSION} from '../web/product-names.mjs';
 import {applySavedRetailerReview} from '../server/saved-retailer-reviews.mjs';
 import {nativeSourceUrl} from '../web/product-facts.mjs';
 import {exactNativeGalleryMember} from '../server/native-gallery-identity.mjs';
@@ -52,7 +53,7 @@ for(const originalGroup of plan.plans){
    try{
     const p=await exactProduct(candidate),{bytes,source,sha256}=await nativeRecovery.read(p);
     native.set(p,bytes);products.push(p);verifiedKeys.push(candidate.digestProductKey);
-    items.push({key:candidate.digestProductKey,sku:candidate.sku,retailerId:productRetailer(p),sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,size:productSize(p),imageSourceUrl:source,imageSha256:sha256,sourceObservedAt:p.observedAt});
+    items.push({key:candidate.digestProductKey,sku:candidate.sku,retailerId:productRetailer(p),names:productNames(p),sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,size:productSize(p),imageSourceUrl:source,imageSha256:sha256,sourceObservedAt:p.observedAt});
    }catch(e){failures.push({plan:originalGroup.id,key:candidate.digestProductKey,error:String(e.message).slice(0,250)});}
   }
   if(!products.length)continue;
@@ -60,7 +61,7 @@ for(const originalGroup of plan.plans){
   const group=products.length===originalGroup.products.length?originalGroup:await control('/internal/digest-subset',{planId:originalGroup.id,readyKeys:verifiedKeys});
   const identity=catalogueIdentityIndex(products);for(const p of products){const canonical=identity.canonical[productRetailer(p)+':'+p.sku];if(canonical)p.canonicalSku=canonical;}
   const dir='web/reports/'+group.id;await fs.mkdir(dir,{recursive:true});
-  const bytes=await createCatalogueReport(products,{output:dir+'/NEW.pdf',readImage:p=>native.get(p)}),manifest={...(group.correction?{correction:true,originalReports:group.parents}:{}),version:'daily-native-pdf-v1',planId:group.id,day:group.day,items,pdf:{sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length}};
+  const bytes=await createCatalogueReport(products,{output:dir+'/NEW.pdf',readImage:p=>native.get(p)}),manifest={...(group.correction?{correction:true,originalReports:group.parents}:{}),version:'daily-native-pdf-v1',layoutVersion:PDF_LAYOUT_VERSION,planId:group.id,day:group.day,items,pdf:{sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length}};
   await fs.writeFile(dir+'/manifest.json',JSON.stringify(manifest));prepared.push({id:group.id,products:items.length,bytes:bytes.length,deferred:group.deferredProducts||0});
  }catch(e){failures.push({plan:originalGroup.id,error:String(e.message).slice(0,250)});}
 }

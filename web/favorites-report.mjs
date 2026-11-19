@@ -1,7 +1,8 @@
 import {cataloguePdf} from './catalogue-pdf.mjs';
 import {pdfNativeImage,pdfText} from './native-image-browser.mjs';
 import {productKey,productPrice,productSize} from './product-facts.mjs';
-const fingerprint=rows=>JSON.stringify(rows.map(p=>[productKey(p),p.department,p.originalImageUrl,p.originalImageEvidence?.sha256,p.previewImage?.sourceUrl,p.sourceImageConflict||null,Boolean(p.favoriteSourceUnavailable),productPrice(p),productSize(p)]));
+import {productNames,PDF_LAYOUT_VERSION} from './product-names.mjs';
+const fingerprint=rows=>JSON.stringify([PDF_LAYOUT_VERSION,rows.map(p=>[productKey(p),productNames(p),p.department,p.originalImageUrl,p.originalImageEvidence?.sha256,p.previewImage?.sourceUrl,p.sourceImageConflict||null,Boolean(p.favoriteSourceUnavailable),productPrice(p),productSize(p)])]);
 let persisted;
 function database(){return persisted??=new Promise((resolve,reject)=>{const r=indexedDB.open('observatory-reports-v1',1);r.onupgradeneeded=()=>r.result.createObjectStore('reports');r.onsuccess=()=>resolve(r.result);r.onerror=()=>{persisted=undefined;reject(r.error);};});}
 const storage={
