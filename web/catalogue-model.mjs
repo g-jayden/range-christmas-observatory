@@ -78,7 +78,13 @@ export function toCentimetres(value){
  const t=String(value||'').trim(),m=t.match(/^([\d.]+)\s*(cm|mm|met(?:er|re)s?|m|feet|foot|ft|inch(?:es)?|in|["′'])/i);
  if(!m)return null;const factor={cm:1,mm:.1,m:100,meter:100,meters:100,metre:100,metres:100,ft:30.48,feet:30.48,foot:30.48,in:2.54,inch:2.54,inches:2.54,'"':2.54,"'":30.48,'′':30.48}[m[2].toLowerCase()];return factor?Math.round(Number(m[1])*factor*1000)/1000:null;
 }
+export function rollDimensionConflict(specs={}){
+ const stated=String(specs.Length||'').trim().match(/^(\d+(?:\.\d+)?)\s*(mm|cm|m)$/i),roll=String(specs.Includes||'').match(/(?:\d+\s*x\s*)?(\d+(?:\.\d+)?)\s*(mm|cm|m)\s+rolls?\b/i);
+ if(!stated||!roll||Number(stated[1])!==Number(roll[1])||stated[2].toLowerCase()===roll[2].toLowerCase())return null;
+ return {field:'Length',value:specs.Length,includes:specs.Includes,label:'官网尺寸冲突 · Size conflict: '+stated[1]+stated[2]+' / '+roll[1]+roll[2]+' 每卷 · per roll'};
+}
 export function productDimensions(specs={},description=''){
+ const conflict=rollDimensionConflict(specs);if(conflict)return {values:{},axes:[],maxCm:null,evidence:{Length:{value:specs.Length,source:'SKU specification'},Includes:{value:specs.Includes,source:'SKU specification'}},sourceSize:null,sourceConflict:conflict,label:conflict.label};
  const fields=['Height','Width','Depth','Length','Diameter','Base Diameter','Top Diameter'];const values={},evidence={};
  for(const key of fields){const n=toCentimetres(specs[key]||key==='Height'&&specs['Christmas Tree Height']);if(n>0){values[key]=n;evidence[key]={value:specs[key]||specs['Christmas Tree Height'],source:'SKU specification'};}}
  for(const key of fields)if(!values[key]){

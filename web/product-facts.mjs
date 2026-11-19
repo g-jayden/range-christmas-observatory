@@ -5,6 +5,7 @@ export const productRetailer=p=>p.retailerId==='the-range-gb'?'the-range':p.reta
 export const productKey=p=>productRetailer(p)+':'+String(p.canonicalSku||p.sku);
 export const productPrice=p=>Number.isFinite(p.priceGBP)?'£'+p.priceGBP.toFixed(2):'官网未标价 · Price not specified';
 export function productSize(p){
+ const checked=productDimensions(p.specifications||{});if(checked.sourceConflict)return checked.label;if(p.dimensions?.sourceConflict)return p.dimensions.label;
  const conflict=treeHeightConflict(p);
  if(conflict&&!conflict.usableHeightCm)return '官网尺寸冲突 · Conflicting source dimensions';
  if(conflict)return conflict.usableHeightCm+'cm';
