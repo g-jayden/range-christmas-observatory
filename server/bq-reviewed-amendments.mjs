@@ -15,7 +15,9 @@ export function applyBqReviewedAmendments(products,{index,visual,reviews,selecti
     if(current?.sha256!==a.index.sha256&&Date.parse(current?.checkedAt)>Date.parse(a.index.checkedAt))continue;
     if(a.visual.imageHash!==a.index.sha256||a.review.imageHash!==a.index.sha256||!a.index.width||!a.index.height)throw Error('Invalid bound B&Q photo review');
     index[key]=current?.sha256===a.index.sha256&&Date.parse(current.checkedAt)>Date.parse(a.index.checkedAt)?current:{...a.index};visual[key]={...a.visual};
-    reviews[p.sku]={...reviews[p.sku],...a.review};
+    // An old source version's colours/exclusion/gallery rejection must not be
+    // promoted into fresh evidence merely by merging in a new fingerprint.
+    reviews[p.sku]={...a.review};
     selections[p.sku]={...a.selection};applied++;
   }
   return applied;
