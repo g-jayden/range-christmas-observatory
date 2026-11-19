@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {digest,detailFingerprint,unchangedDetailInput} from '../server/collection-policy.mjs';
+import {mergeDecorations,compactDecoration,updateDecorationDetails} from '../server/decorations.mjs';
+const row={sku:'990099001',variantId:'v-1',variantName:'6ft Artificial Christmas Tree',brand:'Fixture',productPath:'p/fixture/m990099001',variantPath:'p/fixture/m990099001#990099001',sourceUrl:'https://www.therange.co.uk/p/fixture/m990099001/',imageUrl:'https://www.therange.co.uk/media/a.jpg',variantImageUrl:'https://www.therange.co.uk/media/a.jpg',listingVariantImageUrl:'https://www.therange.co.uk/media/a.jpg',price:1999,newIn:false,inStock:true};
+const prior={...row,kind:'tree',detailsReady:true,attributeObservedAt:'2026-11-01T00:00:00Z',detailEvidence:{verifiedProductSection:true,selectedSku:row.sku},specifications:{Height:'180cm'},colorValues:['绿色']};
+const compact={...prior};delete compact.productPath;delete compact.variantId;
+compact.detailInputFingerprint=digest({sku:compact.sku,productPath:compact.sourceUrl.split('#')[0],variantId:compact.variantId,variantName:compact.variantName,brand:compact.brand,kind:compact.kind,variantImage:compact.listingVariantImageUrl,image:compact.imageUrl});
+assert(unchangedDetailInput(compact,{...row,kind:'decoration'}),'Compact/full identity and derived-category changes must not buy the same details again');
+assert.equal(detailFingerprint({...row,kind:'tree'}),detailFingerprint({...row,kind:'decoration'}));
+assert(!unchangedDetailInput(prior,{...row,variantId:'another'}));assert(!unchangedDetailInput(compact,{...row,variantName:'7ft Artificial Christmas Tree'}));assert(!unchangedDetailInput(compact,{...row,variantImageUrl:'https://www.therange.co.uk/media/b.jpg',listingVariantImageUrl:'https://www.therange.co.uk/media/b.jpg'}));
+const next=mergeDecorations({products:[compact],history:{},baselineReady:true},{products:[{...row,price:1499,newIn:true}],audit:{complete:true}},'2026-11-19T00:00:00Z'),p=next.products[0];assert(p.detailsReady);assert.equal(p.priceGBP,14.99);assert(p.newStatus);assert.equal(p.attributeObservedAt,prior.attributeObservedAt,'A fresh offer never invents fresh physical-attribute verification');assert.equal(compactDecoration(p).variantId,'v-1');
+const report=await updateDecorationDetails(next,{prepareFamilies:()=>{throw Error('Unchanged attributes must make zero paid requests')},raw:()=>{throw Error('No per-SKU reread')}});assert.equal(report.requested,0);
+console.log('Verified compact/full records and derived categories reuse exact physical attributes at zero requests; offer/NEW remains fresh and real identity changes invalidate proof.');

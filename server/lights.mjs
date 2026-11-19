@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import {bestVerifiedEvidence,saveVerifiedRegistry,restoreVerifiedRegistry} from './verified-evidence.mjs';
 import {collectPartitionedCategory} from './catalogue-partitions.mjs';
 import {atomicJson,correctKnownProductPath} from './sync.mjs';
-import {detailFingerprint,digest} from './collection-policy.mjs';
+import {detailFingerprint,unchangedDetailInput,digest} from './collection-policy.mjs';
 import {selectGalleryImages} from './enrich-appearance.mjs';
 import {parseDetails,applyDetails,validProductImage} from './details.mjs';
 import {materialFacts} from './appearance.mjs';
@@ -44,7 +44,7 @@ export function mergeLights(previous,collected,observedAt=new Date().toISOString
   if(row.newIn&&!h.everNew){h.firstNewObservedAt=previous.baselineReady?observedAt:null;h.arrivalEvidence=previous.baselineReady?'observed-after-baseline':'initial-baseline';}h.everNew=Boolean(h.everNew||row.newIn);history[sku]=h;
   const p={...prior,...row,sku,kind:'decoration',department:'lights',departmentIds:[...sets.get(sku)],lightingDepartmentIds:[...sets.get(sku)],priceGBP:row.price/100,originalPrice:Number.isInteger(row.originalPrice)?row.originalPrice:null,promoText:row.promoText||null,currency:'GBP',newStatus:row.newIn,observedAt,newEvidence:{kind:'website_flag',field:'newIn',value:row.newIn,observedAt},...h};
   const u=new URL('https://www.therange.co.uk/'+row.variantPath.replace('#','/#'));u.pathname=correctKnownProductPath(u.pathname);p.sourceUrl=u.href;p.listingVariantImageUrl=row.variantImageUrl||row.imageUrl;
-  const fp=detailFingerprint(p);if(prior?.detailInputFingerprint!==fp){for(const k of evidenceFields)delete p[k];p.variantImageUrl=row.variantImageUrl;p.detailsReady=false;}p.detailInputFingerprint=fp;if(prior?.sourceResolutionEvidence?.inputUrl===p.sourceUrl&&prior.detailInputFingerprint===fp){p.sourceUrl=prior.sourceUrl;p.sourceResolutionEvidence=prior.sourceResolutionEvidence;}
+  const fp=detailFingerprint(p);if(!unchangedDetailInput(prior,p)){for(const k of evidenceFields)delete p[k];p.variantImageUrl=row.variantImageUrl;p.detailsReady=false;}p.detailInputFingerprint=fp;if(prior?.sourceResolutionEvidence?.inputUrl===p.sourceUrl&&prior.detailInputFingerprint===fp){p.sourceUrl=prior.sourceUrl;p.sourceResolutionEvidence=prior.sourceResolutionEvidence;}
   if(prior?.listingVariantImageUrl!==p.listingVariantImageUrl){delete p.cachedImageUrl;delete p.imageCacheEvidence;}
   return p;
  });

@@ -10,17 +10,26 @@ export async function loadPolicy(file='web/collection-policy.json'){
 }
 export const digest=x=>createHash('sha256').update(JSON.stringify(x)).digest('hex');
 export const productKey=(p,policy)=>policy.retailerId+':'+String(p.sku);
+function detailFamily(p){try{const u=new URL(p.sourceUrl||p.productPath,'https://www.therange.co.uk/');return u.origin+u.pathname.replace(/\/$/,'');}catch{return p.sourceUrl||p.productPath||null;}}
 export function detailFingerprint(p){
- return digest({sku:String(p.sku),productPath:p.productPath||p.sourceUrl?.split('#')[0],variantId:p.variantId,variantName:p.variantName,brand:p.brand,kind:p.kind,variantImage:p.listingVariantImageUrl??p.variantImageUrl,image:p.imageUrl});
+ // Category assignments are derived analysis. Compact views and full records
+ // must describe the same source identity; relative/absolute paths are aliases.
+ return digest({version:2,sku:String(p.sku),family:detailFamily(p),variantId:p.variantId,variantName:p.variantName,brand:p.brand,variantImage:p.listingVariantImageUrl??p.variantImageUrl,image:p.imageUrl});
 }
 export function verified(p){return Boolean(p.attributeObservedAt&&p.detailEvidence?.verifiedProductSection&&String(p.detailEvidence.selectedSku).replace(/^0+(?=\d)/,'')===String(p.sku).replace(/^0+(?=\d)/,''));}
 export function unchangedDetailInput(prior,p){
  if(!prior)return false;
+ if((prior.detailInputFingerprint||detailFingerprint(prior))===detailFingerprint(p))return true;
+ // Older compact decoration records omitted productPath/variantId and later
+ // rewrote their fingerprints while restoring proof. Migrate verified records
+ // by their exact persisted source facts, without buying all details again.
+ const proof=(verified(prior)||prior.detailsReady===true&&Number.isFinite(Date.parse(prior.attributeObservedAt))&&/^[a-f0-9]{64}$/.test(prior.detailInputFingerprint||''));
+ if(proof&&!prior.detailIssue&&String(prior.sku)===String(p.sku)&&detailFamily(prior)===detailFamily(p)&&(!prior.variantId||!p.variantId||String(prior.variantId)===String(p.variantId))&&['variantName','brand','imageUrl'].every(k=>prior[k]===p[k])&&(prior.listingVariantImageUrl??prior.variantImageUrl)===(p.listingVariantImageUrl??p.variantImageUrl))return true;
  // Before the first incremental run, old PDP image overrides have no raw-listing field.
  if(!prior.detailInputFingerprint&&prior.imageEvidence&&!prior.listingVariantImageUrl){
   return ['productPath','variantId','variantName','brand','imageUrl'].every(k=>prior[k]===p[k]);
  }
- return (prior.detailInputFingerprint||detailFingerprint(prior))===detailFingerprint(p);
+ return false;
 }
 export function seedFailures(previous,failures,policy){
  for(const issue of previous.detailsAudit?.issues||[]){

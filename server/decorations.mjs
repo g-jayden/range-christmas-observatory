@@ -3,7 +3,7 @@ import {saveVerifiedRegistry,restoreVerifiedRegistry} from './verified-evidence.
 import {createHash} from 'node:crypto';
 import {classifyDecoration,productDimensions,decorationDepartments,decorationMemberships} from '../web/catalogue-model.mjs';
 import {normaliseColors,materialFacts} from './appearance.mjs';
-import {detailFingerprint,digest} from './collection-policy.mjs';
+import {detailFingerprint,unchangedDetailInput,digest} from './collection-policy.mjs';
 import {atomicJson,collectStableCategory} from './sync.mjs';
 import {parseDetails,applyDetails,validProductImage} from './details.mjs';
 export const DECORATION_SOURCE={id:'94578',url:'https://www.therange.co.uk/christmas/christmas-decorations/?sort=relevance&in_stock_f=true&page=1'};
@@ -19,7 +19,7 @@ export function mergeDecorations(previous,listing,observedAt=new Date().toISOStr
   const p={...prior,...row,sku,kind:'decoration',priceGBP:row.price/100,currency:'GBP',sourceUrl:'https://www.therange.co.uk/'+row.variantPath.replace('#','/#'),newStatus:row.newIn,newEvidence:{kind:'website_flag',field:'newIn',value:row.newIn,observedAt},observedAt,...h};
   p.originalPrice=Number.isInteger(row.originalPrice)?row.originalPrice:null;p.promoText=row.promoText||null;
   p.listingVariantImageUrl=row.variantImageUrl||row.imageUrl;
-  const fingerprint=detailFingerprint(p);if(prior?.detailInputFingerprint!==fingerprint){p.detailsReady=false;delete p.detailIssue;delete p.detailEvidence;delete p.specifications;delete p.sourceDescription;p.colorValues=[];p.treeColor='颜色待核验';p.dimensions=productDimensions();p.material='材质未注明 · Material not specified';}
+  const fingerprint=detailFingerprint(p);if(!unchangedDetailInput(prior,p)){p.detailsReady=false;delete p.detailIssue;delete p.detailEvidence;delete p.specifications;delete p.sourceDescription;p.colorValues=[];p.treeColor='颜色待核验';p.dimensions=productDimensions();p.material='材质未注明 · Material not specified';}
   if((prior?.listingVariantImageUrl||prior?.variantImageUrl)!==p.listingVariantImageUrl){delete p.cachedImageUrl;delete p.imageCacheEvidence;delete p.paletteEvidence;}
   p.detailsReady=Boolean(p.detailEvidence?.verifiedProductSection&&String(p.detailEvidence.selectedSku)===p.sku&&p.attributeObservedAt);p.detailInputFingerprint=fingerprint;const cls=classifyDecoration(p);p.department=cls.id;p.departmentIds=decorationMemberships(p,cls.id);p.classificationEvidence=cls;return p;
  });
@@ -38,7 +38,7 @@ export async function saveDecorationDetails(products){
 }
 export const detailUrl=p=>'decoration-details/'+p.sku.slice(-2).padStart(2,'0')+'.json';
 export function compactDecoration(p){
- const keys=['previewImage','previewAudit','sku','kind','department','departmentIds','taxonomyAudit','displayImage','specificationCorrections','variantName','name','brand','priceGBP','originalPrice','promoText','currency','sourceUrl','listingVariantImageUrl','variantImageUrl','imageUrl','cachedImageUrl','imageCacheEvidence','newStatus','newEvidence','firstObservedAt','firstNewObservedAt','arrivalEvidence','everNew','observedAt','attributeObservedAt','detailInputFingerprint','detailsReady','detailIssue','dimensions','material','colorValues','treeColor','paletteEvidence','classificationEvidence','originalImageUrl','originalImageEvidence','originalSourceEvidence','mailAssets'];
+ const keys=['productPath','variantId','previewImage','previewAudit','sku','kind','department','departmentIds','taxonomyAudit','displayImage','specificationCorrections','variantName','name','brand','priceGBP','originalPrice','promoText','currency','sourceUrl','listingVariantImageUrl','variantImageUrl','imageUrl','cachedImageUrl','imageCacheEvidence','newStatus','newEvidence','firstObservedAt','firstNewObservedAt','arrivalEvidence','everNew','observedAt','attributeObservedAt','detailInputFingerprint','detailsReady','detailIssue','dimensions','material','colorValues','treeColor','paletteEvidence','classificationEvidence','originalImageUrl','originalImageEvidence','originalSourceEvidence','mailAssets'];
  const out=Object.fromEntries(keys.filter(k=>p[k]!==undefined).map(k=>[k,p[k]]));out.detailsReady=Boolean(p.detailEvidence?.verifiedProductSection&&String(p.detailEvidence.selectedSku)===p.sku&&p.attributeObservedAt);out.detailsUrl=detailUrl(p);return out;
 }
 export async function updateDecorationDetails(snapshot,reader,{maxFamilies=Infinity,refreshAll=false,refreshAfter=null}={}){
