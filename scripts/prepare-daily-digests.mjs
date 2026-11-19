@@ -1,9 +1,11 @@
+import {rebuildStoredRangeViews} from '../server/rebuild-range-views.mjs';
 import {reportProductEvidence} from '../server/report-product-evidence.mjs';
 import{digestNativeOriginal}from'../server/digest-native-original.mjs';
 import{catalogueIdentityIndex}from'../server/catalogue-identities.mjs';
 import{applyRangeNativeIndex}from'../server/range-native-index.mjs';
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';
 import {control} from '../server/cloud-client.mjs';import {createCatalogueReport} from '../server/catalogue-report.mjs';import {productSize,productRetailer,nativeImageCandidates} from '../web/product-facts.mjs';
+await rebuildStoredRangeViews();
 let plan;const prepared=[],failures=[];
 const cache=new Map();async function json(relative){if(!cache.has(relative))cache.set(relative,fs.readFile('web/'+relative,'utf8').then(JSON.parse));return cache.get(relative);}
 async function exactProduct(candidate){const id=productRetailer(candidate),dep=candidate.taxonomyAudit?.primary||candidate.department||candidate.kind;let source=null,p=null;if(id==='the-range'){if(/^[a-z0-9-]+$/.test(dep||''))source=await json('classified/'+dep+'.json').catch(e=>{if(e.code==='ENOENT')return null;throw e;});p=source?.products.find(p=>String(p.sku)===String(candidate.sku));if(!p)for(const file of await fs.readdir('web/classified'))if(file.endsWith('.json')){const s=await json('classified/'+file),found=s.products.find(p=>String(p.sku)===String(candidate.sku)&&p.taxonomyAudit?.disposition!=='exclude');if(found){p=found;source=s;break;}}}else{source=await json(id+'/catalogue.json');if(source.departmentShards?.[dep])source=await json(source.departmentShards[dep]);p=source.products.find(p=>String(p.sku)===String(candidate.sku)||p.aliasSkus?.includes(String(candidate.sku)));if(!p&&id==='bq'){const full=await json('bq/details/'+String(candidate.sku).slice(-2)+'.json');p=full[candidate.sku];}}if(!p)throw Error('Current exact product absent: '+id+':'+candidate.sku);if(p.detailsUrl){const full=await json(p.detailsUrl);p={...p,...full[p.sku]};}

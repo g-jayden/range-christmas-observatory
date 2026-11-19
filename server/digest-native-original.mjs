@@ -3,6 +3,7 @@ import {createHash} from 'node:crypto';
 import sharp from 'sharp';
 import {nativeSourceUrl} from '../web/product-facts.mjs';
 import {allowedPublicImage} from '../cloud/public-image.mjs';
+import {exactNativeGalleryMember} from './native-gallery-identity.mjs';
 
 // Only the report's actual NEW products need native response bytes. A missing
 // disk mirror must not force a full catalogue or gallery to be collected again.
@@ -13,8 +14,8 @@ export async function digestNativeOriginal(p,{readFile=fs.readFile,fetcher=fetch
     if(createHash('sha256').update(bytes).digest('hex')!==prior.sha256)throw Error('Native original digest mismatch');
     return {bytes,source,sha256:prior.sha256};
   }
-  const g=p.originalImages?.find(g=>g.url===source&&String(g.selectedSku)===String(p.sku));
-  if(!g||!allowedPublicImage(source)||p.previewReviewRequired||p.imageIssue)throw Error('Exact reviewed native gallery mapping unavailable');
+  const g=p.originalImages?.find(g=>g.url===source&&exactNativeGalleryMember(p,g));
+  if(!g||!allowedPublicImage(source)||p.previewReviewRequired||p.imageIssue)throw Error('Exact reviewed native gallery mapping unavailable for '+p.sku+'; '+(!g?'SKU/variant mapping':p.previewReviewRequired?'whole-product preview review':'source photo evidence'));
   const response=await fetcher(source,{signal:AbortSignal.timeout(30000)});if(!response.ok)throw Error('Official native original HTTP '+response.status);
   const bytes=Buffer.from(await response.arrayBuffer());if(bytes.length>25000000)throw Error('Native original exceeds individual file guard');
   const m=await sharp(bytes).metadata();if(!m.width||!m.height||m.width<64||m.height<64)throw Error('Official native response lacks real photo pixels');

@@ -1,8 +1,9 @@
 import{nativeSourceUrl}from'../web/product-facts.mjs';
+import{exactNativeGalleryMember}from'./native-gallery-identity.mjs';
 import fs from'node:fs/promises';import path from'node:path';
 // URL identity remains the official full-resolution gallery resource, never a
 // thumbnail. Stored responses retain their native bytes and pixel dimensions.
-export function applyRangeNativeIndex(products,index){let applied=0;for(const p of products){const gallery=p.originalImages||[],known=g=>String(g.selectedSku)===String(p.sku)||p.variantId&&String(g.variantId)===String(p.variantId);for(const g of gallery){const e=index.entries?.[g.url];if(known(g)&&e?.ok&&e.hash&&e.cachedImageUrl){g.nativeCachePath=e.cachedImageUrl;g.nativeSha256=e.hash;g.sourceWidth=e.width;g.sourceHeight=e.height;}}
+export function applyRangeNativeIndex(products,index){let applied=0;for(const p of products){const gallery=p.originalImages||[],known=g=>exactNativeGalleryMember(p,g);for(const g of gallery){const e=index.entries?.[g.url];if(known(g)&&e?.ok&&e.hash&&e.cachedImageUrl){g.nativeCachePath=e.cachedImageUrl;g.nativeSha256=e.hash;g.sourceWidth=e.width;g.sourceHeight=e.height;}}
  const desired=nativeSourceUrl(p)||gallery.find(g=>g.thumbnail===p.variantImageUrl)?.url,e=index.entries?.[desired];if(!e?.ok||!gallery.some(g=>g.url===desired&&known(g)))continue;p.originalImageUrl=desired;p.originalCachedImageUrl=e.cachedImageUrl;p.originalImageEvidence={sourceUrl:desired,selectedSku:String(p.sku),sha256:e.hash,width:e.width,height:e.height,bytes:e.bytes,observedAt:e.observedAt,method:'exact-official-gallery-native-response-byte-mirror'};applied++;}return applied;}
 export async function applyRangeNativeFiles(root='public',indexRoot='web'){
  let index;try{index=JSON.parse(await fs.readFile(path.join(indexRoot,'range-native-index.json'),'utf8'));}catch(e){if(e.code==='ENOENT')return{applied:0};throw e;}
