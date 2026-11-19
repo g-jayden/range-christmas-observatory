@@ -1,8 +1,4 @@
 if(process.env.GITHUB_REPOSITORY!=='g-jayden/range-christmas-observatory'||!process.env.GITHUB_TOKEN)throw Error('Repository Actions identity required');
 const base='https://api.github.com/repos/'+process.env.GITHUB_REPOSITORY,auth={authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json'};
-// Superseded build has a known async-API test failure. Cancel only its read-only checkout.
-const oldRun='44572082406',jobs=await fetch(base+'/actions/runs/'+oldRun+'/jobs?filter=latest',{headers:auth}).then(r=>r.json());
-if(jobs.jobs?.some(j=>j.status==='in_progress'&&j.steps?.some(s=>s.name==='Run actions/checkout@v7.0.1'&&s.status==='in_progress'))){const r=await fetch(base+'/actions/runs/'+oldRun+'/cancel',{method:'POST',headers:auth});if(r.status!==202&&r.status!==409)throw Error('Stop superseded read-only checkout HTTP '+r.status);console.log(JSON.stringify({supersededReadOnlyCheckoutStopped:oldRun,status:r.status}));}
-const r=await fetch(base+'/actions/workflows/static-pages.yml/dispatches',{method:'POST',headers:{...auth,'content-type':'application/json'},body:JSON.stringify({ref:'main',inputs:{}}),signal:AbortSignal.timeout(20000)});
-if(r.status!==204)throw Error('Website dispatch HTTP '+r.status);console.log(JSON.stringify({requested:'static-pages.yml',status:r.status,sourceRequests:0,firecrawlCredits:0}));
+// Read-only publication acceptance; no source collection, mail or repeat dispatch.
 const response=await fetch(base+'/actions/workflows/static-pages.yml/runs?event=workflow_dispatch&per_page=5&checked='+Date.now(),{headers:auth,cache:'no-store'});if(!response.ok)throw Error('Publication metadata HTTP '+response.status);const recent=await response.json();console.log(JSON.stringify({publicationRuns:recent.workflow_runs?.map(r=>({id:r.id,sha:r.head_sha,status:r.status,conclusion:r.conclusion,createdAt:r.created_at})),sourceRequests:0,firecrawlCredits:0}));
