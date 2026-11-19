@@ -21,6 +21,7 @@ on:
       - Matalan free exact SKU collection and native photos
       - B&Q free exact SKU collection and native photos
       - Argos free native gallery review
+      - The Range native originals without catalogue recollection
     types: [completed]
 permissions:
   contents: write

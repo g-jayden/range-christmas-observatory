@@ -14,15 +14,15 @@ export async function digestSourceBarrier(db,scopes,now=Date.now()){
 export async function dailyDigestPlans(db,{now=Date.now(),maxPlans=10}={}){
  const day=dayAt(now),plans=[],waiting=[];if(new Date(now+28800000).getUTCHours()<7)return{plans,waiting,day,notDue:true};
  const events=await db.list({prefix:'event/'}),pending=await db.list({prefix:'pending/'}),subs=await db.list({prefix:'sub/'}),products=new Map([...events,...pending].map(([,p])=>[retailerStorageSku(p),p]));
- for(const[key,sub]of subs){if(!sub.confirmedAt||await db.get('digest-sent/'+day+'/'+key.slice(4)))continue;
-  const barrier=await digestSourceBarrier(db,sub.scopes,now);if(!barrier.ready){waiting.push({recipient:key.slice(4),retailers:barrier.waiting});continue;}
-  const rows=[];for(const[k,p]of products)if(eligible(sub,p)&&!await db.get('delivered/'+k+'/'+key.slice(4)))rows.push({...p,digestProductKey:k});
+ for(const[key,sub]of subs){if(!sub.confirmedAt)continue;
+  const barrier=await digestSourceBarrier(db,sub.scopes,now),blocked=new Set(barrier.waiting.map(r=>r.retailerId));if(!barrier.ready)waiting.push({recipient:key.slice(4),retailers:barrier.waiting});
+  const rows=[];for(const[k,p]of products)if(eligible(sub,p)&&!blocked.has(p.retailerId==='the-range-gb'?'the-range':p.retailerId||'the-range')&&!await db.get('delivered/'+k+'/'+key.slice(4)))rows.push({...p,digestProductKey:k});
   if(!rows.length)continue;
   rows.sort((a,b)=>a.digestProductKey.localeCompare(b.digestProductKey));
-  const fingerprint=await digest(JSON.stringify(rows.map(p=>[p.digestProductKey,p.sourceUrl,p.firstDetectedAt||p.detectedAt||p.firstNewObservedAt]))),id=await digest(day+'/'+key+'/'+fingerprint),plan={id,day,recipient:key.slice(4),createdAt:new Date(now).toISOString(),fingerprint,products:rows};
+  const fingerprint=await digest(JSON.stringify(rows.map(p=>[p.digestProductKey,p.sourceUrl,p.firstDetectedAt||p.detectedAt||p.firstNewObservedAt]))),id=await digest('source-isolated-v2/'+day+'/'+key+'/'+fingerprint),plan={id,contract:'source-isolated-v2',day,recipient:key.slice(4),createdAt:new Date(now).toISOString(),fingerprint,products:rows,waitingRetailers:[...blocked]};
   await db.put('digest-plan/'+id,plan);plans.push(plan);if(plans.length>=maxPlans)break;
  }
- await db.put('daily-digest-status',{day,checkedAt:new Date(now).toISOString(),state:waiting.length?'waiting-for-current-source':plans.length?'ready':'no-unsent-verified-products',waitingRetailers:[...new Set(waiting.flatMap(w=>w.retailers.map(r=>r.retailerId)))],reportsReady:plans.length});
+ await db.put('daily-digest-status',{day,checkedAt:new Date(now).toISOString(),state:plans.length?(waiting.length?'ready-with-pending-sources':'ready'):waiting.length?'waiting-for-current-source':'no-unsent-verified-products',waitingRetailers:[...new Set(waiting.flatMap(w=>w.retailers.map(r=>r.retailerId)))],reportsReady:plans.length});
  return{day,plans,waiting,firecrawlCredits:0};
 }
 export async function dailyDigestOwnerTest(db,{ownerId,products,requestId,now=Date.now()}={}){
@@ -41,7 +41,8 @@ export function validateDigestManifest(plan,m){
 export async function deliverDailyDigest(db,{body,send,origin,fetcher=fetch,now=Date.now()}={}){
  const{id,revision}=body||{};if(!/^[a-f0-9]{64}$/.test(id||'')||!/^[a-f0-9]{40}$/.test(revision||''))throw Error('Invalid pinned digest publication');
  const plan=await db.get('digest-plan/'+id);if(!plan)throw Error('Daily PDF plan unavailable');
- const sentKey=plan.test?'digest-test-sent/'+id:'digest-sent/'+plan.day+'/'+plan.recipient,already=await db.get(sentKey);if(already)return{accepted:true,alreadySent:true,products:already.products};
+ const sentKey=plan.test?'digest-test-sent/'+id:plan.contract==='source-isolated-v2'?'digest-batch-sent/'+id:'digest-sent/'+plan.day+'/'+plan.recipient,already=await db.get(sentKey);if(already)return{accepted:true,alreadySent:true,products:already.products};
+ if(!plan.test){const delivered=await Promise.all(plan.products.map(p=>db.get('delivered/'+p.digestProductKey+'/'+plan.recipient)));if(delivered.every(Boolean))return{accepted:true,alreadySent:true,products:plan.products.length};if(delivered.some(Boolean))throw Error('Some products were already delivered; rebuild an unsent-only PDF');}
  const sub=await db.get('sub/'+plan.recipient);if(!sub?.confirmedAt||!plan.test&&plan.products.some(p=>!eligible(sub,p)))throw Error('Subscription changed before PDF delivery');
  const root='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/'+revision+'/web/reports/'+id+'/',r=await fetcher(root+'manifest.json',{signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error('Pinned daily PDF manifest HTTP '+r.status);
  const m=await r.json();validateDigestManifest(plan,m);
@@ -54,10 +55,12 @@ export async function deliverDailyDigest(db,{body,send,origin,fetcher=fetch,now=
  // a large report is a direct file link rather than resized source photos.
  const retailers=[...new Set(plan.products.map(p=>retailerName(p.retailerId)))],html='<div style="font:16px/1.8 Arial,sans-serif;color:#173c32"><h2>今日新品汇总 · Daily NEW products</h2>'+ (plan.test?'<p>这是使用真实官网商品的排版测试，不代表今天新增。This is a layout test with real source products; it does not claim a new discovery today.</p>':'')+'<p>'+plan.day+' · '+plan.products.length+' 款 / products</p><p>'+retailers.join(' · ')+'</p><p>全部新品集中在一个 PDF 文档中，按连锁店与类目排列，每页八张官网原图，附官网价格和尺寸。<br>One PDF, grouped by retailer and department. Eight original source photos per page, with source prices and sizes.</p><p><a href="'+root+'NEW.pdf">下载完整 PDF · Download full PDF</a></p><p><a href="'+origin+'/unsubscribe?token='+encodeURIComponent(sub.unsubscribe)+'">取消订阅 · Unsubscribe</a></p></div>';
  const intentKey=plan.test?'digest-test-intent/'+id:'digest-intent/'+plan.day+'/'+plan.recipient;let allowed=false;
- await db.transaction(async tx=>{const prior=await tx.get(intentKey);if(prior&&now-Date.parse(prior.at)<120000)throw Error('Daily PDF delivery is already in progress');if(prior&&now-Date.parse(prior.firstAt)>25*60000)throw Error('Prior provider acknowledgement is uncertain; verify the provider receipt before sending again');await tx.put(intentKey,{at:new Date(now).toISOString(),firstAt:prior?.firstAt||new Date(now).toISOString(),planId:id});allowed=true;});
+ await db.transaction(async tx=>{const prior=await tx.get(intentKey);if(prior&&(prior.planId!==id||now-Date.parse(prior.at)<120000))throw Error('Daily PDF delivery is already in progress; keep other products queued');if(prior&&now-Date.parse(prior.firstAt)>25*60000)throw Error('Prior provider acknowledgement is uncertain; verify the provider receipt before sending again');for(const p of plan.test?[]:plan.products)if(await tx.get('delivered/'+p.digestProductKey+'/'+plan.recipient))throw Error('Product delivery changed; rebuild an unsent-only PDF');await tx.put(intentKey,{at:new Date(now).toISOString(),firstAt:prior?.firstAt||new Date(now).toISOString(),planId:id});allowed=true;});
  if(!allowed)throw Error('Daily PDF delivery lease unavailable');
- const providerId=await send(sub.email,(plan.test?'【测试 · Test】':'')+'圣诞新品汇总 · Daily NEW · '+plan.day,html,large?[]:[{name:'Christmas-NEW-'+plan.day+'.pdf',url:root+'NEW.pdf'}],await digest(plan.test?'owner-pdf-test/'+id:'daily-native-pdf-v1/'+plan.day+'/'+plan.recipient));
+ const pendingNote=plan.waitingRetailers?.length?'<p>本批为已完成核验的新品。仍待核验的店铺：'+plan.waitingRetailers.map(retailerName).join(' · ')+'；其余新品核验通过后合并补发，已推送商品不会重复。<br>This report contains verified arrivals. The listed retailers are still being checked; verified late arrivals will be consolidated separately without repeating delivered products.</p>':'';
+ const content='<!doctype html><html lang="zh-CN"><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>'+html.replace('</div>',pendingNote+'</div>')+'</body></html>';
+ const providerId=await send(sub.email,(plan.test?'【测试 · Test】':'')+'圣诞新品汇总 · Daily NEW · '+plan.day,content,large?[]:[{name:'Christmas-NEW-'+plan.day+'.pdf',url:root+'NEW.pdf'}],await digest(plan.test?'owner-pdf-test/'+id:plan.contract==='source-isolated-v2'?'daily-native-pdf-v2/'+id:'daily-native-pdf-v1/'+plan.day+'/'+plan.recipient));
  const receipt={acceptedAt:new Date(now).toISOString(),providerId,products:plan.products.length,planId:id,revision,pdfSha256:m.pdf.sha256};
- await db.transaction(async tx=>{await tx.put(sentKey,receipt);for(const p of plan.test?[]:plan.products){const key=p.digestProductKey;await tx.put('delivered/'+key+'/'+plan.recipient,receipt);await tx.put('seen/'+key,true);}await tx.put(plan.test?'last-daily-digest-test':'last-daily-digest',{day:plan.day,acceptedAt:receipt.acceptedAt,products:receipt.products,pdfSha256:receipt.pdfSha256});});
+ await db.transaction(async tx=>{await tx.put(sentKey,receipt);for(const p of plan.test?[]:plan.products){const key=p.digestProductKey;await tx.put('delivered/'+key+'/'+plan.recipient,receipt);await tx.put('seen/'+key,true);}if(tx.delete)await tx.delete(intentKey);await tx.put(plan.test?'last-daily-digest-test':'last-daily-digest',{day:plan.day,acceptedAt:receipt.acceptedAt,products:receipt.products,pdfSha256:receipt.pdfSha256,waitingRetailers:plan.waitingRetailers||[]});});
  return{accepted:true,products:receipt.products,firecrawlCredits:0};
 }
