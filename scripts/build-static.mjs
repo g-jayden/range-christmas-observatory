@@ -44,6 +44,7 @@ for(const page of ['index.html','image-check.html']){
 for(const name of ['asda','product-evidence-health.json','product-evidence-repair.json','browser-image-repair-proof.json','preview-status.json','classified','taxonomy-status.json','taxonomy-audit.json','decorations.json','decorations-status.json','decoration-details','lights.json','lights-status.json','light-details','themes.json','themes-status.json','theme-details'])try{const source='web/'+name;const st=await fs.stat(source);if(st.isDirectory())await fs.cp(source,'public/'+name,{recursive:true});else await fs.copyFile(source,'public/'+name)}catch(e){if(e.code!=='ENOENT')throw e;}
 if(retailerEnabled('bq')){const{publishBqCommittedEvidence}=await import('../server/bq-committed-evidence.mjs');console.log(JSON.stringify({phase:'B&Q derive corrected analysis from saved source without recollection',...await publishBqCommittedEvidence()}));}
 if(retailerEnabled('ar'))await fs.cp('web/ar/details','public/ar/details',{recursive:true});
+const{applyRangeNativeFiles}=await import('../server/range-native-index.mjs');console.log(JSON.stringify({phase:'Apply exact official native original mirrors',...await applyRangeNativeFiles('public','web')}));
 await copyPublishedAssets('web','public',{repositoryImages:true});
 const{deriveCatalogueIdentities}=await import('../server/catalogue-identities.mjs');console.log(JSON.stringify({phase:'all-retailer-source-and-photo-identity-audit',...await deriveCatalogueIdentities('public')}));
 // ASDA productSetProduct marks a set member; numeric members remain individual SKUs.

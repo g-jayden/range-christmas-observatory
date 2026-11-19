@@ -1,10 +1,11 @@
+import{applyRangeNativeIndex}from'../server/range-native-index.mjs';
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';
 import {control} from '../server/cloud-client.mjs';import {createCatalogueReport} from '../server/catalogue-report.mjs';import {productSize,productRetailer,nativeImageCandidates} from '../web/product-facts.mjs';
 let plan;const prepared=[],failures=[];
 const cache=new Map();async function json(relative){if(!cache.has(relative))cache.set(relative,fs.readFile('web/'+relative,'utf8').then(JSON.parse));return cache.get(relative);}
-async function exactProduct(candidate){const id=productRetailer(candidate),dep=candidate.department||candidate.kind;let source=await json(id==='the-range'?'classified/'+dep+'.json':id+'/catalogue.json');if(source.departmentShards?.[dep])source=await json(source.departmentShards[dep]);let p=source.products.find(p=>String(p.sku)===candidate.sku||p.aliasSkus?.includes(candidate.sku));if(!p)throw Error('Current exact product absent: '+id+':'+candidate.sku);if(p.detailsUrl){const full=await json(p.detailsUrl);p={...p,...full[p.sku]};}
+async function exactProduct(candidate){const id=productRetailer(candidate),dep=candidate.taxonomyAudit?.primary||candidate.department||candidate.kind;let source=await json(id==='the-range'?'classified/'+dep+'.json':id+'/catalogue.json');if(source.departmentShards?.[dep])source=await json(source.departmentShards[dep]);let p=source.products.find(p=>String(p.sku)===candidate.sku||p.aliasSkus?.includes(candidate.sku));if(!p)throw Error('Current exact product absent: '+id+':'+candidate.sku);if(p.detailsUrl){const full=await json(p.detailsUrl);p={...p,...full[p.sku]};}
  if(p.sourceUrl!==candidate.sourceUrl||!p.inStock||!p.detailsReady||p.detailEvidence?.selectedSku!==p.sku||!Number.isFinite(p.priceGBP)||p.classificationEvidence?.requiresReview||p.taxonomyAudit?.disposition==='exclude')throw Error('Current exact-SKU price/physical identity not accepted: '+id+':'+candidate.sku);
- return p;}
+ if(id==='the-range')applyRangeNativeIndex([p],await json('range-native-index.json').catch(e=>{if(e.code==='ENOENT')return{entries:{}};throw e;}));return p;}
 if(process.env.DIGEST_TEST_OWNER==='true'){
  const d=await json('du/catalogue.json'),selected=[];
  for(const dep of ['du-tree','du-wreath'])for(const p of d.products.filter(p=>p.department===dep&&p.inStock&&p.detailsReady&&p.originalCachedImageUrl&&!p.classificationEvidence?.requiresReview).slice(0,dep==='du-tree'?9:1))selected.push(await exactProduct(p));

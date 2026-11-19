@@ -14,8 +14,8 @@ export function productSize(p){
 }
 export const reportRetailer=p=>retailerName(productRetailer(p));
 export function nativeImageCandidates(p,item){
- const source=item?.url||p.displayImage?.sourceUrl||p.previewImage?.sourceUrl||p.originalImageUrl;
- const candidates=[];
+ const source=item?.url||p.originalImageUrl||p.displayImage?.sourceUrl||p.previewImage?.sourceUrl;
+ const candidates=[];const gallery=p.originalImages?.find(g=>g.url===source&&(!g.selectedSku||String(g.selectedSku)===String(p.sku)));if(gallery?.nativeCachePath)candidates.push(gallery.nativeCachePath);
  // A cached thumbnail never qualifies as a native original. Only the exact
  // source-bound original mirror may replace a remote source image.
  if(source===p.originalImageEvidence?.sourceUrl&&p.originalCachedImageUrl)candidates.push(p.originalCachedImageUrl);
