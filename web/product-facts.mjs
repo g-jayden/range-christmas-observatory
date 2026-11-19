@@ -4,6 +4,9 @@ import {retailerForScope,retailerName} from './retailers.mjs';
 export const productRetailer=p=>p.retailerId==='the-range-gb'?'the-range':p.retailerId||retailerForScope(p.department||p.kind);
 export const productKey=p=>productRetailer(p)+':'+String(p.canonicalSku||p.sku);
 export const productPrice=p=>Number.isFinite(p.priceGBP)?'£'+p.priceGBP.toFixed(2):'官网未标价 · Price not specified';
+export function assertProductPhoto(p){
+ if(p.sourceImageConflict)throw Error(p.sourceImageConflict.note||'官网标题与配图冲突 · Official title and photo disagree');
+}
 export function productSize(p){
  const checked=productDimensions(p.specifications||{});if(checked.sourceConflict)return checked.label;if(p.dimensions?.sourceConflict)return p.dimensions.label;
  const conflict=treeHeightConflict(p);

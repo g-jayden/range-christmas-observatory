@@ -6,3 +6,5 @@ assert(!reportProductEvidence({...p,inStock:false},p,source,{retailerId:'the-ran
 console.log('PASS: exact membership of a complete official filtered Range directory establishes stock; missing, partial, unfiltered, other-SKU and explicit-out-of-stock evidence are rejected.');
 
 const merged=mergeReportProduct({...p,inStock:true,priceGBP:19.99,observedAt:"current",detailsReady:false},{...p,priceGBP:16.99,observedAt:"old",detailsReady:true,specifications:{Height:"60cm"}});assert.equal(merged.priceGBP,19.99);assert.equal(merged.observedAt,"current");assert.equal(merged.detailsReady,false);assert.equal(merged.specifications.Height,"60cm");
+assert(reportProductEvidence({...p,inStock:true,sourceImageConflict:{note:'Wrong colour photo'}},p,{}, {retailerId:'bq'}).reasons.includes('official-title-photo-conflict'));
+assert.equal(mergeReportProduct({...p,sourceImageConflict:{note:'Current conflict'}},{...p,sourceImageConflict:{note:'Stale conflict'}}).sourceImageConflict.note,'Current conflict');

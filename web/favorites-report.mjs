@@ -2,7 +2,7 @@ import {cataloguePdf} from './catalogue-pdf.mjs';
 import {pdfNativeImage,pdfText} from './native-image-browser.mjs';
 import {productKey,productPrice,productSize} from './product-facts.mjs';
 let revision=0,timer,readyUrl,readyKey,persisted;
-const fingerprint=rows=>JSON.stringify(rows.map(p=>[productKey(p),p.department,p.originalImageUrl,p.originalImageEvidence?.sha256,p.previewImage?.sourceUrl,productPrice(p),productSize(p)]));
+const fingerprint=rows=>JSON.stringify(rows.map(p=>[productKey(p),p.department,p.originalImageUrl,p.originalImageEvidence?.sha256,p.previewImage?.sourceUrl,p.sourceImageConflict||null,productPrice(p),productSize(p)]));
 function database(){return persisted??=new Promise((resolve,reject)=>{const r=indexedDB.open('observatory-reports-v1',1);r.onupgradeneeded=()=>r.result.createObjectStore('reports');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
 async function savedReport(key){try{const db=await database();return await new Promise(resolve=>{const r=db.transaction('reports').objectStore('reports').get('favorites');r.onsuccess=()=>resolve(r.result?.key===key?r.result.blob:null);r.onerror=()=>resolve(null);});}catch{return null;}}
 async function storeReport(key,blob){try{const db=await database();await new Promise((resolve,reject)=>{const t=db.transaction('reports','readwrite');t.objectStore('reports').put({key,blob},'favorites');t.oncomplete=resolve;t.onerror=()=>reject(t.error);});}catch{/* An in-memory ready download remains usable when browser storage is full. */}}

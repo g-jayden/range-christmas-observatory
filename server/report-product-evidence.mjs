@@ -8,12 +8,13 @@ export function reportProductEvidence(product,candidate,source,{retailerId}={}){
  if(product.inStock!==true&&!(product.inStock!==false&&rangeStock))reasons.push('current-in-stock-source-proof-missing');
  if(!product.detailsReady||!product.detailEvidence?.verifiedProductSection||String(product.detailEvidence.selectedSku)!==sku)reasons.push('exact-SKU-detail-proof-missing');
  if(!Number.isFinite(product.priceGBP)||product.priceGBP<0)reasons.push('current-price-missing');
+ if(product.sourceImageConflict)reasons.push('official-title-photo-conflict');
  if(product.classificationEvidence?.requiresReview||product.taxonomyAudit?.disposition==='exclude')reasons.push('physical-classification-unaccepted');
  return {accepted:!reasons.length,reasons};
 }
 
 export function mergeReportProduct(current,full={}){
  const merged={...current,...full};
- for(const k of ['priceGBP','price','originalPrice','originalPriceKind','sourcePriceBadge','inStock','newStatus','observedAt','sourceUrl','department','departmentIds','kind','taxonomyAudit','classificationEvidence','previewImage','detailsReady'])if(current[k]!==undefined)merged[k]=current[k];
+ for(const k of ['priceGBP','price','originalPrice','originalPriceKind','sourcePriceBadge','inStock','newStatus','observedAt','sourceUrl','department','departmentIds','kind','taxonomyAudit','classificationEvidence','previewImage','sourceImageConflict','detailsReady'])if(current[k]!==undefined)merged[k]=current[k];
  return merged;
 }
