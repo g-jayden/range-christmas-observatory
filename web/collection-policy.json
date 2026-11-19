@@ -55,5 +55,13 @@
       "purpose": "User-authorized one-time Next restricted source access acceptance; no automatic paid retry",
       "closed": true
     }
-  ]
+  ],
+  "monthlyLimitAuthorization": {
+    "approvedAt": "2026-11-19",
+    "scope": "ordinary project collection",
+    "previousLimit": 1500,
+    "newLimit": 2000,
+    "maximumAdditionalCreditsThisMonth": 500,
+    "automaticPurchaseOrPlanUpgrade": false
+  }
 }
