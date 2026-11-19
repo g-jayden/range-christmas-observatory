@@ -14,6 +14,8 @@ jobs:
     timeout-minutes: 75
     env:
       FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+      GITHUB_TOKEN: ${{ github.token }}
+      RANGE_NATIVE_CHECKPOINTS: '1'
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
@@ -29,15 +31,17 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - name: Mirror only missing exact official native originals within the approved budget
         run: node scripts/mirror-range-originals.mjs
-      - name: Save original response bytes and receipts even after a partial source failure
+      - name: Preserve a recoverable archive after any outcome
         if: always()
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          mkdir -p web/images/source
-          git add web/range-native*.json web/images/source web/collection-ledger.json
-          git diff --cached --quiet || git commit -m "Save exact official full-resolution source photos and receipts [skip ci]"
-          node scripts/push-evidence.mjs
+        continue-on-error: true
+        timeout-minutes: 8
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: range-native-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            web/range-native*.json
+            web/collection-ledger.json
+          retention-days: 3
       - name: Publish the saved original mirrors without source collection
         if: success()
         env:
