@@ -24,7 +24,8 @@ const unique=new Map();for(const s of snapshots)for(const p of s.products){const
 const pending=[...unique.values()].filter(p=>!hasVerifiedDetails(p)&&p.taxonomyAudit?.disposition!=='exclude'),issues=[],resolutionChecks=[];let reader,budget,paidRepaired=0,resolved=0;
 const accept=(p,d)=>{applyDetails(p,d);p.detailsReady=true;p.detailInputFingerprint=detailFingerprint(p);delete p.detailIssue;delete p.detailError;paidRepaired++;};
 const ownsRequest=request?.state==='claimed'&&request.ownerRunId===process.env.GITHUB_RUN_ID;
-if(ownsRequest&&pending.length){
+const missingScopedImages=[...unique.values()].filter(p=>p.taxonomyAudit?.disposition!=='exclude'&&(!p.cachedImageUrl||!p.imageCacheEvidence?.sha256));
+if(ownsRequest&&(pending.length||missingScopedImages.length)){
  const base=await loadPolicy(),policy={...base,catalogueTransport:'enhanced-batch',nativeCaptureEnabled:false,maxFallbackScrapesPerRun:20,browserCreditsPerRun:2,maxSessionSeconds:60,maxRunSeconds:1500,repairImagesOnly:true,familyBatchSize:40,familyBatchConcurrency:6,familyFetchTimeoutMs:10000};
  budget=await openCreditBudget(policy);reader=await createFirecrawlBrowserReader({policy,budget:{...budget,limit:Math.min(20,budget.limit)}});
  try{
@@ -32,7 +33,7 @@ if(ownsRequest&&pending.length){
    for(const p of batch)try{if(!reader.familyReady(p.sourceUrl)){if(prep)throw prep;await reader.raw(p.sourceUrl,{formats:['rawHtml','markdown']});}const d=parseDetails(await reader.raw(p.sourceUrl,{formats:['rawHtml','markdown']}),p.sku,p.sourceUrl);accept(p,d);}catch(e){p.detailIssue={sku:p.sku,status:e.status||0,reason:String(e.message).slice(0,200),sourceResponse:e.sourceResponse,sourceUnavailable:e.sourceResponse?.htmlStatus===404&&[404,500].includes(e.sourceResponse?.jsonStatus),observedAt:new Date().toISOString()};issues.push({sku:p.sku,...p.detailIssue});}
    await saveVerifiedRegistry(batch);console.log(JSON.stringify({phase:'targeted-product-evidence-repair',processed:Math.min(i+40,pending.length),total:pending.length,repaired:paidRepaired,directoryRequests:0}));if(prep?.budgetLimited)break;
   }
-  const dead=pending.filter(p=>!hasVerifiedDetails(p)&&p.detailIssue?.sourceUnavailable);
+  const dead=pending.filter(p=>!hasVerifiedDetails(p));
   for(let i=0;i<dead.length;i+=12){let links;try{links=await reader.resolveProductPages(dead.slice(i,i+12))}catch(e){issues.push({phase:'official-search',error:String(e.message).slice(0,150)});break;}
    resolutionChecks.push(...links);
    const candidates=[];for(const link of links){const p=unique.get(link.sku);if(!p||!link.sourceUrl||link.sourceUrl===p.sourceUrl)continue;candidates.push({...p,sourceUrl:link.sourceUrl,_prior:p,_search:link.searchUrl});}
@@ -40,7 +41,7 @@ if(ownsRequest&&pending.length){
    for(const q of candidates)try{const d=parseDetails(await reader.raw(q.sourceUrl,{formats:['rawHtml','markdown']}),q.sku,q.sourceUrl),p=q._prior,input=p.sourceUrl;p.sourceUrl=q.sourceUrl;p.rawSourceUrl=input;p.sourceResolutionEvidence={selectedSku:p.sku,inputUrl:input,resolvedUrl:q.sourceUrl,searchUrl:q._search,verifiedAt:d.observedAt,method:'official-search-and-exact-SKU-JSON'};accept(p,d);resolved++;}catch{}
   }
   for(const p of pending.filter(p=>!hasVerifiedDetails(p)&&!p.detailIssue?.sourceUnavailable).slice(0,4))try{const d=parseDetails(await reader.readSelectedDetails(p),p.sku,p.sourceUrl);accept(p,d);}catch(e){issues.push({sku:p.sku,phase:'exact-SKU-rendered-page',error:String(e.message).slice(0,150)});if(e.budgetLimited)break;}
-  const missing=[...unique.values()].filter(p=>!p.cachedImageUrl||!p.imageCacheEvidence?.sha256);if(missing.length)try{const audit=await reader.auditImages(missing,{entries:Object.assign({},...snapshots.map(s=>s.browserImageAudit?.entries||{}))},{bodyBatchSize:30});for(const s of snapshots){s.browserImageAudit.entries={...s.browserImageAudit.entries,...audit.entries};for(const p of s.products){const q=unique.get(p.sku);if(q!==p&&q.cachedImageUrl&&(q.variantImageUrl||q.imageUrl)===(p.variantImageUrl||p.imageUrl)){p.cachedImageUrl=q.cachedImageUrl;p.imageCacheEvidence=q.imageCacheEvidence;}}}}catch(e){issues.push({phase:'bounded-image-repair',error:String(e.message).slice(0,150)});}
+  const missing=[...unique.values()].filter(p=>p.taxonomyAudit?.disposition!=='exclude'&&(!p.cachedImageUrl||!p.imageCacheEvidence?.sha256));if(missing.length)try{const audit=await reader.auditImages(missing,{entries:Object.assign({},...snapshots.map(s=>s.browserImageAudit?.entries||{}))},{bodyBatchSize:30});for(const s of snapshots){s.browserImageAudit||={};s.browserImageAudit.entries={...s.browserImageAudit.entries,...audit.entries};for(const p of s.products){const q=unique.get(p.sku);if(q!==p&&q.cachedImageUrl&&(q.variantImageUrl||q.imageUrl)===(p.variantImageUrl||p.imageUrl)){p.cachedImageUrl=q.cachedImageUrl;p.imageCacheEvidence=q.imageCacheEvidence;}}}}catch(e){issues.push({phase:'bounded-image-repair',error:String(e.message).slice(0,150)});}
  }catch(e){issues.push({phase:'targeted-repair',error:String(e.message).slice(0,200)});}
  finally{await reader.close();const metrics=reader.metrics();await budget.settle({credits:metrics.firecrawlCredits||0,receipt:metrics.receipt,report:{mode:'targeted-product-evidence-repair',directoryRequests:0,selected:pending.length,repaired:paidRepaired,metrics}});}
 }
