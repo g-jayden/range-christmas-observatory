@@ -1,0 +1,15 @@
+import fs from 'node:fs/promises';
+import {spawn} from 'node:child_process';
+import {createWriteStream} from 'node:fs';
+import {Readable} from 'node:stream';
+import {pipeline} from 'node:stream/promises';
+import {reusableBqSource} from '../server/bq-source-checkpoint.mjs';
+const id=process.env.BQ_RECOVERY_ARTIFACT_ID;
+if(!id)process.exit(0);
+if(!/^\d{8,20}$/.test(id)||process.env.GITHUB_REPOSITORY!=='g-jayden/range-christmas-observatory'||!process.env.GITHUB_TOKEN)throw Error('Exact repository artifact recovery required');
+await fs.mkdir('runtime',{recursive:true});
+const url='https://api.github.com/repos/'+process.env.GITHUB_REPOSITORY+'/actions/artifacts/'+id,headers={authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json'};
+const metadata=await fetch(url,{headers});if(!metadata.ok)throw Error('Source artifact metadata HTTP '+metadata.status);const m=await metadata.json();if(!/^bq-source-evidence-\d+-\d+$/.test(m.name)||m.expired)throw Error('Unexpected or expired B&Q source artifact');
+const response=await fetch(url+'/zip',{headers,signal:AbortSignal.timeout(180000)});if(!response.ok)throw Error('Source archive HTTP '+response.status);const archive='runtime/bq-source-recovery.zip';await pipeline(Readable.fromWeb(response.body),createWriteStream(archive));
+const file='runtime/bq-source-recovered.json';await new Promise((resolve,reject)=>{const child=spawn('unzip',['-p',archive,'runtime/bq-staged-catalogue.json'],{stdio:['ignore','pipe','pipe']}),out=createWriteStream(file);child.stdout.pipe(out);child.stderr.resume();child.on('error',reject);child.on('close',code=>code===0?out.end(resolve):reject(Error('Exact staged source absent from archive')));out.on('error',reject);});
+const s=JSON.parse(await fs.readFile(file,'utf8'));if(!reusableBqSource(s))throw Error('Recovered source is not a closed current-day catalogue');await fs.rename(file,'runtime/bq-staged-catalogue.json');await fs.rm(archive,{force:true});console.log(JSON.stringify({phase:'Recover already observed exact B&Q source',observedAt:s.observedAt,products:s.products.length,variantEvidencePending:s.variantEvidencePending?.length||0,sourceRequests:0,firecrawlCredits:0}));

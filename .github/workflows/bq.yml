@@ -8,6 +8,10 @@ on:
         description: Reuse saved complete source without directory or detail requests
         type: boolean
         default: false
+      recoverArtifact:
+        description: Restore an exact current source artifact after interrupted image processing
+        type: string
+        default: ''
 permissions:
   contents: write
   actions: write
@@ -64,14 +68,28 @@ jobs:
       - run: npm ci
       - uses: actions/cache@v6.1.0
         with:
-          path: runtime/bq-source
+          path: |
+            runtime/bq-source
+            runtime/bq-staged-catalogue.json
           key: bq-source-checkpoints-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: bq-source-checkpoints-
       - run: node scripts/test-bq.mjs
+      - name: Recover exact saved source without repeating directory requests
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          BQ_RECOVERY_ARTIFACT_ID: ${{ inputs.recoverArtifact }}
+        run: node scripts/recover-bq-source.mjs
       - name: Read all ten official directories, NEW badges and exact variant offers free
         env:
           BQ_REBUILD_ONLY: ${{ inputs.rebuildOnly == true && 'true' || 'false' }}
         run: node scripts/update-bq.mjs
+      - name: Save the closed source before image processing
+        uses: actions/cache/save@v6.1.0
+        with:
+          path: |
+            runtime/bq-source
+            runtime/bq-staged-catalogue.json
+          key: bq-source-checkpoints-${{ github.run_id }}-${{ github.run_attempt }}-source-complete
       - uses: actions/cache@v6.1.0
         with:
           path: |
@@ -86,7 +104,9 @@ jobs:
         if: always()
         uses: actions/cache/save@v6.1.0
         with:
-          path: runtime/bq-source
+          path: |
+            runtime/bq-source
+            runtime/bq-staged-catalogue.json
           key: bq-source-checkpoints-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Preserve source checkpoints and native evidence even on partial failure
         id: evidence
