@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {reviewedTaxonomyOverride} from '../server/taxonomy-override.mjs';
+const hash=value=>createHash('sha256').update(value).digest('hex');
+const p={sku:'123',variantName:'Generic Root Wreath',sourceDescription:'A year-round rustic accent.',detailEvidence:{selectedSku:'123',verifiedProductSection:true,sourceContentHash:hash('official exact SKU page')}};
+const o={title:p.variantName,disposition:'exclude'};
+assert.equal(reviewedTaxonomyOverride(p,o),null,'Two absent image hashes are not image evidence');
+const description={...o,evidenceMode:'exact-source-description',detailHash:p.detailEvidence.sourceContentHash,descriptionHash:hash(p.sourceDescription)};
+assert.equal(reviewedTaxonomyOverride(p,description),'source-description-and-exact-SKU-reviewed');
+for(const changed of [{...p,sku:'456'},{...p,sourceDescription:'A Christmas wreath.'},{...p,detailEvidence:{...p.detailEvidence,sourceContentHash:hash('updated source')}},{...p,detailEvidence:{...p.detailEvidence,verifiedProductSection:false}}])assert.equal(reviewedTaxonomyOverride(changed,description),null,'An exclusion must expire when exact source evidence changes');
+assert.equal(reviewedTaxonomyOverride(p,{...description,disposition:'include'}),null);
+assert.equal(reviewedTaxonomyOverride(p,{...description,object:{id:'wreath'}}),null,'Description-only exclusions cannot supply an image-backed object review');
+const imageHash=hash('exact product image');
+assert.equal(reviewedTaxonomyOverride({...p,imageCacheEvidence:{sha256:imageHash}},{...o,imageHash}),'source-image-and-exact-SKU-reviewed');
+assert.equal(reviewedTaxonomyOverride({...p,imageCacheEvidence:{sha256:hash('new photo')}},{...o,imageHash}),null);
+console.log('PASS: image review requires a real matching SHA; description-only exclusion requires unchanged exact SKU, verified page and description, and cannot admit or classify products.');

@@ -8,6 +8,7 @@ import {DEPARTMENTS} from '../web/catalogue-model.mjs';
 import {TAXONOMY_VERSION,offeredObject,christmasEligibility,objectMemberships,productBody,productDescription} from '../web/taxonomy.mjs';
 import {auditProductImages,readTaxonomyImageCache,VISION_VERSION} from './taxonomy-vision.mjs';
 import {applyProductPreviews} from './product-previews.mjs';
+import {reviewedTaxonomyOverride} from './taxonomy-override.mjs';
 const hash=x=>createHash('sha256').update(JSON.stringify(x)).digest('hex');
 export const taxonomyFingerprint=p=>hash([TAXONOMY_VERSION,p.sku,productBody(p),productDescription(p),p.specifications||{},p.displayImage?.sha256||p.imageCacheEvidence?.sha256,p.kind,p.lightingDepartmentIds,p.themeIds]);
 const read=async(file,fallback)=>fs.readFile(file,'utf8').then(JSON.parse).catch(e=>{if(e.code!=='ENOENT')throw e;return fallback;});
@@ -43,10 +44,10 @@ export async function auditTaxonomy(snapshots,{infer=true,writeViews=true,persis
  if(!infer){const cache=await readTaxonomyImageCache();for(const p of canonical)if(cache.version===VISION_VERSION)p.taxonomyVisual=cache.entries[p.displayImage?.sha256||p.imageCacheEvidence?.sha256];}
  const index={},excluded=[],review=[],moved=[];
  for(const p of canonical){
-  const fingerprint=taxonomyFingerprint(p),visual=p.taxonomyVisual,override=overrides.products[p.sku],validOverride=override&&override.imageHash===p.imageCacheEvidence?.sha256&&override.title===productBody(p);
+  const fingerprint=taxonomyFingerprint(p),visual=p.taxonomyVisual,override=overrides.products[p.sku],overrideMethod=reviewedTaxonomyOverride(p,override),validOverride=Boolean(overrideMethod);
   let object=offeredObject(p),eligibility=christmasEligibility(p,object,visual);
   if(validOverride&&['圣诞树盆栽','折叠式圣诞树','纤细圣诞树','雪景款','预亮灯款','标准款','其它树形类别'].includes(override.treeStyle))p.style=override.treeStyle;
-  if(validOverride){object={...object,...override.object,method:'source-image-and-exact-SKU-reviewed'};if(override.disposition)eligibility={disposition:override.disposition,reason:override.reason,evidence:override.evidence};}
+  if(validOverride){object={...object,...override.object,method:overrideMethod};if(override.disposition)eligibility={disposition:override.disposition,reason:override.reason,evidence:override.evidence};}
   const memberships=objectMemberships(p,object),audit={version:TAXONOMY_VERSION,inputFingerprint:fingerprint,title:productBody(p),imageHash:p.displayImage?.sha256||p.imageCacheEvidence?.sha256||null,primary:object.id,memberships,disposition:eligibility.disposition,reason:eligibility.reason,objectReason:object.reason,subtype:object.subtype||null,evidence:eligibility.evidence,objectEvidence:object.evidence,descriptionVerified:Boolean(p.detailEvidence?.verifiedProductSection&&String(p.detailEvidence.selectedSku)===p.sku),imageAnalysed:Boolean(visual),imageMethod:visual?.method||'source-image-unavailable',imageObjects:visual?.objects?.slice(0,3)||[],imageSeasons:visual?.seasons?.slice(0,3)||[],humanReviewed:Boolean(validOverride),reviewNote:validOverride?override.note||null:null};
   p.taxonomyAudit=audit;p.department=object.id;p.departmentIds=memberships;p.classificationEvidence={id:object.id,method:object.method,reason:object.reason,matched:object.evidence};
   p.kind=['tree','skirt'].includes(object.id)?object.id:'decoration';
