@@ -22,7 +22,8 @@ function createDialog(){
  dialog.querySelector('[data-preview-close]').onclick=()=>dialog.close();dialog.querySelector('[data-preview-previous]').onclick=()=>showImage(position-1);dialog.querySelector('[data-preview-next]').onclick=()=>showImage(position+1);dialog.querySelector('[data-preview-favorite]').onclick=()=>{try{toggleFavorite(current);heart();}catch(e){dialog.querySelector('.previewResolution').textContent='收藏未保存 · Unable to save favorite: '+e.message;}};
  dialog.querySelector('.previewSave').onclick=e=>{if(!e.currentTarget.hasAttribute('href'))e.preventDefault();};
  dialog.querySelector('.previewThumbnails').onclick=e=>{const b=e.target.closest('[data-photo-index]');if(b)showImage(Number(b.dataset.photoIndex));};
- dialog.addEventListener('close',()=>{version++;if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;}dialog.querySelector('.previewStage img').removeAttribute('src');});
+ // A queued close event can arrive after Chrome has already reopened this dialog.
+ dialog.addEventListener('close',()=>{if(dialog.open)return;version++;if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;}dialog.querySelector('.previewStage img').removeAttribute('src');});
  dialog.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'&&position>0){e.preventDefault();showImage(position-1);}if(e.key==='ArrowRight'&&position<items.length-1){e.preventDefault();showImage(position+1);}});
  dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
 }

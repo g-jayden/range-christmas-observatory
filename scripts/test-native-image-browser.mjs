@@ -27,3 +27,10 @@ const named={...product(),priceGBP:10,heightLabel:'30cm'},firstAnnotated=await a
 await annotatedImage({...named,priceGBP:12});assert.equal(draws,2);assert(labels.includes('£12.00'));await annotatedImage({...named,heightLabel:'40cm'});assert.equal(draws,3);assert(labels.includes('40cm'));
 await assert.rejects(annotatedImage({...named,sourceImageConflict:{note:'conflict'}}),/conflict/);
 console.log('Annotated native image reuse avoids repeat PNG encoding; changed source price/size and conflicting photos cannot reuse an earlier overlay.');
+
+// Native display must not wait behind slow browser storage writes.
+const normalOpen=globalThis.caches.open;let releaseWrite,writeStarted;const started=new Promise(resolve=>{writeStarted=resolve;});
+globalThis.caches.open=async()=>{const db=await normalOpen();return{...db,put:async(r,v)=>{writeStarted();await new Promise(resolve=>{releaseWrite=resolve;});return db.put(r,v);}};};
+pixels=new Uint8Array([255,216,10,11,12]);const slowStorage=nativeImage(product());await started;
+const displayed=await Promise.race([slowStorage,new Promise((_,reject)=>setTimeout(()=>reject(Error('Native display waited for background storage')),1000))]);assert.equal(displayed.width,1800);globalThis.caches.open=normalOpen;releaseWrite();
+console.log('Native display is ready while a browser persistence write remains blocked; storage persistence cannot stall original-photo display.');
