@@ -31,6 +31,14 @@ export async function dailyDigestOwnerTest(db,{ownerId,products,requestId,now=Da
  for(const p of products)if(!p.sourceUrl||!p.detailEvidence?.verifiedProductSection||p.detailEvidence.selectedSku!==p.sku||!Number.isFinite(p.priceGBP)||!p.originalImageEvidence?.sha256||!sub.scopes.some(s=>(p.departmentIds||[p.department]).includes(s)))throw Error('Owner PDF test requires verified products in the confirmed scope');
  const id=await digest('owner-pdf-test/'+requestId),plan={id,day:dayAt(now),recipient:ownerId,test:true,createdAt:new Date(now).toISOString(),products:products.map(p=>({...p,digestProductKey:retailerStorageSku(p)}))};await db.put('digest-plan/'+id,plan);return{day:plan.day,plans:[plan],waiting:[]};
 }
+export async function dailyDigestReadySubset(db,{planId,readyKeys,now=Date.now()}={}){
+ const parent=await db.get('digest-plan/'+planId);if(!parent||parent.test||!Array.isArray(readyKeys)||!readyKeys.length||new Set(readyKeys).size!==readyKeys.length)throw Error('Invalid verified PDF subset');
+ const known=new Set(parent.products.map(p=>p.digestProductKey));if(readyKeys.some(k=>!known.has(k)))throw Error('Verified PDF subset contains an unplanned product');
+ const keys=new Set(readyKeys),products=parent.products.filter(p=>keys.has(p.digestProductKey));
+ if(products.length===parent.products.length)return parent;
+ const id=await digest('verified-product-subset-v1/'+parent.id+'/'+[...keys].sort().join('/')),plan={...parent,id,parentId:parent.id,contract:'source-isolated-v2',products,deferredProducts:parent.products.length-products.length,createdAt:new Date(now).toISOString()};
+ await db.put('digest-plan/'+id,plan);await db.put('daily-digest-product-status',{day:plan.day,checkedAt:new Date(now).toISOString(),verifiedProducts:products.length,deferredProducts:plan.deferredProducts,state:'verified-products-ready-remainder-retained'});return plan;
+}
 export function validateDigestManifest(plan,m){
  if(m?.version!=='daily-native-pdf-v1'||m.planId!==plan.id||m.day!==plan.day||!/^[a-f0-9]{64}$/.test(m.pdf?.sha256||'')||!Number.isInteger(m.pdf?.bytes)||m.pdf.bytes<1||!Array.isArray(m.items))throw Error('Invalid daily PDF manifest');
  const planned=new Map(plan.products.map(p=>[p.digestProductKey,p])),covered=new Set();
@@ -57,7 +65,7 @@ export async function deliverDailyDigest(db,{body,send,origin,fetcher=fetch,now=
  const intentKey=plan.test?'digest-test-intent/'+id:'digest-intent/'+plan.day+'/'+plan.recipient;let allowed=false;
  await db.transaction(async tx=>{const prior=await tx.get(intentKey);if(prior&&(prior.planId!==id||now-Date.parse(prior.at)<120000))throw Error('Daily PDF delivery is already in progress; keep other products queued');if(prior&&now-Date.parse(prior.firstAt)>25*60000)throw Error('Prior provider acknowledgement is uncertain; verify the provider receipt before sending again');for(const p of plan.test?[]:plan.products)if(await tx.get('delivered/'+p.digestProductKey+'/'+plan.recipient))throw Error('Product delivery changed; rebuild an unsent-only PDF');await tx.put(intentKey,{at:new Date(now).toISOString(),firstAt:prior?.firstAt||new Date(now).toISOString(),planId:id});allowed=true;});
  if(!allowed)throw Error('Daily PDF delivery lease unavailable');
- const pendingNote=plan.waitingRetailers?.length?'<p>本批为已完成核验的新品。仍待核验的店铺：'+plan.waitingRetailers.map(retailerName).join(' · ')+'；其余新品核验通过后合并补发，已推送商品不会重复。<br>This report contains verified arrivals. The listed retailers are still being checked; verified late arrivals will be consolidated separately without repeating delivered products.</p>':'';
+ const pendingNote=(plan.waitingRetailers?.length||plan.deferredProducts)?'<p>本批为已完成核验的新品。'+(plan.waitingRetailers?.length?'仍待核验的店铺：'+plan.waitingRetailers.map(retailerName).join(' · ')+'。':'')+(plan.deferredProducts?'另有 '+plan.deferredProducts+' 款商品仍待原图或规格核验。':'')+'核验通过后合并补发，已推送商品不会重复。<br>This report contains verified arrivals. Pending sources or product evidence remain queued; verified late arrivals will be consolidated separately without repeating delivered products.</p>':'';
  const content='<!doctype html><html lang="zh-CN"><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>'+html.replace('</div>',pendingNote+'</div>')+'</body></html>';
  const providerId=await send(sub.email,(plan.test?'【测试 · Test】':'')+'圣诞新品汇总 · Daily NEW · '+plan.day,content,large?[]:[{name:'Christmas-NEW-'+plan.day+'.pdf',url:root+'NEW.pdf'}],await digest(plan.test?'owner-pdf-test/'+id:plan.contract==='source-isolated-v2'?'daily-native-pdf-v2/'+id:'daily-native-pdf-v1/'+plan.day+'/'+plan.recipient));
  const receipt={acceptedAt:new Date(now).toISOString(),providerId,products:plan.products.length,planId:id,revision,pdfSha256:m.pdf.sha256};

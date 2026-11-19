@@ -11,3 +11,9 @@ export function reportProductEvidence(product,candidate,source,{retailerId}={}){
  if(product.classificationEvidence?.requiresReview||product.taxonomyAudit?.disposition==='exclude')reasons.push('physical-classification-unaccepted');
  return {accepted:!reasons.length,reasons};
 }
+
+export function mergeReportProduct(current,full={}){
+ const merged={...current,...full};
+ for(const k of ['priceGBP','price','originalPrice','originalPriceKind','sourcePriceBadge','inStock','newStatus','observedAt','sourceUrl','department','departmentIds','kind','taxonomyAudit','classificationEvidence','previewImage','detailsReady'])if(current[k]!==undefined)merged[k]=current[k];
+ return merged;
+}

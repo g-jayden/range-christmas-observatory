@@ -1,6 +1,8 @@
-import assert from 'node:assert/strict';import {reportProductEvidence} from '../server/report-product-evidence.mjs';
+import assert from 'node:assert/strict';import {reportProductEvidence,mergeReportProduct} from '../server/report-product-evidence.mjs';
 const p={sku:'1',sourceUrl:'https://www.therange.co.uk/p/test/#1',detailsReady:true,detailEvidence:{selectedSku:'1',verifiedProductSection:true},priceGBP:10},source={sourceAudits:[{complete:true,records:['1'],batches:[{url:'https://search-lon.therange.co.uk/api/productlist?filters='+encodeURIComponent(JSON.stringify({in_stock_f:['true']}))}]}]};
 assert(reportProductEvidence(p,p,source,{retailerId:'the-range'}).accepted);
 for(const s of [{}, {sourceAudits:[{...source.sourceAudits[0],complete:false}]},{sourceAudits:[{...source.sourceAudits[0],records:['2']}]},{sourceAudits:[{...source.sourceAudits[0],batches:[{url:'https://search-lon.therange.co.uk/api/productlist'}]}]}])assert(!reportProductEvidence(p,p,s,{retailerId:'the-range'}).accepted);
 assert(!reportProductEvidence({...p,inStock:false},p,source,{retailerId:'the-range'}).accepted);assert(!reportProductEvidence(p,p,source,{retailerId:'du'}).accepted);assert(reportProductEvidence({...p,inStock:true},p,{}, {retailerId:'du'}).accepted);assert(!reportProductEvidence({...p,inStock:true,sourceUrl:p.sourceUrl+'changed'},p,{}, {retailerId:'du'}).accepted);
 console.log('PASS: exact membership of a complete official filtered Range directory establishes stock; missing, partial, unfiltered, other-SKU and explicit-out-of-stock evidence are rejected.');
+
+const merged=mergeReportProduct({...p,inStock:true,priceGBP:19.99,observedAt:"current",detailsReady:false},{...p,priceGBP:16.99,observedAt:"old",detailsReady:true,specifications:{Height:"60cm"}});assert.equal(merged.priceGBP,19.99);assert.equal(merged.observedAt,"current");assert.equal(merged.detailsReady,false);assert.equal(merged.specifications.Height,"60cm");

@@ -1,3 +1,4 @@
+import {hydrateRangeIdentity} from './range-record-identity.mjs';
 import fs from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
@@ -23,6 +24,7 @@ export async function auditTaxonomy(snapshots,{infer=true,writeViews=true,persis
   for(const k of ['priceGBP','originalPrice','promoText','observedAt','newStatus','newEvidence'])if(latest[k]!==undefined)p[k]=clone(latest[k]);
   const tree=records.find(r=>r.source==='trees-skirts');if(tree){p.kind=tree.p.kind;for(const k of ['style','heightLabel','heightCm','heightValues','skirtDiameterCm','skirtBaseDiameterCm','skirtTopDiameterCm'])if(tree.p[k]!==undefined)p[k]=clone(tree.p[k]);}
   p.lightingDepartmentIds=[...new Set(records.flatMap(r=>r.p.lightingDepartmentIds||[]))];p.themeIds=[...new Set(records.flatMap(r=>r.p.themeIds||[]))];
+  hydrateRangeIdentity(p,records.map(r=>r.p));
   p.taxonomySources=records.map(r=>r.source);before.set(sku,{primary:sorted[0].p.department,ids:[...new Set(records.flatMap(r=>[r.p.department,...r.p.departmentIds||[],...(['tree','skirt'].includes(r.p.kind)?[r.p.kind]:[])]).filter(Boolean))]});
   canonical.push(p);
  }
