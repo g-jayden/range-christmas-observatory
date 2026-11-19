@@ -1,6 +1,11 @@
 name: The Range native originals without catalogue recollection
 on:
   workflow_dispatch:
+    inputs:
+      continuationDepth:
+        description: Bounded missing-only continuation, maximum 8
+        type: string
+        default: '0'
 permissions:
   contents: write
   actions: write
@@ -16,6 +21,7 @@ jobs:
       FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
       GITHUB_TOKEN: ${{ github.token }}
       RANGE_NATIVE_CHECKPOINTS: '1'
+      RANGE_NATIVE_CONTINUATION_DEPTH: ${{ inputs.continuationDepth || '0' }}
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
@@ -47,3 +53,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/request-retailer-site-publish.mjs ar
+      - name: Continue only after durable progress within the approved budget
+        if: success()
+        run: node scripts/continue-range-native.mjs
