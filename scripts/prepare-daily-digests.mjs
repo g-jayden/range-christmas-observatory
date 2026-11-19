@@ -31,7 +31,12 @@ async function exactProduct(candidate){
 }
 const nativeIndex=await json('range-native-index.json').catch(()=>({entries:{}})),nativeGaps=[];for(const p of range.products||[]){if(p.taxonomyAudit?.disposition!=='include')continue;const url=nativeSourceUrl(p);if(p.originalImages?.some(g=>g.url===url&&exactNativeGalleryMember(p,g))&&!nativeIndex.entries?.[url]?.ok)nativeGaps.push({sku:p.sku,url,sourceUrl:p.sourceUrl});}console.log(JSON.stringify({phase:'Read-only exact native gap diagnosis',missing:[...new Map(nativeGaps.map(p=>[p.url,p])).values()].slice(0,25),sourceRequests:0,firecrawlCredits:0}));
 let plan;
-if(process.env.DIGEST_TEST_OWNER==='true'){
+if(process.env.DIGEST_REPAIR_COMBINED==='true'){
+ const parents=['a1cc4ca4c82fdafee1d7bd315b92e2bf93d7cf91444bfd79dbd2f5815372021a','ec753a24530cbe8914a6190c9ddd2fe0609b88b9e4f5e57818384439626879ce','ae27288802b6b22134701dfde8fa16a0955b3724c8d333f7b2deeb1f31ecf60f'],manifests=await Promise.all(parents.map(id=>json('reports/'+id+'/manifest.json')));
+ if(manifests.some(m=>m.day!=='2026-11-19'||m.version!=='daily-native-pdf-v1'))throw Error('Unexpected original report evidence');
+ const products=manifests.flatMap(m=>m.items.map(p=>({...p,digestProductKey:p.key})));if(products.length!==76||new Set(products.map(p=>p.digestProductKey)).size!==76)throw Error('Previously delivered report coverage changed');
+ const id=createHash('sha256').update('combined-source-conflict-correction-v1/'+parents.join('/')).digest('hex');plan={day:'2026-11-19',plans:[{id,day:'2026-11-19',products,correction:true,parents}],waiting:[]};
+}else if(process.env.DIGEST_TEST_OWNER==='true'){
  const d=await json('du/catalogue.json'),selected=[];
  for(const dep of ['du-tree','du-wreath'])for(const p of d.products.filter(p=>p.department===dep&&p.inStock&&p.detailsReady&&p.originalCachedImageUrl&&!p.classificationEvidence?.requiresReview).slice(0,dep==='du-tree'?9:1))selected.push(await exactProduct(p));
  if(selected.length<2)throw Error('Real verified owner test products unavailable');
@@ -51,10 +56,11 @@ for(const originalGroup of plan.plans){
    }catch(e){failures.push({plan:originalGroup.id,key:candidate.digestProductKey,error:String(e.message).slice(0,250)});}
   }
   if(!products.length)continue;
+  if(originalGroup.correction&&products.length!==originalGroup.products.length)throw Error('Combined correction must verify every originally delivered product before publication');
   const group=products.length===originalGroup.products.length?originalGroup:await control('/internal/digest-subset',{planId:originalGroup.id,readyKeys:verifiedKeys});
   const identity=catalogueIdentityIndex(products);for(const p of products){const canonical=identity.canonical[productRetailer(p)+':'+p.sku];if(canonical)p.canonicalSku=canonical;}
   const dir='web/reports/'+group.id;await fs.mkdir(dir,{recursive:true});
-  const bytes=await createCatalogueReport(products,{output:dir+'/NEW.pdf',readImage:p=>native.get(p)}),manifest={version:'daily-native-pdf-v1',planId:group.id,day:group.day,items,pdf:{sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length}};
+  const bytes=await createCatalogueReport(products,{output:dir+'/NEW.pdf',readImage:p=>native.get(p)}),manifest={...(group.correction?{correction:true,originalReports:group.parents}:{}),version:'daily-native-pdf-v1',planId:group.id,day:group.day,items,pdf:{sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length}};
   await fs.writeFile(dir+'/manifest.json',JSON.stringify(manifest));prepared.push({id:group.id,products:items.length,bytes:bytes.length,deferred:group.deferredProducts||0});
  }catch(e){failures.push({plan:originalGroup.id,error:String(e.message).slice(0,250)});}
 }

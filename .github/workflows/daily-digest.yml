@@ -4,6 +4,10 @@ on:
     - cron: '0,30 23,0-5 * * *'
   workflow_dispatch:
     inputs:
+      repairCombined:
+        description: Rebuild the 76 already delivered products as one corrected PDF without sending new alerts
+        type: boolean
+        default: false
       testOwner:
         description: Send one real-product PDF layout test only to the confirmed owner
         type: boolean
@@ -35,6 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
+      DIGEST_REPAIR_COMBINED: ${{ inputs.repairCombined == true && 'true' || 'false' }}
       DIGEST_TEST_OWNER: ${{ inputs.testOwner == true && 'true' || 'false' }}
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
@@ -68,4 +73,5 @@ jobs:
           git diff --cached --quiet || git commit -m "Publish grouped native NEW product PDF [skip ci]"
           node scripts/push-evidence.mjs
       - name: Send one PDF per confirmed subscriber without recollection
+        if: inputs.repairCombined != true
         run: node scripts/deliver-daily-digests.mjs
