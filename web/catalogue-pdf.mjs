@@ -4,11 +4,11 @@ const bytes=s=>new TextEncoder().encode(s);
 const join=chunks=>{const out=new Uint8Array(chunks.reduce((n,c)=>n+c.length,0));let at=0;for(const c of chunks){out.set(c,at);at+=c.length;}return out;};
 // Native JPEG bytes are embedded unchanged. Other formats are losslessly
 // decoded to RGB and deflated by the host adapter; no resampling or upscaling.
-export async function cataloguePdf(products,{image,text,onProgress=()=>{}}){
+export async function cataloguePdf(products,{image,text,onProgress=()=>{},parts=false}){
  const pages=reportPages(products);if(!pages.length)throw Error('没有可导出的商品 · No products to export');
  const objects=[null,null],pageIds=[],cells=reportCells();let done=0;
  const add=content=>(objects.push(content),objects.length);
- const stream=(dict,data)=>join([bytes('<< '+dict+' /Length '+data.length+' >>\nstream\n'),data,bytes('\nendstream')]);
+ const stream=(dict,data)=>[bytes('<< '+dict+' /Length '+data.length+' >>\nstream\n'),data,bytes('\nendstream')];
  const embed=img=>{if(!(img.width>0&&img.height>0)||!['DCTDecode','FlateDecode'].includes(img.filter))throw Error('Invalid native PDF image');return add(stream('/Type /XObject /Subtype /Image /Width '+img.width+' /Height '+img.height+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /'+img.filter,img.bytes));};
  for(const page of pages){const resources=[],commands=[];
   const draw=(id,x,top,w,h)=>{const name='Im'+resources.length;resources.push('/'+name+' '+id+' 0 R');commands.push('q '+[w,0,0,h,x,REPORT_PAGE.height-top-h].map(n=>Number(n.toFixed(3))).join(' ')+' cm /'+name+' Do Q');};
@@ -20,7 +20,7 @@ export async function cataloguePdf(products,{image,text,onProgress=()=>{}}){
  }
  objects[0]=bytes('<< /Type /Catalog /Pages 2 0 R >>');objects[1]=bytes('<< /Type /Pages /Count '+pageIds.length+' /Kids ['+pageIds.map(id=>id+' 0 R').join(' ')+'] >>');
  const chunks=[bytes('%PDF-1.7\n%\xE2\xE3\xCF\xD3\n')],offsets=[0];let offset=chunks[0].length;
- for(let i=0;i<objects.length;i++){offsets.push(offset);const chunk=join([bytes((i+1)+' 0 obj\n'),objects[i],bytes('\nendobj\n')]);chunks.push(chunk);offset+=chunk.length;}
+ for(let i=0;i<objects.length;i++){offsets.push(offset);const objectParts=[bytes((i+1)+' 0 obj\n'),...(Array.isArray(objects[i])?objects[i]:[objects[i]]),bytes('\nendobj\n')];chunks.push(...objectParts);offset+=objectParts.reduce((n,b)=>n+b.length,0);}
  chunks.push(bytes('xref\n0 '+(objects.length+1)+'\n0000000000 65535 f \n'+offsets.slice(1).map(n=>String(n).padStart(10,'0')+' 00000 n \n').join('')+'trailer\n<< /Size '+(objects.length+1)+' /Root 1 0 R >>\nstartxref\n'+offset+'\n%%EOF\n'));
- return join(chunks);
+ return parts?chunks:join(chunks);
 }
