@@ -22,9 +22,8 @@ export const reportRetailer=p=>retailerName(productRetailer(p));
 const usableNativeUrl=raw=>{try{const u=new URL(raw);return u.protocol==='https:'&&(u.hostname!=='www.therange.co.uk'||!u.pathname.startsWith('/media/')||/\.(?:jpe?g|png|webp|gif|avif)$/i.test(u.pathname));}catch{return false;}};
 export function nativeSourceUrl(p,item){
  if(item?.url)return usableNativeUrl(item.url)?item.url:null;
- if(p.displayImage?.sourceUrl&&usableNativeUrl(p.displayImage.sourceUrl))return p.displayImage.sourceUrl;
  const known=g=>(g.selectedSku!=null?String(g.selectedSku)===String(p.sku):p.variantId!=null&&String(g.variantId)===String(p.variantId)&&p.detailEvidence?.verifiedProductSection&&String(p.detailEvidence.selectedSku)===String(p.sku))&&usableNativeUrl(g.url);
- const selected=p.previewImage?.sourceUrl,pair=p.originalImages?.find(g=>(g.url===selected||g.thumbnail===selected)&&known(g));
+ const selected=p.displayImage?.sourceUrl||p.previewImage?.sourceUrl,pair=p.originalImages?.find(g=>(g.url===selected||g.thumbnail===selected)&&known(g));
  if(pair)return pair.url;
  if(usableNativeUrl(p.originalImageUrl))return p.originalImageUrl;
  const current=p.variantImageUrl||p.imageCacheEvidence?.sourceUrl,matching=p.originalImages?.find(g=>(g.url===current||g.thumbnail===current)&&known(g));
