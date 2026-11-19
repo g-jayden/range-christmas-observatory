@@ -29,11 +29,12 @@ export async function collectJlPaid({key,fetcher=fetch,root='web/jl',runtime='ru
  }
  for(const receipt of checkpoint.receipts)await book(receipt,true);
  async function batch(items,directories,proxy){
-  if(credits>=maxCredits)throw Error('Requested diagnostic budget reached');
   const entry='https://www.johnlewis.com'+JL_DIRECTORIES[0][1]+'?page=2';
   const payload={url:entry,formats:['rawHtml'],onlyMainContent:false,maxAge:0,proxy,parsers:[],timeout:240000,actions:[{type:'executeJavascript',script:jlBatchAction(items,{directories})}]};
   const identity=createHash('sha256').update(JSON.stringify(payload)).digest('hex'),cached=checkpoint.responses[identity];
   if(cached?.result)return cached.result;
+  if(!directories){const saved=new Map;for(const prior of Object.values(checkpoint.responses))for(const row of prior.result?.rows||[])if(row.product?.title&&items.some(i=>i.id===row.id&&i.url===row.url))saved.set(row.id,row);if(saved.size===items.length)return {rows:items.map(i=>saved.get(i.id)),failures:[],requests:0};}
+  if(credits>=maxCredits)throw Error('Requested diagnostic budget reached');
   if(cached?.started)throw Error('Previous identical John Lewis paid request has no confirmed result; automatic duplicate charge stopped');
   const balance=await fetcher('https://api.firecrawl.dev/v2/team/credit-usage',{headers:{authorization:'Bearer '+key},signal:AbortSignal.timeout(30000)}),account=await balance.json(),left=account.data?.remainingCredits??account.remainingCredits;
   if(!balance.ok||!Number.isFinite(left)||left-policy.accountReserveCredits<5)throw Error('John Lewis account reserve cannot cover the next actual request');
@@ -59,7 +60,7 @@ export async function collectJlPaid({key,fetcher=fetch,root='web/jl',runtime='ru
   if(found.size!==items.length)throw Error('John Lewis source incomplete: '+JSON.stringify(failures.slice(-3)));
   return items.map(item=>found.get(item.id));
  }
- const source={observedAt:new Date().toISOString(),transport:'John-Lewis-live-exact-official-HTML-shared-Firecrawl-fallback',sourceRequests:0,firecrawlCredits:0,categories:[],families:{},failures:[],complete:false};
+ const source={observedAt:checkpoint.startedAt,transport:'John-Lewis-live-exact-official-HTML-shared-Firecrawl-fallback',sourceRequests:0,firecrawlCredits:0,categories:[],families:{},failures:[],complete:false};
  try{
   source.categories=await completeBatch(JL_DIRECTORIES.map(([id,path])=>({id,url:'https://www.johnlewis.com'+path})),true);
   const unique=new Map;for(const c of source.categories)for(const p of [...c.pages,...c.ranges.flatMap(r=>r.pages)])for(const r of p.rows.filter(r=>!r.sponsored&&r.type!=='range-navigation'))unique.set(r.pageProductId,r.sourceUrl);

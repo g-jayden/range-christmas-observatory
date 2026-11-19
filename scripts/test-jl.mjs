@@ -49,3 +49,5 @@ assert.equal(fallbackCalls,1);
 for(const e of [Object.assign(Error('HTTP 403'),{stop:true}),Error('John Lewis directory content incomplete')])await assert.rejects(jlDirectoryTransport({navigate:async()=>{throw e;},fetchHtml:async()=>{fallbackCalls++;}}));
 assert.equal(fallbackCalls,1,'Explicit refusal and invalid content cannot trigger alternate transport');
 
+
+const {readJlDirectoryDom}=await import('../server/jl-list-dom.mjs');assert(readJlDirectoryDom.toString().includes("text(n)==='Sponsored'"),'A concatenated product name must not hide an exact Sponsored badge');
