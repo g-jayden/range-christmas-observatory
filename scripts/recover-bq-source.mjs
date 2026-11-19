@@ -6,6 +6,7 @@ import {pipeline} from 'node:stream/promises';
 import {reusableBqSource} from '../server/bq-source-checkpoint.mjs';
 const id=process.env.BQ_RECOVERY_ARTIFACT_ID;
 if(!id)process.exit(0);
+try{const local=JSON.parse(await fs.readFile('runtime/bq-staged-catalogue.json','utf8'));if(reusableBqSource(local)){console.log(JSON.stringify({phase:'Reuse already restored closed B&Q source',observedAt:local.observedAt,products:local.products.length,sourceRequests:0,firecrawlCredits:0}));process.exit(0);}}catch(e){if(e.code!=='ENOENT')throw e;}
 if(!/^\d{8,20}$/.test(id)||process.env.GITHUB_REPOSITORY!=='g-jayden/range-christmas-observatory'||!process.env.GITHUB_TOKEN)throw Error('Exact repository artifact recovery required');
 await fs.mkdir('runtime',{recursive:true});
 const url='https://api.github.com/repos/'+process.env.GITHUB_REPOSITORY+'/actions/artifacts/'+id,headers={authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json'};
