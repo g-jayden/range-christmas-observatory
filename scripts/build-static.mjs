@@ -40,6 +40,11 @@ for(const page of ['index.html','image-check.html']){
  for(const asset of ['dashboard-full.css','dashboard-full.js','controls.js','image-check.js']){
   const hash=createHash('sha256').update(await fs.readFile('public/'+asset)).digest('hex').slice(0,12);html=html.replaceAll('"'+asset+'"','"'+asset+'?v='+hash+'"');
  }
+ // Load the exact versioned dependency graph in parallel with the page instead
+ // of waiting for a chain of module fetches before the first category can show.
+ const preloads=new Set();async function preload(url){if(preloads.has(url))return;const file=url.split('?')[0].replace(/^\.\//,'');if(!browserSources.has(file))return;preloads.add(url.replace(/^\.\//,''));const source=await fs.readFile('public/'+file,'utf8');for(const m of source.matchAll(/['"]\.\/([^'"]+\.(?:mjs|js)(?:\?v=[a-f0-9]+)?)['"]/g))await preload(m[1]);}
+ for(const m of html.matchAll(/<script\b[^>]*type="module"[^>]*src="([^"]+)"/g))await preload(m[1]);
+ html=html.replace('</head>',[...preloads].map(url=>'<link rel="modulepreload" href="'+url+'">').join('')+'</head>');
  await fs.writeFile('public/'+page,html);
 }
 for(const name of ['image-collection-authorization.json','paid-native-index.json','native-original-recovery-status.json','asda','product-evidence-health.json','product-evidence-repair.json','browser-image-repair-proof.json','preview-status.json','classified','taxonomy-status.json','taxonomy-audit.json','decorations.json','decorations-status.json','decoration-details','lights.json','lights-status.json','light-details','themes.json','themes-status.json','theme-details'])try{const source='web/'+name;const st=await fs.stat(source);if(st.isDirectory())await fs.cp(source,'public/'+name,{recursive:true});else await fs.copyFile(source,'public/'+name)}catch(e){if(e.code!=='ENOENT')throw e;}
