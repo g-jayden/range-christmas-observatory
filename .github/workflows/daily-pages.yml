@@ -320,6 +320,15 @@ jobs:
           exit "$mail_status"
       - uses: actions/configure-pages@v6.0.0
         if: steps.tick.outputs.publish == 'true'
+      - name: Reuse reviewed B&Q source-image pixels without collection
+        if: steps.tick.outputs.publish == 'true'
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: |
+            runtime/bq-source
+            runtime/bq-staged-catalogue.json
+          key: bq-source-checkpoints-static-${{ github.run_id }}
+          restore-keys: bq-source-checkpoints-
       - name: Build site
         if: steps.tick.outputs.publish == 'true'
         run: node scripts/build-static.mjs

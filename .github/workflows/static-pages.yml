@@ -27,6 +27,14 @@ jobs:
         with:
           node-version: '24'
       - run: npm ci --no-audit --no-fund
+      - name: Reuse reviewed B&Q source-image pixels without collection
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: |
+            runtime/bq-source
+            runtime/bq-staged-catalogue.json
+          key: bq-source-checkpoints-static-${{ github.run_id }}
+          restore-keys: bq-source-checkpoints-
       - name: Verify committed catalogue and publication logic without source requests
         run: npm test
       - uses: actions/configure-pages@v6.0.0

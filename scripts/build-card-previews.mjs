@@ -1,16 +1,16 @@
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';import sharp from 'sharp';
 import {nativeSourceUrl,nativeImageCandidates} from '../web/product-facts.mjs';
 const OWN='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/';
-export function createCardPreviewBuilder(root,{sourceRoot='web'}={}){
+export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot='runtime/bq-source/preview-files'}={}){
  const work=new Map(),nativeFiles=new Map();let generated=0,bytes=0,active=0,invalidImages=0,nativeBytes=0;const queue=[];
  const limit=fn=>new Promise((resolve,reject)=>{queue.push({fn,resolve,reject});drain();});
  function drain(){while(active<4&&queue.length){const job=queue.shift();active++;Promise.resolve().then(job.fn).then(job.resolve,job.reject).finally(()=>{active--;drain();});}}
  const local=value=>{if(typeof value!=='string')return null;const relative=value.startsWith(OWN)?value.slice(OWN.length):value;return /^images\/[\w./-]+\.(?:jpe?g|png|webp|avif)$/i.test(relative)&&!relative.split('/').includes('..')?relative:null;};
+ const input=(value,bound)=>{const relative=local(value);if(relative)return {file:path.join(sourceRoot,relative),bound};if(/^[a-f0-9]{64}$/.test(bound||''))try{const u=new URL(value);if(u.origin==='https://media.diy.com'&&/^\/is\/image\/(?:Kingfisher|KingfisherDigital)\//.test(u.pathname)){u.search='';u.hash='';return {file:path.join(previewCacheRoot,createHash('sha256').update(u.href).digest('hex')+'.jpg'),bound};}}catch{}return null;};
  async function build(p){
-  const candidates=[p.previewImage?.cachePath,p.displayImage?.cachePath,p.originalCachedImageUrl,p.cachedImageUrl].map(local).filter(Boolean);
-  for(const relative of [...new Set(candidates)]){let buffer;try{buffer=await fs.readFile(path.join(sourceRoot,relative));}catch(e){if(e.code==='ENOENT')continue;throw e;}
+  const candidates=[input(p.previewImage?.cachePath,p.previewImage?.sha256),input(p.displayImage?.cachePath,p.displayImage?.sha256),input(p.originalCachedImageUrl,p.nativeExportEvidence?.sha256||p.originalImageEvidence?.sha256),input(p.cachedImageUrl,p.imageCacheEvidence?.sha256)].filter(Boolean);
+  for(const {file,bound}of [...new Map(candidates.map(c=>[c.file,c])).values()]){let buffer;try{buffer=await fs.readFile(file);}catch(e){if(e.code==='ENOENT')continue;throw e;}
    const digest=createHash('sha256').update(buffer).digest('hex');
-   const bound=relative===local(p.previewImage?.cachePath)?p.previewImage?.sha256:relative===local(p.displayImage?.cachePath)?p.displayImage?.sha256:relative===local(p.originalCachedImageUrl)?p.originalImageEvidence?.sha256:relative===local(p.cachedImageUrl)?p.imageCacheEvidence?.sha256:null;
    if(/^[a-f0-9]{64}$/.test(bound||'')&&bound!==digest)continue;
    const key=digest+'/whole-480-webp-q80';if(!work.has(key))work.set(key,limit(async()=>{
     let meta,output;try{const image=sharp(buffer);meta=await image.metadata();if(!meta.width||!meta.height)throw Error('Cached preview has no image pixels');output=await image.rotate().resize({width:480,height:480,fit:'inside',withoutEnlargement:true}).webp({quality:80}).toBuffer();}catch{invalidImages++;return null;}
