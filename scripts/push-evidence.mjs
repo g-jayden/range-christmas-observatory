@@ -6,6 +6,13 @@ if(!process.env.GITHUB_RUN_ID)throw Error('Evidence publishing is restricted to 
 // Rebase data onto the already-authorised workflow revision. Creating a new
 // branch can require workflow-file permission even for a data-only checkpoint.
 // The collector writes only web/ data to main and never requests that scope.
+// The shared visual quality cache is written by every retailer image check.
+// Preserve this known data side effect before rebasing an already committed
+// catalogue. Never auto-stage arbitrary files or executable source changes.
+const sharedCacheFiles=new Set(['web/preview-quality-cache.json.gz']);
+const dirty=execFileSync('git',['diff','--name-only','-z'],{encoding:'utf8'}).split('\0').filter(Boolean);
+const knownUntracked=execFileSync('git',['ls-files','--others','--exclude-standard','-z'],{encoding:'utf8'}).split('\0').filter(p=>sharedCacheFiles.has(p));
+if(dirty.length||knownUntracked.length){if(dirty.some(p=>!sharedCacheFiles.has(p)))throw Error('Uncommitted collector output needs an explicit publication path: '+dirty.join(', '));git('add','--',...dirty,...knownUntracked);git('commit','-m','Preserve shared source-photo quality evidence [skip ci]');}
 let saved=false;for(let attempt=1;attempt<=4;attempt++){
  try{
   git('pull','--rebase');

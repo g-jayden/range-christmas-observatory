@@ -12,12 +12,13 @@ delivery={...delivery,accepted:acceptedTotal};
 if(out)await fs.unlink(file);
 console.log(JSON.stringify({phase:'verified-NEW-delivery',accepted:delivery.accepted||0,attempted:delivery.attempted||0,failed:delivery.failed||0,pendingDeliveries:delivery.pendingDeliveries||0,readyDeliveries:delivery.readyDeliveries||0,waitingDeliveries:delivery.waitingDeliveries||0,blockedDeliveries:delivery.blockedDeliveries||0,failures:delivery.failures||[],firecrawlCredits:0}));
 if(!delivery.waitingForDigest&&(delivery.morePending||delivery.pendingDeliveries))throw Error('仍有待发新品邮件；云端队列保留，后续仅恢复投递，不重抓商品。');
+const deliveryPending=Boolean(delivery.waitingForDigest&&(delivery.pendingDeliveries||delivery.morePending));
 const receipt={...delivery,verifiedAt:new Date().toISOString(),firecrawlCredits:0};
 for(const name of ['monitor-state.json','status.json','collection-ledger.json']){
  const target='web/'+name;let data;try{data=JSON.parse(await fs.readFile(target,'utf8'))}catch(e){if(e.code==='ENOENT')continue;throw e;}
- if(name==='monitor-state.json'){if(data.state==='delivery-pending')data.state='active';data.lastResult={...data.lastResult,deliveryPending:false,delivery:receipt};}
+ if(name==='monitor-state.json'){if(deliveryPending)data.state='delivery-pending';else if(data.state==='delivery-pending')data.state='active';data.lastResult={...data.lastResult,deliveryPending,delivery:receipt};}
  const report=name==='status.json'?data.collectionAudit:data.lastRun;
- if(report?.notifications)report.notifications={...report.notifications,deliveryPending:false,delivery:receipt};
+ if(report?.notifications)report.notifications={...report.notifications,deliveryPending,delivery:receipt};
  await fs.writeFile(target,JSON.stringify(data));
 }
 console.log(JSON.stringify({success:true,delivery:receipt}));

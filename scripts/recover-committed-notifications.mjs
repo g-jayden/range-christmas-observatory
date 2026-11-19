@@ -11,6 +11,7 @@ import {buildMailAssets} from '../server/mail-assets.mjs';
 import {publishCollectionCheckpoint} from '../server/collection-checkpoints.mjs';
 
 const pending=await control('/internal/pending-evidence');
+if(pending.dailyPdfDigest){console.log(JSON.stringify({phase:'recover-committed-notifications',deliveryMode:'consolidated-native-pdf',retainedPending:pending.totalActive,legacyCardsRequired:false,sourceRequestsMade:false,firecrawlCredits:0}));process.exit(0);}
 // Next and John Lewis have dedicated exact-SKU recovery and notification paths.
 // Their pending evidence must not enter the unrelated legacy catalogue lookup.
 const delegated=pending.candidates.filter(p=>['nx','jl','mt','bq'].includes(p.retailerId));

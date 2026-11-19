@@ -226,11 +226,11 @@ export class Control{
     return response({synced:true,eventsUpdated,pendingUpdated,excludedPending,sent:0,seenHistoryChanged:false});
    }
    if(route==='/internal/mail-status'&&req.method==='GET'){
-    const subs=[...(await this.db.list({prefix:'sub/'})).values()],pending=[...(await this.db.list({prefix:'pending/'})).values()];return response({notificationContract:NOTIFICATION_CONTRACT,...await this.deliveryStatus(),confirmedSubscriptions:subs.filter(s=>s.confirmedAt).length,pendingSubscriptions:subs.filter(s=>!s.confirmedAt).length,pendingScreenshots:pending.filter(p=>!p.unavailableSince).length,pendingUnavailable:pending.filter(p=>p.unavailableSince).length});
+    const subs=[...(await this.db.list({prefix:'sub/'})).values()],pending=[...(await this.db.list({prefix:'pending/'})).values()];return response({notificationContract:NOTIFICATION_CONTRACT,dailyPdfDigest:this.env.DAILY_PDF_DIGEST==='true',...await this.deliveryStatus(),confirmedSubscriptions:subs.filter(s=>s.confirmedAt).length,pendingSubscriptions:subs.filter(s=>!s.confirmedAt).length,pendingScreenshots:pending.filter(p=>!p.unavailableSince).length,pendingUnavailable:pending.filter(p=>p.unavailableSince).length});
    }
    if(route==='/internal/pending-evidence'&&req.method==='GET'){
     const pending=[...(await this.db.list({prefix:'pending/'})).values()],active=pending.filter(p=>!p.unavailableSince&&(!p.taxonomyAudit||p.taxonomyAudit.disposition==='include'));
-    return response({notificationContract:NOTIFICATION_CONTRACT,candidates:active.slice(0,128),totalActive:active.length,unavailable:pending.length-active.length,monitor:await this.monitorState()});
+    return response({notificationContract:NOTIFICATION_CONTRACT,dailyPdfDigest:this.env.DAILY_PDF_DIGEST==='true',candidates:active.slice(0,128),totalActive:active.length,unavailable:pending.length-active.length,monitor:await this.monitorState()});
    }
    if(route==='/internal/evidence-recovered'&&req.method==='POST'){
     const b=await req.json(),m=await this.monitorState(),pending=[...(await this.db.list({prefix:'pending/'})).values()];
