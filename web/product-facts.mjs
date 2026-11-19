@@ -32,7 +32,10 @@ export function nativeSourceUrl(p,item){
 
 export function nativeImageCandidates(p,item){
  const source=nativeSourceUrl(p,item);
- const candidates=[];const gallery=p.originalImages?.find(g=>g.url===source&&(!g.selectedSku||String(g.selectedSku)===String(p.sku)));if(gallery?.nativeCachePath)candidates.push(gallery.nativeCachePath);
+ const candidates=[];const gallery=p.originalImages?.find(g=>g.url===source&&(!g.selectedSku||String(g.selectedSku)===String(p.sku)));
+ const accelerated=p.browseNative,bound=[p.nativeExportEvidence,p.originalImageEvidence,gallery&&{...gallery,sourceUrl:gallery.url,sha256:gallery.sha256||gallery.nativeSha256}].find(e=>e?.sourceUrl===source&&(!e.selectedSku||String(e.selectedSku)===String(p.sku))&&/^[a-f0-9]{64}$/.test(e.sha256||''));
+ if(accelerated?.sourceUrl===source&&bound?.sha256===accelerated.sha256&&new RegExp('^native-first/'+accelerated.sha256+'\\.(?:jpe?g|png|webp|avif)$','i').test(accelerated.url||''))candidates.push(accelerated.url);
+ if(gallery?.nativeCachePath)candidates.push(gallery.nativeCachePath);
  // A cached thumbnail never qualifies as a native original. Only the exact
  // source-bound original mirror may replace a remote source image.
  if(source===p.originalImageEvidence?.sourceUrl&&p.originalCachedImageUrl)candidates.push(p.originalCachedImageUrl);

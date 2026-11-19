@@ -19,3 +19,11 @@ const reloaded=await import('../web/native-image-browser.mjs?fresh=1');await rel
 for(const key of entries.keys())if(decodeURIComponent(key).includes(sha(pixels)))entries.set(key,new Response('bad-cache',{headers:{'content-type':'image/jpeg'}}));
 const corrupt=await import('../web/native-image-browser.mjs?fresh=2');await corrupt.nativeImage(product());assert.equal(requests,3);
 console.log('PASS: native bytes are SHA-verified before caching, survive reload without refetch, recover corrupt storage, and changed source digests bypass old RAM/disk pixels.');
+
+let draws=0;const labels=[];
+globalThis.document={createElement:()=>{const canvas={width:0,height:0,getContext:()=>({drawImage(){draws++;},measureText:s=>({width:s.length*8}),fillRect(){},fillText:s=>labels.push(s)}),toBlob:callback=>callback(new Blob(['annotated-native-pixels'],{type:'image/png'}))};return canvas;}};
+const {annotatedImage,cachedAnnotatedImage}=await import('../web/native-image-browser.mjs');
+const named={...product(),priceGBP:10,heightLabel:'30cm'},firstAnnotated=await annotatedImage(named);assert.equal((await annotatedImage(named)),firstAnnotated);assert.equal(draws,1);assert.equal(cachedAnnotatedImage(named),firstAnnotated);
+await annotatedImage({...named,priceGBP:12});assert.equal(draws,2);assert(labels.includes('£12.00'));await annotatedImage({...named,heightLabel:'40cm'});assert.equal(draws,3);assert(labels.includes('40cm'));
+assert.throws(()=>annotatedImage({...named,sourceImageConflict:{note:'conflict'}}),/conflict/);
+console.log('Annotated native image reuse avoids repeat PNG encoding; changed source price/size and conflicting photos cannot reuse an earlier overlay.');

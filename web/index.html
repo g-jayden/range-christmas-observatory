@@ -1,5 +1,9 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f6f2"><meta name="description" content="按连锁店、季节系列与商品类目浏览的中英双语选品观察室。Browse seasonal assortments by retailer, collection and category."><title>选品观察室 · Assortment Observatory</title><link rel="stylesheet" href="dashboard-full.css"></head>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f6f2"><meta name="description" content="按连锁店、季节系列与商品类目浏览的中英双语选品观察室。Browse seasonal assortments by retailer, collection and category."><title>选品观察室 · Assortment Observatory</title><link rel="stylesheet" href="dashboard-full.css"><link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+<link rel="preload" href="browse-index.json" as="fetch" crossorigin>
+<link rel="preload" href="browse-status.json" as="fetch" crossorigin>
+<link rel="preload" href="product-identities.json" as="fetch" crossorigin>
+</head>
 <body>
 <a class="skipLink" href="#mainContent">跳到内容 · Skip to content</a>
 <header class="appBar"><div class="appBarInner"><a class="appBrand" href="?retailer=the-range&collection=christmas&scope=tree"><span class="brandMark" aria-hidden="true">ao<span></span></span><span><strong>选品观察室</strong><small>ASSORTMENT OBSERVATORY</small></span></a><button class="alertsButton" type="button" data-open-settings><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14l-2-3V9a5 5 0 0 0-10 0v5zM10 21h4M12 2v2"/></svg><span>更新与订阅<small>Updates & alerts</small></span></button></div></header>
