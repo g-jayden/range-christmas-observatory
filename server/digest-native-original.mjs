@@ -1,12 +1,13 @@
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import sharp from 'sharp';
+import {nativeSourceUrl} from '../web/product-facts.mjs';
 import {allowedPublicImage} from '../cloud/public-image.mjs';
 
 // Only the report's actual NEW products need native response bytes. A missing
 // disk mirror must not force a full catalogue or gallery to be collected again.
 export async function digestNativeOriginal(p,{readFile=fs.readFile,fetcher=fetch}={}) {
-  const prior=p.originalImageEvidence,source=p.originalImageUrl||prior?.sourceUrl;
+  const prior=p.originalImageEvidence,source=nativeSourceUrl(p)||prior?.sourceUrl;
   if(prior?.sha256&&p.originalCachedImageUrl&&prior.sourceUrl===source){
     const bytes=await readFile('web/'+p.originalCachedImageUrl);
     if(createHash('sha256').update(bytes).digest('hex')!==prior.sha256)throw Error('Native original digest mismatch');

@@ -13,8 +13,14 @@ export function productSize(p){
  return p.heightLabel||p.specifications?.Dimensions||p.specifications?.Size||(p.skirtDiameterCm?p.skirtDiameterCm+'cm':'官网未注明尺寸 · Size not specified');
 }
 export const reportRetailer=p=>retailerName(productRetailer(p));
+export function nativeSourceUrl(p,item){
+ if(item?.url)return item.url;
+ if(p.displayImage?.sourceUrl)return p.displayImage.sourceUrl;
+ const selected=p.previewImage?.sourceUrl,pair=p.originalImages?.find(g=>(g.url===selected||g.thumbnail===selected)&&(!g.selectedSku||String(g.selectedSku)===String(p.sku))&&(!p.variantId||!g.variantId||String(g.variantId)===String(p.variantId)));
+ return pair?.url||p.originalImageUrl||selected;
+}
 export function nativeImageCandidates(p,item){
- const source=item?.url||p.originalImageUrl||p.displayImage?.sourceUrl||p.previewImage?.sourceUrl;
+ const source=nativeSourceUrl(p,item);
  const candidates=[];const gallery=p.originalImages?.find(g=>g.url===source&&(!g.selectedSku||String(g.selectedSku)===String(p.sku)));if(gallery?.nativeCachePath)candidates.push(gallery.nativeCachePath);
  // A cached thumbnail never qualifies as a native original. Only the exact
  // source-bound original mirror may replace a remote source image.
