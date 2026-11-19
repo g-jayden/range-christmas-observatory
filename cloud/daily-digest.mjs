@@ -22,6 +22,7 @@ export async function dailyDigestPlans(db,{now=Date.now(),maxPlans=10}={}){
   const fingerprint=await digest(JSON.stringify(rows.map(p=>[p.digestProductKey,p.sourceUrl,p.firstDetectedAt||p.detectedAt||p.firstNewObservedAt]))),id=await digest(day+'/'+key+'/'+fingerprint),plan={id,day,recipient:key.slice(4),createdAt:new Date(now).toISOString(),fingerprint,products:rows};
   await db.put('digest-plan/'+id,plan);plans.push(plan);if(plans.length>=maxPlans)break;
  }
+ await db.put('daily-digest-status',{day,checkedAt:new Date(now).toISOString(),state:waiting.length?'waiting-for-current-source':plans.length?'ready':'no-unsent-verified-products',waitingRetailers:[...new Set(waiting.flatMap(w=>w.retailers.map(r=>r.retailerId)))],reportsReady:plans.length});
  return{day,plans,waiting,firecrawlCredits:0};
 }
 export async function dailyDigestOwnerTest(db,{ownerId,products,requestId,now=Date.now()}={}){
