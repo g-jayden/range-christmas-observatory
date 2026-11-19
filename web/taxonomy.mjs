@@ -1,7 +1,7 @@
 // Classify the offered SKU, not motifs printed on it or objects in its roomset.
 // This module has no network or model dependencies and is shared by monitoring
 // and the public catalogue. Image scores are evidence, never fabricated facts.
-export const TAXONOMY_VERSION='2026-11-10-object-season-v3';
+export const TAXONOMY_VERSION='2026-11-19-offered-variant-object-v4';
 export const isPublishedProduct=p=>!p.taxonomyAudit||p.taxonomyAudit.disposition==='include';
 export function productDescription(p){return String(p.sourceDescription||p.appearanceSource?.descriptionText||p.productSummary||'');}
 export function productBody(p){
@@ -19,7 +19,7 @@ export function offeredObject(p,{visual=p.taxonomyVisual}={}){
  if(/\bstorage bags?\b/i.test(nounBody))return r('ornaments','actual-seasonal-storage-bag-not-its-contents',{subtype:'accessory'});
  if(/\b(?:snow spray|spray snow|tree stand)(?! cover)\b/i.test(nounBody))return r('ornaments','tree-accessory-not-a-whole-tree',{subtype:'accessory'});
  if(/\b(?:tree flowers?|poinsettia (?:flowers? )?ornaments?)\b/i.test(nounBody))return r('tree-decorations','floral-tree-ornaments-not-a-whole-tree');
- if(p.kind==='tree'&&/\btree(?:s)?\b/i.test(nounBody)&&!/\b(?:baubles? set|tree (?:topper|skirt|collar)|tree stand cover|tree shaped (?:bauble|ornament)|hanging tree|tree (?:hanging|pendant)|craft kit|diamond art|stocking|cushion)\b/i.test(nounBody))return r('tree','whole-tree-SKU-and-source-catalogue');
+ if(p.kind==='tree'&&!/\b(?:inflatable|house|church|cottage|figurine)\b/i.test(nounBody)&&/\btree(?:s)?\b/i.test(nounBody)&&!/\b(?:baubles? set|tree (?:topper|skirt|collar)|tree stand cover|tree shaped (?:bauble|ornament)|hanging tree|tree (?:hanging|pendant)|craft kit|diamond art|stocking|cushion)\b/i.test(nounBody))return r('tree','whole-tree-SKU-and-source-catalogue');
  if(/\btree (?:base )?(?:skirt|collar)\b|tree stand cover/i.test(body))return r('skirt','tree-base-cover');
  if(p.kind==='skirt'&&/\b(?:tree mat|tree base|floor protector)\b/i.test(body))return r('skirt','tree-base-and-floor-cover');
 
@@ -36,7 +36,7 @@ export function offeredObject(p,{visual=p.taxonomyVisual}={}){
  if(/\bribbon\b/i.test(nounBody)&&!/\b(?:bows?|wreath|garland|swag|spray|pick|stem|candle|tealight|lantern|LED|lights?|lighting|figurine|inflatable|bauble|hanging|standing|door|wall|cone|tree\s+\d|pop[ -]?up tree)\b/i.test(nounBody))return r(/\btree\b/i.test(nounBody)?'tree-decorations':'ornaments','offered-ribbon-not-its-printed-object');
  if(/\b(?:birds?|peacocks?|robins?|butterflies|butterfly|flowers?|leaves|poinsettia)\b/i.test(body)&&/\b(?:with (?:a )?clip|clip[ -]?on|clips?)\b/i.test(body)&&!/\b(?:LED|lights?|lighting|fairy)\b/i.test(body))return r('tree-decorations','offered-clip-on-tree-ornament');
  if(/\btree (?:skirt|collar)\b|tree stand cover/i.test(body))return r('skirt','tree-base-cover');
- if(p.kind==='tree'&&!/\b(?:bauble|ornament|topper|skirt|collar|cover|tree decoration|cushion|pick|spray|clip|garland|wreath)\b/i.test(body))return r('tree','verified-tree-catalogue-and-offered-object');
+ if(p.kind==='tree'&&/\b(?:fir|spruce|pine|pencil|tinsel|fibre optic)\b/i.test(body)&&!/\b(?:house|church|cottage|figurine|inflatable|bauble|ornament|topper|skirt|collar|cover|tree decoration|cushion|pick|spray|clip|garland|wreath)\b/i.test(body))return r('tree','verified-tree-catalogue-and-offered-object');
  const hanging=/\b(?:hanging|hang|pendant|bauble|tree decoration|tree ornament)\b/i.test(body+' '+lead),small=size!==null&&size<=22;
  const freestanding=/\b(?:free[ -]?standing|stand[ -]?up)\b/i.test(body+' '+lead);
  if(/\bbirdhouse ornament\b/i.test(body)&&!hanging)return r('scenes','offered-miniature-birdhouse-scene-not-a-functional-garden-nest');

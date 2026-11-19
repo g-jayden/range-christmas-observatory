@@ -1,7 +1,7 @@
 import {productDimensions,treeHeightConflict} from './catalogue-model.mjs';
 import {retailerForScope,retailerName} from './retailers.mjs';
 
-export const productRetailer=p=>p.retailerId||retailerForScope(p.department||p.kind);
+export const productRetailer=p=>p.retailerId==='the-range-gb'?'the-range':p.retailerId||retailerForScope(p.department||p.kind);
 export const productKey=p=>productRetailer(p)+':'+String(p.canonicalSku||p.sku);
 export const productPrice=p=>Number.isFinite(p.priceGBP)?'£'+p.priceGBP.toFixed(2):'官网未标价 · Price not specified';
 export function productSize(p){
