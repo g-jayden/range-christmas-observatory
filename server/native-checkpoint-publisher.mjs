@@ -8,6 +8,7 @@ export function nativeCheckpointPublisher({token,repository,fetcher=fetch,readFi
   if(!enabled)return async()=>null;
   if(repository!=='g-jayden/range-christmas-observatory'||!token)throw Error('Repository-native checkpoint credential required');
   const uploaded=new Map(),base='https://api.github.com/repos/'+repository;
+  const knownLedgerShas=new Set(),ledgerBase=readFile('web/collection-ledger.json').then(bytes=>createHash('sha1').update(Buffer.concat([Buffer.from('blob '+bytes.length+'\0'),bytes])).digest('hex')).catch(e=>{if(e.code==='ENOENT')return null;throw e;});
   async function api(route,body,method=body?'POST':'GET') {
     let last;
     for(let attempt=0;attempt<3;attempt++) {
@@ -29,8 +30,8 @@ export function nativeCheckpointPublisher({token,repository,fetcher=fetch,readFi
       tree.push({path:file,mode:'100644',type:'blob',sha});
     }
     for(let attempt=0;attempt<4;attempt++) {
-      const ref=await api('/git/ref/heads/main'),parent=await api('/git/commits/'+ref.object.sha),t=await api('/git/trees',{base_tree:parent.tree.sha,tree}),commit=await api('/git/commits',{message:'Checkpoint exact native originals and bounded credit receipt [skip ci]',tree:t.sha,parents:[ref.object.sha]});
-      try {await api('/git/refs/heads/main',{sha:commit.sha,force:false},'PATCH');console.log(JSON.stringify({phase:'Durable exact native checkpoint',files:tree.length,revision:commit.sha,sourceRequests:0,firecrawlCredits:0}));return commit.sha;}
+      const ref=await api('/git/ref/heads/main'),parent=await api('/git/commits/'+ref.object.sha),ledgerEntry=tree.find(e=>e.path==='web/collection-ledger.json');if(ledgerEntry){const remote=await api('/contents/web/collection-ledger.json?ref='+ref.object.sha),initial=await ledgerBase;if(remote.sha!==initial&&!knownLedgerShas.has(remote.sha)&&remote.sha!==ledgerEntry.sha)throw Error('Concurrent credit ledger update: preserve both receipts and reconcile before another paid request');}const t=await api('/git/trees',{base_tree:parent.tree.sha,tree}),commit=await api('/git/commits',{message:'Checkpoint exact native originals and bounded credit receipt [skip ci]',tree:t.sha,parents:[ref.object.sha]});
+      try {await api('/git/refs/heads/main',{sha:commit.sha,force:false},'PATCH');if(ledgerEntry)knownLedgerShas.add(ledgerEntry.sha);console.log(JSON.stringify({phase:'Durable exact native checkpoint',files:tree.length,revision:commit.sha,sourceRequests:0,firecrawlCredits:0}));return commit.sha;}
       catch(e){if(![409,422].includes(e.status)||attempt===3)throw e;}
     }
   };
