@@ -33,7 +33,7 @@ export async function dailyDigestOwnerTest(db,{ownerId,products,requestId,now=Da
 export function validateDigestManifest(plan,m){
  if(m?.version!=='daily-native-pdf-v1'||m.planId!==plan.id||m.day!==plan.day||!/^[a-f0-9]{64}$/.test(m.pdf?.sha256||'')||!Number.isInteger(m.pdf?.bytes)||m.pdf.bytes<1||!Array.isArray(m.items))throw Error('Invalid daily PDF manifest');
  const planned=new Map(plan.products.map(p=>[p.digestProductKey,p])),covered=new Set();
- for(const item of m.items){const p=planned.get(item.key);if(!p||covered.has(item.key)||item.sku!==p.sku||item.sourceUrl!==p.sourceUrl||item.retailerId!==(p.retailerId||'the-range')||!Number.isFinite(item.priceGBP)||item.priceGBP<0||typeof item.size!=='string'||!item.size||!/^https:\/\//.test(item.imageSourceUrl||'')||!/^[a-f0-9]{64}$/.test(item.imageSha256||''))throw Error('Daily PDF product identity or native image evidence mismatch');covered.add(item.key);}
+ for(const item of m.items){const p=planned.get(item.key);if(!p||covered.has(item.key)||item.sku!==p.sku||item.sourceUrl!==p.sourceUrl||item.retailerId!==(p.retailerId==='the-range-gb'?'the-range':p.retailerId||'the-range')||!Number.isFinite(item.priceGBP)||item.priceGBP<0||typeof item.size!=='string'||!item.size||!/^https:\/\//.test(item.imageSourceUrl||'')||!/^[a-f0-9]{64}$/.test(item.imageSha256||''))throw Error('Daily PDF product identity or native image evidence mismatch');covered.add(item.key);}
  if(covered.size!==planned.size)throw Error('Daily PDF must cover every planned NEW product');
  return true;
 }

@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import sharp from 'sharp';
+import {digestNativeOriginal} from '../server/digest-native-original.mjs';
+import {createHash} from 'node:crypto';
+const bytes=await sharp({create:{width:120,height:180,channels:3,background:'#123456'}}).jpeg().toBuffer(),url='https://www.therange.co.uk/media/1/2/fixture.jpg',sha=createHash('sha256').update(bytes).digest('hex'),p={sku:'123456',originalImageUrl:url,originalImages:[{url,selectedSku:'123456'}],originalImageEvidence:{sourceUrl:url,width:120,height:180}};
+let requests=0;const fetcher=async()=>{requests++;return new Response(bytes)};
+const got=await digestNativeOriginal(p,{fetcher});assert.equal(got.sha256,sha);assert.deepEqual(got.bytes,bytes);assert.equal(requests,1);
+await assert.rejects(digestNativeOriginal({...p,originalImages:[{url,selectedSku:'another'}]},{fetcher}),/mapping/);assert.equal(requests,1);
+await assert.rejects(digestNativeOriginal({...p,originalImageEvidence:{sourceUrl:url,width:1200,height:1800}},{fetcher}),/declared/);
+const saved=await digestNativeOriginal({...p,originalCachedImageUrl:'images/source/'+sha+'.jpg',originalImageEvidence:{...p.originalImageEvidence,sha256:sha}},{readFile:async()=>bytes,fetcher});assert.deepEqual(saved.bytes,bytes);assert.equal(requests,2,'A verified local original never makes another source request');
+await assert.rejects(digestNativeOriginal({...p,originalCachedImageUrl:'images/source/'+sha+'.jpg',originalImageEvidence:{...p.originalImageEvidence,sha256:sha}},{readFile:async()=>Buffer.from('wrong'),fetcher}),/digest/);
+console.log('Daily PDF native originals use one exact-SKU source response, preserve its bytes and reject reduced or mismatched source images.');
