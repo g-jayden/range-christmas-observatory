@@ -4,16 +4,22 @@ import {nativeSourceUrl,productRetailer} from '../web/product-facts.mjs';
 import {createPaidNativeOriginals,exactPaidNativeTarget} from '../server/paid-native-originals.mjs';
 import {rebuildStoredRangeViews} from '../server/rebuild-range-views.mjs';
 import {applyRangeNativeIndex} from '../server/range-native-index.mjs';
+import {mergeReportProduct} from '../server/report-product-evidence.mjs';
+import {publishBqCommittedEvidence} from '../server/bq-committed-evidence.mjs';
+import {applySavedRetailerReview} from '../server/saved-retailer-reviews.mjs';
 const tracked=new Set(execFileSync('git',['ls-files','web/images'],{encoding:'utf8',maxBuffer:33554432}).trim().split('\n')),read=p=>fs.readFile('web/'+p,'utf8').then(JSON.parse),products=[],byKey=new Map();
 const range=await rebuildStoredRangeViews({persist:false,includeProducts:true,verifyImageFiles:false});if(!range.rebuilt)throw Error('Canonical Range source required');
 for(const name of ['range-native-index.json','new-original-recovery.json'])applyRangeNativeIndex(range.products,await read(name).catch(()=>({entries:{}})));products.push(...range.products.filter(p=>p.taxonomyAudit?.disposition==='include'));
 for(const retailer of ['asda','ms','bm','hb','du','nx','jl','mt','bq','ar']){
- const d=await read(retailer+'/catalogue.json');let rows=d.products||[];
- if(d.departmentShards)rows=(await Promise.all([...new Set(Object.values(d.departmentShards))].map(p=>read(p)))).flatMap(s=>s.products||[]);
+ let root='web';if(retailer==='bq'){root='runtime/native-recovery-evidence';await publishBqCommittedEvidence({outputRoot:root});}
+ const json=p=>fs.readFile(root+'/'+p,'utf8').then(JSON.parse),detailCache=new Map(),d=await json(retailer+'/catalogue.json');let rows=d.products||[];
+ if(d.departmentShards)rows=(await Promise.all([...new Set(Object.values(d.departmentShards))].map(p=>json(p)))).flatMap(s=>s.products||[]);
+ const reviews=['asda','du'].includes(retailer)?await json(retailer+'/reviews.json'):null;
+ rows=await Promise.all(rows.map(async p=>{if(p.detailsUrl){if(!detailCache.has(p.detailsUrl))detailCache.set(p.detailsUrl,json(p.detailsUrl));p=mergeReportProduct(p,(await detailCache.get(p.detailsUrl))[p.sku]);}if(reviews)applySavedRetailerReview(p,reviews[p.sku],retailer);return p;}));
  products.push(...rows.filter(p=>p.sourceListed!==false&&p.taxonomyAudit?.disposition!=='exclude'));
 }
 for(const p of products)byKey.set(productRetailer(p)+':'+p.sku,p);
-const recovery=await createPaidNativeOriginals(),issues=[],checked=new Set;let reused=0,recovered=0;
+ const recovery=await createPaidNativeOriginals(),issues=[],checked=new Set;let reused=0,recovered=0;
 try{for(const p of byKey.values()){
  const source=nativeSourceUrl(p),proof=p.originalImageEvidence;
  if(!source||checked.has(source))continue;checked.add(source);

@@ -12,16 +12,17 @@ export function nativePaidPolicy(grant){if(grant?.enabled!==true||grant.scope!==
 export function exactPaidNativeTarget(p){assertProductPhoto(p);const retailer=productRetailer(p),source=nativeSourceUrl(p),page=new URL(p.sourceUrl);if(page.protocol!=='https:'||page.hostname!==STORES[retailer]||page.username||page.password||page.port||!allowedPublicImage(source)||new URL(source).hostname==='raw.githubusercontent.com')throw Error('Exact official public image target required');if(!p.originalImages?.some(g=>g.url===source&&exactNativeGalleryMember(p,g)))throw Error('Paid original must belong to this exact SKU gallery');return {retailer,source,page:page.href};}
 // One lazily opened, shared ordinary browser session. Never invoked by a public
 // website endpoint; only the repository's owner-authenticated collectors use it.
-export async function createPaidNativeOriginals({key=process.env.FIRECRAWL_API_KEY,fetcher=fetch,freeRead=digestNativeOriginal,connect,root='web',grant,index}={}){
+export async function createPaidNativeOriginals({key=process.env.FIRECRAWL_API_KEY,fetcher=fetch,freeRead=digestNativeOriginal,connect,root='web',grant,index,now=Date.now}={}){
  grant=nativePaidPolicy(grant||JSON.parse(await fs.readFile(root+'/image-collection-authorization.json','utf8')));
  index??=await fs.readFile(root+'/paid-native-index.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return {version:1,entries:{}};throw e;});
- const file=root+'/paid-native-index.json',tasks=new Map(),started=Date.now(),ttl=600;let session,browser,context,opening,closed=false,receipt;
+ const file=root+'/paid-native-index.json',tasks=new Map(),ttl=600,receipts=[];let session,browser,context,opening,closed=false,sessionAt=0,lastUseAt=0,sessionsStarted=0;
  const save=()=>atomicJson(file,index);
  async function api(path,method,body){const r=await fetcher('https://api.firecrawl.dev/v2/'+path,{method,headers:{authorization:'Bearer '+key,...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(45000)}),b=await r.json();if(!r.ok||b.success===false)throw Error('Native-image provider HTTP '+r.status);return b;}
- async function start(){if(closed)throw Error('Native recovery session closed');return opening??=(async()=>{
+ async function start(){if(closed)throw Error('Native recovery session closed');if(session&&(now()-sessionAt>540000||now()-lastUseAt>70000)){await finishSession();opening=null;}return opening??=(async()=>{
   if(!key)throw Error('Approved native-image fallback credential not configured');
   const balance=await api('team/credit-usage','GET'),left=balance.data?.remainingCredits??balance.remainingCredits;if(!Number.isFinite(left)||left-grant.accountReserveCredits<ttl/30)throw Error('Native-image account reserve reached');
   session=await api('interact','POST',{ttl,activityTtl:90,streamWebView:false,blockAds:false,location:{country:'GB'}});if(!session.id||!session.cdpUrl)throw Error('Native browser session not confirmed');
+  sessionsStarted++;sessionAt=lastUseAt=now();
   browser=await(connect||((url)=>import('playwright').then(p=>p.chromium.connectOverCDP(url))))(session.cdpUrl);context=browser.contexts()[0]||await browser.newContext();
  })();}
  async function existing(source,p){const e=index.entries[source];if(p.originalImageEvidence?.sourceUrl===source&&p.originalImageEvidence?.sha256&&p.originalImageEvidence.sha256!==e?.hash)return null;if(!e?.ok||!e.bindings?.includes(productRetailer(p)+':'+p.sku))return null;try{const bytes=await fs.readFile(root+'/'+e.cachedImageUrl);if(createHash('sha256').update(bytes).digest('hex')===e.hash)return {bytes,source,sha256:e.hash};}catch{}try{const r=await fetcher('https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/'+e.cachedImageUrl,{signal:AbortSignal.timeout(30000)});if(r.ok){const bytes=Buffer.from(await r.arrayBuffer());if(createHash('sha256').update(bytes).digest('hex')===e.hash)return {bytes,source,sha256:e.hash};}}catch{}return null;}
@@ -30,7 +31,7 @@ export async function createPaidNativeOriginals({key=process.env.FIRECRAWL_API_K
    // Unresolved source identity/price/image contradictions need evidence repair,
    // never an arbitrary replacement photo or a charge for a different product.
    const target=exactPaidNativeTarget(p);const taskKey=target.retailer+':'+p.sku+'|'+source;if(tasks.has(taskKey))return tasks.get(taskKey);
-   const task=(async()=>{await start();if(Date.now()-started>540000)throw Error('Native recovery checkpoint required before session expiry');
+   const task=(async()=>{await start();lastUseAt=now();
     let bytes;
     try{const response=await context.request.get(source,{timeout:25000,failOnStatusCode:false});if(response.status()===200&&allowedPublicImage(response.url?.()||source))bytes=await response.body();}catch{}
     if(!bytes){const page=await context.newPage(),captures=[];const response=r=>{if(r.url()===source&&r.status()===200)captures.push(r.body());};page.on('response',response);try{await page.goto(target.page,{waitUntil:'networkidle',timeout:35000});}catch{}finally{const bodies=await Promise.allSettled(captures);bytes=bodies.find(b=>b.status==='fulfilled')?.value;await page.close();}}
@@ -41,6 +42,7 @@ export async function createPaidNativeOriginals({key=process.env.FIRECRAWL_API_K
    })();tasks.set(taskKey,task);return task;
   }
  }
- async function close(){if(closed)return;closed=true;if(!session)return;try{receipt=await api('interact/'+encodeURIComponent(session.id),'DELETE');}catch{receipt=undefined;}finally{await browser?.close().catch(()=>{});const credits=Number.isFinite(receipt?.creditsBilled)?receipt.creditsBilled:ttl/30;const record={id:'native-session-'+session.id,credits,billingVerified:Number.isFinite(receipt?.creditsBilled),authorizationId:grant.id,sessionDurationMs:receipt?.sessionDurationMs,completedAt:new Date().toISOString()};const ledger=await readLedger(),p=ledger.periods[periodKey()]||={used:0,reservations:{},runs:[]};p.runs||=[];if(!p.runs.some(r=>r.receipt?.id===record.id)){p.used+=credits;p.runs.push({key:'native-'+runKey(),credits,receipt:record,completedAt:record.completedAt});}ledger.nativeImageFallback={...record,monthlyLimit:null,sourceCatalogueRequests:0};await atomicJson('web/collection-ledger.json',ledger);index.lastReceipt=record;await save();}}
- return {read,close,index,metrics:()=>({paidSessionStarted:Boolean(session),credits:receipt?.creditsBilled??(session?null:0)})};
+ async function finishSession(){if(!session)return;const current=session;let receipt;try{receipt=await api('interact/'+encodeURIComponent(current.id),'DELETE');}catch{receipt=undefined;}finally{await browser?.close().catch(()=>{});session=null;browser=context=null;const credits=Number.isFinite(receipt?.creditsBilled)?receipt.creditsBilled:ttl/30;const record={id:'native-session-'+current.id,credits,billingVerified:Number.isFinite(receipt?.creditsBilled),authorizationId:grant.id,sessionDurationMs:receipt?.sessionDurationMs,completedAt:new Date().toISOString()};const ledger=await readLedger(),p=ledger.periods[periodKey()]||={used:0,reservations:{},runs:[]};p.runs||=[];if(!p.runs.some(r=>r.receipt?.id===record.id)){p.used+=credits;p.runs.push({key:'native-'+runKey(),credits,receipt:record,completedAt:record.completedAt});}ledger.nativeImageFallback={...record,monthlyLimit:null,sourceCatalogueRequests:0};await atomicJson('web/collection-ledger.json',ledger);index.lastReceipt=record;receipts.push(record);await save();}}
+ async function close(){if(closed)return;closed=true;await finishSession();}
+ return {read,close,index,metrics:()=>({paidSessionStarted:sessionsStarted>0,sessionsStarted,credits:session||receipts.some(r=>!r.billingVerified)?null:receipts.reduce((n,r)=>n+r.credits,0)})};
 }
