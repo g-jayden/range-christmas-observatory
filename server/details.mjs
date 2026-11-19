@@ -36,7 +36,7 @@ export function parseVariantDetails(response,expectedSku,sourceUrl,observedAt=ne
  const image=rawImage?new URL(decode(rawImage),f.url).href:null;
  const images=f.gallery.filter(g=>!g.variants.length||g.variants.includes(String(v.id))).map(g=>g.url);
  const originals=(f.originalGallery||[]).filter(g=>g.variants.includes(String(v.id))||g.thumbnail===image);
- const originalImages=originals.map(g=>({url:new URL(decode(g.url),f.url).href,thumbnail:g.thumbnail?new URL(decode(g.thumbnail),f.url).href:null,variantId:String(v.id),source:f.url}));
+ const originalImages=originals.map(g=>({url:new URL(decode(g.url),f.url).href,thumbnail:g.thumbnail?new URL(decode(g.thumbnail),f.url).href:null,variantId:String(v.id),source:f.url})).filter(g=>validProductImage(g.url));
  if(!originalImages.length&&f.structuredOriginalImages?.length===1&&response.data.familyEvidence?.offers?.length===1)originalImages.push({url:new URL(f.structuredOriginalImages[0],f.url).href,variantId:String(v.id),source:f.url,method:'single-SKU-structured-image'});
 
  return {sku:String(expectedSku),sourceUrl,observedAt,specs,text,featuresText,image,images,originalImages,verificationMethod:f.htmlAvailable===false?'official-exact-SKU-variant-json':'official-variant-json-and-product-page',sourceTransport:f.sourceTransport,breadcrumbs:f.breadcrumbs||[],jsonSource:f.jsonUrl,htmlAvailable:f.htmlAvailable,contentHash:createHash('sha256').update(text).digest('hex')};

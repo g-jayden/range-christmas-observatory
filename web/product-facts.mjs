@@ -14,12 +14,18 @@ export function productSize(p){
  return p.heightLabel||p.specifications?.Dimensions||p.specifications?.Size||(p.skirtDiameterCm?p.skirtDiameterCm+'cm':'官网未注明尺寸 · Size not specified');
 }
 export const reportRetailer=p=>retailerName(productRetailer(p));
+const usableNativeUrl=raw=>{try{const u=new URL(raw);return u.protocol==='https:'&&(u.hostname!=='www.therange.co.uk'||!u.pathname.startsWith('/media/')||/\.(?:jpe?g|png|webp|gif|avif)$/i.test(u.pathname));}catch{return false;}};
 export function nativeSourceUrl(p,item){
- if(item?.url)return item.url;
- if(p.displayImage?.sourceUrl)return p.displayImage.sourceUrl;
- const selected=p.previewImage?.sourceUrl,pair=p.originalImages?.find(g=>(g.url===selected||g.thumbnail===selected)&&(!g.selectedSku||String(g.selectedSku)===String(p.sku))&&(!p.variantId||!g.variantId||String(g.variantId)===String(p.variantId)));
- return pair?.url||p.originalImageUrl||selected;
+ if(item?.url)return usableNativeUrl(item.url)?item.url:null;
+ if(p.displayImage?.sourceUrl&&usableNativeUrl(p.displayImage.sourceUrl))return p.displayImage.sourceUrl;
+ const known=g=>(g.selectedSku!=null?String(g.selectedSku)===String(p.sku):p.variantId!=null&&String(g.variantId)===String(p.variantId)&&p.detailEvidence?.verifiedProductSection&&String(p.detailEvidence.selectedSku)===String(p.sku))&&usableNativeUrl(g.url);
+ const selected=p.previewImage?.sourceUrl,pair=p.originalImages?.find(g=>(g.url===selected||g.thumbnail===selected)&&known(g));
+ if(pair)return pair.url;
+ if(usableNativeUrl(p.originalImageUrl))return p.originalImageUrl;
+ const current=p.variantImageUrl||p.imageCacheEvidence?.sourceUrl,matching=p.originalImages?.find(g=>(g.url===current||g.thumbnail===current)&&known(g));
+ const fallback=matching||p.originalImages?.find(known);return fallback?.url||(usableNativeUrl(selected)?selected:null);
 }
+
 export function nativeImageCandidates(p,item){
  const source=nativeSourceUrl(p,item);
  const candidates=[];const gallery=p.originalImages?.find(g=>g.url===source&&(!g.selectedSku||String(g.selectedSku)===String(p.sku)));if(gallery?.nativeCachePath)candidates.push(gallery.nativeCachePath);
