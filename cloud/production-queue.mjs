@@ -3,7 +3,7 @@
 // a collection or its publication is still running or waiting.
 const INDEPENDENT=new Set(['.github/workflows/jl.yml','.github/workflows/ar.yml','.github/workflows/ar-images.yml','.github/workflows/mt.yml','.github/workflows/bq.yml']);
 const REPO='https://api.github.com/repos/g-jayden/range-christmas-observatory';
-const WORKFLOWS=new Set(['jl.yml','ar.yml','ar-images.yml','daily-pages.yml','asda.yml','ms.yml','bm.yml','hb.yml','du.yml','nx.yml','mt.yml','bq.yml','decorations-bootstrap.yml','probe-native-images.yml','apply-free-update.yml'].map(p=>'.github/workflows/'+p));
+const WORKFLOWS=new Set(['jl.yml','ar.yml','ar-images.yml','daily-pages.yml','range-native.yml','asda.yml','ms.yml','bm.yml','hb.yml','du.yml','nx.yml','mt.yml','bq.yml','decorations-bootstrap.yml','probe-native-images.yml','apply-free-update.yml'].map(p=>'.github/workflows/'+p));
 export async function productionQueueState({env,fetcher=fetch}){
  const base={sourceRequestsMade:false,firecrawlCredits:0,mailSent:false};if(!env.GITHUB_DISPATCH_TOKEN)return {...base,clear:false,reason:'repository-dispatch-credential-required'};
  try{const groups=await Promise.all(['in_progress','queued','pending','waiting','requested'].map(async status=>{
