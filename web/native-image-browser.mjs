@@ -1,7 +1,8 @@
+import{downloadNativeImage}from'./image-download.mjs';
 import {nativeImageCandidates,productPrice,productSize} from './product-facts.mjs';
 const cache=new Map();
 let service;
-async function download(url){const read=async target=>{const r=await fetch(target,{credentials:'omit',signal:AbortSignal.timeout(30000)});if(!r.ok)throw Error('Image HTTP '+r.status);const blob=await r.blob();if(!blob.type.startsWith('image/'))throw Error('Source did not return an image');return blob;};try{return await read(url);}catch(e){if(!/^https:\/\//.test(url))throw e;service??=fetch('service.json').then(r=>r.json());const api=(await service).apiBase;if(!api)throw e;return read(api.replace(/\/$/,'')+'/public/image?url='+encodeURIComponent(url));}}
+async function download(url){return downloadNativeImage(url,{proxyForUrl:async source=>{service??=fetch('service.json').then(r=>{if(!r.ok)throw Error('Image service configuration unavailable');return r.json();});const api=(await service).apiBase;if(!api)throw Error('Image proxy unavailable');return api.replace(/\/$/,'')+'/public/image?url='+encodeURIComponent(source);}});}
 export async function nativeImage(p,item){
  const candidates=nativeImageCandidates(p,item);if(!candidates.length)throw Error('官网原图尚未提供 · Native source image unavailable');
  const key=candidates.join('\n');if(cache.has(key))return cache.get(key);
