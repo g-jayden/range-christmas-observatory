@@ -27,6 +27,12 @@ jobs:
         with:
           node-version: '24'
       - run: npm ci --no-audit --no-fund
+      - name: Reuse source-hash-bound display encodings
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: runtime/card-preview-encodings
+          key: card-preview-encodings-v2-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: card-preview-encodings-v2-
       - name: Reuse reviewed B&Q source-image pixels without collection
         uses: actions/cache/restore@v6.1.0
         with:
@@ -42,6 +48,11 @@ jobs:
         env:
           BROWSE_FETCH_VERIFIED_PREVIEWS: 'true'
         run: node scripts/build-static.mjs
+      - name: Keep source-hash-bound display encodings
+        uses: actions/cache/save@v6.1.0
+        with:
+          path: runtime/card-preview-encodings
+          key: card-preview-encodings-v2-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Keep exact reviewed B&Q preview pixels for future source-free builds
         uses: actions/cache/save@v6.1.0
         with:

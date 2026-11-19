@@ -1,8 +1,8 @@
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';import sharp from 'sharp';
 import {nativeSourceUrl,nativeImageCandidates} from '../web/product-facts.mjs';
 const OWN='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/';
-export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot='runtime/bq-source/preview-files',fetchVerified=process.env.BROWSE_FETCH_VERIFIED_PREVIEWS==='true',fetcher=globalThis.fetch}={}){
- const work=new Map(),nativeFiles=new Map(),downloads=new Map();let imageRequests=0,imageFailures=0,remoteDenied=false;let generated=0,bytes=0,active=0,invalidImages=0,nativeBytes=0;const queue=[];
+export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot='runtime/bq-source/preview-files',fetchVerified=process.env.BROWSE_FETCH_VERIFIED_PREVIEWS==='true',fetcher=globalThis.fetch,encodingCacheRoot='runtime/card-preview-encodings'}={}){
+ const work=new Map(),nativeFiles=new Map(),downloads=new Map();let imageRequests=0,imageFailures=0,remoteDenied=false;let generated=0,reused=0,bytes=0,active=0,invalidImages=0,nativeBytes=0;const nativeRetailerBytes=new Map();const queue=[];
  const limit=fn=>new Promise((resolve,reject)=>{queue.push({fn,resolve,reject});drain();});
  function drain(){while(active<4&&queue.length){const job=queue.shift();active++;Promise.resolve().then(job.fn).then(job.resolve,job.reject).finally(()=>{active--;drain();});}}
  const local=value=>{if(typeof value!=='string')return null;const relative=value.startsWith(OWN)?value.slice(OWN.length):value;return /^images\/[\w./-]+\.(?:jpe?g|png|webp|avif)$/i.test(relative)&&!relative.split('/').includes('..')?relative:null;};
@@ -25,9 +25,11 @@ export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot
   for(const candidate of [...new Map(candidates.map(c=>[c.file,c])).values()]){const {file,bound}=candidate,buffer=await readInput(candidate);if(!buffer)continue;
    const digest=createHash('sha256').update(buffer).digest('hex');
    if(/^[a-f0-9]{64}$/.test(bound||'')&&bound!==digest)continue;
-   const key=digest+'/whole-480-webp-q80';if(!work.has(key))work.set(key,limit(async()=>{
-    let meta,output;try{const image=sharp(buffer);meta=await image.metadata();if(!meta.width||!meta.height)throw Error('Cached preview has no image pixels');output=await image.rotate().resize({width:480,height:480,fit:'inside',withoutEnlargement:true}).webp({quality:80}).toBuffer();}catch{invalidImages++;return null;}
-    const hash=createHash('sha256').update(output).digest('hex'),url='card-previews/'+hash+'.webp';await fs.mkdir(path.join(root,'card-previews'),{recursive:true});await fs.writeFile(path.join(root,url),output);generated++;bytes+=output.length;return {url,sourceImageHash:digest,sourceWidth:meta.width,sourceHeight:meta.height,representation:'uncropped-display-preview-native-original-retained'};
+   const key=digest+'/whole-384-webp-q72';if(!work.has(key))work.set(key,limit(async()=>{
+    const cacheBase=path.join(encodingCacheRoot,digest+'-whole384q72');
+    try{const record=JSON.parse(await fs.readFile(cacheBase+'.json','utf8')),encoded=await fs.readFile(cacheBase+'.webp');if(record.sourceImageHash===digest&&/^card-previews\/[a-f0-9]{64}\.webp$/.test(record.url)&&createHash('sha256').update(encoded).digest('hex')===path.basename(record.url,'.webp')){await fs.mkdir(path.join(root,'card-previews'),{recursive:true});await fs.writeFile(path.join(root,record.url),encoded);reused++;bytes+=encoded.length;return record;}}catch{}
+    let meta,output;try{const image=sharp(buffer);meta=await image.metadata();if(!meta.width||!meta.height)throw Error('Cached preview has no image pixels');output=await image.rotate().resize({width:384,height:384,fit:'inside',withoutEnlargement:true}).webp({quality:72}).toBuffer();}catch{invalidImages++;return null;}
+    const hash=createHash('sha256').update(output).digest('hex'),url='card-previews/'+hash+'.webp';await fs.mkdir(path.join(root,'card-previews'),{recursive:true});await fs.writeFile(path.join(root,url),output);generated++;bytes+=output.length;const result={url,sourceImageHash:digest,sourceWidth:meta.width,sourceHeight:meta.height,representation:'uncropped-display-preview-native-original-retained'};await fs.mkdir(encodingCacheRoot,{recursive:true});await fs.writeFile(cacheBase+'.webp',output);await fs.writeFile(cacheBase+'.json',JSON.stringify(result));return result;
    }));
    const preview=await work.get(key);if(preview)return {...p,fastPreview:preview};
   }
@@ -42,10 +44,10 @@ export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot
    if(createHash('sha256').update(buffer).digest('hex')!==hash)continue;
    // Keep first-screen original transfers local without publishing the several
    // gigabytes of historical galleries. The other originals retain their URLs.
-   if(buffer.length>3000000||nativeBytes+buffer.length>150*1024*1024)return p;
-   const url='native-first/'+hash+path.extname(file).toLowerCase();await fs.mkdir(path.join(root,'native-first'),{recursive:true});await fs.writeFile(path.join(root,url),buffer);nativeBytes+=buffer.length;const entry={url,sha256:hash};nativeFiles.set(hash,entry);return {...p,browseNative:{...entry,sourceUrl:source}};
+   const retailer=p.retailerId||'the-range';if(buffer.length>3000000||nativeBytes+buffer.length>96*1024*1024||(nativeRetailerBytes.get(retailer)||0)+buffer.length>8*1024*1024)return p;
+   const url='native-first/'+hash+path.extname(file).toLowerCase();await fs.mkdir(path.join(root,'native-first'),{recursive:true});await fs.writeFile(path.join(root,url),buffer);nativeBytes+=buffer.length;nativeRetailerBytes.set(retailer,(nativeRetailerBytes.get(retailer)||0)+buffer.length);const entry={url,sha256:hash};nativeFiles.set(hash,entry);return {...p,browseNative:{...entry,sourceUrl:source}};
   }
   return p;
  }
- return {build,warmNative,stats:()=>({generated,bytes,invalidImages,firstScreenNativeFiles:nativeFiles.size,firstScreenNativeBytes:nativeBytes,sourceRequests:imageRequests,officialPreviewImageRequests:imageRequests,officialPreviewImageFailures:imageFailures,officialPreviewAccessDenied:remoteDenied,sourceDirectoriesRequested:0,firecrawlCredits:0,originalFilesChanged:0})};
+ return {build,warmNative,stats:()=>({generated,reused,bytes,invalidImages,firstScreenNativeBytesByRetailer:Object.fromEntries(nativeRetailerBytes),firstScreenNativeFiles:nativeFiles.size,firstScreenNativeBytes:nativeBytes,sourceRequests:imageRequests,officialPreviewImageRequests:imageRequests,officialPreviewImageFailures:imageFailures,officialPreviewAccessDenied:remoteDenied,sourceDirectoriesRequested:0,firecrawlCredits:0,originalFilesChanged:0})};
 }
