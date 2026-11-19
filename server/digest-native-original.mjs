@@ -13,20 +13,26 @@ export async function digestNativeOriginal(p,{readFile=fs.readFile,fetcher=fetch
     let bytes;
     try{bytes=await readFile('web/'+p.originalCachedImageUrl);}catch(e){
       if(e.code!=='ENOENT'||!/^images\/(?:source|asda|du|ms|bm|hb|nx|jl|mt|ar)\/[a-f0-9]{64}\.(?:jpg|png|webp|avif|gif)$/.test(p.originalCachedImageUrl)||!p.originalCachedImageUrl.includes(prior.sha256+'.'))throw e;
-      const mirror='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/'+p.originalCachedImageUrl,response=await fetcher(mirror,{signal:AbortSignal.timeout(30000)});
-      if(!response.ok)throw Error('Verified repository native mirror HTTP '+response.status+' for '+p.sku);
-      bytes=Buffer.from(await response.arrayBuffer());if(bytes.length>25000000)throw Error('Native original exceeds individual file guard');
+      const mirror='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/'+p.originalCachedImageUrl;
+      try{const response=await fetcher(mirror,{signal:AbortSignal.timeout(30000)});if(response.ok)bytes=Buffer.from(await response.arrayBuffer());}catch{}
+      // A missing repository mirror is not evidence that the retailer's free
+      // native response is inaccessible. Try that exact gallery URL below.
+      if(bytes?.length>25000000)throw Error('Native original exceeds individual file guard');
     }
-    if(createHash('sha256').update(bytes).digest('hex')!==prior.sha256)throw Error('Native original digest mismatch');
-    if(validExport){const m=await sharp(bytes).metadata();if(m.width!==exported.width||m.height!==exported.height)throw Error('Native export dimensions changed');}
-    return {bytes,source:validExport?exported.exportUrl:source,sha256:prior.sha256};
+    if(bytes){
+      if(createHash('sha256').update(bytes).digest('hex')!==prior.sha256)throw Error('Native original digest mismatch');
+      if(validExport){const m=await sharp(bytes).metadata();if(m.width!==exported.width||m.height!==exported.height)throw Error('Native export dimensions changed');}
+      return {bytes,source:validExport?exported.exportUrl:source,sha256:prior.sha256,nativeMirrorVerified:true};
+    }
   }
   const g=p.originalImages?.find(g=>g.url===source&&exactNativeGalleryMember(p,g));
   if(!g||!allowedPublicImage(source)||p.previewReviewRequired||p.imageIssue)throw Error('Exact reviewed native gallery mapping unavailable for '+p.sku+'; '+(!g?'SKU/variant mapping':p.previewReviewRequired?'whole-product preview review':'source photo evidence'));
-  const response=await fetcher(source,{signal:AbortSignal.timeout(30000)});if(!response.ok)throw Error('Official native original HTTP '+response.status);
+  const downloadSource=validExport&&allowedPublicImage(exported.exportUrl)?exported.exportUrl:source;
+  const response=await fetcher(downloadSource,{signal:AbortSignal.timeout(30000)});if(!response.ok)throw Error('Official native original HTTP '+response.status);
   const bytes=Buffer.from(await response.arrayBuffer());if(bytes.length>25000000)throw Error('Native original exceeds individual file guard');
   const m=await sharp(bytes).metadata();if(!m.width||!m.height||m.width<64||m.height<64)throw Error('Official native response lacks real photo pixels');
   const expected=prior?.sourceUrl===source?prior:null;
-  if(expected?.width&&m.width!==expected.width||expected?.height&&m.height!==expected.height)throw Error('Official native response changed its declared pixel dimensions');
-  return {bytes,source,sha256:createHash('sha256').update(bytes).digest('hex')};
+  if(expected?.width&&m.width!==expected.width||expected?.height&&m.height!==expected.height)throw Object.assign(Error('Official native response changed its declared pixel dimensions'),{code:'NATIVE_SOURCE_VERSION_CHANGED'});
+  const sha256=createHash('sha256').update(bytes).digest('hex');if(expected?.sha256&&expected.sha256!==sha256)throw Object.assign(Error('Official native source pixels changed; exact-SKU recheck required'),{code:'NATIVE_SOURCE_VERSION_CHANGED'});
+  return {bytes,source:downloadSource,sha256,nativeMirrorVerified:false};
 }

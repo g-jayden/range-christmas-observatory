@@ -16,3 +16,10 @@ const missing=Object.assign(new Error('Sparse checkout omits native bytes'),{cod
 for(const retailer of ['asda','du','ms','bm','hb','nx','jl','mt','ar']){const path='images/'+retailer+'/'+sha+'.jpg';const got=await digestNativeOriginal({...p,originalCachedImageUrl:path,originalImageEvidence:{...p.originalImageEvidence,sha256:sha}},{readFile:async()=>{throw missing},fetcher:async url=>{assert.equal(url,'https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/'+path);return new Response(bytes)}});assert.deepEqual(got.bytes,bytes);}
 await assert.rejects(digestNativeOriginal({...p,originalCachedImageUrl:'images/unverified/'+sha+'.jpg',originalImageEvidence:{...p.originalImageEvidence,sha256:sha}},{readFile:async()=>{throw missing},fetcher:async()=>{throw Error('Must never fetch an unknown namespace')}}),/Sparse/);
 console.log('Sparse PDF jobs retrieve exact hash-bound native originals for all approved retailer namespaces without re-fetching retailer pages.');
+
+for(const failure of ['http404','timeout']){
+ const calls=[];const got=await digestNativeOriginal({...p,originalCachedImageUrl:'images/source/'+sha+'.jpg',originalImageEvidence:{...p.originalImageEvidence,sha256:sha}},{readFile:async()=>{throw missing},fetcher:async source=>{calls.push(source);if(source.startsWith('https://raw.githubusercontent.com/')){if(failure==='timeout')throw Error('Repository request timed out');return new Response('',{status:404});}assert.equal(source,url);return new Response(bytes);}});
+ assert.equal(calls.length,2);assert.deepEqual(got.bytes,bytes);assert.equal(got.sha256,sha);assert.equal(got.nativeMirrorVerified,false,'A mirror miss must persist its free official recovery');
+}
+await assert.rejects(digestNativeOriginal({...p,originalImageEvidence:{...p.originalImageEvidence,sha256:'f'.repeat(64)}},{fetcher}),e=>e.code==='NATIVE_SOURCE_VERSION_CHANGED');
+console.log('Missing or timed-out repository mirrors still try the free exact official original; changed source pixels require evidence recheck.');
