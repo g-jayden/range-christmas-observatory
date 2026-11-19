@@ -1,6 +1,9 @@
-import assert from 'node:assert/strict';import fs from 'node:fs/promises';
+import assert from 'node:assert/strict';
 import {parseSource,collectCategory,mergeSnapshot,categories} from '../server/sync.mjs';
-const seed=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));
+// A regression test must not freeze today's merchandising counts or the result
+// of a later independent physical-object audit.
+const row=(sku,name,kind)=>({sku,variantId:sku,variantName:name,kind,price:1999,newIn:false,newStatus:false,everNew:false,inStock:true,sponsored:false,variantImageUrl:'https://www.therange.co.uk/media/fixture-'+sku+'.jpg',productPath:'p/fixture-'+sku,variantPath:'p/fixture-'+sku+'#'+sku,features:{snow:false},style:'标准款',firstObservedAt:'2026-10-29T10:00:00Z',arrivalEvidence:'initial-baseline'});
+const seed={observedAt:'2026-10-29T10:00:00Z',products:[row('100001','Artificial Christmas Tree','tree'),row('100002','Pre-Lit Artificial Christmas Tree','tree'),row('100003','Christmas Tree Skirt','skirt')],sources:Object.fromEntries(Object.keys(categories).map(id=>[id,{records:id==='artificial-trees'?['100001','100002']:id==='prelit-christmas-trees'?['100002']:id==='christmas-tree-skirt'?['100003']:[]}]))};
 assert.throws(()=>parseSource({success:true,data:{rawHtml:'<html>blocked</html>',metadata:{statusCode:403}}}));
 const p=seed.products[0];const fake={success:true,data:{rawHtml:JSON.stringify({products:[p],totalResults:1}),metadata:{statusCode:200}}};assert.equal(parseSource(fake).products.length,1);
 await assert.rejects(()=>collectCategory('test',async()=>({products:[p,p],totalResults:2})),/reconcile/);
