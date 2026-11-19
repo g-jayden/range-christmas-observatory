@@ -14,7 +14,7 @@ export async function dispatchDue({storage,env,config,monitor,fullLease,monitorL
  if(initialized&&env.BREVO_API_KEY&&env.MAIL_FROM&&now>=Date.parse(monitor.nextRunAt)&&!(monitorLease?.expires>now))due.push('new:'+monitor.nextRunAt);
  if(initialized&&env.BREVO_API_KEY&&env.MAIL_FROM&&sourceRetryDue(monitor,now)&&!(monitorLease?.expires>now))due.push('source-retry:'+monitor.sourceRetryAt);
  if(initialized&&env.BREVO_API_KEY&&env.MAIL_FROM&&evidenceRetryDue(monitor,now)&&!(monitorLease?.expires>now))due.push('evidence-retry:'+monitor.evidenceRetryAt);
- if(hasReadyDeliveries(monitor)&&!(fullLease?.expires>now)&&!(monitorLease?.expires>now))due.push('delivery:'+(monitor.checkedAt||monitor.lastSuccess||'recovery'));
+ if(env.DAILY_PDF_DIGEST!=='true'&&hasReadyDeliveries(monitor)&&!(fullLease?.expires>now)&&!(monitorLease?.expires>now))due.push('delivery:'+(monitor.checkedAt||monitor.lastSuccess||'recovery'));
  if(!due.length)return {...base,enabled:true,due:false};
  const key=due.join('|');let claim;
  await storage.transaction(async db=>{

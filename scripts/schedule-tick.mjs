@@ -14,7 +14,7 @@ const previousStatus=await fs.readFile('web/status.json','utf8').then(JSON.parse
 let blocked=event==='schedule'&&sourceCircuitOpen(previousStatus.sourceHealth,process.env.COLLECTION_PROVIDER||'firecrawl-browser');
 if(!config.nextRunAt)config=firstRun(config);
 let daily=await readDailyMonitor();await saveDailyMonitor(daily);
-const cloudState=apiBase&&(!blocked||process.env.CONTROL_TOKEN)?await control('/public/status'):null,pendingDelivery=hasReadyDeliveries(cloudState?.monitor);
+const cloudState=apiBase&&(!blocked||process.env.CONTROL_TOKEN)?await control('/public/status'):null,pendingDelivery=cloudState?.dailyPdfDigest?false:hasReadyDeliveries(cloudState?.monitor);
 if(sourceRetryDue(cloudState?.monitor)||evidenceRetryDue(cloudState?.monitor)||dailyDue(daily))blocked=false;
 if(event!=='push'&&!['probe','catalogue-probe','repair','monitor-probe','lights-init','themes-init','previews','asda','publish'].includes(mode)&&!blocked){
  if(apiBase){

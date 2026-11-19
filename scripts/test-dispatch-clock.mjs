@@ -27,3 +27,5 @@ try{
  assert(workflow.indexOf('- name: Install collection and local image analysis clients')<workflow.indexOf('- name: Verify source integrity, SKU matching and credit limits'),'Native format tests must run after their image decoder dependency is installed');
  console.log('PASS: actual sparse-checkout scheduler imports and dependency order; publication still opens no paid source session.');
 }finally{await fs.rm(sparseFixture,{recursive:true,force:true});}
+
+assert.equal((await run(at,{storage:new Store,env:{...env,DAILY_PDF_DIGEST:'true'},monitor:recoveryMonitor})).due,false,'A pending consolidated PDF must not dispatch the legacy source/publication workflow');
