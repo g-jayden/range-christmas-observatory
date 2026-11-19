@@ -16,10 +16,10 @@ on:
       - B&M Christmas exact SKU collection
       - Home Bargains Christmas exact SKU collection
       - Dunelm Christmas exact SKU collection
-      - Next Christmas exact source and daily arrivals
-      - John Lewis Christmas exact SKU collection
+      - Next daily exact SKU collection with paid fallback
+      - John Lewis Christmas daily exact SKU collection
       - Matalan free exact SKU collection and native photos
-      - B&Q free exact SKU source and original photos
+      - B&Q free exact SKU collection and native photos
       - Argos free native gallery review
     types: [completed]
 permissions:

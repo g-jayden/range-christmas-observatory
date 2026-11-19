@@ -30,6 +30,7 @@ jobs:
             /server/
             /cloud/public-image.mjs
             /web/*.mjs
+            /web/argos-acquisition-status.json
             /web/ar/
             /web/images/ar/
             /package.json
@@ -48,6 +49,8 @@ jobs:
           restore-keys: ar-native-images-
       - name: Verify every saved exact product gallery through free native media
         run: node scripts/enrich-ar.mjs
+      - name: Release all seven departments only after complete source and original-image acceptance
+        run: node scripts/activate-ar.mjs
       - uses: actions/upload-artifact@v7.0.2
         if: always()
         with:
@@ -64,7 +67,7 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add web/ar web/images/ar
+          git add web/ar web/images/ar web/retailer-activation.mjs web/argos-acquisition-status.json
           git diff --cached --quiet || git commit -m "Preserve Argos free native gallery and local review evidence [skip ci]"
           node scripts/push-evidence.mjs
       - name: Synchronize the accepted Argos NEW baseline without per-product mail

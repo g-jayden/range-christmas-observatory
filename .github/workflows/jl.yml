@@ -1,0 +1,77 @@
+name: John Lewis Christmas daily exact SKU collection
+on:
+  schedule:
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+    inputs:
+      rebuildOnly:
+        type: boolean
+        default: false
+        description: Reuse an already complete saved source without browsing
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: range-jl-source
+  cancel-in-progress: false
+  queue: max
+jobs:
+  john-lewis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    env:
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Install the already accepted official Firefox collection runtime
+        run: |
+          npm install --prefix runtime/jl-probe --no-audit --no-fund --ignore-scripts playwright@1.64.1
+          node runtime/jl-probe/node_modules/playwright/cli.js install --with-deps firefox
+      - uses: actions/cache@v6.1.0
+        with:
+          path: |
+            runtime/models
+            runtime/fonts
+          key: local-clip-vit-base-patch32-q8-v1
+      - name: Read the seven actual official directories and exact variants
+        env:
+          JL_REBUILD_ONLY: ${{ inputs.rebuildOnly == true && 'true' || 'false' }}
+        run: node scripts/update-jl.mjs
+      - name: Reuse unchanged native images and saved visual reviews
+        run: node scripts/enrich-jl.mjs
+      - name: Preserve only first-observed genuine NEW after baseline
+        run: node scripts/prepare-jl-notifications.mjs
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: jl-current-source-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            web/jl/
+            runtime/jl-family/source.json
+          retention-days: 3
+      - name: Save actual evidence independently of publication and email
+        if: always()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add web/jl web/images/jl
+          git diff --cached --quiet || git commit -m "Save current John Lewis exact source and original photos [skip ci]"
+          node scripts/push-evidence.mjs
+      - name: Queue verified products for the consolidated PDF
+        if: success()
+        run: node scripts/deliver-jl-notifications.mjs
+      - name: Publish the saved catalogue without recollection
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/request-retailer-site-publish.mjs jl

@@ -3,9 +3,9 @@ const dayAt=now=>new Date(now+28800000).toISOString().slice(0,10);
 const digest=async value=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))].map(v=>v.toString(16).padStart(2,'0')).join('');
 const eligible=(sub,p)=>!p.unavailableSince&&(!p.taxonomyAudit||p.taxonomyAudit.disposition==='include')&&sub.scopes.some(s=>!independentRetailer(p)&&s===p.kind||(p.departmentIds||[p.department]).includes(s))&&Date.parse(sub.confirmedAt)<=Date.parse(p.firstDetectedAt||p.detectedAt||p.firstNewObservedAt);
 export async function digestSourceBarrier(db,scopes,now=Date.now()){
- const day=dayAt(now),start=Date.parse(day+'T00:00:00+08:00'),waiting=[];
+ const day=dayAt(now),start=Date.parse(day+'T07:00:00+08:00'),waiting=[];
  for(const id of new Set(scopes.map(retailerForScope))){const m=await db.get(id==='the-range'?'monitor':id+'-monitor'),at=id==='the-range'?m?.lastDiscoverySuccess:m?.observedAt;
-  if(!Number.isFinite(Date.parse(at))||Date.parse(at)<start||Date.parse(at)>now||id!=='the-range'&&m?.automaticArrivalChecks!==true)waiting.push({retailerId:id,lastVerifiedSourceAt:at||null});
+  if(!Number.isFinite(Date.parse(at))||Date.parse(at)<start||Date.parse(at)>now)waiting.push({retailerId:id,lastVerifiedSourceAt:at||null});
  }
  return {ready:!waiting.length,day,waiting};
 }
