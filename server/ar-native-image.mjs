@@ -12,15 +12,16 @@ export async function ensureArNativeImage(p,{fetcher=fetch,sharp,root='web'}={})
  if(prior?.sourceUrl===source&&prior.sourcePreviewHash===p.previewImage.sha256&&p.originalCachedImageUrl){
   try{const bytes=await fs.readFile(root+'/'+p.originalCachedImageUrl);if(createHash('sha256').update(bytes).digest('hex')===prior.sha256)return prior;}catch{}
  }
- const r=await fetcher(source,{signal:AbortSignal.timeout(30000)});
+ let responseUrl=source;let r=await fetcher(source,{signal:AbortSignal.timeout(30000)});
  if(!r.ok)throw Object.assign(Error('Argos native original HTTP '+r.status),{status:r.status});
- const bytes=Buffer.from(await r.arrayBuffer());if(bytes.length>25000000)throw Error('Argos native original exceeds file guard');
- const meta=await sharp(bytes).metadata();
+ let bytes=Buffer.from(await r.arrayBuffer());if(bytes.length>25000000)throw Error('Argos native original exceeds file guard');
+ let meta=await sharp(bytes).metadata();
+ if(meta.width!==p.previewImage.sourceWidth||meta.height!==p.previewImage.sourceHeight){const u=new URL(source);u.searchParams.set('maxW',String(p.previewImage.sourceWidth));u.searchParams.set('maxH',String(p.previewImage.sourceHeight));u.searchParams.set('upscale','false');responseUrl=u.href;r=await fetcher(responseUrl,{signal:AbortSignal.timeout(30000)});if(!r.ok)throw Error('Argos full native-pixel source export HTTP '+r.status);bytes=Buffer.from(await r.arrayBuffer());if(bytes.length>25000000)throw Error('Argos native original exceeds file guard');meta=await sharp(bytes).metadata();}
  if(meta.width!==p.previewImage.sourceWidth||meta.height!==p.previewImage.sourceHeight)throw Error('Argos original does not match official native pixel dimensions');
  const extension={jpeg:'jpg',png:'png',webp:'webp',avif:'avif'}[meta.format];if(!extension)throw Error('Unsupported Argos native original format');
  const sha256=createHash('sha256').update(bytes).digest('hex'),relative='images/ar/'+sha256+'-native.'+extension;
  await fs.mkdir(root+'/images/ar',{recursive:true});await fs.writeFile(root+'/'+relative,bytes);
  p.originalCachedImageUrl=relative;
- p.originalImageEvidence={sourceUrl:source,selectedSku:p.sku,sourceParentId:p.parentGroupId,sha256,sourcePreviewHash:p.previewImage.sha256,width:meta.width,height:meta.height,bytes:bytes.length,observedAt:new Date().toISOString(),method:'exact-official-gallery-original-response-bytes-native-metadata-dimensions'};
+ p.originalImageEvidence={sourceUrl:source,responseUrl,selectedSku:p.sku,sourceParentId:p.parentGroupId,sha256,sourcePreviewHash:p.previewImage.sha256,width:meta.width,height:meta.height,bytes:bytes.length,observedAt:new Date().toISOString(),method:'exact-official-gallery-original-response-bytes-native-metadata-dimensions'};
  return p.originalImageEvidence;
 }

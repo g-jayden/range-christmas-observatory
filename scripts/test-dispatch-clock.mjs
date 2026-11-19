@@ -20,7 +20,7 @@ const suppressed={...recoveryMonitor,readyDeliveries:0,blockedDeliveries:18};ass
 const sparseFixture=await fs.mkdtemp(path.join(os.tmpdir(),'range-sparse-tick-'));
 try{
  const workflow=await fs.readFile('.github/workflows/daily-pages.yml','utf8'),selection=/sparse-checkout: \|\n([\s\S]*?)\n      - uses:/.exec(workflow)[1].trim().split('\n').map(s=>s.trim().replace(/^\//,''));
- for(const relative of selection){const dest=path.join(sparseFixture,relative);await fs.mkdir(path.dirname(dest),{recursive:true});await fs.cp(relative,dest,{recursive:true});}
+ for(const pattern of selection){const expanded=pattern==='web/*.mjs'?(await fs.readdir('web')).filter(f=>f.endsWith('.mjs')).map(f=>'web/'+f):[pattern];for(const relative of expanded){const dest=path.join(sparseFixture,relative);await fs.mkdir(path.dirname(dest),{recursive:true});await fs.cp(relative,dest,{recursive:true});}}
  await fs.writeFile(path.join(sparseFixture,'block-source.mjs'),"globalThis.fetch=()=>{throw Error('The first publication tick must not make a network/source request')};");
  const stdout=execFileSync(process.execPath,['--import',path.join(sparseFixture,'block-source.mjs'),'scripts/schedule-tick.mjs'],{cwd:sparseFixture,encoding:'utf8',env:{...process.env,CONTROL_API_URL:'',CONTROL_TOKEN:'',GITHUB_EVENT_NAME:'push',COLLECTION_MODE:'verify-all',FORCE_MONITOR:'false',MANUAL_REFRESH:'false',GITHUB_OUTPUT:path.join(sparseFixture,'outputs')}});
  const tick=JSON.parse(stdout.trim().split('\n').at(-1));assert.equal(tick.work,false);assert.equal(tick.publish,true);assert.equal(tick.sourceRequestsMade,false);
