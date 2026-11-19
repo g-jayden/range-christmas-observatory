@@ -12,5 +12,7 @@
   "scheduledPaidCollection": true,
   "automaticPaidRetry": false,
   "dailyCheckBeijing": "07:00",
-  "scopeRestriction": "John Lewis seven requested Christmas categories only; authenticated live source, exact SKU and complete pagination required"
+  "scopeRestriction": "John Lewis seven requested Christmas categories only; authenticated live source, exact SKU and complete pagination required",
+  "sourceCollectionBeijing": "06:00",
+  "newProductPushBeijing": "07:00"
 }
