@@ -6,6 +6,15 @@ export function sanitiseJlFamily(p){
  if(!p?.title||!Array.isArray(p.variants)||!p.variants.length)throw Error('John Lewis public family data absent');
  return {...pick(p,['title','aliases','availability','defaultVariant','canonicalURL','pdpURL','unitOfMeasure','description','howToUse','productTypeHierarchy','sellingProductType','brand','attributes','messaging','icons']),variants:p.variants.map(v=>pick(v,['id','title','canonicalURL','pdpURL','displayCode','messaging','price','availability','images','aliases','differentiators','colour','attributes']))};
 }
+// A transient navigation reset does not mean that the public source is absent.
+// Retry the same URL through ordinary fetch in the already accepted page.
+// Explicit authentication/rate-limit refusals are never routed around.
+export async function jlDirectoryTransport({navigate,fetchHtml}){
+ try{return await navigate();}catch(e){
+  if(e.stop||![408,502,503,504].includes(e.status)&&!/NS_ERROR_NET_RESET|ECONNRESET|ERR_NETWORK_CHANGED|ERR_CONNECTION_RESET|Timeout.*exceeded|timed? ?out/i.test(e.message))throw e;
+  return await fetchHtml();
+ }
+}
 export async function collectJl({checkpointDir='runtime/jl-family',onBatch=()=>{}}={}){
  const {firefox}=await import('../runtime/jl-probe/node_modules/playwright/index.mjs');
  await fs.mkdir(checkpointDir,{recursive:true});const browser=await firefox.launch({headless:true}),context=await browser.newContext(),page=await context.newPage();let listingPage=await context.newPage();
@@ -16,10 +25,19 @@ export async function collectJl({checkpointDir='runtime/jl-family',onBatch=()=>{
   await page.locator('article[data-product-id]').first().waitFor({timeout:20000});
   const request=async(url,kind)=>{for(let attempt=0;attempt<3;attempt++){result.sourceRequests++;try{
    if(kind==='directory'){
-    if(attempt>0){await listingPage.close();listingPage=await context.newPage();}const current=listingPage;
-    if(current.url()!==url){const response=await current.goto(url,{waitUntil:'domcontentloaded',timeout:35000});if([401,403,429].includes(response.status()))throw Object.assign(Error('John Lewis official refusal HTTP '+response.status()),{stop:true});if(response.status()!==200)throw Error('John Lewis directory HTTP '+response.status());}
-    await current.locator('article[data-product-id]').first().waitFor({timeout:15000});const row=await current.evaluate(readJlDirectoryDom);
-    if(!row.count||!row.rows.length||!/John Lewis/i.test(await current.title())||/Technical Problem|Access Denied/i.test(await current.title()))throw Error('John Lewis directory content incomplete: '+await current.title());
+    const row=await jlDirectoryTransport({navigate:async()=>{
+     if(attempt>0){await listingPage.close();listingPage=await context.newPage();}const current=listingPage;
+     if(current.url()!==url){const response=await current.goto(url,{waitUntil:'domcontentloaded',timeout:35000});if([401,403,429].includes(response.status()))throw Object.assign(Error('John Lewis official refusal HTTP '+response.status()),{stop:true});if(response.status()!==200)throw Object.assign(Error('John Lewis directory HTTP '+response.status()),{status:response.status()});}
+     await current.locator('article[data-product-id]').first().waitFor({timeout:15000});return current.evaluate(readJlDirectoryDom,{url});
+    },fetchHtml:async()=>{
+     result.sourceRequests++;
+     const read=await page.evaluate(async url=>{const r=await fetch(url,{signal:AbortSignal.timeout(25000)});return{status:r.status,html:r.status===200?await r.text():null};},url);
+     if([401,403,429].includes(read.status))throw Object.assign(Error('John Lewis official refusal HTTP '+read.status),{stop:true});
+     if(read.status!==200)throw Object.assign(Error('John Lewis directory HTTP '+read.status),{status:read.status});
+     const reader=readJlDirectoryDom.toString();const parsed=await page.evaluate(({reader,html,url})=>(0,eval)('('+reader+')')({html,url}),{reader,html:read.html,url});
+     console.log(JSON.stringify({phase:'John Lewis transient-navigation recovery',url,status:read.status,method:'ordinary-same-origin-HTML',firecrawlCredits:0}));return parsed;
+    }});
+    if(!row.count||!row.rows.length||!/John Lewis/i.test(row.documentTitle||'')||/Technical Problem|Access Denied/i.test(row.documentTitle||''))throw Error('John Lewis directory content incomplete: '+row.documentTitle);
     return {...row,status:200};
    }
    const suppliedHtml=null;
@@ -36,7 +54,7 @@ export async function collectJl({checkpointDir='runtime/jl-family',onBatch=()=>{
    if(kind==='family'&&!data.product)throw Error('John Lewis family JSON absent');return data;
   }catch(e){if(e.stop||attempt===2)throw e;await new Promise(r=>setTimeout(r,700*(attempt+1)));}}
   };
-  const rangeCache=new Map(),directory=async url=>{const pages=[],seen=new Set();for(let next=url;next;){if(seen.has(next)||pages.length>30)throw Error('John Lewis pagination loop');seen.add(next);const p=await request(next,'directory');pages.push(p);await onBatch({directoryPage:p});next=p.next;if(next){try{await listingPage.getByRole('link',{name:'Next',exact:true}).click({timeout:15000});await listingPage.waitForURL(next,{timeout:20000,waitUntil:'domcontentloaded'});}catch{}}}return pages;};
+  const rangeCache=new Map(),directory=async url=>{const pages=[],seen=new Set();for(let next=url;next;){if(seen.has(next)||pages.length>30)throw Error('John Lewis pagination loop');seen.add(next);const p=await request(next,'directory');pages.push(p);await fs.writeFile(checkpointDir+'/directory-'+(await import('node:crypto')).createHash('sha256').update(next).digest('hex')+'.json',JSON.stringify({...p,observedAt:new Date().toISOString()}));await onBatch({directoryPage:p});next=p.next;if(next){try{await listingPage.getByRole('link',{name:'Next',exact:true}).click({timeout:15000});await listingPage.waitForURL(next,{timeout:20000,waitUntil:'domcontentloaded'});}catch{}}}return pages;};
   for(const[id,path]of JL_DIRECTORIES){const c={id,pages:await directory('https://www.johnlewis.com'+path),ranges:[]};for(const row of c.pages.flatMap(p=>p.rows).filter(r=>!r.sponsored&&r.type==='range-navigation')){if(!row.sourceUrl)throw Error('John Lewis range URL absent');if(!rangeCache.has(row.sourceUrl))rangeCache.set(row.sourceUrl,await directory(row.sourceUrl));c.ranges.push({url:row.sourceUrl,pages:rangeCache.get(row.sourceUrl)});}result.categories.push(c);console.log(JSON.stringify({phase:'John Lewis directory',id,count:c.pages[0]?.count?.[2],pages:c.pages.length,ranges:c.ranges.length}));}
   const unique=new Map();for(const c of result.categories)for(const p of [...c.pages,...c.ranges.flatMap(r=>r.pages)])for(const r of p.rows.filter(r=>!r.sponsored&&r.type!=='range-navigation'))unique.set(r.pageProductId,r.sourceUrl);
   const items=[...unique],batch=[];let cursor=0,stopped=false;

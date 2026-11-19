@@ -39,3 +39,12 @@ assert.equal(jlTreeStyle('John Lewis Brunswick Spruce Unlit Christmas Tree, 5ft'
 assert.equal(jlTreeStyle('John Lewis Christmas Tree',{'Pre-lit':'Pre-Lit'}),'预亮灯款');
 assert.equal(jlTreeStyle('John Lewis Christmas Tree',{'Pre-lit':'Unlit'}),'标准款');
 assert.equal(jlTreeStyle('John Lewis Unlit Potted Christmas Tree',{'Pre-lit':'Unlit'}),'圣诞树盆栽');
+
+// Real production failure: Firefox reset on page 2. Preserve the exact URL and
+// use the accepted same-origin page only for transient transport failures.
+const {jlDirectoryTransport}=await import('../server/jl-source.mjs');let fallbackCalls=0;
+const expected={url:'https://www.johnlewis.com/browse/christmas/baubles-tree-decorations/_/N-54yc?page=2',count:[25,48,64]};
+assert.equal(await jlDirectoryTransport({navigate:async()=>{throw Error('page.goto: NS_ERROR_NET_RESET');},fetchHtml:async()=>{fallbackCalls++;return expected;}}),expected);
+assert.equal(fallbackCalls,1);
+for(const e of [Object.assign(Error('HTTP 403'),{stop:true}),Error('John Lewis directory content incomplete')])await assert.rejects(jlDirectoryTransport({navigate:async()=>{throw e;},fetchHtml:async()=>{fallbackCalls++;}}));
+assert.equal(fallbackCalls,1,'Explicit refusal and invalid content cannot trigger alternate transport');
