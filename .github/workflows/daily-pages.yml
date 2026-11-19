@@ -80,6 +80,7 @@ jobs:
             /web/monitor-state.json
             /web/catalogue.json
             /web/asda/request.json
+            /web/*.mjs
             /web/asda-model.mjs
             /web/bm-model.mjs
             /web/ms-model.mjs

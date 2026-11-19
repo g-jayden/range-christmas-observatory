@@ -1,6 +1,13 @@
 name: Argos exact public product baseline
 on:
+  schedule:
+    - cron: '0 23 * * *'
   workflow_dispatch:
+    inputs:
+      refreshDirectories:
+        description: Refresh and reconcile all seven current official directories
+        type: boolean
+        default: true
   workflow_run:
     workflows: [Argos authorised shared-session directory acceptance]
     types: [completed]
@@ -12,7 +19,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   source:
-    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.id == 44210326302 && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main')
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event.workflow_run.id == 44210326302 && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -35,6 +42,7 @@ jobs:
           restore-keys: ar-exact-source-
       - name: Resume only missing exact public product records
         env:
+          AR_REFRESH_DIRECTORIES: ${{ (github.event_name == 'schedule' || inputs.refreshDirectories == true) && 'true' || 'false' }}
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
         run: node scripts/collect-ar-products.mjs
       - uses: actions/cache/save@v6.1.0

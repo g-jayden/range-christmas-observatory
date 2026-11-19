@@ -1,0 +1,66 @@
+name: One daily native PDF across all retailers
+on:
+  schedule:
+    - cron: '0,30 23,0-5 * * *'
+  workflow_dispatch:
+    inputs:
+      testOwner:
+        description: Send one real-product PDF layout test only to the confirmed owner
+        type: boolean
+        default: false
+  workflow_run:
+    workflows:
+      - Credit controlled collection and permanent website
+      - ASDA Christmas exact SKU collection
+      - M&S Christmas exact SKU collection
+      - B&M Christmas exact SKU collection
+      - Home Bargains Christmas exact SKU collection
+      - Dunelm Christmas exact SKU collection
+      - Next Christmas exact source and daily arrivals
+      - John Lewis Christmas exact SKU collection
+      - Matalan free exact SKU collection and native photos
+      - B&Q free exact SKU source and original photos
+      - Argos free native gallery review
+    types: [completed]
+permissions:
+  contents: write
+concurrency:
+  group: consolidated-christmas-new-pdf
+  cancel-in-progress: false
+  queue: max
+jobs:
+  digest:
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      DIGEST_TEST_OWNER: ${{ inputs.testOwner == true && 'true' || 'false' }}
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - uses: actions/cache@v6.1.0
+        with:
+          path: runtime/fonts
+          key: report-noto-cjk-v1
+      - name: Group verified NEW items into eight native photos per page
+        run: node scripts/prepare-daily-digests.mjs
+      - name: Publish the immutable product report before sending
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          mkdir -p web/reports
+          git add web/reports
+          git diff --cached --quiet || git commit -m "Publish grouped native NEW product PDF [skip ci]"
+          node scripts/push-evidence.mjs
+      - name: Send one PDF per confirmed subscriber without recollection
+        run: node scripts/deliver-daily-digests.mjs

@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
       ONNXRUNTIME_NODE_INSTALL_CUDA: skip
     steps:
@@ -65,3 +67,11 @@ jobs:
           git add web/ar web/images/ar
           git diff --cached --quiet || git commit -m "Preserve Argos free native gallery and local review evidence [skip ci]"
           node scripts/push-evidence.mjs
+      - name: Synchronize the accepted Argos NEW baseline without per-product mail
+        if: success()
+        run: node scripts/sync-ar-notifications.mjs
+      - name: Publish the Argos hierarchy without other source collection
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/request-retailer-site-publish.mjs ar

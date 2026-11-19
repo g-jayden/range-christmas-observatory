@@ -1,3 +1,4 @@
+import {AR_DEPARTMENTS,isArScope} from './ar-model.mjs';
 import {MT_DEPARTMENTS,isMtScope} from './mt-model.mjs';
 import {BQ_DEPARTMENTS,isBqScope} from './bq-model.mjs';
 import {retailerEnabled} from './retailer-activation.mjs';
@@ -12,7 +13,7 @@ import {TAXONOMY_VERSION,productBody,offeredObject,objectMemberships,isPublished
 export {isPublishedProduct} from './taxonomy.mjs';
 import {THEME_DEFINITIONS,isThemeScope} from './theme-model.mjs';
 export {THEME_DEFINITIONS,isThemeScope} from './theme-model.mjs';
-export const EXTERNAL_DEPARTMENT_DEFINITIONS={mt:MT_DEPARTMENTS,bq:BQ_DEPARTMENTS,nx:NX_DEPARTMENTS,jl:JL_DEPARTMENTS,du:DU_DEPARTMENTS,hb:HB_DEPARTMENTS,bm:BM_DEPARTMENTS,asda:ASDA_DEPARTMENTS,ms:MS_DEPARTMENTS};
+export const EXTERNAL_DEPARTMENT_DEFINITIONS={ar:AR_DEPARTMENTS,mt:MT_DEPARTMENTS,bq:BQ_DEPARTMENTS,nx:NX_DEPARTMENTS,jl:JL_DEPARTMENTS,du:DU_DEPARTMENTS,hb:HB_DEPARTMENTS,bm:BM_DEPARTMENTS,asda:ASDA_DEPARTMENTS,ms:MS_DEPARTMENTS};
 export const ALL_EXTERNAL_DEPARTMENTS=Object.values(EXTERNAL_DEPARTMENT_DEFINITIONS).flat();
 export const ACTIVE_EXTERNAL_DEPARTMENTS=Object.entries(EXTERNAL_DEPARTMENT_DEFINITIONS).filter(([id])=>retailerEnabled(id)).flatMap(([,rows])=>rows);
 const externalDepartmentIds=new Set(ALL_EXTERNAL_DEPARTMENTS.map(d=>d.id));

@@ -41,6 +41,9 @@ export function arSpecifications(d){
  if(!s.Height&&treeHeight&&/\btree\b/i.test(title))s.Height=treeHeight[1]+treeHeight[2];
  const base=dimensionsText.match(/\bbase of (?:the )?tree diameter\s*(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)\b/i);if(base)s['Base Diameter']=base[1]+base[2];
  const dimension=field('Overall dimensions')||field('Dimensions');if(dimension&&!s.Size&&/\d\s*[x×]/i.test(dimension))s.Size=dimension;
+ const specifiedSize=dimensionsText.match(/(?:^|[;.•\n])\s*(?:Approx(?:imate)?\s+)?(?:Size|Dimensions)\s*:\s*([^;\n•]{1,110})/i)?.[1]?.trim();
+ if(!s.Size&&specifiedSize&&/\d+(?:\.\d+)?\s*(?:cm|mm|m|ft|inches?)\b/i.test(specifiedSize))s.Size=specifiedSize;
+ if(!s.Size&&!s.Height&&!s.Length&&!s.Diameter){const measured=dimensionsText.match(/\bMeasures\s+(\d+(?:\.\d+)?\s*(?:cm|mm|m|ft|inches?))\b/i);if(measured)s.Size=measured[1];}
  const familyBlocks=[...dimensionsText.matchAll(/\b(\d+(?:\.\d+)?)\s*(?:FT|ft)\s*[:：]/g)],titleHeight=title.match(/\b(\d+(?:\.\d+)?)\s*(cm|ft)\b/i);
  if(familyBlocks.length>1&&titleHeight){const selectedCm=toCentimetres(titleHeight[1]+titleHeight[2]),block=familyBlocks.find(m=>Math.abs(Number(m[1])*30.48-selectedCm)<3);if(block){const next=familyBlocks.find(m=>m.index>block.index),text=dimensionsText.slice(block.index,next?.index),height=text.match(/(?:height|size)[^\n]{0,35}?(\d+(?:\.\d+)?)\s*cm/i),diameter=text.match(/[ΦφØø]\s*(\d+(?:\.\d+)?)\s*cm/i);if(height&&Math.abs(Number(height[1])-selectedCm)<5)s.Height=height[1]+'cm';if(diameter)s.Diameter=diameter[1]+'cm';}}
  return s;
@@ -52,7 +55,7 @@ export function arDirectoryAudit(source){
 }
 export function buildArSnapshot(source,details,{previous={products:[]},allowIncomplete=false}={}){
  const sourceAudits=arDirectoryAudit(source),sourceRows=new Map(),old=new Map(previous.products.map(p=>[p.sku,p]));
- for(const c of source.categories)for(const page of c.pages)for(const r of page.props.productData){const sku=String(r.id);if(!arValidSku(sku))throw Error('Invalid Argos public product ID');const saved=sourceRows.get(sku)||{row:r,groups:[]};if(!saved.listedAt||Date.parse(page.observedAt)>Date.parse(saved.listedAt)){saved.row=r;saved.listedAt=page.observedAt;saved.listedUrl=page.url;}saved.groups.push(c.id);sourceRows.set(sku,saved);}
+ for(const c of source.categories)for(const page of c.pages)for(const r of page.props.productData){const sku=String(r.id);if(!arValidSku(sku))throw Error('Invalid Argos public product ID');const saved=sourceRows.get(sku)||{row:r,groups:[]};if(!saved.listedAt||r.attributes?.price!=null&&(saved.row.attributes?.price==null||Date.parse(page.observedAt)>Date.parse(saved.listedAt))){saved.row=r;saved.listedAt=page.observedAt;saved.listedUrl=page.url;}saved.groups.push(c.id);sourceRows.set(sku,saved);}
  const baseline=!previous.notificationBaselineReady,products=[],pending=[];
  for(const[sku,{row,groups,listedAt,listedUrl}]of sourceRows){
   const d=details[sku];if(!d){pending.push(sku);continue;}
