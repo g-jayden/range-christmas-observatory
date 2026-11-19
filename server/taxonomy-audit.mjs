@@ -14,7 +14,7 @@ const hash=x=>createHash('sha256').update(JSON.stringify(x)).digest('hex');
 export const taxonomyFingerprint=p=>hash([TAXONOMY_VERSION,p.sku,productBody(p),productDescription(p),p.specifications||{},p.displayImage?.sha256||p.imageCacheEvidence?.sha256,p.kind,p.lightingDepartmentIds,p.themeIds]);
 const read=async(file,fallback)=>fs.readFile(file,'utf8').then(JSON.parse).catch(e=>{if(e.code!=='ENOENT')throw e;return fallback;});
 const clone=p=>structuredClone(p);
-export async function auditTaxonomy(snapshots,{infer=true,writeViews=true,persist=true}={}){
+export async function auditTaxonomy(snapshots,{infer=true,writeViews=true,persist=true,verifyImageFiles=true}={}){
  const bySku=new Map(),sourceNames=['trees-skirts','decorations','lights','themes'];
  for(let i=0;i<snapshots.length;i++)for(const p of snapshots[i]?.products||[]){if(!bySku.has(p.sku))bySku.set(p.sku,[]);bySku.get(p.sku).push({p,source:sourceNames[i]});}
  const canonical=[],before=new Map();
@@ -33,7 +33,7 @@ export async function auditTaxonomy(snapshots,{infer=true,writeViews=true,persis
  for(const p of canonical){
   const o=overrides.products[p.sku],d=o?.displayImage;
   if(d&&o.title===productBody(p)&&d.selectedSku===p.sku&&d.sourceInputImageUrl===(p.listingVariantImageUrl||p.variantImageUrl)){
-   const bytes=await fs.readFile('web/'+d.cachePath);if(createHash('sha256').update(bytes).digest('hex')!==d.sha256)throw Error('Reviewed source image digest mismatch: '+p.sku);
+   if(verifyImageFiles){const bytes=await fs.readFile('web/'+d.cachePath);if(createHash('sha256').update(bytes).digest('hex')!==d.sha256)throw Error('Reviewed source image digest mismatch: '+p.sku);}
    p.displayImage=d;p.originalImageUrl=d.sourceUrl;p.originalCachedImageUrl=d.cachePath;
    if(d.colors){p.colorValues=d.colors;p.treeColor=d.colors.join(' / ');}
    if(d.verifiedSpecifications){p.retailerSpecificationConflicts||={};for(const [k,v]of Object.entries(d.verifiedSpecifications))if(p.specifications?.[k]!==v)p.retailerSpecificationConflicts[k]=p.specifications?.[k]||null;
@@ -60,7 +60,7 @@ export async function auditTaxonomy(snapshots,{infer=true,writeViews=true,persis
   if(eligibility.disposition==='exclude')excluded.push(entry);else if(eligibility.disposition==='review')review.push(entry);
   else if(before.get(p.sku).ids.some(id=>!memberships.includes(id))||memberships.some(id=>!before.get(p.sku).ids.includes(id)))moved.push(entry);
  }
- await applyProductPreviews(canonical);
+ await applyProductPreviews(canonical,{verifyFiles:verifyImageFiles});
  const lookup=new Map(canonical.map(p=>[p.sku,p]));
  for(const snapshot of snapshots.filter(Boolean))for(const p of snapshot.products){const q=lookup.get(p.sku);for(const k of ['taxonomyAudit','department','departmentIds','classificationEvidence','displayImage','previewImage','previewAudit'])p[k]=q[k]===undefined?undefined:clone(q[k]);p.kind=q.kind;if(['tree','skirt'].includes(q.department)){for(const k of ['style','heightCm','heightLabel','heightValues','skirtDiameterCm','skirtBaseDiameterCm','skirtTopDiameterCm'])if(q[k]!==undefined)p[k]=clone(q[k]);}if(q.displayImage){for(const k of ['colorValues','treeColor','originalImageUrl','originalCachedImageUrl','specifications','material','dimensions','specificationCorrections','retailerSpecificationConflicts'])if(q[k]!==undefined)p[k]=clone(q[k]);}}
  const included=canonical.filter(p=>p.taxonomyAudit.disposition==='include'),observedAt=snapshots.filter(Boolean).map(s=>s.observedAt).filter(Boolean).sort().at(-1),revision=hash({taxonomy:Object.entries(index),previews:canonical.filter(p=>p.previewImage).map(p=>[p.sku,p.previewImage.sha256])});

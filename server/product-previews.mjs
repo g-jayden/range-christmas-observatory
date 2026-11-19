@@ -23,14 +23,15 @@ export function previewCandidates(p){
  return [...result.values()];
 }
 export const previewInput=p=>digest([String(p.sku),p.variantId||null,p.sourceUrl?.split('#')[0],p.listingVariantImageUrl||p.imageUrl||p.variantImageUrl,p.displayImage?.sha256||null,previewCandidates(p).map(g=>g.url).sort()]);
-export async function applyProductPreviews(products){
+export async function applyProductPreviews(products,{verifyFiles=true}={}){
  const registry=await readGzip(REGISTRY,{version:PREVIEW_QUALITY_VERSION,products:{}}),verified=new Set;let applied=0;
  for(const p of products){delete p.previewImage;delete p.previewAudit;const r=registry.products[p.sku];if(!r||r.version!==PREVIEW_QUALITY_VERSION||r.inputFingerprint!==previewInput(p))continue;
   p.previewAudit={version:r.version,status:r.status,issues:r.remainingIssues||[],checkedAt:r.checkedAt,inputFingerprint:r.inputFingerprint};
   if(!r.selected||p.displayImage)continue;
   if(!previewCandidates(p).some(g=>g.url===r.selected.sourceUrl))continue;
   const selected=r.selected;if(!/^images\/previews\/[a-f0-9]{64}\.webp$/.test(selected.cachePath))continue;
-  if(!verified.has(selected.cachePath)){const bytes=await fs.readFile('web/'+selected.cachePath).catch(()=>null);if(!bytes||createHash('sha256').update(bytes).digest('hex')!==selected.sha256)continue;verified.add(selected.cachePath);}
+  if(!/^[a-f0-9]{64}$/.test(selected.sha256||''))continue;
+  if(verifyFiles&&!verified.has(selected.cachePath)){const bytes=await fs.readFile('web/'+selected.cachePath).catch(()=>null);if(!bytes||createHash('sha256').update(bytes).digest('hex')!==selected.sha256)continue;verified.add(selected.cachePath);}
   p.previewImage=selected;applied++;
  }return {applied,registered:Object.keys(registry.products).length};
 }

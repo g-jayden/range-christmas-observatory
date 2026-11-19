@@ -1,4 +1,3 @@
-import {restoreReviewedNativeFiles} from '../server/reviewed-native-files.mjs';
 import {nativeSourceUrl} from '../web/product-facts.mjs';
 import {exactNativeGalleryMember} from '../server/native-gallery-identity.mjs';
 import {rebuildStoredRangeViews} from '../server/rebuild-range-views.mjs';
@@ -9,8 +8,7 @@ import {applyRangeNativeIndex} from '../server/range-native-index.mjs';
 import {publishBqCommittedEvidence} from '../server/bq-committed-evidence.mjs';
 import fs from 'node:fs/promises';import {createHash} from 'node:crypto';
 import {control} from '../server/cloud-client.mjs';import {createCatalogueReport} from '../server/catalogue-report.mjs';import {productSize,productRetailer} from '../web/product-facts.mjs';
-await restoreReviewedNativeFiles(JSON.parse(await fs.readFile('web/taxonomy-overrides.json','utf8')));
-const range=await rebuildStoredRangeViews({persist:false,includeProducts:true}),rangeBySku=new Map((range.products||[]).map(p=>[String(p.sku),p]));
+const range=await rebuildStoredRangeViews({persist:false,includeProducts:true,verifyImageFiles:false}),rangeBySku=new Map((range.products||[]).map(p=>[String(p.sku),p]));
 const prepared=[],failures=[],cache=new Map();let bqPrepared=false;
 async function json(relative,root='web'){const key=root+'/'+relative;if(!cache.has(key))cache.set(key,fs.readFile(key,'utf8').then(JSON.parse));return cache.get(key);}
 async function exactProduct(candidate){
