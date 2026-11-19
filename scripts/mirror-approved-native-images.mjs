@@ -21,7 +21,7 @@ for(const retailer of ['asda','ms','bm','hb','du','nx','jl','mt','bq','ar']){
 for(const p of products)byKey.set(productRetailer(p)+':'+p.sku,p);
  const recovery=await createPaidNativeOriginals(),issues=[],checked=new Set;let reused=0,recovered=0;
 try{for(const p of byKey.values()){
- const source=nativeSourceUrl(p),proof=p.originalImageEvidence;
+ const source=nativeSourceUrl(p),declared=p.originalImageEvidence,exported=p.nativeExportEvidence,validExport=exported?.sourceUrl===source&&String(exported.selectedSku)===String(p.sku)&&exported.width===declared?.width&&exported.height===declared?.height&&exported.sourceVersion===declared?.sourceVersion,proof=validExport?{...declared,sha256:exported.sha256}:declared;
  if(!source||checked.has(source))continue;checked.add(source);
  if(p.originalCachedImageUrl&&proof?.sourceUrl===source&&/^[a-f0-9]{64}$/.test(proof.sha256||'')&&p.originalCachedImageUrl.includes(proof.sha256+'.')&&tracked.has('web/'+p.originalCachedImageUrl)){reused++;continue;}
  try{exactPaidNativeTarget(p);await recovery.read(p);recovered++;}catch(e){issues.push({retailerId:productRetailer(p),sku:p.sku,source,error:String(e.message).slice(0,200)});}
