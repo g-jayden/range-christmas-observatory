@@ -20,21 +20,29 @@ export function arGallery(d,sku){
  });
 }
 export function arSpecifications(d){
- const a=d.legacy?.dimensions?.attributes||{},s={},description=arPlainText(d.structuredProduct.description||'');
+ const a=d.legacy?.dimensions?.attributes||{},s={},description=arPlainText(d.structuredProduct.description||''),title=arPlainText(d.structuredProduct.name);
  for(const[k,v]of Object.entries(a))if(v!==null&&v!==undefined&&v!=='')s[k[0].toUpperCase()+k.slice(1)]=String(v);
  const boundary='(?:Colour|Color|Material|Tree width|Total height|Tree height|Stand size|Overall dimensions|Dimensions|Size|With \\d+|Assembly required|Power source|Number of|Voltage|Suitable for)';
- const field=label=>description.match(new RegExp('\\b'+label+'\\s*:\\s*(.{1,160}?)(?=\\s+'+boundary+'\\s*:|[\\n•]|$)','i'))?.[1]?.trim();
+ const field=label=>description.match(new RegExp('\\b'+label+'\\s*:\\s*(.{1,160}?)(?=\\s+'+boundary+'\\s*:|[\\n•;]|$)','i'))?.[1]?.trim();
  if(field('Colou?r'))s.Colour=field('Colou?r');if(field('Material'))s.Material=field('Material');
+ // Argos often lists boxed dimensions in the same Product description. They
+ // describe shipping packaging, not the assembled product. Remove only those
+ // source clauses from product-size parsing; retain the full description.
+ const dimensionsText=description.replace(/\b(?:boxed|box|packaged?|packed|shipping|carton)\s+(?:size|dimensions)\s*:?\s*[^;\n•]*(?:;|$)/ig,'');
  const measure='(\\d+(?:\\.\\d+)?)\\s*(cm|mm|m|ft|inches?)\\b';
- for(const [label,key]of [['Total height','Height'],['Tree height','Height'],['Tree width','Width'],['Height','Height'],['Width','Width'],['Diameter','Diameter'],['Length','Length'],['Depth','Depth']]){const match=description.match(new RegExp('\\b'+label+'\\s*:\\s*'+measure,'i'));if(match&&!/\b(?:cable|cord|wire|lead)\s*$/i.test(description.slice(Math.max(0,match.index-12),match.index)))s[key]||=match[1]+match[2];}
- const explicit=description.match(/\bSize\s+((?:H|W|D|L)\d[^\n•]*?)(?:\.\s|$)/i)?.[1];if(!s.Size&&explicit)s.Size=explicit;
- const shared=s.Size?.match(/(cm|mm|m|ft|inches?)\s*$/i)?.[1];
- for(const m of String(s.Size||'').matchAll(/\b([HWDL])\s*(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)?/ig))if(m[3]||shared)s[({H:'Height',W:'Width',D:'Depth',L:'Length'})[m[1].toUpperCase()]]||=m[2]+(m[3]||shared);
- const dimension=field('Overall dimensions')||field('Dimensions');if(dimension&&!s.Size)s.Size=dimension;
- // A multi-size family description cannot donate the first member's dimensions
- // to another selected SKU. Only an explicitly matching size block is usable.
- const title=arPlainText(d.structuredProduct.name),titleHeight=title.match(/\b(\d+(?:\.\d+)?)\s*(cm|ft)\b/i),familyBlocks=[...description.matchAll(/\b(\d+(?:\.\d+)?)\s*(?:FT|ft)\s*[:：]/g)];
- if(familyBlocks.length>1&&titleHeight){const selectedCm=toCentimetres(titleHeight[1]+titleHeight[2]),block=familyBlocks.find(m=>Math.abs(Number(m[1])*30.48-selectedCm)<3);if(block){const next=familyBlocks.find(m=>m.index>block.index),text=description.slice(block.index,next?.index),height=text.match(/(?:height|size)[^\n]{0,35}?(\d+(?:\.\d+)?)\s*cm/i),diameter=text.match(/[ΦφØø]\s*(\d+(?:\.\d+)?)\s*cm/i);if(height&&Math.abs(Number(height[1])-selectedCm)<5)s.Height=height[1]+'cm';if(diameter)s.Diameter=diameter[1]+'cm';}}
+ for(const[label,key]of [['Total height','Height'],['Tree height','Height'],['Tree width','Width'],['Height','Height'],['Width','Width'],['Diameter','Diameter'],['Length','Length'],['Depth','Depth']]){
+  const match=dimensionsText.match(new RegExp('\\b'+label+'\\s*:\\s*'+measure,'i'));if(match&&!/\b(?:cable|cord|wire|lead|stand|lights?|LEDs?)\s*$/i.test(dimensionsText.slice(Math.max(0,match.index-12),match.index)))s[key]||=match[1]+match[2];
+ }
+ const explicit=dimensionsText.match(/(?:^|[;.•\n])\s*(?:Size|Dimensions)\s*:?\s*((?:[HWDL]\s*\d+(?:\.\d+)?\s*(?:cm|mm|m|ft|inches?)?\s*[,×x]?\s*){1,4})/i)?.[1]?.trim();
+ if(!s.Size&&explicit)s.Size=explicit;
+ const size=String(s.Size||''),shared=[...size.matchAll(/\d\s*(cm|mm|m|ft|inches?)\b/ig)].at(-1)?.[1];
+ for(const m of size.matchAll(/\b([HWDL])\s*(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)?/ig))if(m[3]||shared)s[({H:'Height',W:'Width',D:'Depth',L:'Length'})[m[1].toUpperCase()]]||=m[2]+(m[3]||shared);
+ const treeHeight=dimensionsText.match(/\b(\d+(?:\.\d+)?)\s*(ft|cm)\s+(?:(?:artificial|christmas|xmas|pine|spruce)\s+)*tree\b/i);
+ if(!s.Height&&treeHeight&&/\btree\b/i.test(title))s.Height=treeHeight[1]+treeHeight[2];
+ const base=dimensionsText.match(/\bbase of (?:the )?tree diameter\s*(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)\b/i);if(base)s['Base Diameter']=base[1]+base[2];
+ const dimension=field('Overall dimensions')||field('Dimensions');if(dimension&&!s.Size&&/\d\s*[x×]/i.test(dimension))s.Size=dimension;
+ const familyBlocks=[...dimensionsText.matchAll(/\b(\d+(?:\.\d+)?)\s*(?:FT|ft)\s*[:：]/g)],titleHeight=title.match(/\b(\d+(?:\.\d+)?)\s*(cm|ft)\b/i);
+ if(familyBlocks.length>1&&titleHeight){const selectedCm=toCentimetres(titleHeight[1]+titleHeight[2]),block=familyBlocks.find(m=>Math.abs(Number(m[1])*30.48-selectedCm)<3);if(block){const next=familyBlocks.find(m=>m.index>block.index),text=dimensionsText.slice(block.index,next?.index),height=text.match(/(?:height|size)[^\n]{0,35}?(\d+(?:\.\d+)?)\s*cm/i),diameter=text.match(/[ΦφØø]\s*(\d+(?:\.\d+)?)\s*cm/i);if(height&&Math.abs(Number(height[1])-selectedCm)<5)s.Height=height[1]+'cm';if(diameter)s.Diameter=diameter[1]+'cm';}}
  return s;
 }
 export function arDirectoryAudit(source){
