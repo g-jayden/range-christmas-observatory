@@ -331,7 +331,17 @@ jobs:
           restore-keys: bq-source-checkpoints-
       - name: Build site
         if: steps.tick.outputs.publish == 'true'
+        env:
+          BROWSE_FETCH_VERIFIED_PREVIEWS: 'true'
         run: node scripts/build-static.mjs
+      - name: Keep exact reviewed B&Q preview pixels for future source-free builds
+        if: steps.tick.outputs.publish == 'true'
+        uses: actions/cache/save@v6.1.0
+        with:
+          path: |
+            runtime/bq-source
+            runtime/bq-staged-catalogue.json
+          key: bq-source-checkpoints-preview-${{ github.run_id }}-${{ github.run_attempt }}
       - uses: actions/upload-pages-artifact@v5.0.0
         if: steps.tick.outputs.publish == 'true'
         with:

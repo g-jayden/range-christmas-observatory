@@ -1,15 +1,28 @@
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';import sharp from 'sharp';
 import {nativeSourceUrl,nativeImageCandidates} from '../web/product-facts.mjs';
 const OWN='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/';
-export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot='runtime/bq-source/preview-files'}={}){
- const work=new Map(),nativeFiles=new Map();let generated=0,bytes=0,active=0,invalidImages=0,nativeBytes=0;const queue=[];
+export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot='runtime/bq-source/preview-files',fetchVerified=process.env.BROWSE_FETCH_VERIFIED_PREVIEWS==='true',fetcher=globalThis.fetch}={}){
+ const work=new Map(),nativeFiles=new Map(),downloads=new Map();let imageRequests=0,imageFailures=0,remoteDenied=false;let generated=0,bytes=0,active=0,invalidImages=0,nativeBytes=0;const queue=[];
  const limit=fn=>new Promise((resolve,reject)=>{queue.push({fn,resolve,reject});drain();});
  function drain(){while(active<4&&queue.length){const job=queue.shift();active++;Promise.resolve().then(job.fn).then(job.resolve,job.reject).finally(()=>{active--;drain();});}}
  const local=value=>{if(typeof value!=='string')return null;const relative=value.startsWith(OWN)?value.slice(OWN.length):value;return /^images\/[\w./-]+\.(?:jpe?g|png|webp|avif)$/i.test(relative)&&!relative.split('/').includes('..')?relative:null;};
- const input=(value,bound)=>{const relative=local(value);if(relative)return {file:path.join(sourceRoot,relative),bound};if(/^[a-f0-9]{64}$/.test(bound||''))try{const u=new URL(value);if(u.origin==='https://media.diy.com'&&/^\/is\/image\/(?:Kingfisher|KingfisherDigital)\//.test(u.pathname)){u.search='';u.hash='';return {file:path.join(previewCacheRoot,createHash('sha256').update(u.href).digest('hex')+'.jpg'),bound};}}catch{}return null;};
+ const input=(value,bound)=>{const relative=local(value);if(relative)return {file:path.join(sourceRoot,relative),bound};if(/^[a-f0-9]{64}$/.test(bound||''))try{const u=new URL(value);if(u.origin==='https://media.diy.com'&&/^\/is\/image\/(?:Kingfisher|KingfisherDigital)\//.test(u.pathname)){u.search='';u.hash='';return {file:path.join(previewCacheRoot,createHash('sha256').update(u.href).digest('hex')+'.jpg'),bound,remote:value};}}catch{}return null;};
+ async function readInput({file,bound,remote}){
+  let buffer;try{buffer=await fs.readFile(file);}catch(e){if(e.code!=='ENOENT')throw e;}
+  if(buffer&&/^[a-f0-9]{64}$/.test(bound||'')&&createHash('sha256').update(buffer).digest('hex')!==bound)buffer=null;
+  if(buffer||!remote||!fetchVerified||remoteDenied)return buffer;
+  const key=file+'|'+bound;if(!downloads.has(key))downloads.set(key,limit(async()=>{try{
+   if(remoteDenied)return null;imageRequests++;const response=await fetcher(remote,{signal:AbortSignal.timeout(15000)});if(response.status===403||response.status===401)remoteDenied=true;
+   if(!response.ok)throw Error('Reviewed source image HTTP '+response.status);
+   if(Number(response.headers.get('content-length'))>8*1024*1024)throw Error('Reviewed source preview is too large');
+   const reader=response.body.getReader(),parts=[];let length=0;for(;;){const {done,value}=await reader.read();if(done)break;length+=value.length;if(length>8*1024*1024){await reader.cancel();throw Error('Reviewed source preview is too large');}parts.push(Buffer.from(value));}
+   const bytes=Buffer.concat(parts);if(createHash('sha256').update(bytes).digest('hex')!==bound)throw Error('Reviewed preview digest changed');
+   await fs.mkdir(path.dirname(file),{recursive:true});await fs.writeFile(file,bytes);return bytes;
+  }catch{imageFailures++;return null;}}));return downloads.get(key);
+ }
  async function build(p){
   const candidates=[input(p.previewImage?.cachePath,p.previewImage?.sha256),input(p.displayImage?.cachePath,p.displayImage?.sha256),input(p.originalCachedImageUrl,p.nativeExportEvidence?.sha256||p.originalImageEvidence?.sha256),input(p.cachedImageUrl,p.imageCacheEvidence?.sha256)].filter(Boolean);
-  for(const {file,bound}of [...new Map(candidates.map(c=>[c.file,c])).values()]){let buffer;try{buffer=await fs.readFile(file);}catch(e){if(e.code==='ENOENT')continue;throw e;}
+  for(const candidate of [...new Map(candidates.map(c=>[c.file,c])).values()]){const {file,bound}=candidate,buffer=await readInput(candidate);if(!buffer)continue;
    const digest=createHash('sha256').update(buffer).digest('hex');
    if(/^[a-f0-9]{64}$/.test(bound||'')&&bound!==digest)continue;
    const key=digest+'/whole-480-webp-q80';if(!work.has(key))work.set(key,limit(async()=>{
@@ -34,5 +47,5 @@ export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot
   }
   return p;
  }
- return {build,warmNative,stats:()=>({generated,bytes,invalidImages,firstScreenNativeFiles:nativeFiles.size,firstScreenNativeBytes:nativeBytes,sourceRequests:0,firecrawlCredits:0,originalFilesChanged:0})};
+ return {build,warmNative,stats:()=>({generated,bytes,invalidImages,firstScreenNativeFiles:nativeFiles.size,firstScreenNativeBytes:nativeBytes,sourceRequests:imageRequests,officialPreviewImageRequests:imageRequests,officialPreviewImageFailures:imageFailures,officialPreviewAccessDenied:remoteDenied,sourceDirectoriesRequested:0,firecrawlCredits:0,originalFilesChanged:0})};
 }
