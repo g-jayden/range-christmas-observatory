@@ -6,7 +6,7 @@
   "maxDetailPagesPerRun": 10000,
   "maxScreenshotPagesPerRun": 1000,
   "maxCreditsPerRun": 60,
-  "maxCreditsPerCalendarMonth": 1500,
+  "maxCreditsPerCalendarMonth": 2000,
   "accountReserveCredits": 5000,
   "catalogueReuseHours": 0,
   "failureRetryDays": [
