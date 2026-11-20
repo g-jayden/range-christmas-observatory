@@ -10,7 +10,7 @@ export async function dispatchDue({storage,env,config,monitor,fullLease,monitorL
  const base={sourceRequestsMade:false,firecrawlCredits:0,mailSent:false};
  if(!env.GITHUB_DISPATCH_TOKEN)return {...base,enabled:false,reason:'repository-dispatch-credential-required'};
  const due=[];
- if(now>=Date.parse(config.nextRunAt)&&!(fullLease?.expires>now))due.push('full:'+config.nextRunAt);
+ if(now>=Date.parse(config.nextRunAt)&&!(fullLease?.expires>now))due.push('full:'+config.nextRunAt+':recovery-day:'+new Date(now+28800000).toISOString().slice(0,10));
  if(initialized&&env.BREVO_API_KEY&&env.MAIL_FROM&&now>=Date.parse(monitor.nextRunAt)&&!(monitorLease?.expires>now))due.push('new:'+monitor.nextRunAt);
  if(initialized&&env.BREVO_API_KEY&&env.MAIL_FROM&&sourceRetryDue(monitor,now)&&!(monitorLease?.expires>now))due.push('source-retry:'+monitor.sourceRetryAt);
  if(initialized&&env.BREVO_API_KEY&&env.MAIL_FROM&&evidenceRetryDue(monitor,now)&&!(monitorLease?.expires>now))due.push('evidence-retry:'+monitor.evidenceRetryAt);

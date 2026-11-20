@@ -29,3 +29,7 @@ try{
 }finally{await fs.rm(sparseFixture,{recursive:true,force:true});}
 
 assert.equal((await run(at,{storage:new Store,env:{...env,DAILY_PDF_DIGEST:'true'},monitor:recoveryMonitor})).due,false,'A pending consolidated PDF must not dispatch the legacy source/publication workflow');
+
+// A failed weekly refresh must not remain disabled forever at its old due key.
+const fullStorage=new Store,fullConfig={nextRunAt:'2026-11-01T16:00:00Z'},laterMonitor={nextRunAt:'2026-12-01T23:00:00Z'};let fullCalls=0;const retryFull=now=>run(now,{storage:fullStorage,config:fullConfig,monitor:laterMonitor,fetcher:async()=>{fullCalls++;return new Response(null,{status:204})}});
+for(let n=0;n<4;n++)await retryFull(at+n*15*60000);assert.equal(fullCalls,3);assert((await retryFull(at+86400000)).dispatched);assert.equal(fullCalls,4,'An overdue full refresh gets a new bounded daily window rather than staying suppressed permanently');

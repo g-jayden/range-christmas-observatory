@@ -1,23 +1,22 @@
-name: Release obsolete full-archive website checkout
+name: Remove duplicate waiting image scans before restoring saved originals
 on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/release-old-publisher.yml']
   workflow_dispatch:
 permissions:
   actions: write
 jobs:
-  release-obsolete-checkout:
+  release-only-waiting-duplicate:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     env:
       GITHUB_TOKEN: ${{ github.token }}
     steps:
-      - name: Release only the verified older read-only build before deployment
+      - name: Retain every active capture and cancel only the known waiting duplicate
         run: |
           node --input-type=module - <<'JS'
-          const root='https://api.github.com/repos/g-jayden/range-christmas-observatory',id=44709659044,headers={authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json'};
-          const api=async(path,method='GET')=>{const r=await fetch(root+path,{method,headers,signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error('Owner workflow control HTTP '+r.status);return r.status===202||r.status===204?{status:r.status}:r.json();};
-          const run=await api('/actions/runs/'+id);if(run.name!=='Publish committed catalogues without source collection'||run.head_branch!=='main'||run.head_repository?.full_name!=='g-jayden/range-christmas-observatory')throw Error('Unrelated workflow cannot be cancelled');
-          if(run.status==='completed'){console.log(JSON.stringify({obsoleteRun:id,alreadyFinished:true,sourceRequests:0,firecrawlCredits:0}));process.exit(0);}
-          const jobs=await api('/actions/runs/'+id+'/jobs'),job=jobs.jobs.find(j=>j.name==='website'),deployment=job?.steps?.find(s=>s.name==='Publish one immutable artifact with the shared deployment lease');
-          if(!job||deployment?.status!=='pending'){console.log(JSON.stringify({obsoleteRun:id,retained:true,reason:'Deployment is already active or its phase is uncertain',sourceRequests:0,firecrawlCredits:0}));process.exit(0);}
-          const result=await api('/actions/runs/'+id+'/cancel','POST');console.log(JSON.stringify({obsoleteRun:id,cancelAccepted:result.status===202,phase:job.steps.find(s=>s.status==='in_progress')?.name,sourceRequests:0,firecrawlCredits:0}));
+          const root='https://api.github.com/repos/g-jayden/range-christmas-observatory',headers={authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json'};
+          const api=async(path,method='GET')=>{const r=await fetch(root+path,{method,headers,signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error('Workflow queue HTTP '+r.status);return r.status===202||r.status===204?{status:r.status}:r.json();};
+          for(const id of [44714082782]){const run=await api('/actions/runs/'+id);if(run.name!=='Recover exact native originals across retailers'||run.head_branch!=='main'||run.head_repository?.full_name!=='g-jayden/range-christmas-observatory')throw Error('Unrelated workflow cannot be cancelled');if(!['pending','queued','waiting','requested'].includes(run.status)){console.log(JSON.stringify({run:id,retained:true,status:run.status}));continue;}const jobs=await api('/actions/runs/'+id+'/jobs');if(jobs.jobs.some(j=>j.status==='in_progress'))throw Error('Active source capture must retain its evidence');const result=await api('/actions/runs/'+id+'/cancel','POST');console.log(JSON.stringify({run:id,cancelAccepted:result.status===202,onlyWaitingDuplicate:true,sourceRequests:0,firecrawlCredits:0}));}
           JS
