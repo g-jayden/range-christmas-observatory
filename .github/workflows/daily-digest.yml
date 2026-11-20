@@ -1,5 +1,8 @@
 name: One daily native PDF across all retailers
 on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/daily-digest.yml']
   schedule:
     - cron: '0,30 23,0-5 * * *'
   workflow_dispatch:
@@ -36,8 +39,30 @@ concurrency:
   # Every report reads the latest durable outbox. Keep one waiting refresh;
   # preserve the active delivery, without queueing every source completion.
 jobs:
-  digest:
+  pending:
     if: github.event_name != 'workflow_run' || (github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 3
+    outputs:
+      needed: ${{ steps.queue.outputs.needed }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /scripts/digest-pending-gate.mjs
+      - id: queue
+        env:
+          CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+          CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+          DIGEST_REPAIR_COMBINED: ${{ inputs.repairCombined == true && 'true' || 'false' }}
+          DIGEST_TEST_OWNER: ${{ inputs.testOwner == true && 'true' || 'false' }}
+        run: node scripts/digest-pending-gate.mjs
+  digest:
+    needs: pending
+    if: needs.pending.outputs.needed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
