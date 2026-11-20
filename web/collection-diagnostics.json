@@ -470,6 +470,17 @@
       "providerScrapeId": "01a1f6bf-1d35-775e-a68a-81dcd67c31ca",
       "billingVerified": true,
       "recordedAt": "2026-11-20T02:22:17.341Z"
+    },
+    {
+      "id": "mcp-01a1f6cb-9e6a-759b-a826-f574c0cf9a29",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "source": "Argos exact missing SKU British-origin diagnostic; source Product and availability evidence reused",
+      "sourceUrl": "https://www.argos.co.uk/product/3114917",
+      "providerScrapeId": "01a1f6cb-9e6a-759b-a826-f574c0cf9a29",
+      "billingVerified": true,
+      "recordedAt": "2026-11-20T02:34:23Z"
     }
   ],
   "unreceipted": [
