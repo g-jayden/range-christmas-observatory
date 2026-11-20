@@ -1,4 +1,5 @@
 import {applySavedRetailerReview} from '../server/saved-retailer-reviews.mjs';
+import {applyNextDisplayFacts} from '../server/nx-display-facts.mjs';
 import fs from 'node:fs/promises';import {createHash} from 'node:crypto';import {jlAppearanceFingerprint} from '../server/jl-products.mjs';import {nextReviewMatches} from '../server/nx-image-freshness.mjs';import {NX_DEPARTMENTS} from '../web/nx-model.mjs';import {atomicJson} from '../server/sync.mjs';
 // Daily Range source and targeted repair jobs must not rewrite another
 // retailer while its independent collector is publishing the same catalogue.
@@ -7,6 +8,7 @@ const treeStyles=['圣诞树盆栽','折叠式圣诞树','纤细圣诞树','雪�
 for(const id of (rangeSourceWork?[]:['nx','jl'])){
  const read=f=>fs.readFile('web/'+id+'/'+f,'utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return null;throw e;});
  const snapshot=await read('catalogue.json');if(!snapshot)continue;const reviews=await read('reviews.json');let appearanceChanged=0;
+ if(id==='nx')for(const p of snapshot.products)if(applyNextDisplayFacts(p))appearanceChanged++;
  if(reviews)for(const p of snapshot.products){const r=reviews[p.sku];if(!r)continue;const before=JSON.stringify(p);
   if(id==='jl'&&p.kind==='tree'&&r.imageHash===p.originalImageEvidence?.sha256&&r.sourceFingerprint===jlAppearanceFingerprint(p)&&treeStyles.includes(r.treeStyle)){p.style=r.treeStyle;p.classificationEvidence={...p.classificationEvidence,savedImageReview:r};}
   if(id==='nx'){
