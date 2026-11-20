@@ -1,5 +1,8 @@
 name: The Range bulk native originals independently of daily checks
 on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/range-bulk-native.yml']
   workflow_dispatch:
     inputs:
       continuationDepth:
@@ -10,9 +13,9 @@ permissions:
   contents: write
   actions: write
 concurrency:
-  group: range-bulk-native-originals
+  group: approved-native-image-recovery
   cancel-in-progress: false
-  queue: single
+  queue: max
 jobs:
   exact-originals:
     runs-on: ubuntu-latest
@@ -47,6 +50,18 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci --no-audit --no-fund
+      - uses: actions/download-artifact@v8.0.2
+        if: github.event_name == 'push'
+        with:
+          name: range-bulk-native-44707655282-1
+          run-id: 44707655282
+          github-token: ${{ github.token }}
+          path: runtime/restore-range-native
+      - name: Restore the failed checkpoint without collecting its photos again
+        if: github.event_name == 'push'
+        run: |
+          git fetch --filter=blob:none --depth=1 origin 11fb929080780021767ac281d7fbd78d38808eec
+          node scripts/restore-range-native-artifact.mjs
       - name: Recover missing originals in verified native batches, never recollect directories
         run: node scripts/mirror-range-originals.mjs
       - name: Keep a recoverable archive after any outcome
