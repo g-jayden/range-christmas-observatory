@@ -12,6 +12,7 @@ assert.match(productNames({department:'nx-baubles',variantName:'50 Pack Berry Me
 assert.match(productNames({department:'tree-decorations',variantName:'LED Gingerbread House Hanging Decoration'}).zh,/姜饼屋LED圣诞挂饰/);
 assert(!productNames({...tree,variantName:'7ft Non-Flocked Artificial Tree'}).zh.includes('覆雪'));
 assert.match(productNames({department:'wreath',variantName:'Set of LED Wreath and Garland'}).zh,/圣诞圈与长藤套装/);
+assert.equal(productNames({department:'lights',variantName:'LED Christmas Fairground Model'}).zh,'LED圣诞游乐场模型','A named physical model must not be reduced to its lighting department in the Chinese product name');
 assert.match(productNames({department:'nx-wreath',variantName:'Gold Light Up Christmas Bauble Wreath'}).zh,/圣诞圈$/);
 assert.match(productNames({department:'jl-garland',variantName:'John Lewis Chinese Lantern Garland, L183cm'}).zh,/灯笼造型圣诞长藤$/);
 assert.match(productNames({department:'nx-baubles',variantName:'Decoris Assorted Pearl Look Christmas Tree Bow Decoration'}).zh,/仿珍珠光泽.*蝴蝶结圣诞树装饰$/);
