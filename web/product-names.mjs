@@ -1,6 +1,6 @@
 import {DEPARTMENT_MAP} from './catalogue-model.mjs';
 
-export const PDF_LAYOUT_VERSION='native-eight-bilingual-names-v3';
+export const PDF_LAYOUT_VERSION='native-eight-bilingual-names-v4';
 const clean=value=>String(value||'').replace(/\s+/g,' ').trim();
 const concepts=[
  [/\bdark forest green\b/i,'深森林绿'],[/\bsage green\b/i,'鼠尾草绿'],[/\bmonochrome\b/i,'黑白色'],[/\bspots?\b/i,'波点'],[/\bbiscuits?\b/i,'饼干造型'],[/\bbakery\b/i,'烘焙点心造型'],[/\bpersonalised\b|\bpersonalized\b/i,'定制'],[/\bdog breeds?\b/i,'犬种图案'],[/\bcheck(?:ed)?\b/i,'格纹'],
@@ -26,6 +26,7 @@ function chineseProductName(p,en){
  else if(!treeScope&&/\blights?\b/i.test(en)&&(/light/.test(scope)||!/\btree\b/i.test(en)))noun=category.includes('灯')?category:'圣诞灯饰';
  else if(/lantern/i.test(en))noun='圣诞灯笼';else if(/candle holder|candlestick|candelabra/i.test(en))noun='圣诞烛台';else if(/stocking/i.test(en))noun='圣诞袜';
  else if(/bauble/i.test(en))noun='圣诞装饰球';
+ else if(/\brose\b(?!\s*gold).*\bclips?\b/i.test(en))noun='玫瑰花夹';
  else if(!treeScope&&/tree(?: [a-z-]+){0,4} decorations?/i.test(en))noun='圣诞树装饰';
  else if(!treeScope&&/hanging decorations?|hanging ornaments?/i.test(en))noun='圣诞挂饰';
  else if(!treeScope&&/ornament/i.test(en))noun='圣诞装饰品';
@@ -34,7 +35,7 @@ function chineseProductName(p,en){
  const attributes=features.filter(([pattern,zh])=>pattern.test(en)&&!noun.includes(zh)).map(([,zh])=>zh);
  if(/\bnon[ -]flocked\b/i.test(en)){const at=attributes.indexOf('覆雪');if(at>=0)attributes.splice(at,1);}
  const size=en.match(/\b(\d+(?:\.\d+)?(?:\s*[x×]\s*\d+(?:\.\d+)?){0,3})\s*(ft|feet|foot|cm|mm|inch|inches|m)\b/i),unit={ft:'英尺',feet:'英尺',foot:'英尺',cm:'厘米',mm:'毫米',inch:'英寸',inches:'英寸',m:'米'};
- const pack=en.match(/\b(?:set|pack)\s+of\s+(\d+)\b/i)||en.match(/\b(\d+)\s*(?:[ -]pack|pieces?|pcs)\b/i),led=en.match(/\b(\d+)\s*(?:(?:warm|cool) white\s*)?(?:[ -])?leds?\b/i);
+ const pack=en.match(/\b(?:set|pack)\s+of\s+(\d+)\b/i)||en.match(/\b(\d+)\s*(?:[ -]pack|pieces?|pcs?)\b/i),led=en.match(/\b(\d+)\s*(?:(?:warm|cool) white\s*)?(?:[ -])?leds?\b/i);
  const colours={green:'绿色',red:'红色',white:'白色',black:'黑色',pink:'粉色',blue:'蓝色',navy:'海军蓝色',grey:'灰色',gray:'灰色',gold:'金色',silver:'银色',brown:'棕色',beige:'米色',cream:'奶油色',orange:'橙色',purple:'紫色',clear:'透明色',natural:'原色',multi:'多色',multicolour:'多色'};
  const colour=en.match(/\s[-·/]\s*(green|red|white|black|pink|blue|navy|grey|gray|gold|silver|brown|beige|cream|orange|purple|clear|natural|multi|multicolour)(?:\s*\/\s*\d[^a-z]*)?\s*$/i);
  if(!['tree','trees'].includes(scope)){const at=shape.indexOf('松树型');if(at>=0)shape[at]='松枝';}
