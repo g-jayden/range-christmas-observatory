@@ -1,0 +1,49 @@
+name: Restore already collected native originals without another scrape
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/restore-native-artifact.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: immutable-native-artifact-restoration
+  cancel-in-progress: false
+jobs:
+  saved-originals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/
+            /web/*.mjs
+            /web/*.json
+      - name: Fetch only the immutable artifact's original metadata revision
+        run: git fetch --filter=blob:none --depth=1 origin fe093446a28d25d1145398fda46c906019052675
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          name: native-original-evidence-44700272478-1
+          run-id: 44700272478
+          github-token: ${{ github.token }}
+          path: runtime/restore-native
+      - name: Verify archived original hashes and reconcile actual credit receipts
+        run: node scripts/restore-native-artifact.mjs
+      - name: Publish immutable photos in bounded batches before their index
+        run: node scripts/publish-native-recovery.mjs
+      - name: Publish the saved originals without collecting catalogues
+        run: node scripts/request-retailer-site-publish.mjs ar
