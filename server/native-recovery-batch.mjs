@@ -17,7 +17,7 @@ export async function recoverNativeBatch(entries,{reuse,recover,close,checkpoint
   const workers=await Promise.allSettled(Array.from({length:Math.min(concurrency,queue.length)},async()=>{while(cursor<queue.length){
    if(now()-started>=budgetMs){status.deadlineReached=true;break;}const index=cursor++,entry=queue[index];
    try{if(await reuse(entry))status.reused++;else{await recover(entry);status.recovered++;}}
-   catch(e){status.issues.push({retailerId:entry.retailerId,sku:entry.sku,source:entry.source,error:String(e.message).slice(0,200)});}
+   catch(e){status.issues.push({retailerId:entry.retailerId,sku:entry.sku,source:entry.source,error:String(e.message).slice(0,200),...(e.code?{code:e.code}:{})});}
    finished.add(index);status.processed++;if(status.processed%checkpointEvery===0)await checkpoint(snapshot());
   }}));const failure=workers.find(r=>r.status==='rejected');if(failure)throw failure.reason;
  }finally{await close();}
