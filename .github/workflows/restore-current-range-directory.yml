@@ -1,0 +1,53 @@
+name: Restore the already captured current Range directory
+on:
+  push:
+    paths:
+      - .github/workflows/restore-current-range-directory.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+jobs:
+  restore-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      EVIDENCE_NATIVE_ONLY: '1'
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/images/
+            !/web/mail-assets/
+            !/web/reports/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - name: Verify the exact immutable source checkpoint
+        run: |
+          node --input-type=module - <<'JS'
+          const r=await fetch('https://api.github.com/repos/g-jayden/range-christmas-observatory/actions/artifacts/14622329073',{headers:{authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json'},signal:AbortSignal.timeout(30000)});if(!r.ok)throw Error('Checkpoint verification HTTP '+r.status);const a=await r.json();if(a.name!=='range-source-evidence-44722657807-1'||a.expired||a.workflow_run.id!==44722657807||a.workflow_run.head_repository_id!==1439271815||a.digest!=='sha256:f80ae6d6c10402ccfb68cbfd03fd017d1cfa5036df48c7599cbcb5e2143c2588')throw Error('Wrong source checkpoint');console.log(JSON.stringify({artifact:a.name,sourceRequests:0,firecrawlCredits:0}));
+          JS
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          name: range-source-evidence-44722657807-1
+          run-id: 44722657807
+          github-token: ${{ github.token }}
+          path: runtime/restore-range-source
+      - name: Restore closed directory partitions and exact cached SKU evidence
+        run: node scripts/restore-current-range-directory.mjs
+      - name: Publish recovered current facts without changing full-success or source dates
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add --sparse -- web/catalogue.json web/status.json
+          git diff --cached --quiet || git commit -m 'Recover already captured current Range prices and stock [skip ci]'
+          node scripts/push-evidence.mjs
+      - name: Rebuild the permanent website from saved current facts
+        run: node scripts/request-nx-site-publish.mjs
