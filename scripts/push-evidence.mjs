@@ -1,6 +1,7 @@
 import {mergeCollectorLedgers,mergeCollectorImageCaches,mergeCollectorNativeIndexes} from '../server/collector-merge.mjs';
 import {gunzipSync,gzipSync} from 'node:zlib';
-import {execFileSync} from 'node:child_process';
+import {execFileSync,spawn} from 'node:child_process';
+import {withDataPublicationLease} from '../server/pages-lease-client.mjs';
 import fs from 'node:fs';
 import {control,apiBase} from '../server/cloud-client.mjs';
 const git=(...args)=>execFileSync('git',args,{stdio:'inherit'}),read=(...args)=>execFileSync('git',args,{encoding:'utf8',maxBuffer:67108864}).trim();
@@ -15,10 +16,12 @@ const sharedCacheFiles=new Set(['web/preview-quality-cache.json.gz']);
 const dirty=execFileSync('git',['diff','--name-only','-z'],{encoding:'utf8'}).split('\0').filter(Boolean);
 const knownUntracked=execFileSync('git',['ls-files','--others','--exclude-standard','-z'],{encoding:'utf8'}).split('\0').filter(p=>sharedCacheFiles.has(p));
 if(dirty.length||knownUntracked.length){if(dirty.some(p=>!sharedCacheFiles.has(p)))throw Error('Uncommitted collector output needs an explicit publication path: '+dirty.join(', '));git('add','--',...dirty,...knownUntracked);git('commit','-m','Preserve shared source-photo quality evidence [skip ci]');}
+const gitNetwork=(...args)=>new Promise((resolve,reject)=>{const child=spawn('git',args,{stdio:'inherit'});child.once('error',reject);child.once('exit',code=>code===0?resolve():reject(Error('Git publication exited '+code)));});
+const publishEvidence=async(assertLease=()=>{})=>{
 const maximumAttempts=process.env.EVIDENCE_NATIVE_ONLY==='1'?8:4;
 let saved=false;for(let attempt=1;attempt<=maximumAttempts;attempt++){
  try{
-  try{git('pull','--rebase');}catch(error){
+  assertLease();try{await gitNetwork('pull','--rebase');}catch(error){
    const conflicts=read('diff','--name-only','--diff-filter=U').split('\n').filter(Boolean),allowed=new Set(['web/collection-ledger.json','web/preview-quality-cache.json.gz','web/paid-native-index.json']);
    if(!conflicts.length||conflicts.some(p=>!allowed.has(p)))throw error;
    for(const file of conflicts){const packed=file.endsWith('.gz'),stages=[1,2,3].map(n=>{const raw=execFileSync('git',['show',':'+n+':'+file],{maxBuffer:67108864});return JSON.parse((packed?gunzipSync(raw):raw).toString('utf8'));}),merged=file.endsWith('collection-ledger.json')?mergeCollectorLedgers(...stages):file.endsWith('paid-native-index.json')?mergeCollectorNativeIndexes(...stages):mergeCollectorImageCaches(...stages),bytes=Buffer.from(JSON.stringify(merged));fs.writeFileSync(file,packed?gzipSync(bytes):bytes);git('add','--',file);}
@@ -27,11 +30,13 @@ let saved=false;for(let attempt=1;attempt<=maximumAttempts;attempt++){
   }
   const changed=read('diff','--name-only','origin/main..HEAD').split('\n').filter(Boolean);
   if(changed.some(p=>!p.startsWith('web/')))throw Object.assign(Error('Collector publication contains non-data files; refused'),{nonData:true});
-  git('push','origin','HEAD:refs/heads/main');saved=true;break;
+  assertLease();await gitNetwork('push','origin','HEAD:refs/heads/main');saved=true;break;
  }catch(error){const rebase=read('rev-parse','--git-path','rebase-merge');if(error.nonData||fs.existsSync(rebase))throw Error('Data publication requires reconciliation; recover the workflow source-evidence archive');if(attempt<maximumAttempts)await new Promise(r=>setTimeout(r,Math.min(8000,1500*attempt)+Math.floor(Math.random()*1000)));}
 }
 if(!saved)throw Error('Main was not updated; recover the source-evidence artifact instead of collecting again');
 console.log(JSON.stringify({evidenceSaved:true,dataOnly:true,commit:read('rev-parse','HEAD')}));
+};
+if(apiBase&&process.env.CONTROL_TOKEN)await withDataPublicationLease(publishEvidence);else await publishEvidence();
 // Announce only after the exact public files have been pushed. Pages file sync
 // is a separate delivery channel and cannot hold the team's data hostage.
 if(process.env.EVIDENCE_NATIVE_ONLY!=='1'&&apiBase&&process.env.CONTROL_TOKEN){try{const p=JSON.parse(fs.readFileSync('web/asda/catalogue.json','utf8'));if(p.baselineReady&&p.imageAudit?.verified===p.products.length){const result=await control('/internal/published-site',{commit:read('rev-parse','HEAD')});console.log(JSON.stringify({mirrorPublished:result.published,commit:result.commit,firecrawlCredits:0}));}}catch(e){console.log(JSON.stringify({mirrorAnnouncementPending:true,status:e.status||0,firecrawlCredits:0}));}}

@@ -21,6 +21,7 @@ import {scheduleLabel} from './schedule.mjs';
 import {control,apiBase} from './cloud-client.mjs';
 import {recordSourceOutcome} from './source-health.mjs';
 import {productInformation,parseDetails,applyDetails} from './details.mjs';
+import {readPreflightProduct} from './preflight-product.mjs';
 export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budgetFactory=openCreditBudget,now=()=>Date.now()}={}){
  const previous=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),policy={...await loadPolicy(),familyBatchSize:100,familyBatchConcurrency:8,familyFetchTimeoutMs:20000,adaptiveFamilies:true,imageBodyBatchSize:250,imageHashBatchSize:1000,maxFallbackScrapesPerRun:56};
  const previousStatus=await fs.readFile('web/status.json','utf8').then(JSON.parse).catch(()=>({}));
@@ -40,8 +41,8 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
   const gathered=await catalogueSnapshot({previous,reader,policy,now,forceFresh:true,onProgress:c=>console.log('官网完整目录 '+c),onSessionReady:async rows=>{
    const p=rows.find(p=>String(p.sku)==='12776')||rows[0];if(!p)return;
    const url='https://www.therange.co.uk/'+p.variantPath.replace('#','/#');
-   preflight=parseDetails(await reader.raw(url,{formats:['rawHtml','markdown']}),p.sku,url);
-   console.log('同一会话具体SKU已核验 '+p.sku);
+   const checked=await readPreflightProduct(reader,p,url);preflight=checked.detail;
+   console.log(JSON.stringify(checked.issue?{phase:'individual-preflight-detail-pending',...checked.issue,directoryValidationRemainsRequired:true}:{phase:'official-preflight-SKU-verified',sku:p.sku}));
   }});
   let next=gathered.snapshot;catalogueReady=true;const previousDecorations=await readDecorations();decorations=previousDecorations.baselineReady?await collectDecorationDirectory(reader,previousDecorations):null;if(decorations)await loadDecorationDetails(decorations.products);previousLights=await readLights();lights=previousLights.baselineReady?await collectLightDirectory(reader,previousLights,[next,decorations]):null;
   const previousThemes=await readThemes();themes=previousThemes.baselineReady?await collectThemeDirectory(reader,previousThemes,[next,decorations,lights]):null;restoreProducts(next,collection,policy);await restoreVerifiedRegistry(next.products);reconcileVerifiedEvidence([next,decorations,lights,themes]);

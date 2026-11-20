@@ -1,5 +1,8 @@
 name: The Range bulk native originals independently of daily checks
 on:
+  workflow_run:
+    workflows: [Credit controlled collection and permanent website]
+    types: [completed]
   workflow_dispatch:
     inputs:
       continuationDepth:
@@ -15,6 +18,7 @@ concurrency:
   queue: max
 jobs:
   exact-originals:
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 65
     env:

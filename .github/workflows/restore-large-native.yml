@@ -1,0 +1,70 @@
+name: Restore the saved native archive in bounded data publications
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/restore-large-native.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+jobs:
+  restore-saved-bytes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    concurrency:
+      group: approved-native-image-recovery
+      cancel-in-progress: false
+      queue: max
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      NATIVE_RESTORE_RUN_ID: '44704997668'
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/
+            /web/*.mjs
+            /web/*.json
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - name: Verify this exact durable archive before restoration
+        run: |
+          node --input-type=module - <<'JS'
+          const root='https://api.github.com/repos/g-jayden/range-christmas-observatory',headers={authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json'};
+          const r=await fetch(root+'/actions/artifacts/14616688810',{headers,signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error('Artifact verification HTTP '+r.status);const a=await r.json();if(a.name!=='native-original-evidence-44704997668-1'||a.expired||a.workflow_run.id!==44704997668||a.workflow_run.head_repository_id!==1439271815)throw Error('Wrong source archive');console.log(JSON.stringify({artifact:a.name,bytes:a.size_in_bytes,digest:a.digest,sourceRequests:0,firecrawlCredits:0}));
+          JS
+      - name: Fetch the actual collector checkout used by its billing receipts
+        run: git fetch --filter=blob:none --depth=1 origin c424e61135eb804f3d365abf25ace8d98df71676
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          name: native-original-evidence-44704997668-1
+          run-id: 44704997668
+          github-token: ${{ github.token }}
+          path: runtime/restore-native
+      - name: Verify native hashes and move bytes without doubling runner disk usage
+        run: node scripts/restore-native-artifact.mjs
+      - name: Save immutable photo batches before publishing exact SKU bindings
+        run: node scripts/publish-native-recovery.mjs
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          name: range-bulk-native-44707655282-1
+          run-id: 44707655282
+          github-token: ${{ github.token }}
+          path: runtime/restore-range-native
+      - name: Restore the separate Range checkpoint and actual receipts
+        run: |
+          git fetch --filter=blob:none --depth=1 origin 11fb929080780021767ac281d7fbd78d38808eec
+          node scripts/restore-range-native-artifact.mjs
+      - name: Resume only remaining Range native originals
+        run: |
+          node --input-type=module - <<'JS'
+          const r=await fetch('https://api.github.com/repos/g-jayden/range-christmas-observatory/actions/workflows/range-bulk-native.yml/dispatches',{method:'POST',headers:{authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json','content-type':'application/json'},body:JSON.stringify({ref:'main',inputs:{continuationDepth:'0'}}),signal:AbortSignal.timeout(20000)});if(r.status!==204)throw Error('Native continuation HTTP '+r.status);console.log(JSON.stringify({remainingOriginalsDispatched:true,sourceDirectoriesRequested:0,firecrawlCredits:0}));
+          JS
+      - name: Publish restored originals without recollecting products
+        run: node scripts/request-retailer-site-publish.mjs ar

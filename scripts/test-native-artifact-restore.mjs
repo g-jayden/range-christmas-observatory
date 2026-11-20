@@ -1,0 +1,8 @@
+import assert from'node:assert/strict';import fs from'node:fs/promises';import os from'node:os';import path from'node:path';import{createHash}from'node:crypto';import{restoreNativeFile}from'../server/restore-native-file.mjs';
+const root=await fs.mkdtemp(path.join(os.tmpdir(),'native-restore-')),archiveRoot=path.join(root,'archive'),webRoot=path.join(root,'web'),bytes=Buffer.from('unchanged native fixture'),hash=createHash('sha256').update(bytes).digest('hex'),entry={ok:true,hash,cachedImageUrl:'images/source/'+hash+'.jpg'},file=path.join(archiveRoot,entry.cachedImageUrl);
+try{
+ await fs.mkdir(path.dirname(file),{recursive:true});await fs.writeFile(file,bytes);const before=await fs.stat(file);assert.equal(await restoreNativeFile({entry,archiveRoot,webRoot}),'restored');assert.equal((await fs.stat(path.join(webRoot,entry.cachedImageUrl))).ino,before.ino,'Restore moves the native file instead of doubling disk usage');assert.deepEqual(await fs.readFile(path.join(webRoot,entry.cachedImageUrl)),bytes);await assert.rejects(fs.access(file));
+ await fs.writeFile(file,bytes);assert.equal(await restoreNativeFile({entry,archiveRoot,webRoot,tracked:true}),'already-durable');await assert.rejects(fs.access(file));assert.equal(await restoreNativeFile({entry,archiveRoot,webRoot,tracked:true}),'already-durable');
+ await fs.writeFile(file,'corrupt');await assert.rejects(restoreNativeFile({entry,archiveRoot,webRoot}),/hash mismatch/);await assert.rejects(restoreNativeFile({entry:{...entry,cachedImageUrl:'../unsafe'},archiveRoot,webRoot}),/Invalid/);
+ console.log('PASS: immutable hash checks, disk-safe native moves, existing durable originals and corrupt archive rejection.');
+}finally{await fs.rm(root,{recursive:true,force:true});}

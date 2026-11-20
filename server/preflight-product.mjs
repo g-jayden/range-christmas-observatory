@@ -1,0 +1,2 @@
+import {parseDetails} from './details.mjs';
+export async function readPreflightProduct(reader,p,url){try{await reader.prepareFamilies?.([{...p,sourceUrl:url}]);const detail=parseDetails(await reader.raw(url,{formats:['rawHtml','markdown']}),p.sku,url);return{detail,issue:null};}catch(e){return{detail:null,issue:{sku:String(p.sku),error:String(e.message).replace(/fc-[\w-]+/g,'[redacted]').slice(0,180),status:e.status||0}};}}
