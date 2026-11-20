@@ -23,6 +23,7 @@ import {recordSourceOutcome} from './source-health.mjs';
 import {productInformation,parseDetails,applyDetails} from './details.mjs';
 import {readPreflightProduct} from './preflight-product.mjs';
 import {resumeFullDirectory} from './full-directory-reuse.mjs';
+import {partialCatalogueCheckpoint} from './full-catalogue-checkpoint.mjs';
 export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budgetFactory=openCreditBudget,now=()=>Date.now()}={}){
  const previous=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),policy={...await loadPolicy(),familyBatchSize:100,familyBatchConcurrency:8,familyFetchTimeoutMs:20000,adaptiveFamilies:true,imageBodyBatchSize:250,imageHashBatchSize:1000,maxFallbackScrapesPerRun:56};
  const previousStatus=await fs.readFile('web/status.json','utf8').then(JSON.parse).catch(()=>({}));
@@ -34,7 +35,7 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
  const state={schedule:scheduleLabel(config),timezone:'Asia/Shanghai',nextCheckAt:config.nextRunAt||null,startedAt:new Date(now()).toISOString(),lastSuccess:previous.observedAt||null,revision:previous.revision,running:true,mode:'firecrawl-browser',lastError:null,provider:'firecrawl-browser',firecrawlRequests:0,firecrawlCredits:0};
  const collection=await readState();collection.completed=[];collection.attempted={};if(collection.provider!=='firecrawl-browser')collection.failures={};collection.provider='firecrawl-browser';
  const priorCycle=previousStatus.fullCycle;const cycle=priorCycle?.pending&&priorCycle.due===config.nextRunAt?priorCycle:{due:config.nextRunAt,cutoff:Date.parse(config.nextRunAt)<=now()?config.nextRunAt:new Date(now()).toISOString(),attempt:0};state.fullCycle={...cycle,attempt:cycle.attempt+1,pending:true};policy.detailMaxAgeDays=Math.max(0,(now()-Date.parse(cycle.cutoff))/86400000);policy.imageRefreshAfter=cycle.cutoff;policy.imageCheckpoint='web/full-image-checkpoint.json';
- let reader,budget,decorations,lights,themes,previousLights,catalogueReady=false;
+ let reader,budget,decorations,lights,themes,previousLights,pendingCatalogue,catalogueReady=false;
  try{
   budget=await budgetFactory(policy);
   reader=await readerFactory({policy,budget});
@@ -45,7 +46,7 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
    const checked=await readPreflightProduct(reader,p,url);preflight=checked.detail;
    console.log(JSON.stringify(checked.issue?{phase:'individual-preflight-detail-pending',...checked.issue,directoryValidationRemainsRequired:true}:{phase:'official-preflight-SKU-verified',sku:p.sku}));
   }});
-  let next=gathered.snapshot;catalogueReady=true;const reuseOptions=kind=>({kind,cycle:priorCycle,due:config.nextRunAt,now:now()});const previousDecorations=await readDecorations(),savedDecorations=resumeFullDirectory(previousDecorations,reuseOptions('decorations'));decorations=previousDecorations.baselineReady?(savedDecorations||await collectDecorationDirectory(reader,previousDecorations)):null;if(decorations)await loadDecorationDetails(decorations.products);previousLights=await readLights();const savedLights=resumeFullDirectory(previousLights,reuseOptions('lights'));lights=previousLights.baselineReady?(savedLights||await collectLightDirectory(reader,previousLights,[next,decorations])):null;
+  let next=gathered.snapshot;pendingCatalogue=next;catalogueReady=true;const reuseOptions=kind=>({kind,cycle:priorCycle,due:config.nextRunAt,now:now()});const previousDecorations=await readDecorations(),savedDecorations=resumeFullDirectory(previousDecorations,reuseOptions('decorations'));decorations=previousDecorations.baselineReady?(savedDecorations||await collectDecorationDirectory(reader,previousDecorations)):null;if(decorations)await loadDecorationDetails(decorations.products);previousLights=await readLights();const savedLights=resumeFullDirectory(previousLights,reuseOptions('lights'));lights=previousLights.baselineReady?(savedLights||await collectLightDirectory(reader,previousLights,[next,decorations])):null;
   const previousThemes=await readThemes(),savedThemes=resumeFullDirectory(previousThemes,reuseOptions('themes'));themes=previousThemes.baselineReady?(savedThemes||await collectThemeDirectory(reader,previousThemes,[next,decorations,lights])):null;const reused=[savedDecorations&&'decorations',savedLights&&'lights',savedThemes&&'themes'].filter(Boolean);if(reused.length)console.log(JSON.stringify({phase:'resume-only-unfinished-full-evidence',directoryScopesReused:reused,originalObservationDatesPreserved:true,sourceRequests:0,firecrawlCredits:0}));restoreProducts(next,collection,policy);await restoreVerifiedRegistry(next.products);reconcileVerifiedEvidence([next,decorations,lights,themes]);
   const oldBySku=new Map(previous.products.map(p=>[p.sku,p])),previousIssues=new Set((previous.detailsAudit?.issues||[]).map(p=>p.sku));
   const difficult=next.products.filter(p=>(!p.attributeObservedAt||Date.parse(p.attributeObservedAt)<Date.parse(cycle.cutoff)||!unchangedDetailInput(oldBySku.get(p.sku),p))&&(oldBySku.get(p.sku)?.detailEvidence?.sourceTransport==='enhanced-batch'||previousIssues.has(p.sku)||(policy.enhancedFamilyIds||[]).some(id=>p.productPath?.endsWith('/'+id))));
@@ -59,6 +60,7 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
   if(detailEnabled){
    const checked=next;
    next=(await catalogueSnapshot({previous:checked,reader,policy,now,forceFresh:true,onProgress:c=>console.log('发布前目录复核 '+c)})).snapshot;
+   pendingCatalogue=next;
    const delta=await refreshDetails({previous:checked,snapshot:next,reader,policy,budget,state:collection,now,enabled:true});
    const present=new Set(next.products.map(p=>p.sku));
    audit={...delta,checked:audit.checked+delta.checked,succeeded:audit.succeeded+delta.succeeded,issues:[...new Map([...audit.issues,...delta.issues].filter(x=>present.has(x.sku)).map(x=>[x.sku,x])).values()],mode:'all-SKU-pages-attempted',reused:delta.reused,catalogueReconciledBeforePublish:true};
@@ -97,6 +99,7 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
   await reader?.close?.().catch(()=>{});const metrics=reader?.metrics?.()||{};
   await budget?.settle({credits:metrics.firecrawlCredits||0,receipt:metrics.receipt||null,report:{success:false,error:message,provider:'firecrawl-browser',native:metrics}});
   state.firecrawlCredits=metrics.firecrawlCredits||0;state.firecrawlRequests=metrics.firecrawlRequests||0;
+  const partial=partialCatalogueCheckpoint(pendingCatalogue,{failedAt:new Date(now()).toISOString(),reason:message});if(partial){await atomicJson('web/catalogue.json',partial);state.lastDirectorySuccess=partial.observedAt;state.directoryCheckpoint={sourceObservedAt:partial.observedAt,detailsComplete:false};state.revision=partial.revision;console.log(JSON.stringify({phase:'durable-current-directory-with-pending-details',sourceObservedAt:partial.observedAt,products:partial.products.length,detailsComplete:false,sourceRequests:0,firecrawlCredits:0}));}
   state.running=false;state.lastError={message,at:new Date(now()).toISOString(),phase:catalogueReady?'details':'catalogue'};state.collectionAudit={provider:'firecrawl-browser',firecrawlEnabled:true,firecrawlRequests:metrics.firecrawlRequests||0,firecrawlCredits:metrics.firecrawlCredits||0,native:metrics,paidFallback:false,verifiedNewSnapshot:false};
   if(lights){await publishLights(lights,metrics);}
   if(themes){await publishThemes(themes,metrics);}
