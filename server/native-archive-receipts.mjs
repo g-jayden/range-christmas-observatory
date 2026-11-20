@@ -9,6 +9,7 @@ export function restoreNativeRunReceipts(current,archive,{runId,authorizationId}
   const target=out.periods?.[period];if(!target||!Number.isFinite(target.used))throw Error('Current receipt period missing');
   const known=Object.values(out.periods).flatMap(v=>v.runs||[]).find(x=>id(x)===id(r)),mark=out.restoredNativeReceipts[id(r)];if(known&&known.credits!==r.credits||mark&&(mark.credits!==r.credits||mark.period!==period))throw Error('Conflicting archived native receipt amount');
   if(!known&&!mark){target.used+=r.credits;target.runs=[...(target.runs||[]),copy(r)].sort((a,b)=>String(a.completedAt).localeCompare(String(b.completedAt))).slice(-80);added++;credits+=r.credits;}
+  const scoped={receiptId:id(r),credits:r.credits,authorizationId,scope:'failed-native-originals-all-retailers'},prior=target.uncappedReceipts?.[id(r)];if(prior&&JSON.stringify(prior)!==JSON.stringify(scoped))throw Error('Conflicting archived native scope');target.uncappedReceipts||={};target.uncappedReceipts[id(r)]=scoped;
   out.restoredNativeReceipts[id(r)]={period,credits:r.credits,runId:String(runId)};
   if(Date.parse(r.completedAt)>Date.parse(out.nativeImageFallback?.completedAt||'1970-01-01'))out.nativeImageFallback={...copy(r.receipt),monthlyLimit:null,sourceCatalogueRequests:0};
  }
