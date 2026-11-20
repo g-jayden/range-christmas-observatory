@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import {atomicJson,SourceError} from './sync.mjs';
+import {loadUncappedCreditGrants,indexUncappedCreditReceipts,ordinaryCreditUsage} from './credit-scope.mjs';
 const file='web/collection-ledger.json';
 export const periodKey=(now=Date.now())=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit'}).format(new Date(now));
 export const runKey=()=>String(process.env.GITHUB_RUN_ID||'local')+'-'+String(process.env.GITHUB_RUN_ATTEMPT||'1');
@@ -12,13 +13,14 @@ export async function readLedger(){
   if(!/^mcp-[a-f0-9-]+$/.test(r.id)||!/^\d{4}-\d{2}$/.test(r.period)||!Number.isFinite(r.credits)||!Number.isFinite(r.refunded)||r.credits<0||r.refunded<0||r.refunded>r.credits)throw Error('Invalid diagnostic billing receipt');
   const p=data.periods[r.period]||={used:0,reservations:{}},net=r.credits-r.refunded;p.used+=net;p.externalCredits=(p.externalCredits||0)+net;data.externalReceipts[r.id]=r;
  }data.unreceiptedDiagnostics=diagnostics.unreceipted;}
+ const grants=await loadUncappedCreditGrants();for(const p of Object.values(data.periods))indexUncappedCreditReceipts(p,grants);
  return data;
 }
 export async function reserveCredits(policy,{now=Date.now(),key=runKey(),accountRemaining=Infinity}={}){
  const ledger=await readLedger(),period=periodKey(now),p=ledger.periods[period]||={used:0,reservations:{}};p.reservations||={};
  if(p.reservations[key])return {ledger,period,key,limit:p.reservations[key].amount};
  const reserved=Object.values(p.reservations).reduce((n,r)=>n+r.amount,0);
- const limit=Math.floor(Math.min(policy.maxCreditsPerRun,policy.maxCreditsPerCalendarMonth-p.used-reserved,accountRemaining-policy.accountReserveCredits));
+ const limit=Math.floor(Math.min(policy.maxCreditsPerRun,policy.maxCreditsPerCalendarMonth-ordinaryCreditUsage(p).ordinary-reserved,accountRemaining-policy.accountReserveCredits));
  if(limit<(policy.minimumReservationCredits===1?1:2))throw budgetError('本项目积分上限或账户保留额度不足，尚未创建付费会话');
  p.reservations[key]={amount:limit,createdAt:new Date(now).toISOString()};
  ledger.provider='firecrawl-browser';await atomicJson(file,ledger);
