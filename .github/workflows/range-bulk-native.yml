@@ -1,8 +1,5 @@
 name: The Range bulk native originals independently of daily checks
 on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/range-bulk-native.yml']
   workflow_dispatch:
     inputs:
       continuationDepth:
