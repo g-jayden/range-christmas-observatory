@@ -1,6 +1,11 @@
 name: ASDA Christmas exact SKU collection
 on:
   workflow_dispatch:
+    inputs:
+      rebuildOnly:
+        description: Apply an already closed current source without source or paid calls
+        type: boolean
+        default: false
 permissions:
   contents: write
 concurrency:
@@ -12,7 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+      FIRECRAWL_API_KEY: ${{ inputs.rebuildOnly != true && secrets.FIRECRAWL_API_KEY || '' }}
+      ASDA_REBUILD_ONLY: ${{ inputs.rebuildOnly == true && 'true' || 'false' }}
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
@@ -21,6 +27,11 @@ jobs:
       - uses: actions/checkout@v7.0.1
         with:
           ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/images/*
+            /web/images/asda/
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'

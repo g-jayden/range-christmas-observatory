@@ -1,3 +1,4 @@
+import{recoverAsdaClosedSource}from'../server/asda-source-acceptance.mjs';
 import {publishCollectionCheckpoint} from '../server/collection-checkpoints.mjs';
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
@@ -10,6 +11,7 @@ import {atomicJson} from '../server/sync.mjs';
 const DIR='web/asda',ROOT='https://direct.asda.com/george/christmas/trees-decorations/D18M2G1,default,sc.html',read=async(name,fallback)=>fs.readFile(DIR+'/'+name,'utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return fallback;throw e;});
 await fs.mkdir(DIR,{recursive:true});
 const request=await read('request.json',{}),previous=await read('catalogue.json',{products:[]}),checkpoint=await read('checkpoint.json',{details:{}}),initial=!previous.notificationBaselineReady;
+if(process.env.ASDA_REBUILD_ONLY==='true'){const recovered=recoverAsdaClosedSource(previous,await read('source-directory.json',null),await read('directory-checkpoint.json',null));await atomicJson(DIR+'/catalogue.json',recovered);const status=await read('status.json',{});await atomicJson(DIR+'/status.json',{...status,baselineReady:true,collectionComplete:true,detailEvidencePending:recovered.detailEvidencePending,sourceAcceptance:recovered.sourceAcceptance});console.log(JSON.stringify({phase:'ASDA apply current complete source independently of individual detail failures',detailEvidencePending:recovered.detailEvidencePending,sourceRequests:0,firecrawlCredits:0}));process.exit(0);}
 if(process.env.GITHUB_EVENT_NAME==='push'&&!['pending','needs-evidence'].includes(request.state)){console.log('ASDA request already completed; no paid requests');process.exit(0);}
 const nowBjt=new Date(Date.now()+28800000).toISOString().slice(0,10),dailyDueAt=Date.parse(nowBjt+'T07:00:00+08:00');if(!initial&&process.env.GITHUB_EVENT_NAME!=='push'&&Date.parse(previous.observedAt)>=dailyDueAt){console.log('ASDA daily source observation already completed; no duplicate paid requests');process.exit(0);}
 const key=process.env.FIRECRAWL_API_KEY;if(!key)throw Error('Firecrawl server credential required');
@@ -65,7 +67,7 @@ try{
   }
   await atomicJson(DIR+'/checkpoint.json',checkpoint);await atomicJson(DIR+'/directory-checkpoint.json',{observedAt,total,products});console.log(JSON.stringify({phase:'ASDA exact SKU checkpoint',processed:Math.min(i+36,needed.length),total:needed.length,credits}));
  }
- const ready=products.filter(p=>p.detailsReady),snapshot={retailerId:'asda',sourceUrl:ROOT,observedAt,baselineReady:ready.length===products.length,notificationBaselineReady:previous.notificationBaselineReady||false,notificationBaselineAt:previous.notificationBaselineAt||null,totalSourceProducts:total,uniqueSourceSkus:[...listings.keys()].filter(id=>/^\d+$/.test(id)).length,expandedVariants:listings.size-total,products,revision:createHash('sha256').update(JSON.stringify(products)).digest('hex')};
+ const ready=products.filter(p=>p.detailsReady),snapshot={retailerId:'asda',sourceUrl:ROOT,observedAt,collectionComplete:true,detailEvidencePending:products.length-ready.length,baselineReady:previous.notificationBaselineReady===true||ready.length===products.length,notificationBaselineReady:previous.notificationBaselineReady||false,notificationBaselineAt:previous.notificationBaselineAt||null,totalSourceProducts:total,uniqueSourceSkus:[...listings.keys()].filter(id=>/^\d+$/.test(id)).length,expandedVariants:listings.size-total,products,revision:createHash('sha256').update(JSON.stringify(products)).digest('hex')};
  await atomicJson(DIR+'/catalogue.json',snapshot);
  await atomicJson(DIR+'/status.json',{state:ready.length===products.length?'active':'active-with-source-issues',baselineReady:snapshot.baselineReady,observedAt,total,productRecords:products.length,uniqueSourceSkus:snapshot.uniqueSourceSkus,expandedVariants:snapshot.expandedVariants,products:products.filter(p=>p.inStock&&p.recordType==='sku').length,details:ready.length,issues:products.filter(p=>p.detailIssue).map(p=>({sku:p.sku,...p.detailIssue})),firecrawlCredits:credits,requests});
  request.state=snapshot.baselineReady?'complete':'needs-evidence';request.completedAt=new Date().toISOString();await atomicJson(DIR+'/request.json',request);
