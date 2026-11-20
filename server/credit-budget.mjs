@@ -33,7 +33,7 @@ export async function openCreditBudget(policy){
  return {limit:reservation.amount,remaining:()=>settled?0:Infinity,summary:()=>({provider:'firecrawl-browser',runLimit:reservation.amount,monthLimit:policy.maxCreditsPerCalendarMonth}),async settle({credits=0,receipt=null,report=null}={}){
   if(settled)return;ledger=await readLedger();const p=ledger.periods[period],r=p?.reservations?.[key];if(!r)throw Error('Credit reservation is missing');
   if(!Number.isFinite(credits)||credits<0)throw Error('Invalid Firecrawl credit receipt');
-  p.used+=credits;delete p.reservations[key];p.runs||=[];p.runs.push({key,credits,receipt,completedAt:new Date().toISOString()});p.runs=p.runs.slice(-80);
+  p.used+=credits;delete p.reservations[key];p.runs||=[];p.runs.push({key,credits,receipt,completedAt:new Date().toISOString()});p.runs=p.runs.slice(-80);indexUncappedCreditReceipts(p,await loadUncappedCreditGrants());
   ledger.lastRun=report;ledger.provider='firecrawl-browser';await atomicJson(file,ledger);settled=true;
  }};
 }
