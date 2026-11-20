@@ -1,8 +1,10 @@
+import{nativeSourceUrl}from'../web/product-facts.mjs';
+import{exactNativeGalleryMember}from'./native-gallery-identity.mjs';
 import {hasVerifiedDetails} from './verified-evidence.mjs';
 import {treeHeightConflict} from '../web/catalogue-model.mjs';
 export function productEvidenceHealth(snapshots){
  const scopes=['catalogue','decorations','lights','themes'],unique=new Map(),coverage={};
- const photo=p=>Boolean(p.cachedImageUrl&&p.imageCacheEvidence?.sha256&&p.imageCacheEvidence.sourceUrl===(p.variantImageUrl||p.imageUrl));
+ const photo=p=>{if(p.cachedImageUrl&&p.imageCacheEvidence?.sha256&&p.imageCacheEvidence.sourceUrl===(p.variantImageUrl||p.imageUrl))return true;const e=p.originalImageEvidence,source=nativeSourceUrl(p);return Boolean(e&&String(e.selectedSku)===String(p.sku)&&e.sourceUrl===source&&/^[a-f0-9]{64}$/.test(e.sha256||'')&&e.width>=64&&e.height>=64&&p.originalCachedImageUrl?.includes('/'+e.sha256+'.')&&p.originalImages?.some(g=>g.url===source&&exactNativeGalleryMember(p,g)));};
  for(let i=0;i<snapshots.length;i++){const s=snapshots[i];if(!s)continue;coverage[scopes[i]]={total:s.products.length,verifiedDetails:s.products.filter(hasVerifiedDetails).length,verifiedPhotos:s.products.filter(photo).length,sourceObservedAt:s.observedAt};
   for(const p of s.products){if(p.taxonomyAudit?.disposition&&p.taxonomyAudit.disposition!=='include')continue;if(!unique.has(p.sku))unique.set(p.sku,{sku:p.sku,title:p.variantName,sourceUrl:p.sourceUrl,scopes:[],missingDetails:[],missingPhotos:[],issues:[],dimensionConflicts:[]});const item=unique.get(p.sku);item.scopes.push(scopes[i]);if(!hasVerifiedDetails(p)){item.missingDetails.push(scopes[i]);if(p.detailIssue)item.issues.push(p.detailIssue);}if(!photo(p))item.missingPhotos.push(scopes[i]);const conflict=treeHeightConflict(p);if(conflict)item.dimensionConflicts.push({scope:scopes[i],...conflict});}
  }
