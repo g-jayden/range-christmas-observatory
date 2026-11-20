@@ -44,9 +44,9 @@ export function nativeSourceUrl(p,item){
  if(item?.url)return usableNativeUrl(item.url)?item.url:null;
  const reviewed=reviewedWholeGalleryPhoto(p);if(reviewed)return reviewed.url;
  const known=g=>(g.selectedSku!=null?String(g.selectedSku)===String(p.sku):p.variantId!=null&&String(g.variantId)===String(p.variantId)&&p.detailEvidence?.verifiedProductSection&&String(p.detailEvidence.selectedSku)===String(p.sku))&&usableNativeUrl(g.url);
- const selected=p.displayImage?.sourceUrl||p.previewImage?.sourceUrl,pair=p.originalImages?.find(g=>(g.url===selected||g.thumbnail===selected)&&known(g));
+ const selected=p.displayImage?.sourceUrl||p.previewImage?.sourceUrl,pair=selected&&p.originalImages?.find(g=>(g.url===selected||g.thumbnail===selected)&&known(g));
  if(pair)return pair.url;
- const current=p.variantImageUrl||p.imageCacheEvidence?.sourceUrl,matching=p.originalImages?.find(g=>(g.url===current||g.thumbnail===current)&&known(g));
+ const current=p.variantImageUrl||p.imageCacheEvidence?.sourceUrl,matching=current&&p.originalImages?.find(g=>(g.url===current||g.thumbnail===current)&&known(g));
  if(matching)return matching.url;
  if(usableNativeUrl(p.originalImageUrl))return p.originalImageUrl;
  const fallback=matching||p.originalImages?.find(known);return fallback?.url||(usableNativeUrl(selected)?selected:null);

@@ -1,6 +1,6 @@
 import {DEPARTMENT_MAP} from './catalogue-model.mjs';
 
-export const PDF_LAYOUT_VERSION='native-eight-bilingual-names-v4';
+export const PDF_LAYOUT_VERSION='native-eight-bilingual-names-v5';
 const clean=value=>String(value||'').replace(/\s+/g,' ').trim();
 const concepts=[
  [/\bdark forest green\b/i,'深森林绿'],[/\bsage green\b/i,'鼠尾草绿'],[/\bmonochrome\b/i,'黑白色'],[/\bspots?\b/i,'波点'],[/\bbiscuits?\b/i,'饼干造型'],[/\bbakery\b/i,'烘焙点心造型'],[/\bpersonalised\b|\bpersonalized\b/i,'定制'],[/\bdog breeds?\b/i,'犬种图案'],[/\bcheck(?:ed)?\b/i,'格纹'],
