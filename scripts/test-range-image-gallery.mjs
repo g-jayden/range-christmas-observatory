@@ -1,0 +1,11 @@
+import assert from'node:assert/strict';import{readRangeImageGalleries,acceptedImageGallery}from'../server/range-image-gallery.mjs';
+const product={sku:'123',variantId:'v123',sourceUrl:'https://www.therange.co.uk/p/exact/p123/#123',variantImageUrl:'https://www.therange.co.uk/media/thumbnail.jpg'},image='https://www.therange.co.uk/media/original.jpg',priorFetch=globalThis.fetch,priorDOM=globalThis.DOMParser;
+try{
+ let variant={sku:'123',code:'123',id:'v123',prod_id:'999'},imageSku='v123',imageUrl=image;
+ globalThis.fetch=async url=>url.endsWith('?json')?Response.json({variant_arr:[variant]}):new Response('<product>');
+ globalThis.DOMParser=class{parseFromString(){return{querySelector:s=>s==='#product_id'?{value:'999'}:null,querySelectorAll:s=>s.includes('a.rsImg')?[{getAttribute:k=>k==='href'?imageUrl:null,querySelector:()=>({getAttribute:k=>k==='data-variant'?imageSku:product.variantImageUrl})}]:[]};}};
+ const [gallery]=await readRangeImageGalleries({products:[product]});assert(acceptedImageGallery(product,gallery));assert.equal(gallery.images[0].url,image);assert(!('description' in gallery));assert(!('specifications' in gallery));assert(!('detailEvidence' in gallery));
+ for(const wrong of [{...gallery,sku:'other'},{...gallery,inputSourceUrl:product.sourceUrl+'different'},{...gallery,listingImageUrl:image},{...gallery,variantId:'other'},{...gallery,sourceUrl:'https://foreign.invalid/product'}])assert(!acceptedImageGallery(product,wrong));
+ variant={...variant,prod_id:'other'};assert.equal((await readRangeImageGalleries({products:[product]}))[0].images.length,0);variant={...variant,prod_id:'999'};imageSku='foreign';assert.equal((await readRangeImageGalleries({products:[product]}))[0].images.length,0);imageSku='v123';imageUrl='https://foreign.invalid/photo.jpg';assert.equal((await readRangeImageGalleries({products:[product]}))[0].images.length,0);
+ console.log('Image-only discovery binds official gallery URLs to exact SKU, variant, family, current listing image and source page; foreign images and identities are rejected and no PDP facts are promoted.');
+}finally{globalThis.fetch=priorFetch;if(priorDOM===undefined)delete globalThis.DOMParser;else globalThis.DOMParser=priorDOM;}
