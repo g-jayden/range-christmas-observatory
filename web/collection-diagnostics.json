@@ -512,5 +512,20 @@
       "error": "MCP transport closed; provider receipt not returned",
       "credits": null
     }
+  ],
+  "reservationScopes": [
+    {
+      "period": "2026-11",
+      "key": "44459609460-1",
+      "amount": 60,
+      "createdAt": "2026-11-19T04:44:00Z",
+      "authorizationId": "all-retailers-free-first-native-originals-20261119",
+      "scope": "failed-native-originals-all-retailers",
+      "workflow": ".github/workflows/range-native.yml",
+      "workflowRunId": 44459609460,
+      "workflowUrl": "https://github.com/g-jayden/range-christmas-observatory/actions/runs/44459609460",
+      "checkedAt": "2026-11-20T02:58:00Z",
+      "evidence": "GitHub run metadata confirms this failed run collected only original images and no catalogue. Preserve the uncertain hold; classify its scope without asserting a charge or refund."
+    }
   ]
 }
