@@ -65,6 +65,12 @@ jobs:
         with:
           path: runtime/fonts
           key: report-noto-cjk-v1
+      - name: Recover only free-failed pending Range originals in one exact image batch
+        if: inputs.testOwner != true && inputs.repairCombined != true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          COLLECTION_CHECKPOINTS: '1'
+        run: node scripts/recover-range-mail-originals.mjs
       - name: Group verified NEW items into eight native photos per page
         run: node scripts/prepare-daily-digests.mjs
       - name: Publish the immutable product report before sending
