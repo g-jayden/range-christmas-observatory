@@ -1,5 +1,8 @@
 name: Restore the latest archived originals without repeat collection
 on:
+  push:
+    paths:
+      - .github/workflows/restore-latest-native.yml
   workflow_dispatch:
 permissions:
   contents: write
@@ -9,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 65
     concurrency:
-      group: approved-native-image-recovery
+      group: archived-native-bytes-44707707847
       cancel-in-progress: false
       queue: max
     env:
@@ -30,17 +33,37 @@ jobs:
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
+      - name: Replace the queued shared-group restoration without interrupting collection
+        id: prior
+        run: |
+          node --input-type=module - <<'JS'
+          const root='https://api.github.com/repos/g-jayden/range-christmas-observatory',headers={authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json'},id=44724739380;
+          const r=await fetch(root+'/actions/runs/'+id,{headers,signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error('Prior archive status HTTP '+r.status);const run=await r.json();if(run.path!=='.github/workflows/restore-latest-native.yml'||run.head_repository.full_name!=='g-jayden/range-christmas-observatory')throw Error('Foreign archive job');
+          if(run.status==='in_progress'){await import('node:fs/promises').then(fs=>fs.appendFile(process.env.GITHUB_OUTPUT,'already_active=true\n'));console.log(JSON.stringify({existingArchiveRestorationActive:true,sourceRequests:0,firecrawlCredits:0}));}
+          else if(['queued','pending','waiting'].includes(run.status)){const c=await fetch(root+'/actions/runs/'+id+'/cancel',{method:'POST',headers,signal:AbortSignal.timeout(20000)});if(![202,409].includes(c.status))throw Error('Queued archive replacement HTTP '+c.status);console.log(JSON.stringify({queuedArchiveReplaced:id,activeCollectionCancelled:false,sourceRequests:0,firecrawlCredits:0}));}
+          JS
       - name: Verify the immutable archive and completed source run
+        if: steps.prior.outputs.already_active != 'true'
         run: node scripts/verify-latest-native-archive.mjs
       - uses: actions/download-artifact@v8.0.2
+        if: steps.prior.outputs.already_active != 'true'
         with:
           name: native-original-evidence-44707707847-1
           run-id: 44707707847
           github-token: ${{ github.token }}
           path: runtime/restore-native
       - name: Verify native hashes and restore only missing bytes
+        if: steps.prior.outputs.already_active != 'true'
         run: node scripts/restore-native-artifact.mjs
       - name: Save missing photos and exact source bindings in bounded batches
+        if: steps.prior.outputs.already_active != 'true'
         run: node scripts/publish-native-recovery.mjs
       - name: Publish originals without recollecting products
+        if: steps.prior.outputs.already_active != 'true'
         run: node scripts/request-retailer-site-publish.mjs ar
+      - name: Verify remaining originals from the restored exact source index
+        if: success() && steps.prior.outputs.already_active != 'true'
+        run: |
+          node --input-type=module - <<'JS'
+          const r=await fetch('https://api.github.com/repos/g-jayden/range-christmas-observatory/actions/workflows/native-images.yml/dispatches',{method:'POST',headers:{authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json','content-type':'application/json'},body:JSON.stringify({ref:'main',inputs:{continuationDepth:'0'}}),signal:AbortSignal.timeout(20000)});if(r.status!==204)throw Error('Native verification dispatch HTTP '+r.status);console.log(JSON.stringify({remainingNativeVerificationRequested:true,sourceRequests:0,firecrawlCredits:0}));
+          JS
