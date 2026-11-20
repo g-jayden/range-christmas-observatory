@@ -1,5 +1,8 @@
 import {applySavedRetailerReview} from '../server/saved-retailer-reviews.mjs';
 import fs from 'node:fs/promises';import {createHash} from 'node:crypto';import {jlAppearanceFingerprint} from '../server/jl-products.mjs';import {nextReviewMatches} from '../server/nx-image-freshness.mjs';import {NX_DEPARTMENTS} from '../web/nx-model.mjs';import {atomicJson} from '../server/sync.mjs';
+// Daily Range source and targeted repair jobs must not rewrite another
+// retailer while its independent collector is publishing the same catalogue.
+if(process.env.COLLECTION_MODE&&process.env.COLLECTION_MODE!=='publish'){console.log(JSON.stringify({phase:'Cross-retailer publication is isolated from Range source work',sourceRequests:0,firecrawlCredits:0,foreignCataloguesWritten:0}));process.exit(0);}
 const treeStyles=['圣诞树盆栽','折叠式圣诞树','纤细圣诞树','雪景款','预亮灯款','标准款','其它树形类别'];
 for(const id of ['nx','jl']){
  const read=f=>fs.readFile('web/'+id+'/'+f,'utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return null;throw e;});

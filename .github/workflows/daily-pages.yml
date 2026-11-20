@@ -112,7 +112,7 @@ jobs:
         if: steps.tick.outputs.publish == 'true'
         run: node scripts/hydrate-retailer-images.mjs
       - name: Apply matching complete-gallery audit without source requests
-        if: steps.tick.outputs.publish == 'true'
+        if: inputs.mode == 'publish'
         run: node scripts/apply-retailer-gallery-audits.mjs
       - name: Verify source integrity, SKU matching and credit limits
         if: steps.tick.outputs.publish == 'true' || inputs.mode == 'probe'
