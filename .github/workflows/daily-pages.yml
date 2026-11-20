@@ -241,7 +241,7 @@ jobs:
         run: node scripts/optimise-product-previews.mjs
       - name: Collect ASDA within the remaining shared run budget
         id: asda
-        if: steps.tick.outputs.asda == 'true'
+        if: steps.tick.outputs.asda == 'true' && (steps.budget.outcome == 'success' || steps.tick.outputs.work != 'true')
         continue-on-error: true
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
@@ -250,12 +250,6 @@ jobs:
           node scripts/update-asda.mjs
           node scripts/enrich-asda.mjs
           node scripts/prepare-asda-notifications.mjs
-      - name: Complete the selected interval
-        if: always() && steps.tick.outputs.full == 'true' && steps.tick.outputs.full_lease != ''
-        env:
-          REFRESH_SUCCESS: ${{ steps.refresh.outputs.catalogue_success == 'true' }}
-          SCHEDULE_LEASE: ${{ steps.tick.outputs.full_lease }}
-        run: node scripts/complete-full.mjs
       - name: Release this run's unfinished NEW claim
         if: always() && steps.tick.outputs.monitor == 'true'
         run: node scripts/release-unused-monitor.mjs
@@ -296,6 +290,28 @@ jobs:
           retention-days: 1
           compression-level: 9
           if-no-files-found: error
+      - name: Preserve the full Range source and actual receipt before publication
+        if: always() && steps.tick.outputs.full == 'true' && steps.refresh.outcome != 'skipped'
+        continue-on-error: true
+        timeout-minutes: 8
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: range-source-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            web/catalogue.json
+            web/status.json
+            web/collection-ledger.json
+            web/decorations.json
+            web/decoration-details/
+            web/lights.json
+            web/light-details/
+            web/themes.json
+            web/theme-details/
+            web/original-image-map/
+            web/full-image-checkpoint.json
+            web/images/source/
+            runtime/collection/
+          retention-days: 3
       - name: Preserve data and source status
         id: evidence
         if: always() && (steps.tick.outputs.publish == 'true' || (inputs.mode == 'probe' || inputs.mode == 'catalogue-probe'))
@@ -306,6 +322,18 @@ jobs:
           git add --sparse -- web
           git diff --cached --quiet || git commit -m "Update free-source catalogue and verification status"
           node scripts/push-evidence.mjs
+      - name: Complete the selected interval
+        if: always() && steps.tick.outputs.full == 'true' && steps.tick.outputs.full_lease != ''
+        env:
+          REFRESH_SUCCESS: ${{ steps.refresh.outputs.catalogue_success == 'true' && steps.evidence.outcome == 'success' }}
+          SCHEDULE_LEASE: ${{ steps.tick.outputs.full_lease }}
+        run: |
+          node scripts/complete-full.mjs
+          if [ "${{ steps.evidence.outcome }}" = "success" ]; then
+            git add --sparse -- web/settings.json web/status.json
+            git diff --cached --quiet || git commit -m "Record durable full-refresh schedule outcome [skip ci]"
+            EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
+          fi
       - name: Send verified NEW emails from committed, accessible native attachments
         id: delivery
         continue-on-error: true

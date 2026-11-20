@@ -36,8 +36,10 @@ for(let n=0;n<4;n++)await retryFull(at+n*15*60000);assert.equal(fullCalls,3);ass
 
 const dailyYaml=await fs.readFile('.github/workflows/daily-pages.yml','utf8'),bootstrapYaml=await fs.readFile('.github/workflows/decorations-bootstrap.yml','utf8');
 for(const yaml of[dailyYaml,bootstrapYaml])assert(!/^[ \t]+git (?:push|pull)/m.test(yaml),'Every data-writing stage must use the shared private publication lease, including budget reservations');
-const completeStep=dailyYaml.slice(dailyYaml.indexOf('- name: Complete the selected interval'),dailyYaml.indexOf('- name: Release this run'));assert(completeStep.includes("steps.tick.outputs.full_lease != ''"));assert(!completeStep.includes("steps.refresh.outcome != 'skipped'"),'A budget or preflight failure must release its full-refresh claim even when no source session opened');
+const completeStep=dailyYaml.slice(dailyYaml.indexOf('- name: Complete the selected interval'),dailyYaml.indexOf('- name: Send verified NEW emails'));assert(completeStep.includes("steps.tick.outputs.full_lease != ''"));assert(!completeStep.includes("steps.refresh.outcome != 'skipped'"),'A budget or preflight failure must release its full-refresh claim even when no source session opened');
 
 assert(dailyYaml.includes("'!/web/mail-assets/'"),'Source checks must not download the historical email attachment archive');assert(dailyYaml.includes('git add --sparse -- web'),'New exact native files created outside a sparse checkout must still be explicitly committed');
 
 assert(dailyYaml.includes('npm ci --no-audit --no-fund')&&!dailyYaml.includes('run: npm install'),'Collection setup must preserve the committed dependency lock');assert(dailyYaml.includes('hydrate-current-previews.mjs --retailer=asda'),'An enabled ASDA collector needs its current exact preview files');
+
+assert(completeStep.includes("steps.evidence.outcome == 'success'"),'A full refresh can only advance its schedule after exact source files were committed');assert(dailyYaml.indexOf('- name: Preserve data and source status')<dailyYaml.indexOf('- name: Complete the selected interval'));assert(dailyYaml.includes('name: range-source-evidence-${{ github.run_id }}-${{ github.run_attempt }}'),'Retain full-source evidence separately from ASDA if final publication fails');
