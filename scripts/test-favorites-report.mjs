@@ -3,6 +3,7 @@ import {createFavoritesReportController} from '../web/favorites-report.mjs';
 const memory=new Map();globalThis.localStorage={getItem:k=>memory.get(k),setItem:(k,v)=>memory.set(k,v)};
 const {saveFavorites,favoriteProducts,removeFavorites,clearFavorites}=await import('../web/favorites-store.mjs');
 const a={retailerId:'nx',sku:'one',department:'nx-tree',priceGBP:20},b={...a,sku:'two'},c={...a,retailerId:'jl',sku:'one'};
+const inline={...a,fastPreview:{url:'card-previews/exact.webp',inlineUrl:'data:image/webp;base64,AAAA'},browseRecord:{url:'transient-record'}};saveFavorites([inline]);assert.equal(favoriteProducts()[0].fastPreview.inlineUrl,undefined);assert.equal(favoriteProducts()[0].fastPreview.url,inline.fastPreview.url);assert.equal(favoriteProducts()[0].browseRecord,undefined);assert.equal(inline.fastPreview.inlineUrl,'data:image/webp;base64,AAAA','Persisting a favorite must not mutate the active preview or source record');
 saveFavorites([a,b,c]);removeFavorites(['nx:one']);assert.deepEqual(favoriteProducts().map(p=>p.retailerId+':'+p.sku),['nx:two','jl:one']);clearFavorites();assert.equal(JSON.parse(memory.get('observatory-favorites-v1')).length,0);
 let stored=null,calls=0,scheduled=[],revoked=[],next=0,states=[];
 const cache={get:async key=>stored?.key===key?stored.blob:null,set:async(key,blob)=>{stored={key,blob};},remove:async()=>{stored=null;}};

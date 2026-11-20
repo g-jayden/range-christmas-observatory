@@ -3,7 +3,7 @@ const KEY='observatory-favorites-v1',listeners=new Set();let current;
 function read(){try{const value=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(value)?value:[];}catch{return[];}}
 export const favoriteProducts=()=>current??=(read());
 export const isFavorite=p=>favoriteProducts().some(x=>productKey(x)===productKey(p));
-export function saveFavorites(products){const unique=[...new Map(products.map(p=>[productKey(p),p])).values()];localStorage.setItem(KEY,JSON.stringify(unique));current=unique;for(const fn of listeners)fn(unique);}
+export function saveFavorites(products){const unique=[...new Map(products.map(p=>[productKey(p),p])).values()].map(p=>{const saved={...p};if(p.fastPreview?.inlineUrl){saved.fastPreview={...p.fastPreview};delete saved.fastPreview.inlineUrl;}delete saved.browseRecord;return saved;});localStorage.setItem(KEY,JSON.stringify(unique));current=unique;for(const fn of listeners)fn(unique);}
 export function toggleFavorite(p){const key=productKey(p),rows=favoriteProducts(),exists=rows.some(x=>productKey(x)===key);saveFavorites(exists?rows.filter(x=>productKey(x)!==key):[...rows,{...p,favoritedAt:new Date().toISOString()}]);return!exists;}
 export const onFavoritesChange=fn=>(listeners.add(fn),()=>listeners.delete(fn));
 export function removeFavorites(keys){const selected=new Set(keys);saveFavorites(favoriteProducts().filter(p=>!selected.has(productKey(p))));}
