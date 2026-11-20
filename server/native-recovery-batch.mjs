@@ -1,3 +1,4 @@
+import{createHash}from'node:crypto';
 // Interleave retailers so one blocked source cannot consume the entire job.
 // Stop before the runner timeout, leaving explicit pending work and enough time
 // to close the paid session, record its receipt, and commit recovered originals.
@@ -24,3 +25,6 @@ export async function recoverNativeBatch(entries,{reuse,recover,close,checkpoint
  status.scanComplete=status.processed===queue.length;status.complete=status.scanComplete&&status.issues.length===0;
  const result=snapshot();await checkpoint(result);return result;
 }
+
+export function nativeAuditFingerprint(entries,{mirrors={},trackedBlobs=new Map()}={}){const rows=entries.map(({retailerId,sku,source,product:p={}})=>{const e=p.originalImageEvidence||{},m=mirrors[source]||{},key=retailerId+':'+sku;return{retailerId,sku,source,page:p.sourceUrl,variantId:p.variantId,selected:p.originalImageUrl,declared:{sha256:e.sha256,source:e.sourceUrl,selectedSku:e.selectedSku,width:e.width,height:e.height,sourceVersion:e.sourceVersion},gallery:(p.originalImages||[]).filter(g=>g.url===source),conflict:p.sourceImageConflict||p.sourceConflict,localBlob:trackedBlobs.get('web/'+p.originalCachedImageUrl)||null,mirror:{ok:m.ok===true&&m.bindings?.includes(key),hash:m.hash,blob:trackedBlobs.get('web/'+m.cachedImageUrl)||null}};}).sort((a,b)=>(a.retailerId+':'+a.sku+'|'+a.source).localeCompare(b.retailerId+':'+b.sku+'|'+b.source));return createHash('sha256').update(JSON.stringify({version:'exact-native-source-inputs-v1',rows})).digest('hex');}
+export function canReuseNativeAudit(previous,fingerprint){if(previous?.sourceInputsFingerprint!==fingerprint||previous.scanComplete!==true||previous.pending?.length!==0)return false;if(previous.complete===true&&previous.issues?.length===0)return true;return previous.issues?.length>0&&previous.issues.every(i=>!i.source&&i.error==='Exact official public image target required'||i.error==='Paid original must belong to this exact SKU gallery'||/official-title-photo|Official title says Red & Gold|官网标题为红色/i.test(i.error||''));}
