@@ -83,3 +83,9 @@ jobs:
       - name: Continue only saved progress after successful publication
         if: success()
         run: node scripts/continue-range-bulk-native.mjs
+      - name: Verify saved native bindings with an explicit dispatch
+        if: success()
+        run: |
+          node --input-type=module - <<'JS'
+          const r=await fetch('https://api.github.com/repos/g-jayden/range-christmas-observatory/actions/workflows/native-images.yml/dispatches',{method:'POST',headers:{authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json','content-type':'application/json'},body:JSON.stringify({ref:'main',inputs:{continuationDepth:'0'}}),signal:AbortSignal.timeout(20000)});if(r.status!==204)throw Error('Native verification dispatch HTTP '+r.status);console.log(JSON.stringify({nativeVerificationRequested:true,sourceRequests:0,firecrawlCredits:0}));
+          JS

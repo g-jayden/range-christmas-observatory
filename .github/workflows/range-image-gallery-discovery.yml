@@ -1,4 +1,4 @@
-name: Diagnose exact missing image galleries using approved native allowance
+name: Recover exact missing image galleries using approved native allowance
 on:
   workflow_dispatch:
   push:
