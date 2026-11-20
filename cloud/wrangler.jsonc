@@ -5,7 +5,7 @@
   "main": "worker.mjs",
   "compatibility_date": "2026-10-30",
   "workers_dev": true,
-  "vars": {"DAILY_PDF_DIGEST": "true"},
+  "vars": {"DAILY_PDF_DIGEST": "true", "APPROVED_NATIVE_RECOVERY": "owner-native-20261120-v1"},
   "triggers": {"crons": ["0 23 * * *", "*/5 * * * *"]},
   "durable_objects": {"bindings": [{"name": "CONTROL", "class_name": "Control"}]},
   "migrations": [{"tag": "v1", "new_sqlite_classes": ["Control"]}],
