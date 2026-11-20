@@ -1,0 +1,61 @@
+name: The Range bulk native originals independently of daily checks
+on:
+  workflow_dispatch:
+    inputs:
+      continuationDepth:
+        description: Continue only durably saved image progress, maximum eight
+        type: string
+        default: '0'
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: range-bulk-native-originals
+  cancel-in-progress: false
+  queue: single
+jobs:
+  exact-originals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    env:
+      FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+      GITHUB_TOKEN: ${{ github.token }}
+      RANGE_NATIVE_CHECKPOINTS: '1'
+      RANGE_NATIVE_CONTINUATION_DEPTH: ${{ inputs.continuationDepth || '0' }}
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/images/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Recover missing originals in verified native batches, never recollect directories
+        run: node scripts/mirror-range-originals.mjs
+      - name: Keep a recoverable archive after any outcome
+        if: always()
+        continue-on-error: true
+        timeout-minutes: 8
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: range-bulk-native-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            web/range-native*.json
+            web/collection-ledger.json
+            web/images/source/
+          retention-days: 3
+      - name: Publish saved originals without source collection
+        if: success()
+        run: node scripts/request-retailer-site-publish.mjs ar
+      - name: Continue only saved progress after successful publication
+        if: success()
+        run: node scripts/continue-range-bulk-native.mjs
