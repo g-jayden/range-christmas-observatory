@@ -7,6 +7,16 @@ export const productPrice=p=>Number.isFinite(p.priceGBP)?'£'+p.priceGBP.toFixed
 export function assertProductPhoto(p){
  if(p.sourceImageConflict)throw Error(p.sourceImageConflict.note||'官网标题与配图冲突 · Official title and photo disagree');
 }
+export function componentSizeFacts(p){
+ const text=String(p.sourceDescription||p.productSummary||'');
+ if(!/\bset\s+includes\s*:|\bpack\s+(?:contains|includes)\s*:/i.test(text))return null;
+ const section=text.slice(text.search(/\b(?:set\s+includes|pack\s+(?:contains|includes))\s*:/i)),parts=[];
+ for(const m of section.matchAll(/(?<![\d.])(\d{1,4})\s*[x×]\s*(\d+(?:\.\d+)?)\s*(mm|cm|m|inches?|ft)\s*(?=baubles?|balls?|ornaments?|decorations?|snowflakes?|stars?|garlands?|wreaths?)/ig)){
+  if(Number(m[1])>0&&Number(m[2])>0)parts.push({quantity:Number(m[1]),measure:m[2]+m[3].toLowerCase(),source:m[0].trim()});
+ }
+ if(!parts.length)return null;
+ return{values:{},axes:[],maxCm:null,componentSizes:parts,evidence:{source:'exact-SKU source description',excerpt:section.slice(0,500)},label:'已标注组件尺寸 · Specified component sizes: '+[...new Set(parts.map(p=>p.quantity+' × '+p.measure))].join(' / ')};
+}
 export function productSize(p){
  const checked=productDimensions(p.specifications||{});if(checked.sourceConflict)return checked.label;if(p.dimensions?.sourceConflict)return p.dimensions.label;
  const conflict=treeHeightConflict(p);
@@ -14,6 +24,7 @@ export function productSize(p){
  if(conflict)return conflict.usableHeightCm+'cm';
  const d=p.dimensions?.label?p.dimensions:productDimensions(p.specifications||{});
  if(d.axes?.length)return d.label;
+ const components=componentSizeFacts(p);if(components)return components.label;
  const realSize=value=>value&&!/^(?:one(?: size)?|os|n\/?a|not (?:specified|available))$/i.test(String(value).trim());
  if(realSize(d.sourceSize))return d.categoryLabel||d.sourceSize;
  return [p.heightLabel,p.specifications?.Dimensions,p.specifications?.Size].find(realSize)||(p.skirtDiameterCm?p.skirtDiameterCm+'cm':'官网未注明尺寸 · Size not specified');
