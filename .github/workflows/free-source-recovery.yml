@@ -1,0 +1,46 @@
+name: Apply already captured free official product evidence
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - web/free-source-recovery.json
+permissions:
+  contents: write
+  actions: write
+jobs:
+  source-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/images/
+            !/web/mail-assets/
+            !/web/reports/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Apply current exact-SKU facts under the shared publication lease
+        run: node scripts/apply-free-source-recovery.mjs
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: free-source-recovery-${{ github.run_id }}
+          path: |
+            web/free-source-recovery-proof.json
+            web/product-evidence-health.json
+          retention-days: 3
+      - name: Rebuild the permanent website without source recollection
+        run: node scripts/request-retailer-site-publish.mjs ar
