@@ -1,8 +1,5 @@
 name: Restore already collected native originals without another scrape
 on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/restore-native-artifact.yml']
   workflow_dispatch:
 permissions:
   contents: write
