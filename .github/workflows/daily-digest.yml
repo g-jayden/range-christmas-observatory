@@ -33,7 +33,8 @@ permissions:
 concurrency:
   group: consolidated-christmas-new-pdf
   cancel-in-progress: false
-  queue: max
+  # Every report reads the latest durable outbox. Keep one waiting refresh;
+  # preserve the active delivery, without queueing every source completion.
 jobs:
   digest:
     if: github.event_name != 'workflow_run' || (github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main')
