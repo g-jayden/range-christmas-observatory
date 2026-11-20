@@ -1,6 +1,7 @@
 import {applySavedRetailerReview,retailerReviewFingerprint} from '../server/saved-retailer-reviews.mjs';
 import {asdaMemberships} from '../web/asda-model.mjs';
-import {asdaDimensionFacts} from '../server/asda-products.mjs';
+import {asdaDimensionFacts,asdaFingerprint} from '../server/asda-products.mjs';
+import {currentAsdaTileEvidence,applyAsdaTileEvidence} from '../server/asda-native-tiles.mjs';
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';
 import {analysePreviewFiles,previewQualityScore,previewProblems} from '../server/preview-quality.mjs';
 import {analyseAsdaImages} from '../server/visual-model.mjs';
@@ -11,6 +12,8 @@ for(const p of snapshot.products){const d=asdaDimensionFacts(p.specifications,p.
 const reviews=await fs.readFile('web/asda/reviews.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return {};throw e;});
 const refreshDays=await fs.readFile('web/settings.json','utf8').then(JSON.parse).then(s=>Math.max(1,Number(s.intervalDays)||7));
 const index=await fs.readFile('web/asda/image-index.json','utf8').then(JSON.parse).catch(()=>({})),cache=await fs.readFile('web/asda/visual-cache.json','utf8').then(JSON.parse).catch(()=>({}));
+const nativeTiles=await fs.readFile('web/asda/native-tile-evidence.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return{entries:{}};throw e;});
+for(const p of snapshot.products){const e=nativeTiles.entries?.[p.sku];if(!e)continue;if(p.originalImageEvidence?.method==='official-native-pixel-tiles-no-resampling'){delete p.originalCachedImageUrl;delete p.originalImageEvidence;if(p.originalImageUrl===e.sourceUrl)delete p.originalImageUrl;p.originalImages=p.originalImages?.filter(g=>g.verifiedBy!=='ASDA exact-SKU native pixel tiles');delete p.asdaNativeTileEvidence;}if(await currentAsdaTileEvidence(p,e,asdaFingerprint(p)))applyAsdaTileEvidence(p,e,asdaFingerprint(p));else delete index[e.thumbnailUrl];}
 await fs.mkdir('web/images/asda',{recursive:true});const candidates=new Map();
 for(const p of snapshot.products){for(const g of (p.originalImages?.length?p.originalImages.map(g=>({url:g.thumbnail,original:g.url})):p.images?.map(url=>({url,original:null}))||[]).slice(0,3)){const old=candidates.get(g.url);if(!old||Date.parse(p.attributeObservedAt)>Date.parse(old.requiredAfter||0))candidates.set(g.url,{...g,requiredAfter:p.attributeObservedAt});}}
 let cursor=0;const urls=[...candidates.keys()];await Promise.all(Array.from({length:6},async()=>{while(cursor<urls.length){const url=urls[cursor++];try{
