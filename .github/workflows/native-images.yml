@@ -1,6 +1,11 @@
 name: Recover exact native originals across retailers
 on:
   workflow_dispatch:
+    inputs:
+      continuationDepth:
+        description: Continue only durably saved native-image progress, maximum eight
+        type: string
+        default: '0'
   workflow_run:
     workflows:
       - Credit controlled collection and permanent website
@@ -26,7 +31,7 @@ jobs:
   native-originals:
     if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     env:
       FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
       GITHUB_TOKEN: ${{ github.token }}
@@ -34,6 +39,7 @@ jobs:
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
       ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+      NATIVE_CONTINUATION_DEPTH: ${{ inputs.continuationDepth || '0' }}
     steps:
       - uses: actions/checkout@v7.0.1
         with:
@@ -49,6 +55,19 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - name: Reuse exact committed originals, then free and approved paid recovery
         run: node scripts/mirror-approved-native-images.mjs
+      - name: Preserve original bytes and receipts after any outcome
+        if: always()
+        continue-on-error: true
+        timeout-minutes: 8
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: native-original-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            web/collection-ledger.json
+            web/paid-native-index.json
+            web/native-original-recovery-status.json
+            web/images/source/
+          retention-days: 3
       - name: Commit original bytes and their exact source bindings
         if: always()
         run: |
@@ -60,3 +79,6 @@ jobs:
       - name: Publish without catalogue recollection
         if: success()
         run: node scripts/request-retailer-site-publish.mjs ar
+      - name: Continue only saved progress and never a failed publication
+        if: success()
+        run: node scripts/continue-approved-native.mjs
