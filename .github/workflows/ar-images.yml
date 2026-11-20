@@ -73,6 +73,14 @@ jobs:
       - name: Synchronize the accepted Argos NEW baseline without per-product mail
         if: success()
         run: node scripts/sync-ar-notifications.mjs
+      - name: Persist the acknowledged Argos NEW baseline before publishing
+        if: success()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add web/ar/catalogue.json web/ar/staged-catalogue.json.gz web/ar/notification-baseline.json
+          git diff --cached --quiet || git commit -m "Persist confirmed Argos NEW baseline and exact current snapshot [skip ci]"
+          node scripts/push-evidence.mjs
       - name: Publish the Argos hierarchy without other source collection
         if: success()
         env:
