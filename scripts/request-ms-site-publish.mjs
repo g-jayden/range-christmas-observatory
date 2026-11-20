@@ -6,7 +6,7 @@ import path from 'node:path';
 // The repository's short-lived workflow token stays inside GitHub Actions.
 export async function requestMsSitePublish({env=process.env,fetcher=fetch}={}){
  if(env.GITHUB_REPOSITORY!=='g-jayden/range-christmas-observatory'||!/^\d+$/.test(env.GITHUB_RUN_ID||'')||!env.GITHUB_TOKEN)throw Error('M&S publication requires its GitHub Actions identity');
- const r=await fetcher('https://api.github.com/repos/'+env.GITHUB_REPOSITORY+'/actions/workflows/daily-pages.yml/dispatches',{method:'POST',headers:{authorization:'Bearer '+env.GITHUB_TOKEN,accept:'application/vnd.github+json','content-type':'application/json','x-github-api-version':'2022-11-28'},body:JSON.stringify({ref:'main',inputs:{refresh:false,mode:'publish',checkNew:false,runner:'ubuntu-latest',browser:'firecrawl-browser'}}),signal:AbortSignal.timeout(20000)});
+ const r=await fetcher('https://api.github.com/repos/'+env.GITHUB_REPOSITORY+'/actions/workflows/static-pages.yml/dispatches',{method:'POST',headers:{authorization:'Bearer '+env.GITHUB_TOKEN,accept:'application/vnd.github+json','content-type':'application/json','x-github-api-version':'2022-11-28'},body:JSON.stringify({ref:'main'}),signal:AbortSignal.timeout(20000)});
  if(r.status!==204)throw Error('M&S website publication request HTTP '+r.status);
  return {requested:true,mode:'publish',sourceRefresh:false,firecrawlCredits:0};
 }

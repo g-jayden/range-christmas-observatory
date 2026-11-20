@@ -380,5 +380,5 @@ jobs:
             runtime/daily-new-screenshot.png
           retention-days: 3
       - name: Report unsuccessful source collection
-        if: steps.delivery.outcome == 'failure' || steps.evidence_repair.outcome == 'failure' || steps.catalogue_probe.outcome == 'failure' || steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure' || steps.repair.outcome == 'failure' || steps.lights.outcome == 'failure' || steps.themes.outcome == 'failure' || steps.previews.outcome == 'failure'
+        if: steps.delivery.outcome == 'failure' || steps.asda.outcome == 'failure' || steps.evidence_repair.outcome == 'failure' || steps.catalogue_probe.outcome == 'failure' || steps.refresh.outcome == 'failure' || steps.budget.outcome == 'failure' || steps.probe.outcome == 'failure' || steps.repair.outcome == 'failure' || steps.lights.outcome == 'failure' || steps.themes.outcome == 'failure' || steps.previews.outcome == 'failure'
         run: exit 1
