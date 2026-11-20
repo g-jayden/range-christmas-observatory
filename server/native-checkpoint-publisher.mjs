@@ -10,7 +10,7 @@ export function nativeGitCheckpointPublisher({enabled=false,env=process.env,run=
  return async files=>{
   const selected=[...new Set(files)];for(const file of selected){if(!/^web\/(?:images\/source\/[a-f0-9]{64}\.(?:jpg|png|webp|avif|gif)|range-native(?:-index|-status|-checkpoint)\.json|collection-ledger\.json)$/.test(file))throw Error('Unexpected native checkpoint path');if(file.includes('/images/')){const b=await readFile(file),hash=createHash('sha256').update(b).digest('hex');if(!file.includes('/'+hash+'.')||b.length>25000000)throw Error('Original bytes changed or exceed the native checkpoint guard');}}
   const git=(...args)=>run('git',args,{env,stdio:'pipe'});git('config','user.name','github-actions[bot]');git('config','user.email','41898282+github-actions[bot]@users.noreply.github.com');git('add','--sparse','--',...selected);let changed=false;try{git('diff','--cached','--quiet');}catch(e){if(e.status!==1)throw e;changed=true;}if(changed)git('commit','-m','Preserve exact native image batch and source bindings [skip ci]');
-  run(process.execPath,['scripts/push-evidence.mjs'],{env,stdio:'inherit'});const revision=String(run('git',['rev-parse','HEAD'],{env,encoding:'utf8'})).trim();if(!/^[a-f0-9]{40}$/.test(revision))throw Error('Native checkpoint revision not confirmed');return revision;
+  run(process.execPath,['scripts/push-evidence.mjs'],{env:{...env,EVIDENCE_NATIVE_ONLY:'1'},stdio:'inherit'});const revision=String(run('git',['rev-parse','HEAD'],{env,encoding:'utf8'})).trim();if(!/^[a-f0-9]{40}$/.test(revision))throw Error('Native checkpoint revision not confirmed');return revision;
  };
 }
 
