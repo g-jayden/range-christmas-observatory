@@ -39,3 +39,5 @@ for(const yaml of[dailyYaml,bootstrapYaml])assert(!/^[ \t]+git (?:push|pull)/m.t
 const completeStep=dailyYaml.slice(dailyYaml.indexOf('- name: Complete the selected interval'),dailyYaml.indexOf('- name: Release this run'));assert(completeStep.includes("steps.tick.outputs.full_lease != ''"));assert(!completeStep.includes("steps.refresh.outcome != 'skipped'"),'A budget or preflight failure must release its full-refresh claim even when no source session opened');
 
 assert(dailyYaml.includes("'!/web/mail-assets/'"),'Source checks must not download the historical email attachment archive');assert(dailyYaml.includes('git add --sparse -- web'),'New exact native files created outside a sparse checkout must still be explicitly committed');
+
+assert(dailyYaml.includes('npm ci --no-audit --no-fund')&&!dailyYaml.includes('run: npm install'),'Collection setup must preserve the committed dependency lock');assert(dailyYaml.includes('hydrate-current-previews.mjs --retailer=asda'),'An enabled ASDA collector needs its current exact preview files');

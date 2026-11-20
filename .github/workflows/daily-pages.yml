@@ -106,9 +106,10 @@ jobs:
         run: |
           git sparse-checkout set --no-cone '/*' '!/web/images/' '!/web/reports/' '!/web/mail-assets/'
           node scripts/hydrate-current-previews.mjs --range-only
+          if [ "${{ steps.tick.outputs.asda }}" = "true" ]; then node scripts/hydrate-current-previews.mjs --retailer=asda; fi
       - name: Install collection and local image analysis clients
         if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
       - name: Hydrate reviewed native images for an explicitly requested retailer release
         id: retailer_release
         if: steps.tick.outputs.publish == 'true'
@@ -144,7 +145,7 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add web/monitor-state.json
+          git add --sparse -- web
           git diff --cached --quiet || git commit -m "Claim this Beijing daily NEW check exactly once"
           EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
       - name: Check private notification readiness without exposing addresses
@@ -170,7 +171,7 @@ jobs:
           node scripts/reserve-credits.mjs
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add web/collection-ledger.json web/notification-readiness.json web/monitor-state.json
+          git add --sparse -- web
           git diff --cached --quiet || git commit -m "Reserve the bounded Firecrawl collection budget"
           EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
       - name: Restore resumable free collection state
