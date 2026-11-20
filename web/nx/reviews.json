@@ -357,25 +357,23 @@
     "sourceFingerprint": "388e63688dd290b5db70d58693fe1fa96fcb45c391eea1e19f337e5dc584f1e7"
   },
   "L72914-01": {
-    "imageHash": "2bf08718efa34090f1c38f15746ab6031f6cf1391319b77e0c9a44e93880d246",
+    "imageHash": "3f66e302ee0804e8d9be7e86ff03dffc09915e1ef069189f73de56c7c4af41ee",
     "departmentIds": [
       "nx-baubles"
     ],
-    "reviewedAt": "2026-11-19T14:29:48.554Z",
-    "method": "actual-SHA-verified-whole-native-gallery-title-description-and-labelled-size-axes-human-review",
-    "reason": "已逐张查看官网原图，核对本体、底座／挂绳、用途与主要本体色；灯光、背景和细小吊带不作为本体颜色 · Native gallery, offered body, stand/loop, source purpose and dominant body colours reviewed; lighting, backdrop and minor ties excluded.",
-    "sourceFingerprint": "dae519fe492df17f0b3d4e96f573ad60b6839c5009a997cb3a1264b8e37bcb66",
+    "reviewedAt": "2026-11-20T03:29:57.434Z",
+    "method": "actual-native-photo-SHA-bound-title-description-materials-and-physical-form-direct-visual-review",
+    "reason": "已核对实际原图、完整构图、所选款标题和描述；仅统计商品本体主要颜色，不统计背景树、灯光、包装或细小挂钩 · Actual native photo, whole view and exact option checked; major product colours exclude staging, illumination, packaging and small hardware",
+    "sourceFingerprint": "97ce718bc3bdbcd25a3bbb530a01af687b1183a5d032467b720e8709e0272865",
     "colors": [
       "白色"
     ],
     "colorReviewMethod": "assistant-vision-plus-official-product-description",
     "reviewedImageHashes": [
-      "3f66e302ee0804e8d9be7e86ff03dffc09915e1ef069189f73de56c7c4af41ee",
-      "2e331075d4520948f567c2b7665413e351e8958cf7421e371eabe33243bfe3b2",
-      "2bf08718efa34090f1c38f15746ab6031f6cf1391319b77e0c9a44e93880d246"
+      "3f66e302ee0804e8d9be7e86ff03dffc09915e1ef069189f73de56c7c4af41ee"
     ],
-    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/L72914s3.jpg",
-    "previewImageHash": "2bf08718efa34090f1c38f15746ab6031f6cf1391319b77e0c9a44e93880d246",
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/L72914s.jpg",
+    "previewImageHash": "3f66e302ee0804e8d9be7e86ff03dffc09915e1ef069189f73de56c7c4af41ee",
     "department": "nx-baubles",
     "exclude": false
   },
@@ -1629,26 +1627,23 @@
     "sourceFingerprint": "f28a66167af885f64e772ecd294aa3102c2f5a977ea4ec6329d6783f4e34f23a"
   },
   "AB4646-01": {
-    "imageHash": "76f063d0bddf05c23162c67cb51c4bf23d693085f17cd9591d6e2e7dafb41240",
+    "imageHash": "215577232bd31ed96c33589aa727d7b0d50a9f922e9d30fe0b7adfd3b451d7be",
     "departmentIds": [
       "nx-baubles"
     ],
-    "reviewedAt": "2026-11-19T14:29:48.554Z",
-    "method": "actual-SHA-verified-whole-native-gallery-title-description-and-labelled-size-axes-human-review",
-    "reason": "已逐张查看官网原图，核对本体、底座／挂绳、用途与主要本体色；灯光、背景和细小吊带不作为本体颜色 · Native gallery, offered body, stand/loop, source purpose and dominant body colours reviewed; lighting, backdrop and minor ties excluded.",
-    "sourceFingerprint": "d5f99dcf8f81af1c5ad77963969fc2bf58c509e7f0103e10195d8121ae9baa81",
+    "reviewedAt": "2026-11-20T03:29:57.435Z",
+    "method": "actual-native-photo-SHA-bound-title-description-materials-and-physical-form-direct-visual-review",
+    "reason": "已核对实际原图、完整构图、所选款标题和描述；仅统计商品本体主要颜色，不统计背景树、灯光、包装或细小挂钩 · Actual native photo, whole view and exact option checked; major product colours exclude staging, illumination, packaging and small hardware",
+    "sourceFingerprint": "2b1f9670cf9541474906d65da967850f54c87a2094a85df2d6cc6cbaff722da8",
     "colors": [
-      "金色",
-      "棕色"
+      "金色"
     ],
     "colorReviewMethod": "assistant-vision-plus-official-product-description",
     "reviewedImageHashes": [
-      "215577232bd31ed96c33589aa727d7b0d50a9f922e9d30fe0b7adfd3b451d7be",
-      "ad7db021d96f95cf26069339aec8d438efd8a50cdf8921c07516fcc98980e231",
-      "76f063d0bddf05c23162c67cb51c4bf23d693085f17cd9591d6e2e7dafb41240"
+      "215577232bd31ed96c33589aa727d7b0d50a9f922e9d30fe0b7adfd3b451d7be"
     ],
-    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/AB4646s3.jpg",
-    "previewImageHash": "76f063d0bddf05c23162c67cb51c4bf23d693085f17cd9591d6e2e7dafb41240",
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/AB4646s.jpg",
+    "previewImageHash": "215577232bd31ed96c33589aa727d7b0d50a9f922e9d30fe0b7adfd3b451d7be",
     "department": "nx-baubles",
     "exclude": false
   },
@@ -2374,25 +2369,23 @@
     "colorReviewMethod": "assistant-vision-plus-official-product-description"
   },
   "L75076-01": {
-    "imageHash": "0cab4bc948d6adc429e7c072d0951492906eff4b0645efc527c722637db137b3",
+    "imageHash": "f2ad025caccf98d449ea174aebfff0174df7cb9e00b4c3d0d5176e80022ebda5",
     "departmentIds": [
       "nx-baubles"
     ],
-    "reviewedAt": "2026-11-19T14:29:48.554Z",
-    "method": "actual-SHA-verified-whole-native-gallery-title-description-and-labelled-size-axes-human-review",
-    "reason": "已逐张查看官网原图，核对本体、底座／挂绳、用途与主要本体色；灯光、背景和细小吊带不作为本体颜色 · Native gallery, offered body, stand/loop, source purpose and dominant body colours reviewed; lighting, backdrop and minor ties excluded.",
-    "sourceFingerprint": "2e88f4d46875b7042dff2e20eba931287b7c26e7e749ece07eca90dd80b01d75",
+    "reviewedAt": "2026-11-20T03:29:57.435Z",
+    "method": "actual-native-photo-SHA-bound-title-description-materials-and-physical-form-direct-visual-review",
+    "reason": "已核对实际原图、完整构图、所选款标题和描述；仅统计商品本体主要颜色，不统计背景树、灯光、包装或细小挂钩 · Actual native photo, whole view and exact option checked; major product colours exclude staging, illumination, packaging and small hardware",
+    "sourceFingerprint": "b03fa092c613ed9385e271390271f51cd4c16cfee33837893b574a7d41fe65e0",
     "colors": [
       "红色"
     ],
     "colorReviewMethod": "assistant-vision-plus-official-product-description",
     "reviewedImageHashes": [
-      "f2ad025caccf98d449ea174aebfff0174df7cb9e00b4c3d0d5176e80022ebda5",
-      "2c58b6164a855e36cc60f76614b84f7a9ebaea07c8beb12ece1576674320c828",
-      "0cab4bc948d6adc429e7c072d0951492906eff4b0645efc527c722637db137b3"
+      "f2ad025caccf98d449ea174aebfff0174df7cb9e00b4c3d0d5176e80022ebda5"
     ],
-    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/L75076s3.jpg",
-    "previewImageHash": "0cab4bc948d6adc429e7c072d0951492906eff4b0645efc527c722637db137b3",
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/L75076s.jpg",
+    "previewImageHash": "f2ad025caccf98d449ea174aebfff0174df7cb9e00b4c3d0d5176e80022ebda5",
     "department": "nx-baubles",
     "exclude": false
   },
@@ -3060,27 +3053,25 @@
     "sourceFingerprint": "5a22ab66356879b231226b28f98d90f35739c7d2eb58de95086e605123171343"
   },
   "L92051-01": {
-    "imageHash": "5913b7aa14689eebe919b7c03de67d9d0b94f8d4da95df090f8af5bc6409f409",
+    "imageHash": "e1582cffb32f5bae7edceb9d58589bd5d7214dbd5c3153fb9cac8017f3fc1997",
     "departmentIds": [
       "nx-baubles"
     ],
-    "reviewedAt": "2026-11-19T14:29:48.555Z",
-    "method": "actual-SHA-verified-whole-native-gallery-title-description-and-labelled-size-axes-human-review",
-    "reason": "已逐张查看官网原图，核对本体、底座／挂绳、用途与主要本体色；灯光、背景和细小吊带不作为本体颜色 · Native gallery, offered body, stand/loop, source purpose and dominant body colours reviewed; lighting, backdrop and minor ties excluded.",
-    "sourceFingerprint": "d2a76e778f109af769f4de4956a90a4275a39b161774a020a57c685d99aec332",
+    "reviewedAt": "2026-11-20T03:29:57.435Z",
+    "method": "actual-native-photo-SHA-bound-title-description-materials-and-physical-form-direct-visual-review",
+    "reason": "已核对实际原图、完整构图、所选款标题和描述；仅统计商品本体主要颜色，不统计背景树、灯光、包装或细小挂钩 · Actual native photo, whole view and exact option checked; major product colours exclude staging, illumination, packaging and small hardware",
+    "sourceFingerprint": "2a803662affb278e8a348191ba0c86f6fa8d1a244103847ea26c87b04e1fed44",
     "colors": [
       "白色",
-      "棕色",
+      "粉色",
       "黑色"
     ],
     "colorReviewMethod": "assistant-vision-plus-official-product-description",
     "reviewedImageHashes": [
-      "e1582cffb32f5bae7edceb9d58589bd5d7214dbd5c3153fb9cac8017f3fc1997",
-      "7dc9722c9112451cb75c4620aa6be6a6481686a5ee09f986ef40952903c6e315",
-      "5913b7aa14689eebe919b7c03de67d9d0b94f8d4da95df090f8af5bc6409f409"
+      "e1582cffb32f5bae7edceb9d58589bd5d7214dbd5c3153fb9cac8017f3fc1997"
     ],
-    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/L92051s3.jpg",
-    "previewImageHash": "5913b7aa14689eebe919b7c03de67d9d0b94f8d4da95df090f8af5bc6409f409",
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/L92051s.jpg",
+    "previewImageHash": "e1582cffb32f5bae7edceb9d58589bd5d7214dbd5c3153fb9cac8017f3fc1997",
     "department": "nx-baubles",
     "exclude": false
   },
@@ -3234,26 +3225,24 @@
     "exclude": false
   },
   "N21409-01": {
-    "imageHash": "f35dc9a46fac7a56230f34fea5f59fdddfb54d7f70ec1b0a77cd792cb4be4f6d",
+    "imageHash": "e4456ceba449edaf5259b11868d7fe4017497d8d6b967f1f783c4a89dd6738bd",
     "departmentIds": [
       "nx-baubles"
     ],
-    "reviewedAt": "2026-11-19T14:29:48.554Z",
-    "method": "actual-SHA-verified-whole-native-gallery-title-description-and-labelled-size-axes-human-review",
-    "reason": "已逐张查看官网原图，核对本体、底座／挂绳、用途与主要本体色；灯光、背景和细小吊带不作为本体颜色 · Native gallery, offered body, stand/loop, source purpose and dominant body colours reviewed; lighting, backdrop and minor ties excluded.",
-    "sourceFingerprint": "bde613e5d4d88726f400a40ebe4565f12a31cfeed6efade7f90ef42c04907222",
+    "reviewedAt": "2026-11-20T03:29:57.435Z",
+    "method": "actual-native-photo-SHA-bound-title-description-materials-and-physical-form-direct-visual-review",
+    "reason": "已核对实际原图、完整构图、所选款标题和描述；仅统计商品本体主要颜色，不统计背景树、灯光、包装或细小挂钩 · Actual native photo, whole view and exact option checked; major product colours exclude staging, illumination, packaging and small hardware",
+    "sourceFingerprint": "75abb03b58183b3de415a63dd56bdcedaebabd7f2a9dc83fc70e585e54d813f3",
     "colors": [
       "粉色",
       "银色"
     ],
     "colorReviewMethod": "assistant-vision-plus-official-product-description",
     "reviewedImageHashes": [
-      "e4456ceba449edaf5259b11868d7fe4017497d8d6b967f1f783c4a89dd6738bd",
-      "8c0903dbe3f519441052e14f46fbb8772bad23adba9dd09f07e8c52a28ca08ec",
-      "f35dc9a46fac7a56230f34fea5f59fdddfb54d7f70ec1b0a77cd792cb4be4f6d"
+      "e4456ceba449edaf5259b11868d7fe4017497d8d6b967f1f783c4a89dd6738bd"
     ],
-    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/N21409s3.jpg",
-    "previewImageHash": "f35dc9a46fac7a56230f34fea5f59fdddfb54d7f70ec1b0a77cd792cb4be4f6d",
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/N21409s.jpg",
+    "previewImageHash": "e4456ceba449edaf5259b11868d7fe4017497d8d6b967f1f783c4a89dd6738bd",
     "department": "nx-baubles",
     "exclude": false
   },
@@ -10575,13 +10564,14 @@
     "reason": "本体形态、挂绳／底座、官网用途及原图相互核对；灯光与背景不计为本体色 · Offered shape, hanging loop/stand, source purpose and native photos agree; illumination/background excluded."
   },
   "866972-01": {
-    "sourceFingerprint": "d2557acae67c1969878e17f7e5c3ef30fc5ed8d7afdd2bf7fe7a048df7f8f517",
-    "imageHash": "df6216c96566e054391f10615c980fdf49ea7ae46356c09652e1aedb30c3f195",
+    "sourceFingerprint": "c823f87c91dedf40cc601a667800923806cabf296b542575293760facce82985",
+    "imageHash": "01dc1fc73c23abf9994abe8dedf2f4f0a4bb9a2aaa36b2cfa0ecf7bad0929707",
     "reviewedImageHashes": [
-      "df6216c96566e054391f10615c980fdf49ea7ae46356c09652e1aedb30c3f195"
+      "df6216c96566e054391f10615c980fdf49ea7ae46356c09652e1aedb30c3f195",
+      "01dc1fc73c23abf9994abe8dedf2f4f0a4bb9a2aaa36b2cfa0ecf7bad0929707"
     ],
-    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/866972s.jpg",
-    "previewImageHash": "df6216c96566e054391f10615c980fdf49ea7ae46356c09652e1aedb30c3f195",
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/866972s4.jpg",
+    "previewImageHash": "01dc1fc73c23abf9994abe8dedf2f4f0a4bb9a2aaa36b2cfa0ecf7bad0929707",
     "department": "nx-garland",
     "departmentIds": [
       "nx-garland"
@@ -10591,18 +10581,19 @@
       "铜色"
     ],
     "exclude": false,
-    "reviewedAt": "2026-11-19T14:01:30.617Z",
-    "method": "actual-SHA-verified-native-photos-exact-option-title-description-materials-and-all-labelled-size-axes-human-review",
-    "reason": "本体形态、挂绳／底座、官网用途及原图相互核对；灯光与背景不计为本体色 · Offered shape, hanging loop/stand, source purpose and native photos agree; illumination/background excluded."
+    "reviewedAt": "2026-11-20T03:29:57.435Z",
+    "method": "actual-native-photo-SHA-bound-title-description-materials-and-physical-form-direct-visual-review",
+    "reason": "已核对实际原图、完整构图、所选款标题和描述；仅统计商品本体主要颜色，不统计背景树、灯光、包装或细小挂钩 · Actual native photo, whole view and exact option checked; major product colours exclude staging, illumination, packaging and small hardware"
   },
   "867006-01": {
-    "sourceFingerprint": "fa36425ca7b4572d4a694bf1b54dc694d9338e081c7dbc027dd88fb769fe1968",
-    "imageHash": "72efc00c09dd387d909a9727c99d65e869609a0a66827149011976a5751ab31c",
+    "sourceFingerprint": "dee9dda3c6feffb374a9bbad63c9548369f81b5159489678751cc2058ab8a45c",
+    "imageHash": "ecae2010c451ed13c371e3ef9a5f51ebdfec5c6e9a1653eb7b1c2e46b4dac4bf",
     "reviewedImageHashes": [
-      "72efc00c09dd387d909a9727c99d65e869609a0a66827149011976a5751ab31c"
+      "72efc00c09dd387d909a9727c99d65e869609a0a66827149011976a5751ab31c",
+      "ecae2010c451ed13c371e3ef9a5f51ebdfec5c6e9a1653eb7b1c2e46b4dac4bf"
     ],
-    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/867006s.jpg",
-    "previewImageHash": "72efc00c09dd387d909a9727c99d65e869609a0a66827149011976a5751ab31c",
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/867006s3.jpg",
+    "previewImageHash": "ecae2010c451ed13c371e3ef9a5f51ebdfec5c6e9a1653eb7b1c2e46b4dac4bf",
     "department": "nx-garland",
     "departmentIds": [
       "nx-garland"
@@ -10612,9 +10603,9 @@
       "透明色"
     ],
     "exclude": false,
-    "reviewedAt": "2026-11-19T14:01:30.617Z",
-    "method": "actual-SHA-verified-native-photos-exact-option-title-description-materials-and-all-labelled-size-axes-human-review",
-    "reason": "本体形态、挂绳／底座、官网用途及原图相互核对；灯光与背景不计为本体色 · Offered shape, hanging loop/stand, source purpose and native photos agree; illumination/background excluded."
+    "reviewedAt": "2026-11-20T03:29:57.435Z",
+    "method": "actual-native-photo-SHA-bound-title-description-materials-and-physical-form-direct-visual-review",
+    "reason": "已核对实际原图、完整构图、所选款标题和描述；仅统计商品本体主要颜色，不统计背景树、灯光、包装或细小挂钩 · Actual native photo, whole view and exact option checked; major product colours exclude staging, illumination, packaging and small hardware"
   },
   "473603-01": {
     "sourceFingerprint": "afaaf6304e180f895f92213a5bd3a89ce5ae5a58c905cf522642f0b4bfa160b0",
@@ -10820,5 +10811,46 @@
     "reviewedAt": "2026-11-19T14:29:48.555Z",
     "method": "actual-SHA-verified-whole-native-gallery-title-description-and-labelled-size-axes-human-review",
     "reason": "已逐张查看官网原图，核对本体、底座／挂绳、用途与主要本体色；灯光、背景和细小吊带不作为本体颜色 · Native gallery, offered body, stand/loop, source purpose and dominant body colours reviewed; lighting, backdrop and minor ties excluded."
+  },
+  "V53016-01": {
+    "sourceFingerprint": "3a5c21cd841856e328396500709e83f8d1d0cacc7c52511ba6ff4511c43ff33a",
+    "imageHash": "641dee96753e1c9ff6eac3930f5c1f112933fe799d377fe720d7503c94e43d7c",
+    "reviewedImageHashes": [
+      "641dee96753e1c9ff6eac3930f5c1f112933fe799d377fe720d7503c94e43d7c"
+    ],
+    "previewImageHash": "641dee96753e1c9ff6eac3930f5c1f112933fe799d377fe720d7503c94e43d7c",
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/V53016s.jpg",
+    "department": "nx-tree",
+    "departmentIds": [
+      "nx-tree"
+    ],
+    "exclude": false,
+    "colors": [
+      "绿色",
+      "白色"
+    ],
+    "reviewedAt": "2026-11-20T03:29:57.435Z",
+    "method": "actual-native-photo-SHA-bound-title-description-materials-and-physical-form-direct-visual-review",
+    "reason": "已核对实际原图、完整构图、所选款标题和描述；仅统计商品本体主要颜色，不统计背景树、灯光、包装或细小挂钩 · Actual native photo, whole view and exact option checked; major product colours exclude staging, illumination, packaging and small hardware"
+  },
+  "W15896-01": {
+    "sourceFingerprint": "45359e246ba79bbe9c8452cad602528962794352a48a5722d16828d7040a585f",
+    "imageHash": "5806a9ea49bfc12d5103eea600d59c5fa0e012212528ae8f494e435e06c50d5d",
+    "reviewedImageHashes": [
+      "5806a9ea49bfc12d5103eea600d59c5fa0e012212528ae8f494e435e06c50d5d"
+    ],
+    "previewImageHash": "5806a9ea49bfc12d5103eea600d59c5fa0e012212528ae8f494e435e06c50d5d",
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/W15896s.jpg",
+    "department": "nx-tree",
+    "departmentIds": [
+      "nx-tree"
+    ],
+    "exclude": false,
+    "colors": [
+      "绿色"
+    ],
+    "reviewedAt": "2026-11-20T03:29:57.435Z",
+    "method": "actual-native-photo-SHA-bound-title-description-materials-and-physical-form-direct-visual-review",
+    "reason": "已核对实际原图、完整构图、所选款标题和描述；仅统计商品本体主要颜色，不统计背景树、灯光、包装或细小挂钩 · Actual native photo, whole view and exact option checked; major product colours exclude staging, illumination, packaging and small hardware"
   }
 }
