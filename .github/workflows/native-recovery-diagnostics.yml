@@ -1,9 +1,6 @@
 name: Diagnose remaining native originals without collection
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/native-recovery-diagnostics.yml']
 permissions:
   contents: read
 jobs:
