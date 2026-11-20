@@ -2,6 +2,7 @@ export const MT_DEPARTMENTS=[['mt-baubles','圣诞树装饰与圣诞球','Christ
 export const isMtScope=id=>MT_DEPARTMENTS.some(d=>d.id===id);
 export function mtMemberships(p){const name=String(p.baseName||p.variantName||'').toLowerCase(),description=String(p.sourceDescription||'').toLowerCase(),groups=p.mtSource?.groups||[],has=s=>groups.includes(s),decoration=/decoration|ornament|bauble|tree topper|hanging|clip/.test(name);let id=null;
  if(/halloween|easter|spring wreath|autumn wreath|harvest wreath/.test(name))return {primary:null,memberships:[],reason:'非指定圣诞商品 · Outside Christmas scope'};
+ if(/\b(?:cushions?|pillows?|towels?|duvets?|bedding|bed\s?linen|pyjamas?|pajamas?|bandanas?|napkins?|tablecloths?|mugs?|dinnerware)\b/.test(name))return {primary:null,memberships:[],reason:'商品本体为家纺、服饰或餐具，圣诞树仅为图案，不属于指定七类 · The physical product is a textile, garment or tableware; a Christmas-tree motif does not make it a requested Christmas product'};
  if(/tree (?:skirt|collar)|tree stand cover/.test(name))id='mt-skirt';
  else if(/inflatable|airblown/.test(name)||has('inflatables'))id='mt-inflatables';
  else if(/swag/.test(name))id=null;
