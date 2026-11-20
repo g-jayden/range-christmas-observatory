@@ -6,10 +6,15 @@ on:
     paths: ['.github/workflows/range-image-gallery-discovery.yml']
 permissions:
   contents: write
+  actions: write
+concurrency:
+  group: approved-native-image-recovery
+  cancel-in-progress: false
+  queue: max
 jobs:
   discover:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     env:
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
       ONNXRUNTIME_NODE_INSTALL_CUDA: skip
@@ -40,3 +45,9 @@ jobs:
           name: image-gallery-discovery-${{ github.run_id }}
           path: runtime/image-gallery-discovery-proof.json
           retention-days: 3
+      - name: Recover independently verified native bytes after gallery discovery
+        if: success()
+        run: |
+          node --input-type=module - <<'JS'
+          const r=await fetch('https://api.github.com/repos/g-jayden/range-christmas-observatory/actions/workflows/range-bulk-native.yml/dispatches',{method:'POST',headers:{authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json','content-type':'application/json'},body:JSON.stringify({ref:'main',inputs:{continuationDepth:'0'}}),signal:AbortSignal.timeout(20000)});if(r.status!==204)throw Error('Native recovery dispatch HTTP '+r.status);console.log(JSON.stringify({nativeRecoveryRequested:true,sourceDirectoriesRequested:0,firecrawlCredits:0}));
+          JS
