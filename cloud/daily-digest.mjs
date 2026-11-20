@@ -23,7 +23,12 @@ export async function dailyDigestPlans(db,{now=Date.now(),maxPlans=10}={}){
   await db.put('digest-plan/'+id,plan);plans.push(plan);if(plans.length>=maxPlans)break;
  }
  await db.put('daily-digest-status',{day,checkedAt:new Date(now).toISOString(),state:plans.length?(waiting.length?'ready-with-pending-sources':'ready'):waiting.length?'waiting-for-current-source':'no-unsent-verified-products',waitingRetailers:[...new Set(waiting.flatMap(w=>w.retailers.map(r=>r.retailerId)))],reportsReady:plans.length});
- if(!plans.length)await db.put('daily-digest-product-status',{day,checkedAt:new Date(now).toISOString(),verifiedProducts:0,deferredProducts:0,state:'no-unsent-known-products',sourceVerificationPending:waiting.length>0});
+ if(!plans.length){await db.put('daily-digest-product-status',{day,checkedAt:new Date(now).toISOString(),verifiedProducts:0,deferredProducts:0,state:'no-unsent-known-products',sourceVerificationPending:waiting.length>0});
+  // The consolidated PDF queue is authoritative for delivery. An obsolete
+  // per-product screenshot state must not report a delivery failure after every
+  // eligible event has a receipt. Keep all pending evidence and seen history.
+  const monitor=await db.get('monitor');if(!waiting.length&&['delivery-pending','delivery-blocked','delivery-waiting'].includes(monitor?.state)&&(await digestSourceBarrier(db,['tree'],now)).ready)await db.put('monitor',{...monitor,state:'active',stage:'complete',deliveryMode:'daily-native-pdf',pendingDeliveries:0,lastError:null,digestQueueCheckedAt:new Date(now).toISOString()});
+ }
  return{day,plans,waiting,firecrawlCredits:0};
 }
 export async function dailyDigestOwnerTest(db,{ownerId,products,requestId,now=Date.now()}={}){
