@@ -28,3 +28,5 @@ const r=await request('/internal/classification-sync',{version:TAXONOMY_VERSION,
 console.log('PASS: customer misclassification examples, object versus motif/background, seasonal and brand negatives, all/NEW/today exclusion, midnight retention, and private queue reconciliation without sending or resetting deduplication.');
 
 assert.equal(offeredObject({kind:'tree',variantName:'42cm Grey Wooden LED Christmas House with Warm White Steady Bulbs'}).id,'scenes','A supplier family tree kind cannot override the actual house SKU');assert.equal(offeredObject({kind:'tree',variantName:'HOMCOM Inflatable Christmas Tree'}).id,'inflatable');
+
+assert.equal(christmasEligibility({variantName:'24K Gold Plated 500 Euro Flexible Poker Playing Cards Christmas Gifts'}).disposition,'exclude','A card game marketed as a Christmas gift is not a present-shaped decoration');assert.equal(christmasEligibility({variantName:'Playing Cards Christmas Tree Decoration Bauble',specifications:{Height:'8cm'}}).disposition,'include','A genuine miniature game-shaped bauble remains eligible');
