@@ -24,7 +24,7 @@ export function arDirectoryPageProps(html){
   if(outer[0]!==1||typeof outer[1]!=='string')continue;
   for(const line of outer[1].split('\n')){if(!/^[a-f0-9]+:/.test(line))continue;try{visit(JSON.parse(line.slice(line.indexOf(':')+1)));}catch{}}
  }
- if(native){const full=matches.find(p=>p.productMetadata.currentPage===native.productMetadata.currentPage&&p.productMetadata.numberOfResults===native.productMetadata.numberOfResults&&p.productData.length===native.productData.length&&p.productData.every(r=>native.productData.some(n=>String(r.id)===n.id)));return full||native;}
+ if(native){const full=matches.find(p=>p.productMetadata.currentPage===native.productMetadata.currentPage&&p.productMetadata.numberOfResults===native.productMetadata.numberOfResults&&p.productData.length>=native.productData.length&&native.productData.every(n=>p.productData.some(r=>String(r.id)===n.id)));return full||native;}
  if(matches.length!==1)throw Error('Argos listing business props absent or ambiguous');return matches[0];
 }
 
