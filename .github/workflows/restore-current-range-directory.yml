@@ -1,8 +1,5 @@
 name: Restore the already captured current Range directory
 on:
-  push:
-    paths:
-      - .github/workflows/restore-current-range-directory.yml
   workflow_dispatch:
 permissions:
   contents: write

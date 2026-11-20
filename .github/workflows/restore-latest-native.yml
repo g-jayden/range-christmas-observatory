@@ -1,8 +1,5 @@
 name: Restore the latest archived originals without repeat collection
 on:
-  push:
-    paths:
-      - .github/workflows/restore-latest-native.yml
   workflow_dispatch:
 permissions:
   contents: write
