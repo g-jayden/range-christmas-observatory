@@ -43,7 +43,10 @@ jobs:
         if: always()
         with:
           name: image-gallery-discovery-${{ github.run_id }}
-          path: runtime/image-gallery-discovery-proof.json
+          path: |
+            runtime/image-gallery-discovery-proof.json
+            web/range-native-gallery.json
+            web/collection-ledger.json
           retention-days: 3
       - name: Recover independently verified native bytes after gallery discovery
         if: success()
