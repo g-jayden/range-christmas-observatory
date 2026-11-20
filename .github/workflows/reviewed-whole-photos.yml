@@ -1,0 +1,47 @@
+name: Correct reviewed whole-product originals from existing official galleries
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/reviewed-whole-photos.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: reviewed-whole-product-originals
+  cancel-in-progress: false
+jobs:
+  exact-gallery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+      GITHUB_TOKEN: ${{ github.token }}
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/images/
+            !/web/mail-assets/
+            !/web/reports/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci --no-audit --no-fund
+      - name: Recover only reviewed full views, free first and at most four native-image credits
+        run: node scripts/recover-reviewed-whole-photos.mjs
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: reviewed-whole-photo-proof-${{ github.run_id }}
+          path: runtime/reviewed-whole-photo-proof.json
+          retention-days: 3
+      - name: Publish selected native views without source recollection
+        run: node scripts/request-retailer-site-publish.mjs ar

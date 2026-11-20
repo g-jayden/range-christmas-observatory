@@ -7,18 +7,14 @@ const REGISTRY='web/preview-selections.json.gz',SOURCE_INDEX='web/preview-source
 const SELECTION_VERSION='complete-border-selection-20261104-v3';
 // Human-reviewed whole-product frames from these exact SKU galleries. A URL
 // is eligible only while the current verified SKU gallery still contains it.
-const REVIEWED_WHOLE_SOURCES={
- '1492333':'https://www.therange.co.uk/media/7/8/1792876204_2772.jpg',
- '1459857':'https://www.therange.co.uk/media/7/4/1787119137_4695.jpg',
- '474493':'https://www.therange.co.uk/media/8/5/1758265760_11_5313.jpg',
- '3414647':'https://www.therange.co.uk/media/2/6/1793701706_9756.jpg'
-};
+import{REVIEWED_WHOLE_SOURCES}from'../web/source-photo-selection.mjs';
+import{exactNativeGalleryMember}from'./native-gallery-identity.mjs';
 const digest=v=>createHash('sha256').update(JSON.stringify(v)).digest('hex');
 const readGzip=async(file,fallback)=>{try{return JSON.parse(gunzipSync(await fs.readFile(file)));}catch(e){if(e.code!=='ENOENT')throw e;return fallback;}};
 const writeGzip=async(file,value)=>{await fs.writeFile(file+'.tmp',gzipSync(JSON.stringify(value)));await fs.rename(file+'.tmp',file);};
 export function previewCandidates(p){
  const result=new Map,add=(url,originalUrl=url)=>{try{const u=new URL(url);if(u.protocol!=='https:'||u.hostname!=='www.therange.co.uk'||!u.pathname.startsWith('/media/'))return;result.set(url,{url,originalUrl});}catch{}};
- for(const g of p.originalImages||[])if(String(g.selectedSku)===String(p.sku)&&(!p.variantId||!g.variantId||String(p.variantId)===String(g.variantId)))add(g.url);
+ for(const g of p.originalImages||[])if(exactNativeGalleryMember(p,g)&&(!p.variantId||!g.variantId||String(p.variantId)===String(g.variantId)))add(g.url);
  for(const url of [p.variantImageUrl,p.listingVariantImageUrl,...p.images||[]])add(url);
  return [...result.values()];
 }

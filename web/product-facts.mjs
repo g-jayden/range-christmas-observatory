@@ -42,11 +42,13 @@ export const reportRetailer=p=>retailerName(productRetailer(p));
 const usableNativeUrl=raw=>{try{const u=new URL(raw);return u.protocol==='https:'&&(u.hostname!=='www.therange.co.uk'||!u.pathname.startsWith('/media/')||/\.(?:jpe?g|png|webp|gif|avif)$/i.test(u.pathname));}catch{return false;}};
 export function nativeSourceUrl(p,item){
  if(item?.url)return usableNativeUrl(item.url)?item.url:null;
+ const reviewed=reviewedWholeGalleryPhoto(p);if(reviewed)return reviewed.url;
  const known=g=>(g.selectedSku!=null?String(g.selectedSku)===String(p.sku):p.variantId!=null&&String(g.variantId)===String(p.variantId)&&p.detailEvidence?.verifiedProductSection&&String(p.detailEvidence.selectedSku)===String(p.sku))&&usableNativeUrl(g.url);
  const selected=p.displayImage?.sourceUrl||p.previewImage?.sourceUrl,pair=p.originalImages?.find(g=>(g.url===selected||g.thumbnail===selected)&&known(g));
  if(pair)return pair.url;
- if(usableNativeUrl(p.originalImageUrl))return p.originalImageUrl;
  const current=p.variantImageUrl||p.imageCacheEvidence?.sourceUrl,matching=p.originalImages?.find(g=>(g.url===current||g.thumbnail===current)&&known(g));
+ if(matching)return matching.url;
+ if(usableNativeUrl(p.originalImageUrl))return p.originalImageUrl;
  const fallback=matching||p.originalImages?.find(known);return fallback?.url||(usableNativeUrl(selected)?selected:null);
 }
 
@@ -72,3 +74,4 @@ export function nativeImageCandidates(p,item){
  if(source)candidates.push(nativeDownloadUrl(p,source),source);
  return [...new Set(candidates)];
 }
+import{reviewedWholeGalleryPhoto}from'./source-photo-selection.mjs';
