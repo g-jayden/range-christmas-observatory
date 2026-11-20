@@ -30,10 +30,8 @@ jobs:
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
-      - name: Verify the immutable archive and actual completed collector checkout
+      - name: Verify the immutable archive and completed source run
         run: node scripts/verify-latest-native-archive.mjs
-      - name: Fetch the verified original billing base
-        run: git fetch --filter=blob:none --depth=1 origin "$NATIVE_RESTORE_BASE_SHA"
       - uses: actions/download-artifact@v8.0.2
         with:
           name: native-original-evidence-44707707847-1
