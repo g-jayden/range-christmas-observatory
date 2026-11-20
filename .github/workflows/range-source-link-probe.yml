@@ -1,8 +1,5 @@
 name: Verify malformed official product links with a four-credit ceiling
 on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/range-source-link-probe.yml']
   workflow_dispatch:
 permissions:
   contents: write
