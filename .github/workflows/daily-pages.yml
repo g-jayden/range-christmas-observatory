@@ -2,11 +2,11 @@ name: Credit controlled collection and permanent website
 on:
   push:
     branches: [main]
-    paths-ignore: ['web/catalogue.json', 'web/status.json', 'web/settings.json', 'web/collection-ledger.json', 'web/images/**', 'web/mail-assets/**', 'web/monitor-state.json', 'web/new-arrivals.json', 'web/monitor-proof.json', 'web/visual-cache.json', 'web/notification-readiness.json']
+    paths: ['web/evidence-repair-request.json', 'web/asda/request.json']
   schedule:
     - cron: '0 23 * * *'
     - cron: '1 23 * * *'
-    - cron: '2-57/5 * * * *'
+    - cron: '0 16 * * *'
   workflow_dispatch:
     inputs:
       refresh:

@@ -1,6 +1,22 @@
 name: Publish committed catalogues without source collection
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - '!web/images/**'
+      - '!web/mail-assets/**'
+      - '!web/reports/**'
+      - '!web/evidence-repair-request.json'
+      - '!web/asda/request.json'
+      - 'scripts/**'
+      - '!scripts/dispatch-approved-acceptance.mjs'
+      - 'server/**'
+      - 'cloud/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/static-pages.yml'
 permissions:
   contents: read
   pages: write
