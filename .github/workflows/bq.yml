@@ -8,6 +8,10 @@ on:
         description: Reuse saved complete source without directory or detail requests
         type: boolean
         default: false
+      notificationsOnly:
+        description: Prepare only pending mail from the already committed complete source
+        type: boolean
+        default: false
       recoverArtifact:
         description: Restore an exact current source artifact after interrupted image processing
         type: string
@@ -86,17 +90,20 @@ jobs:
           restore-keys: bq-source-checkpoints-
       - run: node scripts/test-bq.mjs
       - name: Recover exact saved source without repeating directory requests
+        if: inputs.notificationsOnly != true
         env:
           GITHUB_TOKEN: ${{ github.token }}
           BQ_RECOVERY_ARTIFACT_ID: ${{ inputs.recoverArtifact }}
         run: node scripts/recover-bq-source.mjs
       - name: Read exact official directories free first with bounded paid fallback
+        if: inputs.notificationsOnly != true
         env:
-          FIRECRAWL_API_KEY: ${{ inputs.rebuildOnly != true && secrets.FIRECRAWL_API_KEY || '' }}
+          FIRECRAWL_API_KEY: ${{ inputs.rebuildOnly != true && inputs.notificationsOnly != true && secrets.FIRECRAWL_API_KEY || '' }}
           COLLECTION_CHECKPOINTS: '1'
           BQ_REBUILD_ONLY: ${{ inputs.rebuildOnly == true && 'true' || 'false' }}
         run: node scripts/update-bq.mjs
       - name: Save the closed source before image processing
+        if: inputs.notificationsOnly != true
         uses: actions/cache/save@v6.1.0
         with:
           path: |
@@ -110,11 +117,12 @@ jobs:
             runtime/fonts
           key: local-clip-vit-base-patch32-q8-v1
       - name: Verify originals and local body colours without paid requests
+        if: inputs.notificationsOnly != true
         run: node scripts/enrich-bq.mjs
       - name: Prepare verified first-observed arrivals after the initial baseline
         run: node scripts/prepare-retailer-notifications.mjs bq
       - name: Save resumable source checkpoints after any outcome
-        if: always()
+        if: always() && inputs.notificationsOnly != true
         uses: actions/cache/save@v6.1.0
         with:
           path: |
