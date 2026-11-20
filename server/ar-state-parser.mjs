@@ -13,6 +13,8 @@ export function arPublicState(html){
 // App-router lists carry the same business props inside JSON-encoded Flight
 // records. Decode their literal payloads, without evaluating a Flight script.
 export function arDirectoryPageProps(html){
+ const sai=String(html).match(/<script\b[^>]*\bid=["']sai-product-data["'][^>]*>([\s\S]*?)<\/script>/i);let native;
+ if(sai){const d=JSON.parse(sai[1]);if(d.version!=='1.0'||!Number.isInteger(d.currentPage)||d.currentPage<1||!Number.isInteger(d.totalPages)||d.totalPages<d.currentPage||!Number.isInteger(d.totalNumberOfAllProducts)||d.totalNumberOfAllProducts<0||!Array.isArray(d.products)||d.products.length!==d.rank1CountForCurrentPage||d.products.length>d.totalNumberOfAllProducts||new Set(d.products.map(p=>String(p.id))).size!==d.products.length||d.products.some(p=>!/^[a-z0-9]{7,8}$/.test(String(p.id))||typeof p.title!=='string'))throw Error('Argos native listing counters or exact identities are inconsistent');native={productMetadata:{currentPage:d.currentPage,totalPages:d.totalPages,numberOfResults:d.totalNumberOfAllProducts},productData:d.products.map(p=>({id:String(p.id),attributes:{name:p.title},sourceTransport:'official-sai-product-data'})),sourceTransport:'official-sai-product-data'};}
  const direct=String(html).match(/<script\b[^>]*id=["']__NEXT_DATA__["'][^>]*>([\s\S]*?)<\/script>/i);
  if(direct)return JSON.parse(direct[1]).props.pageProps;
  const matches=[];const visit=v=>{if(Array.isArray(v))for(const x of v)visit(x);else if(v&&typeof v==='object'){if(v.pageProps?.productData&&v.pageProps.productMetadata)matches.push(v.pageProps);for(const x of Object.values(v))visit(x);}};
@@ -22,6 +24,7 @@ export function arDirectoryPageProps(html){
   if(outer[0]!==1||typeof outer[1]!=='string')continue;
   for(const line of outer[1].split('\n')){if(!/^[a-f0-9]+:/.test(line))continue;try{visit(JSON.parse(line.slice(line.indexOf(':')+1)));}catch{}}
  }
+ if(native){const full=matches.find(p=>p.productMetadata.currentPage===native.productMetadata.currentPage&&p.productMetadata.numberOfResults===native.productMetadata.numberOfResults&&p.productData.length===native.productData.length&&p.productData.every(r=>native.productData.some(n=>String(r.id)===n.id)));return full||native;}
  if(matches.length!==1)throw Error('Argos listing business props absent or ambiguous');return matches[0];
 }
 
