@@ -1,7 +1,7 @@
 // Classify the offered SKU, not motifs printed on it or objects in its roomset.
 // This module has no network or model dependencies and is shared by monitoring
 // and the public catalogue. Image scores are evidence, never fabricated facts.
-export const TAXONOMY_VERSION='2026-11-20-offered-variant-object-v5';
+export const TAXONOMY_VERSION='2026-11-20-offered-variant-object-v6';
 export const isPublishedProduct=p=>!p.taxonomyAudit||p.taxonomyAudit.disposition==='include';
 export function productDescription(p){return String(p.sourceDescription||p.appearanceSource?.descriptionText||p.productSummary||'');}
 export function productBody(p){
@@ -19,7 +19,9 @@ export function offeredObject(p,{visual=p.taxonomyVisual}={}){
  if(/\bstorage bags?\b/i.test(nounBody))return r('ornaments','actual-seasonal-storage-bag-not-its-contents',{subtype:'accessory'});
  if(/\b(?:snow spray|spray snow|tree stand)(?! cover)\b/i.test(nounBody))return r('ornaments','tree-accessory-not-a-whole-tree',{subtype:'accessory'});
  if(/\b(?:tree flowers?|poinsettia (?:flowers? )?ornaments?)\b/i.test(nounBody))return r('tree-decorations','floral-tree-ornaments-not-a-whole-tree');
- if(p.kind==='tree'&&!/\b(?:inflatable|house|church|cottage|figurine)\b/i.test(nounBody)&&/\btree(?:s)?\b/i.test(nounBody)&&!/\b(?:baubles? set|tree (?:topper|skirt|collar)|tree stand cover|tree shaped (?:bauble|ornament)|hanging tree|tree (?:hanging|pendant)|craft kit|diamond art|stocking|cushion)\b/i.test(nounBody))return r('tree','whole-tree-SKU-and-source-catalogue');
+ const floralHead=nounBody.split(/\bfor\b/i)[0];
+ if(/\b(?:picks?|sprays?|stems?|sprigs?)\b/i.test(floralHead)&&/\b(?:berries|berry|floral|foliage|pine|leaves|leaf|poinsettia|flowers?|eucalyptus)\b/i.test(floralHead)&&!/\b(?:snow spray|spray snow|spray paint|clips?|ribbon)\b/i.test(floralHead))return r('spray','offered-floral-picks-before-the-tree-wreath-or-garland-they-decorate');
+ if(p.kind==='tree'&&!/\b(?:inflatable|house|church|cottage|figurine)\b/i.test(nounBody)&&/\btree(?:s)?\b/i.test(nounBody)&&!/\b(?:baubles? set|tree (?:topper|skirt|collar)|tree stand cover|tree shaped (?:bauble|ornament)|hanging tree|tree (?:hanging|pendant)|craft kit|diamond art|stocking|cushion|picks?|sprays?|stems?|sprigs?)\b/i.test(nounBody))return r('tree','whole-tree-SKU-and-source-catalogue');
  if(/\btree (?:base )?(?:skirt|collar)\b|tree stand cover/i.test(body))return r('skirt','tree-base-cover');
  if(p.kind==='skirt'&&/\b(?:tree mat|tree base|floor protector)\b/i.test(body))return r('skirt','tree-base-and-floor-cover');
 
