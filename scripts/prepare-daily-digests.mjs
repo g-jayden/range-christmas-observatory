@@ -3,7 +3,7 @@ import {applySavedRetailerReview} from '../server/saved-retailer-reviews.mjs';
 import {nativeSourceUrl} from '../web/product-facts.mjs';
 import {exactNativeGalleryMember} from '../server/native-gallery-identity.mjs';
 import {rebuildStoredRangeViews} from '../server/rebuild-range-views.mjs';
-import {reportProductEvidence,mergeReportProduct} from '../server/report-product-evidence.mjs';
+import {reportProductEvidence,mergeReportProduct,reportFieldProduct} from '../server/report-product-evidence.mjs';
 import {createPaidNativeOriginals} from '../server/paid-native-originals.mjs';
 import {catalogueIdentityIndex} from '../server/catalogue-identities.mjs';
 import {applyRangeNativeIndex} from '../server/range-native-index.mjs';
@@ -27,6 +27,7 @@ async function exactProduct(candidate){
  if(!p)throw Error('Current exact product absent: '+id+':'+candidate.sku);
  if(id==='asda'||id==='du')applySavedRetailerReview(p,(await json(id+'/reviews.json'))[p.sku],id);
  const acceptance=reportProductEvidence(p,candidate,source,{retailerId:id});if(!acceptance.accepted)throw Error('Exact-SKU evidence '+id+':'+candidate.sku+'; '+acceptance.reasons.join(', '));
+ p=reportFieldProduct(p,acceptance);
  if(id==='the-range')for(const name of ['new-original-recovery.json','range-native-index.json'])applyRangeNativeIndex([p],await json(name).catch(e=>{if(e.code==='ENOENT')return {entries:{}};throw e;}));
  return p;
 }
@@ -53,7 +54,7 @@ for(const originalGroup of plan.plans){
    try{
     const p=await exactProduct(candidate),{bytes,source,sha256}=await nativeRecovery.read(p);
     native.set(p,bytes);products.push(p);verifiedKeys.push(candidate.digestProductKey);
-    items.push({key:candidate.digestProductKey,sku:candidate.sku,retailerId:productRetailer(p),names:productNames(p),sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,size:productSize(p),imageSourceUrl:source,imageSha256:sha256,sourceObservedAt:p.observedAt});
+    items.push({key:candidate.digestProductKey,sku:candidate.sku,retailerId:productRetailer(p),names:productNames(p),sourceUrl:p.sourceUrl,priceGBP:p.priceGBP,size:productSize(p),imageSourceUrl:source,imageSha256:sha256,sourceObservedAt:p.observedAt,...(p.reportFieldEvidence?{reportFieldEvidence:p.reportFieldEvidence}:{})});
    }catch(e){failures.push({plan:originalGroup.id,key:candidate.digestProductKey,error:String(e.message).slice(0,250)});}
   }
   if(!products.length)continue;
