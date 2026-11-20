@@ -21,5 +21,13 @@ for(const failure of ['http404','timeout']){
  const calls=[];const got=await digestNativeOriginal({...p,originalCachedImageUrl:'images/source/'+sha+'.jpg',originalImageEvidence:{...p.originalImageEvidence,sha256:sha}},{readFile:async()=>{throw missing},fetcher:async source=>{calls.push(source);if(source.startsWith('https://raw.githubusercontent.com/')){if(failure==='timeout')throw Error('Repository request timed out');return new Response('',{status:404});}assert.equal(source,url);return new Response(bytes);}});
  assert.equal(calls.length,2);assert.deepEqual(got.bytes,bytes);assert.equal(got.sha256,sha);assert.equal(got.nativeMirrorVerified,false,'A mirror miss must persist its free official recovery');
 }
-await assert.rejects(digestNativeOriginal({...p,originalImageEvidence:{...p.originalImageEvidence,sha256:'f'.repeat(64)}},{fetcher}),e=>e.code==='NATIVE_SOURCE_VERSION_CHANGED');
+await assert.rejects(digestNativeOriginal({...p,originalImageEvidence:{...p.originalImageEvidence,sha256:'f'.repeat(64)}},{fetcher:async source=>source.startsWith('https://raw.githubusercontent.com/')?new Response('',{status:404}):new Response(bytes)}),e=>e.code==='NATIVE_SOURCE_VERSION_CHANGED');
 console.log('Missing or timed-out repository mirrors still try the free exact official original; changed source pixels require evidence recheck.');
+
+const compact={...p,originalImageEvidence:{...p.originalImageEvidence,sha256:sha}},pointerCalls=[];
+const recovered=await digestNativeOriginal(compact,{readFile:async()=>{throw missing},fetcher:async target=>{pointerCalls.push(target);assert.equal(target,'https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/images/source/'+sha+'.jpg');return new Response(bytes);}});
+assert.equal(pointerCalls.length,1);assert.deepEqual(recovered.bytes,bytes);assert.equal(recovered.nativeMirrorVerified,true);assert.equal(recovered.nativeCachePath,'images/source/'+sha+'.jpg');assert.equal(compact.originalCachedImageUrl,undefined,'Recovering an archive pointer must not rewrite source product facts');
+await assert.rejects(digestNativeOriginal(compact,{readFile:async()=>{throw missing},fetcher:async()=>new Response('wrong native archive')}),/digest mismatch/);
+await assert.rejects(digestNativeOriginal({...compact,originalImageEvidence:{...compact.originalImageEvidence,width:1200}},{readFile:async()=>bytes,fetcher:()=>{throw Error('Must not request source')}}),e=>e.code==='NATIVE_SOURCE_VERSION_CHANGED');
+let inferredReads=0;await assert.rejects(digestNativeOriginal({...compact,originalImages:[{url,selectedSku:'foreign'}]},{readFile:async()=>{inferredReads++;return bytes},fetcher:()=>{throw Error('Must not request source')}}),/mapping/);assert.equal(inferredReads,0);
+console.log('Missing compact native pointers recover exact hash-bound archive bytes without retailer or paid requests; wrong hashes, dimensions and foreign galleries are rejected.');
