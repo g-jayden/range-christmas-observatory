@@ -50,6 +50,15 @@ export function productInformation(product,specs){
  const text='商品概览\n'+summary+'\n\n商品规格\n'+Object.entries(specifications).map(([key,value])=>names[key]+'：'+value).join('\n')+'\n\n完整介绍请查看原站购买页。';
  return {specifications,summary,text};
 }
+export function restoreExactRangeGalleryPreview(p){
+ if(validProductImage(p.variantImageUrl||p.imageUrl)||!p.detailEvidence?.verifiedProductSection||String(p.detailEvidence.selectedSku)!==String(p.sku)||!p.variantId)return false;
+ const canonical=raw=>{try{const u=new URL(raw);return u.origin==='https://www.therange.co.uk'?u.origin+u.pathname.replace(/\/$/,''):null;}catch{return null;}},path=canonical(p.sourceUrl);
+ if(!path)return false;
+ const eligible=(p.originalImages||[]).filter(g=>String(g.variantId)===String(p.variantId)&&canonical(g.source)===path&&validProductImage(g.url)&&new URL(g.url).origin==='https://www.therange.co.uk');
+ const chosen=eligible.find(g=>g.url===p.originalImageUrl)||eligible[0];if(!chosen)return false;
+ p.variantImageUrl=chosen.url;p.originalImageUrl=chosen.url;p.imageSelectionEvidence={method:'exact-SKU-variant-gallery-replaces-invalid-listing-placeholder',selectedSku:String(p.sku),variantId:String(p.variantId),sourceUrl:p.sourceUrl,sourceGalleryUrl:chosen.url,verifiedAt:p.attributeObservedAt};
+ if(p.imageCacheEvidence?.sourceUrl!==chosen.url){delete p.cachedImageUrl;delete p.imageCacheEvidence;}return true;
+}
 export function applyDetails(p,d){
  const s=d.specs,t=d.featuresText,lower=t.toLowerCase();
  if(p.kind==='decoration'){p.sourceDescription=t;p.dimensions=productDimensions(s,t);p.detailsReady=true;delete p.detailIssue;delete p.detailError;}
@@ -75,5 +84,6 @@ export function applyDetails(p,d){
  if((/placeholder/i.test(p.variantImageUrl||p.imageUrl||'')||/kube-media-unpublished/.test(p.variantImageUrl||''))&&validProductImage(d.image)){p.variantImageUrl=d.image;p.imageEvidence={url:d.image,source:d.sourceUrl,field:'selected SKU offer image / og:image',observedAt:d.observedAt}}
  if(p.kind==='decoration'&&validProductImage(d.image)&&/^https:\/\//.test(d.image)&&d.image!==p.variantImageUrl){p.sourceListingImageUrl=p.variantImageUrl;p.variantImageUrl=d.image;p.imageSelectionEvidence={method:'exact-SKU-offer-image',sourceUrl:d.sourceUrl,observedAt:d.observedAt};}
  p.images=[...new Set([p.variantImageUrl,p.imageUrl,...d.images].filter(u=>/^https:\/\//.test(u||'')))];
+ restoreExactRangeGalleryPreview(p);
  return p;
 }
