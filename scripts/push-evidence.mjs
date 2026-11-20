@@ -3,7 +3,7 @@ import {gunzipSync,gzipSync} from 'node:zlib';
 import {execFileSync} from 'node:child_process';
 import fs from 'node:fs';
 import {control,apiBase} from '../server/cloud-client.mjs';
-const git=(...args)=>execFileSync('git',args,{stdio:'inherit'}),read=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
+const git=(...args)=>execFileSync('git',args,{stdio:'inherit'}),read=(...args)=>execFileSync('git',args,{encoding:'utf8',maxBuffer:67108864}).trim();
 if(!process.env.GITHUB_RUN_ID)throw Error('Evidence publishing is restricted to its GitHub workflow');
 // Rebase data onto the already-authorised workflow revision. Creating a new
 // branch can require workflow-file permission even for a data-only checkpoint.
@@ -20,7 +20,7 @@ let saved=false;for(let attempt=1;attempt<=4;attempt++){
   try{git('pull','--rebase');}catch(error){
    const conflicts=read('diff','--name-only','--diff-filter=U').split('\n').filter(Boolean),allowed=new Set(['web/collection-ledger.json','web/preview-quality-cache.json.gz','web/paid-native-index.json']);
    if(!conflicts.length||conflicts.some(p=>!allowed.has(p)))throw error;
-   for(const file of conflicts){const packed=file.endsWith('.gz'),stages=[1,2,3].map(n=>{const raw=execFileSync('git',['show',':'+n+':'+file]);return JSON.parse((packed?gunzipSync(raw):raw).toString('utf8'));}),merged=file.endsWith('collection-ledger.json')?mergeCollectorLedgers(...stages):file.endsWith('paid-native-index.json')?mergeCollectorNativeIndexes(...stages):mergeCollectorImageCaches(...stages),bytes=Buffer.from(JSON.stringify(merged));fs.writeFileSync(file,packed?gzipSync(bytes):bytes);git('add','--',file);}
+   for(const file of conflicts){const packed=file.endsWith('.gz'),stages=[1,2,3].map(n=>{const raw=execFileSync('git',['show',':'+n+':'+file],{maxBuffer:67108864});return JSON.parse((packed?gunzipSync(raw):raw).toString('utf8'));}),merged=file.endsWith('collection-ledger.json')?mergeCollectorLedgers(...stages):file.endsWith('paid-native-index.json')?mergeCollectorNativeIndexes(...stages):mergeCollectorImageCaches(...stages),bytes=Buffer.from(JSON.stringify(merged));fs.writeFileSync(file,packed?gzipSync(bytes):bytes);git('add','--',file);}
    git('-c','core.editor=true','rebase','--continue');
    console.log(JSON.stringify({collectorReceiptConflictsReconciled:conflicts,sourceRequests:0,firecrawlCredits:0}));
   }
