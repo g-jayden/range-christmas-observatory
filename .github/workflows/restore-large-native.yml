@@ -1,8 +1,5 @@
 name: Restore the saved native archive in bounded data publications
 on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/restore-large-native.yml']
   workflow_dispatch:
 permissions:
   contents: write
