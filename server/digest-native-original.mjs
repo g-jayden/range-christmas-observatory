@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import sharp from 'sharp';
-import {nativeSourceUrl} from '../web/product-facts.mjs';
+import {nativeSourceUrl,nativeDownloadUrl} from '../web/product-facts.mjs';
 import {allowedPublicImage} from '../cloud/public-image.mjs';
 import {exactNativeGalleryMember} from './native-gallery-identity.mjs';
 
@@ -12,7 +12,7 @@ export async function digestNativeOriginal(p,{readFile=fs.readFile,fetcher=fetch
   if(prior?.sha256&&p.originalCachedImageUrl&&prior.sourceUrl===source){
     let bytes;
     try{bytes=await readFile('web/'+p.originalCachedImageUrl);}catch(e){
-      if(e.code!=='ENOENT'||!/^images\/(?:source|asda|du|ms|bm|hb|nx|jl|mt|ar)\/[a-f0-9]{64}\.(?:jpg|png|webp|avif|gif)$/.test(p.originalCachedImageUrl)||!p.originalCachedImageUrl.includes(prior.sha256+'.'))throw e;
+      if(e.code!=='ENOENT'||!/^images\/(?:source|asda|du|ms|bm|hb|nx|jl|mt|bq|ar)\/[a-f0-9]{64}\.(?:jpg|png|webp|avif|gif)$/.test(p.originalCachedImageUrl)||!p.originalCachedImageUrl.includes(prior.sha256+'.'))throw e;
       const mirror='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/'+p.originalCachedImageUrl;
       try{const response=await fetcher(mirror,{signal:AbortSignal.timeout(30000)});if(response.ok)bytes=Buffer.from(await response.arrayBuffer());}catch{}
       // A missing repository mirror is not evidence that the retailer's free
@@ -27,7 +27,7 @@ export async function digestNativeOriginal(p,{readFile=fs.readFile,fetcher=fetch
   }
   const g=p.originalImages?.find(g=>g.url===source&&exactNativeGalleryMember(p,g));
   if(!g||!allowedPublicImage(source)||p.previewReviewRequired||p.imageIssue)throw Error('Exact reviewed native gallery mapping unavailable for '+p.sku+'; '+(!g?'SKU/variant mapping':p.previewReviewRequired?'whole-product preview review':'source photo evidence'));
-  const downloadSource=validExport&&allowedPublicImage(exported.exportUrl)?exported.exportUrl:source;
+  const downloadSource=validExport&&allowedPublicImage(exported.exportUrl)?exported.exportUrl:nativeDownloadUrl(p,source);
   const response=await fetcher(downloadSource,{signal:AbortSignal.timeout(30000)});if(!response.ok)throw Error('Official native original HTTP '+response.status);
   const bytes=Buffer.from(await response.arrayBuffer());if(bytes.length>25000000)throw Error('Native original exceeds individual file guard');
   const m=await sharp(bytes).metadata();if(!m.width||!m.height||m.width<64||m.height<64)throw Error('Official native response lacks real photo pixels');
