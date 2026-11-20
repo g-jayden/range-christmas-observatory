@@ -15,7 +15,8 @@ const sharedCacheFiles=new Set(['web/preview-quality-cache.json.gz']);
 const dirty=execFileSync('git',['diff','--name-only','-z'],{encoding:'utf8'}).split('\0').filter(Boolean);
 const knownUntracked=execFileSync('git',['ls-files','--others','--exclude-standard','-z'],{encoding:'utf8'}).split('\0').filter(p=>sharedCacheFiles.has(p));
 if(dirty.length||knownUntracked.length){if(dirty.some(p=>!sharedCacheFiles.has(p)))throw Error('Uncommitted collector output needs an explicit publication path: '+dirty.join(', '));git('add','--',...dirty,...knownUntracked);git('commit','-m','Preserve shared source-photo quality evidence [skip ci]');}
-let saved=false;for(let attempt=1;attempt<=4;attempt++){
+const maximumAttempts=process.env.EVIDENCE_NATIVE_ONLY==='1'?8:4;
+let saved=false;for(let attempt=1;attempt<=maximumAttempts;attempt++){
  try{
   try{git('pull','--rebase');}catch(error){
    const conflicts=read('diff','--name-only','--diff-filter=U').split('\n').filter(Boolean),allowed=new Set(['web/collection-ledger.json','web/preview-quality-cache.json.gz','web/paid-native-index.json']);
@@ -27,7 +28,7 @@ let saved=false;for(let attempt=1;attempt<=4;attempt++){
   const changed=read('diff','--name-only','origin/main..HEAD').split('\n').filter(Boolean);
   if(changed.some(p=>!p.startsWith('web/')))throw Object.assign(Error('Collector publication contains non-data files; refused'),{nonData:true});
   git('push','origin','HEAD:refs/heads/main');saved=true;break;
- }catch(error){const rebase=read('rev-parse','--git-path','rebase-merge');if(error.nonData||fs.existsSync(rebase))throw Error('Data publication requires reconciliation; recover the workflow source-evidence archive');if(attempt<4)await new Promise(r=>setTimeout(r,1500));}
+ }catch(error){const rebase=read('rev-parse','--git-path','rebase-merge');if(error.nonData||fs.existsSync(rebase))throw Error('Data publication requires reconciliation; recover the workflow source-evidence archive');if(attempt<maximumAttempts)await new Promise(r=>setTimeout(r,Math.min(8000,1500*attempt)+Math.floor(Math.random()*1000)));}
 }
 if(!saved)throw Error('Main was not updated; recover the source-evidence artifact instead of collecting again');
 console.log(JSON.stringify({evidenceSaved:true,dataOnly:true,commit:read('rev-parse','HEAD')}));
