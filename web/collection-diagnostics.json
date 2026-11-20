@@ -1,1 +1,505 @@
-{"version":1,"receipts":[{"id":"mcp-01a1a3a8-3ef5-7754-a47c-2495a46fdd0c","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1a3aa-f604-72de-bbdb-b26e10f85305","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1a3aa-f819-71c6-b60f-1ec238ab1c89","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1a3c8-1a95-71af-9b69-1217bcd2f129","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1a3ac-b7d3-756c-a223-6d1e46c0ff06","period":"2026-11","credits":1,"refunded":1},{"id":"mcp-01a1a3af-50bf-7109-a471-f9b98eec7d81","period":"2026-11","credits":2,"refunded":0},{"id":"mcp-01a1a3af-db67-7429-b13f-4c7f4401515d","period":"2026-11","credits":2,"refunded":0},{"id":"mcp-01a1a3b2-42f9-74f3-addc-cf18830e9aff","period":"2026-11","credits":2,"refunded":0},{"id":"mcp-01a1a3ba-e0c9-72ee-9e0e-80cae1fb24db","period":"2026-11","credits":2,"refunded":0},{"id":"mcp-01a1a3bb-a483-7092-9d9c-734190e4e4d7","period":"2026-11","credits":2,"refunded":0},{"id":"mcp-01a1a3be-12f9-717e-bf74-e9247770fe0b","period":"2026-11","credits":2,"refunded":0},{"id":"mcp-01a1a3cb-85b1-726d-8bb4-0fbd960f98b8","period":"2026-11","credits":2,"refunded":0},{"id":"mcp-01a1a3d7-a301-713d-bbf9-2e44b3b98911","period":"2026-11","credits":2,"refunded":0},{"id":"mcp-01a1a4fc-8f91-7228-9f92-c006fa1b5338","period":"2026-11","credits":2,"refunded":1},{"id":"mcp-01a1a4fd-11ac-77db-a4c3-85d7ce65f312","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1b36d-13ba-70da-899d-fc55d1f88c71","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1b36e-fce2-726e-ab6d-4c25c70ed1a3","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1b375-7b9a-7419-9e80-5b992a5fef00","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1b376-3751-723f-8e06-2affc13e9792","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1b3be-07e6-71f7-8d05-a531a4a98baa","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1b3d5-510e-757a-942b-8473f7cc63a4","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1b3db-5345-70d5-9bb8-7035e7c1102e","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1bea5-a8b0-71aa-8148-b814626cd5cd","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1bec4-a570-7148-b6c7-3073fdfcf381","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1bea5-4e04-7074-8c8c-596d3f7de618","period":"2026-11","credits":2,"refunded":0},{"id":"mcp-01a1bed3-7f3e-710a-989d-649133d23269","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1bee2-cbd0-73a2-965d-acb2c59c761d","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1bee4-98b8-75ee-b3ec-97fd58cb28fe","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1bee5-06d8-76d7-b6e8-b3465afea38e","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c0f9-8093-705e-a2c1-ad2bc2043bae","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c0fd-2463-7677-b431-c1f41d3a6fa1","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c0fe-00b6-73cc-a95d-2a76add33d3a","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c129-9e9e-753b-8c18-23731437aa84","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c14b-7d14-713a-911a-65b8ebb554ed","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c159-8284-7778-8f2a-f2a67b4825d3","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c159-ea98-7158-b894-bcae93c3daa2","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c183-270d-7549-b6f7-b08e84bc5639","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c185-3e75-775d-aceb-a794e83f605a","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c401-5fbb-75ce-a8ab-4dc208cf52ae","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c402-0885-76ff-8dfc-27618e2a1174","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c403-0ee3-755b-82e0-be5aa36d8760","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c73c-0c51-75c1-8751-a57b21bfecdc","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c73d-bcc0-7382-970c-fad208f4a6a7","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1c740-7975-7788-b0b7-f950e2990296","period":"2026-11","credits":1,"refunded":0},{"id":"mcp-01a1e578-20b7-768d-8aa6-8d0e58542e48","period":"2026-11","credits":1,"refunded":0,"retailerId":"nx","authorizationId":"nx-source-access-20261117","endpoint":"scrape"},{"id":"mcp-01a1e579-f44a-7447-9af2-23d1ed5c8c99","period":"2026-11","credits":2,"refunded":0,"retailerId":"nx","authorizationId":"nx-source-access-20261117","endpoint":"interact","sessionDurationMs":19000},{"id":"next-01a1e6e0-42e0-719d-903b-ffaf4c9b25fd","period":"2026-11","credits":1,"refunded":0,"retailerId":"nx","authorizationId":"next-current-integration-20261117","endpoint":"scrape","billingVerified":true,"githubRun":43986784198},{"id":"next-01a1e6e3-97bc-755b-9f06-410e8cfd20d7","period":"2026-11","credits":1,"refunded":0,"retailerId":"nx","authorizationId":"next-current-integration-20261117","endpoint":"scrape","billingVerified":true},{"id":"next-01a1e6e8-22dc-72bc-b3bb-6a6fa6327359","period":"2026-11","credits":1,"refunded":0,"retailerId":"nx","authorizationId":"next-current-integration-20261117","endpoint":"scrape","billingVerified":true},{"id":"next-01a1e6ec-ce38-7083-9c7c-684db168780b","period":"2026-11","credits":1,"refunded":0,"retailerId":"nx","authorizationId":"next-current-integration-20261117","endpoint":"scrape","billingVerified":true},{"id":"next-01a1e6f0-7c35-76fb-b417-8d0fdf23698d","period":"2026-11","credits":1,"refunded":0,"retailerId":"nx","authorizationId":"next-current-integration-20261117","endpoint":"scrape","billingVerified":true},{"id":"next-01a1e6f5-2191-702e-b2bb-1183f9660403","period":"2026-11","credits":1,"refunded":0,"retailerId":"nx","authorizationId":"next-current-integration-20261117","endpoint":"scrape","billingVerified":true},{"id":"next-01a1e6fb-9afd-73fd-95c7-82fe95e09849","period":"2026-11","credits":1,"refunded":0,"retailerId":"nx","authorizationId":"next-current-integration-20261117","endpoint":"scrape","billingVerified":true,"githubRun":43990812715},{"id":"next-01a1e703-c23f-749e-adb7-4b68aae1898a","period":"2026-11","credits":1,"refunded":0,"retailerId":"nx","authorizationId":"next-current-integration-20261117","endpoint":"scrape","billingVerified":true,"githubRun":43991951446},{"id":"next-01a1e70a-c184-754b-bfb9-5d28125c99fb","period":"2026-11","credits":1,"refunded":0,"retailerId":"nx","authorizationId":"next-current-integration-20261117","endpoint":"scrape","billingVerified":true},{"id":"next-01a1e72b-e0d3-77b9-a999-3bfa89523db7","period":"2026-11","credits":1,"refunded":0,"retailerId":"nx","authorizationId":"next-current-integration-20261117","endpoint":"scrape","billingVerified":true},{"id":"next-01a1e72c-672c-743d-8494-d45d044fdabe","period":"2026-11","credits":1,"refunded":0,"retailerId":"nx","authorizationId":"next-current-integration-20261117","endpoint":"scrape","billingVerified":true},{"id":"next-01a1e72c-6e52-77c9-8a1e-18b617416522","period":"2026-11","credits":1,"refunded":0,"retailerId":"nx","authorizationId":"next-current-integration-20261117","endpoint":"scrape","billingVerified":true},{"id":"next-01a1e72c-69de-772c-82e1-448387fe289a","period":"2026-11","credits":1,"refunded":0,"retailerId":"nx","authorizationId":"next-current-integration-20261117","endpoint":"scrape","billingVerified":true},{"id":"mcp-01a1f1fc-b9dd-7208-a8dd-c888a731024b","period":"2026-11","credits":1,"refunded":0,"source":"John Lewis exact official pagination transport validation","sourceUrl":"https://www.johnlewis.com/browse/christmas/baubles-tree-decorations/_/N-54yc?page=2","providerScrapeId":"01a1f1fc-b9dd-7208-a8dd-c888a731024b","billingVerified":true,"recordedAt":"2026-11-19T05:10:15.991873Z"},{"id":"mcp-01a1f290-794a-73dc-9e2c-4b387bc4c29d","period":"2026-11","credits":1,"refunded":0,"source":"The Range malformed-link exact-product diagnostic","sourceUrl":"https://www.therange.co.uk/p/white-berry-and-pine-cone-decorative-wreath-%C2%BF-35cm/m1493532/","sourceStatus":404,"billingVerified":true}],"unreceipted":[{"id":"01a1a3b7-dc28-754f-a346-63f7af16a560","operation":"map","reason":"No billing receipt returned"},{"operation":"sitemap-1.xml scrape","reason":"Transport closed without billing receipt"},{"operation":"interact diagnostic for existing scrape 01a1b3db-5345-70d5-9bb8-7035e7c1102e","reason":"Tool timed out before returning an execution or billing receipt; stop requested"},{"id":"unicode-path-normalization-1549656-20261109","operation":"single normalized official product path probe","sourceUrl":"https://www.therange.co.uk/p/christow-pre-lit-valmorel-flocked-christmas-tree-5ft%E2%80%938ft/m1549656?json","reason":"ERR_TOO_MANY_REDIRECTS; failed tool returned no billing receipt; observed balance remained 96298 before and after","balanceBefore":96298,"balanceAfter":96298},{"id":"asda-directory-600-mcp-transport-closed","at":"2026-11-09T17:29:00Z","source":"ASDA complete directory diagnostic","error":"MCP transport closed; provider receipt not returned","credits":null}]}
+{
+  "version": 1,
+  "receipts": [
+    {
+      "id": "mcp-01a1a3a8-3ef5-7754-a47c-2495a46fdd0c",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3aa-f604-72de-bbdb-b26e10f85305",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3aa-f819-71c6-b60f-1ec238ab1c89",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3c8-1a95-71af-9b69-1217bcd2f129",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3ac-b7d3-756c-a223-6d1e46c0ff06",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 1
+    },
+    {
+      "id": "mcp-01a1a3af-50bf-7109-a471-f9b98eec7d81",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3af-db67-7429-b13f-4c7f4401515d",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3b2-42f9-74f3-addc-cf18830e9aff",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3ba-e0c9-72ee-9e0e-80cae1fb24db",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3bb-a483-7092-9d9c-734190e4e4d7",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3be-12f9-717e-bf74-e9247770fe0b",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3cb-85b1-726d-8bb4-0fbd960f98b8",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a3d7-a301-713d-bbf9-2e44b3b98911",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1a4fc-8f91-7228-9f92-c006fa1b5338",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 1
+    },
+    {
+      "id": "mcp-01a1a4fd-11ac-77db-a4c3-85d7ce65f312",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1b36d-13ba-70da-899d-fc55d1f88c71",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1b36e-fce2-726e-ab6d-4c25c70ed1a3",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1b375-7b9a-7419-9e80-5b992a5fef00",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1b376-3751-723f-8e06-2affc13e9792",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1b3be-07e6-71f7-8d05-a531a4a98baa",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1b3d5-510e-757a-942b-8473f7cc63a4",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1b3db-5345-70d5-9bb8-7035e7c1102e",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1bea5-a8b0-71aa-8148-b814626cd5cd",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1bec4-a570-7148-b6c7-3073fdfcf381",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1bea5-4e04-7074-8c8c-596d3f7de618",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1bed3-7f3e-710a-989d-649133d23269",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1bee2-cbd0-73a2-965d-acb2c59c761d",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1bee4-98b8-75ee-b3ec-97fd58cb28fe",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1bee5-06d8-76d7-b6e8-b3465afea38e",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c0f9-8093-705e-a2c1-ad2bc2043bae",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c0fd-2463-7677-b431-c1f41d3a6fa1",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c0fe-00b6-73cc-a95d-2a76add33d3a",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c129-9e9e-753b-8c18-23731437aa84",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c14b-7d14-713a-911a-65b8ebb554ed",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c159-8284-7778-8f2a-f2a67b4825d3",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c159-ea98-7158-b894-bcae93c3daa2",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c183-270d-7549-b6f7-b08e84bc5639",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c185-3e75-775d-aceb-a794e83f605a",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c401-5fbb-75ce-a8ab-4dc208cf52ae",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c402-0885-76ff-8dfc-27618e2a1174",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c403-0ee3-755b-82e0-be5aa36d8760",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c73c-0c51-75c1-8751-a57b21bfecdc",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c73d-bcc0-7382-970c-fad208f4a6a7",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1c740-7975-7788-b0b7-f950e2990296",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0
+    },
+    {
+      "id": "mcp-01a1e578-20b7-768d-8aa6-8d0e58542e48",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "nx-source-access-20261117",
+      "endpoint": "scrape"
+    },
+    {
+      "id": "mcp-01a1e579-f44a-7447-9af2-23d1ed5c8c99",
+      "period": "2026-11",
+      "credits": 2,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "nx-source-access-20261117",
+      "endpoint": "interact",
+      "sessionDurationMs": 19000
+    },
+    {
+      "id": "next-01a1e6e0-42e0-719d-903b-ffaf4c9b25fd",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true,
+      "githubRun": 43986784198
+    },
+    {
+      "id": "next-01a1e6e3-97bc-755b-9f06-410e8cfd20d7",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e6e8-22dc-72bc-b3bb-6a6fa6327359",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e6ec-ce38-7083-9c7c-684db168780b",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e6f0-7c35-76fb-b417-8d0fdf23698d",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e6f5-2191-702e-b2bb-1183f9660403",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e6fb-9afd-73fd-95c7-82fe95e09849",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true,
+      "githubRun": 43990812715
+    },
+    {
+      "id": "next-01a1e703-c23f-749e-adb7-4b68aae1898a",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true,
+      "githubRun": 43991951446
+    },
+    {
+      "id": "next-01a1e70a-c184-754b-bfb9-5d28125c99fb",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e72b-e0d3-77b9-a999-3bfa89523db7",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e72c-672c-743d-8494-d45d044fdabe",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e72c-6e52-77c9-8a1e-18b617416522",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "next-01a1e72c-69de-772c-82e1-448387fe289a",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "retailerId": "nx",
+      "authorizationId": "next-current-integration-20261117",
+      "endpoint": "scrape",
+      "billingVerified": true
+    },
+    {
+      "id": "mcp-01a1f1fc-b9dd-7208-a8dd-c888a731024b",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "source": "John Lewis exact official pagination transport validation",
+      "sourceUrl": "https://www.johnlewis.com/browse/christmas/baubles-tree-decorations/_/N-54yc?page=2",
+      "providerScrapeId": "01a1f1fc-b9dd-7208-a8dd-c888a731024b",
+      "billingVerified": true,
+      "recordedAt": "2026-11-19T05:10:15.991873Z"
+    },
+    {
+      "id": "mcp-01a1f290-794a-73dc-9e2c-4b387bc4c29d",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "source": "The Range malformed-link exact-product diagnostic",
+      "sourceUrl": "https://www.therange.co.uk/p/white-berry-and-pine-cone-decorative-wreath-%C2%BF-35cm/m1493532/",
+      "sourceStatus": 404,
+      "billingVerified": true
+    },
+    {
+      "id": "mcp-01a1f698-c20c-7049-bbd5-827c1bfe04bd",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "source": "B&Q free-source 503 official paid route validation",
+      "sourceUrl": "https://www.diy.com/departments/christmas/christmas-trees/DIY908923.cat",
+      "providerScrapeId": "01a1f698-c20c-7049-bbd5-827c1bfe04bd",
+      "billingVerified": true,
+      "recordedAt": "2026-11-20T02:22:17.324Z"
+    },
+    {
+      "id": "mcp-01a1f6a1-6248-7267-8168-6978dc707281",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "source": "Argos exact current native listing transport validation",
+      "sourceUrl": "https://www.argos.co.uk/search/christmas-inflatables/",
+      "providerScrapeId": "01a1f6a1-6248-7267-8168-6978dc707281",
+      "billingVerified": true,
+      "recordedAt": "2026-11-20T02:22:17.331Z"
+    },
+    {
+      "id": "mcp-01a1f6bf-1d35-775e-a68a-81dcd67c31ca",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "source": "Argos official second-page result ranks and exact missing product diagnosis",
+      "sourceUrl": "https://www.argos.co.uk/search/christmas-inflatables/opt/page:2/",
+      "providerScrapeId": "01a1f6bf-1d35-775e-a68a-81dcd67c31ca",
+      "billingVerified": true,
+      "recordedAt": "2026-11-20T02:22:17.341Z"
+    }
+  ],
+  "unreceipted": [
+    {
+      "id": "01a1a3b7-dc28-754f-a346-63f7af16a560",
+      "operation": "map",
+      "reason": "No billing receipt returned"
+    },
+    {
+      "operation": "sitemap-1.xml scrape",
+      "reason": "Transport closed without billing receipt"
+    },
+    {
+      "operation": "interact diagnostic for existing scrape 01a1b3db-5345-70d5-9bb8-7035e7c1102e",
+      "reason": "Tool timed out before returning an execution or billing receipt; stop requested"
+    },
+    {
+      "id": "unicode-path-normalization-1549656-20261109",
+      "operation": "single normalized official product path probe",
+      "sourceUrl": "https://www.therange.co.uk/p/christow-pre-lit-valmorel-flocked-christmas-tree-5ft%E2%80%938ft/m1549656?json",
+      "reason": "ERR_TOO_MANY_REDIRECTS; failed tool returned no billing receipt; observed balance remained 96298 before and after",
+      "balanceBefore": 96298,
+      "balanceAfter": 96298
+    },
+    {
+      "id": "asda-directory-600-mcp-transport-closed",
+      "at": "2026-11-09T17:29:00Z",
+      "source": "ASDA complete directory diagnostic",
+      "error": "MCP transport closed; provider receipt not returned",
+      "credits": null
+    }
+  ]
+}
