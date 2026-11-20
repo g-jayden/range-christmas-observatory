@@ -21,7 +21,7 @@ for(const retailer of ['asda','ms','bm','hb','du','nx','jl','mt','bq','ar']){
  products.push(...publishedNativeCandidates(rows));
 }
 for(const p of products)byKey.set(productRetailer(p)+':'+p.sku,p);
-const recovery=await createPaidNativeOriginals(),checked=new Set(),entries=[];
+const recovery=await createPaidNativeOriginals({skipPaidRetailers:['the-range']}),checked=new Set(),entries=[];
 for(const p of byKey.values()){const source=nativeSourceUrl(p),identity=source||productRetailer(p)+':'+p.sku;if(checked.has(identity))continue;checked.add(identity);entries.push({retailerId:productRetailer(p),sku:p.sku,source:source||null,product:p});}
 const previous=await read('native-original-recovery-status.json').catch(e=>{if(e.code==='ENOENT')return {};throw e;});let checkpointWrites=Promise.resolve();
 await recoverNativeBatch(prioritizePendingOriginals(entries,previous),{
