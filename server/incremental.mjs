@@ -52,7 +52,7 @@ export async function refreshDetails({previous,snapshot,reader,policy,budget,sta
     if(failures.length<=3)console.error(JSON.stringify({phase:'exact-SKU-failure',sku:p.sku,error:e.message}));
     delete state.details[item.key];
     if(verified(p))p.previousDetailEvidence={observedAt:p.attributeObservedAt,evidence:p.detailEvidence,specifications:p.specifications};
-    p.attributeObservedAt=null;delete p.detailEvidence;delete p.specifications;delete p.productSummary;
+    p.attributeObservedAt=null;delete p.detailEvidence;delete p.specifications;delete p.productSummary;delete p.sourceDescription;
     p.heightLabel='高度未确认';p.heightCm=null;p.heightValues=[];p.treeColor='颜色未确认';p.colorValues=[];p.material='材质未确认';p.skirtDiameterCm=null;p.skirtBaseDiameterCm=null;p.skirtTopDiameterCm=null;
     p.features={...(p.listingFeatures||{}),pinecones:null,berries:null,baubles:null};p.style=[['potted','圣诞树盆栽'],['popUp','折叠式圣诞树'],['slim','纤细圣诞树'],['snow','雪景款'],['prelit','预亮灯款']].find(([key])=>p.features[key])?.[1]||'标准／其他装饰待核验';
     p.detailStatus='本轮详情未通过核验，旧规格不计入当前统计';p.detailCheckedAt=new Date(now()).toISOString();
