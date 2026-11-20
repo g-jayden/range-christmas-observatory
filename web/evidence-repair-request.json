@@ -1,1 +1,9 @@
-{"state":"complete","scope":"current-product-evidence","requestId":"current-evidence-20261119-approved-2000-cap","requestedAt":"2026-11-19T03:56:51.977915Z","authorization":"User approved normal monthly cap 2000; retain 60 per run and 5000 account reserve; repair only missing current exact-SKU details and native photos without repeating catalogue discovery","monthlyCap":2000,"maxPaidRepairCredits":20,"ownerRunId":"44455014662","claimedAt":"2026-11-19T04:09:31.729Z","completedAt":"2026-11-19T04:12:51.788Z","report":"product-evidence-repair.json"}
+{
+  "state": "pending",
+  "scope": "current-product-evidence",
+  "requestId": "current-evidence-20261120-source-and-dimensions",
+  "requestedAt": "2026-11-20T02:27:00Z",
+  "authorization": "Continue user-approved repairs under ordinary monthly cap 2000, max 60 per run, account reserve 5000. Repair only missing current exact-SKU details and contradictory dimensions; reuse exact native photo evidence and no catalogue discovery.",
+  "monthlyCap": 2000,
+  "maxPaidRepairCredits": 20
+}
