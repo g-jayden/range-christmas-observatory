@@ -3,7 +3,7 @@ import fs from'node:fs/promises';import{createHash}from'node:crypto';
 // A sparse-checkout rebase can remove an unchanged archive file from disk.
 // Restore exact already-committed bytes before the local image classifier;
 // metadata alone is never sufficient and this path cannot contact a retailer.
-export async function hydrateRangePreviewEntries(entries,{readFile=fs.readFile,writeFile=fs.writeFile,fetcher=fetch,revision='main'}={}){
+export async function hydrateRangePreviewEntries(entries,{readFile=fs.readFile,writeFile=async(name,bytes)=>{await fs.mkdir('web/images/source',{recursive:true});await fs.writeFile(name,bytes);},fetcher=fetch,revision='main'}={}){
  if(revision!=='main'&&!/^[a-f0-9]{40}$/.test(revision))throw Error('Unexpected archive revision');
  let restored=0,verified=0;const unavailable=[];
  for(const[url,e]of Object.entries(entries))try{
