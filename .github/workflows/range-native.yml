@@ -72,6 +72,11 @@ jobs:
             web/browser-image-recovery.json
             web/product-evidence-health.json
             web/collection-ledger.json
+            web/images/source/
+            web/catalogue.json
+            web/decorations.json
+            web/lights.json
+            web/themes.json
           retention-days: 3
       - name: Publish the saved original mirrors without source collection
         if: success()
