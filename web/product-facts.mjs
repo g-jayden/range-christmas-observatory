@@ -28,7 +28,7 @@ export function titleSizeFacts(p){
 export function productSize(p){
  const checked=productDimensions(p.specifications||{});if(checked.sourceConflict)return checked.label;if(p.dimensions?.sourceConflict)return p.dimensions.label;
  const conflict=treeHeightConflict(p);
- if(conflict&&!conflict.usableHeightCm)return '官网尺寸冲突 · Conflicting source dimensions';
+ if(conflict&&!conflict.usableHeightCm){const titleValue=String(p.variantName||p.name||'').match(/\b\d+(?:\.\d+)?\s*(?:cm|mm|metres?|meters?|m|ft|feet|inches?|in)\b/i)?.[0]||conflict.titleHeightCm+'cm',other=checked.axes.filter(a=>a.key!=='Height').map(a=>a.label+' '+a.cm+'cm');return '官网尺寸冲突 · Conflicting source dimensions: 标题 · Title '+titleValue+' / 规格高度 · Source height '+conflict.sourceValue+(other.length?'；'+other.join(' × '):'');}
  if(conflict)return conflict.usableHeightCm+'cm';
  const d=p.dimensions?.label?p.dimensions:productDimensions(p.specifications||{});
  if(d.axes?.length)return d.label;
