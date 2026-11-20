@@ -101,7 +101,9 @@ jobs:
         run: node scripts/schedule-tick.mjs
       - name: Load image files only for a real collection or publication
         if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
-        run: git sparse-checkout disable
+        # Source work needs its own saved bytes, not every other retailer's
+        # original-photo archive. The independent publisher loads its assets.
+        run: git sparse-checkout set --no-cone '/*' '!/web/images/*' '/web/images/source/'
       - name: Install collection and local image analysis clients
         if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
         run: npm install --no-audit --no-fund
