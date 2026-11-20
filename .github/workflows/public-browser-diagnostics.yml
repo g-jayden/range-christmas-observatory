@@ -1,9 +1,6 @@
 name: Diagnose free public Range browser access
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - scripts/probe-range-public-browser.mjs
 permissions:
   contents: read
 jobs:
