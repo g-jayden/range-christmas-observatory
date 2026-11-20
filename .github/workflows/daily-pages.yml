@@ -104,7 +104,7 @@ jobs:
         # Source work needs its own saved bytes, not every other retailer's
         # original-photo archive. The independent publisher loads its assets.
         run: |
-          git sparse-checkout set --no-cone '/*' '!/web/images/' '!/web/reports/'
+          git sparse-checkout set --no-cone '/*' '!/web/images/' '!/web/reports/' '!/web/mail-assets/'
           node scripts/hydrate-current-previews.mjs --range-only
       - name: Install collection and local image analysis clients
         if: steps.tick.outputs.publish == 'true' || steps.tick.outputs.work == 'true' || inputs.mode == 'probe' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init')
@@ -146,8 +146,7 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add web/monitor-state.json
           git diff --cached --quiet || git commit -m "Claim this Beijing daily NEW check exactly once"
-          git pull --rebase
-          git push
+          EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
       - name: Check private notification readiness without exposing addresses
         if: steps.tick.outputs.publish == 'true'
         run: node scripts/mail-readiness.mjs
@@ -171,10 +170,9 @@ jobs:
           node scripts/reserve-credits.mjs
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add web/collection-ledger.json web/notification-readiness.json
+          git add web/collection-ledger.json web/notification-readiness.json web/monitor-state.json
           git diff --cached --quiet || git commit -m "Reserve the bounded Firecrawl collection budget"
-          git pull --rebase
-          git push
+          EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
       - name: Restore resumable free collection state
         if: (steps.tick.outputs.work == 'true' || inputs.mode == 'repair' || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init'))
         uses: actions/cache/restore@v6.1.0
@@ -252,7 +250,7 @@ jobs:
           node scripts/enrich-asda.mjs
           node scripts/prepare-asda-notifications.mjs
       - name: Complete the selected interval
-        if: always() && steps.tick.outputs.full == 'true' && steps.refresh.outcome != 'skipped'
+        if: always() && steps.tick.outputs.full == 'true' && steps.tick.outputs.full_lease != ''
         env:
           REFRESH_SUCCESS: ${{ steps.refresh.outputs.catalogue_success == 'true' }}
           SCHEDULE_LEASE: ${{ steps.tick.outputs.full_lease }}
@@ -304,7 +302,7 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           mkdir -p web/mail-assets
-          git add web
+          git add --sparse -- web
           git diff --cached --quiet || git commit -m "Update free-source catalogue and verification status"
           node scripts/push-evidence.mjs
       - name: Send verified NEW emails from committed, accessible native attachments

@@ -33,3 +33,9 @@ assert.equal((await run(at,{storage:new Store,env:{...env,DAILY_PDF_DIGEST:'true
 // A failed weekly refresh must not remain disabled forever at its old due key.
 const fullStorage=new Store,fullConfig={nextRunAt:'2026-11-01T16:00:00Z'},laterMonitor={nextRunAt:'2026-12-01T23:00:00Z'};let fullCalls=0;const retryFull=now=>run(now,{storage:fullStorage,config:fullConfig,monitor:laterMonitor,fetcher:async()=>{fullCalls++;return new Response(null,{status:204})}});
 for(let n=0;n<4;n++)await retryFull(at+n*15*60000);assert.equal(fullCalls,3);assert((await retryFull(at+86400000)).dispatched);assert.equal(fullCalls,4,'An overdue full refresh gets a new bounded daily window rather than staying suppressed permanently');
+
+const dailyYaml=await fs.readFile('.github/workflows/daily-pages.yml','utf8'),bootstrapYaml=await fs.readFile('.github/workflows/decorations-bootstrap.yml','utf8');
+for(const yaml of[dailyYaml,bootstrapYaml])assert(!/^[ \t]+git (?:push|pull)/m.test(yaml),'Every data-writing stage must use the shared private publication lease, including budget reservations');
+const completeStep=dailyYaml.slice(dailyYaml.indexOf('- name: Complete the selected interval'),dailyYaml.indexOf('- name: Release this run'));assert(completeStep.includes("steps.tick.outputs.full_lease != ''"));assert(!completeStep.includes("steps.refresh.outcome != 'skipped'"),'A budget or preflight failure must release its full-refresh claim even when no source session opened');
+
+assert(dailyYaml.includes("'!/web/mail-assets/'"),'Source checks must not download the historical email attachment archive');assert(dailyYaml.includes('git add --sparse -- web'),'New exact native files created outside a sparse checkout must still be explicitly committed');

@@ -41,8 +41,7 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add web/collection-ledger.json
           git diff --cached --quiet || git commit -m "Reserve bounded Christmas decorations initialization"
-          git pull --rebase
-          git push
+          EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
       - name: Collect one shared directory and batch all family evidence
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
