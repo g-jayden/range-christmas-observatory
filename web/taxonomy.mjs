@@ -1,7 +1,7 @@
 // Classify the offered SKU, not motifs printed on it or objects in its roomset.
 // This module has no network or model dependencies and is shared by monitoring
 // and the public catalogue. Image scores are evidence, never fabricated facts.
-export const TAXONOMY_VERSION='2026-11-19-offered-variant-object-v4';
+export const TAXONOMY_VERSION='2026-11-20-offered-variant-object-v5';
 export const isPublishedProduct=p=>!p.taxonomyAudit||p.taxonomyAudit.disposition==='include';
 export function productDescription(p){return String(p.sourceDescription||p.appearanceSource?.descriptionText||p.productSummary||'');}
 export function productBody(p){
@@ -84,6 +84,7 @@ export function christmasEligibility(p,object=offeredObject(p),visual=p.taxonomy
  // A Christmas motif does not turn a duvet or bed linen into an ornament.
  // These products fall outside the requested decoration categories.
  if(object.id==='home-textiles')return {disposition:(p.themeIds||[]).some(id=>id.startsWith('theme-'))?'include':'exclude',reason:(p.themeIds||[]).some(id=>id.startsWith('theme-'))?'official-theme-home-textile-not-an-ornament':'home-textile-outside-requested-decoration-scope',evidence:productBody(p)};
+ if(/\b(?:playing cards?|poker cards?|poker sets?|card games?|board games?)\b/i.test(productBody(p))&&!/\b(?:tree decoration|hanging ornament|bauble)\b/i.test(productBody(p)))return {disposition:'exclude',reason:'actual-card-game-not-a-Christmas-decoration-or-present-shaped-ornament',evidence:productBody(p)};
  const rawTitle=productBody(p),brand=String(p.brand||'').trim(),title=brand&&rawTitle.toLowerCase().startsWith(brand.toLowerCase()+' ')?rawTitle.slice(brand.length).trim():rawTitle,description=productDescription(p),lead=description.slice(0,1000),specs=p.specifications||{},occasion=String(specs.Occasion||specs.Season||'');
  const titleSeason=/\b(?:halloween|easter|thanksgiving|valentine|cupids? arrow|spring|summer|harvest|autumn(?:al)?|eid|ramadan|diwali|hanukkah|birthday|wedding|baby shower|graduation)\b/i.exec(title),occasionSeason=/\b(?:halloween|easter|thanksgiving|valentine|spring|summer|harvest|autumn(?:al)?|eid|ramadan|diwali|hanukkah|birthday|wedding|baby shower|graduation)\b/i.exec(occasion),positiveTitle=/\b(?:christmas|xmas|santa|noel|gingerbread|nutcracker|candy cane|jingle bell)\b/i.test(title),explicit=titleSeason||(!positiveTitle?occasionSeason:null);
  // Autumn can name a Christmas bauble's colour/finish. Its object and actual
