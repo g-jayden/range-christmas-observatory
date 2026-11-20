@@ -36,7 +36,7 @@ export async function requestBqDirectory(url,{fresh=false,session=null,requestPa
   const htmlResponse=await requestPage(u.href,{attempts:1,fresh,cookieFile:session?.cookieFile});
   return{...htmlResponse,sourceUrl:u.href,sourceApiUrl:u.href,sourceTransport:'official-html-loader',nativeTransportError:{status:e.status,attempts:e.attempts||null},lister:bqRoute(htmlResponse.html)};
  }
- return{...response,sourceUrl:u.href,sourceApiUrl:api.href,sourceTransport:'official-native-loader',lister:response.sourceFormat&&response.sourceFormat!=='native-loader'?bqRoute(response.html):bqDataRouteField(response.html,'routes/plp','lister')};
+ return{...response,sourceUrl:u.href,sourceApiUrl:response.sourceApiUrl||api.href,sourceTransport:response.sourceFormat&&response.sourceFormat!=='native-loader'?'official-origin-paid-navigation-html':'official-native-loader',lister:response.sourceFormat&&response.sourceFormat!=='native-loader'?bqRoute(response.html):bqDataRouteField(response.html,'routes/plp','lister')};
 }
 
 // Vary: Cookie is part of the official response contract. Keep one clean,
