@@ -1,15 +1,13 @@
 name: ASDA free exact native pixel recovery
 on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/asda-native-tiles.yml']
   workflow_dispatch:
 permissions:
   contents: write
   actions: write
 concurrency:
-  group: range-source-and-pages-production
+  group: asda-exact-native-pixels
   cancel-in-progress: false
+  queue: max
 jobs:
   exact-pixels:
     runs-on: ubuntu-latest
