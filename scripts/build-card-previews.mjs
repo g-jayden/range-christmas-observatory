@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';import path from 'node:path';import {createHas
 import {nativeSourceUrl,nativeImageCandidates} from '../web/product-facts.mjs';
 const OWN='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/';
 export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot='runtime/bq-source/preview-files',fetchVerified=process.env.BROWSE_FETCH_VERIFIED_PREVIEWS==='true',fetcher=globalThis.fetch,encodingCacheRoot='runtime/card-preview-encodings'}={}){
- const work=new Map(),nativeFiles=new Map(),downloads=new Map();let imageRequests=0,imageFailures=0,remoteDenied=false;let generated=0,reused=0,bytes=0,active=0,invalidImages=0,nativeBytes=0;const nativeRetailerBytes=new Map();const queue=[];
+ const work=new Map(),nativeFiles=new Map(),downloads=new Map();let imageRequests=0,imageFailures=0,repositoryImageRequests=0,remoteDenied=false;let generated=0,reused=0,bytes=0,active=0,invalidImages=0,nativeBytes=0;const nativeRetailerBytes=new Map();const queue=[];
  const limit=fn=>new Promise((resolve,reject)=>{queue.push({fn,resolve,reject});drain();});
  function drain(){while(active<4&&queue.length){const job=queue.shift();active++;Promise.resolve().then(job.fn).then(job.resolve,job.reject).finally(()=>{active--;drain();});}}
  const local=value=>{if(typeof value!=='string')return null;const relative=value.startsWith(OWN)?value.slice(OWN.length):value;return /^images\/[\w./-]+\.(?:jpe?g|png|webp|avif)$/i.test(relative)&&!relative.split('/').includes('..')?relative:null;};
@@ -10,9 +10,9 @@ export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot
  async function readInput({file,bound,remote}){
   let buffer;try{buffer=await fs.readFile(file);}catch(e){if(e.code!=='ENOENT')throw e;}
   if(buffer&&/^[a-f0-9]{64}$/.test(bound||'')&&createHash('sha256').update(buffer).digest('hex')!==bound)buffer=null;
-  if(buffer||!remote||!fetchVerified||remoteDenied)return buffer;
+  const repository=remote?.startsWith(OWN);if(buffer||!remote||!fetchVerified||remoteDenied&&!repository)return buffer;
   const key=file+'|'+bound;if(!downloads.has(key))downloads.set(key,limit(async()=>{try{
-   if(remoteDenied)return null;imageRequests++;const response=await fetcher(remote,{signal:AbortSignal.timeout(15000)});if(response.status===403||response.status===401)remoteDenied=true;
+   if(remoteDenied&&!repository)return null;if(repository)repositoryImageRequests++;else imageRequests++;const response=await fetcher(remote,{signal:AbortSignal.timeout(15000)});if(!repository&&(response.status===403||response.status===401))remoteDenied=true;
    if(!response.ok)throw Error('Reviewed source image HTTP '+response.status);
    if(Number(response.headers.get('content-length'))>8*1024*1024)throw Error('Reviewed source preview is too large');
    const reader=response.body.getReader(),parts=[];let length=0;for(;;){const {done,value}=await reader.read();if(done)break;length+=value.length;if(length>8*1024*1024){await reader.cancel();throw Error('Reviewed source preview is too large');}parts.push(Buffer.from(value));}
@@ -39,15 +39,16 @@ export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot
   const source=nativeSourceUrl(p),proof=[p.nativeExportEvidence,p.originalImageEvidence,...(p.originalImages||[]).filter(g=>g.url===source).map(g=>({...g,sourceUrl:g.url,sha256:g.sha256||g.nativeSha256}))].find(e=>e?.sourceUrl===source&&(!e.selectedSku||String(e.selectedSku)===String(p.sku))&&/^[a-f0-9]{64}$/.test(e.sha256||''));
   if(!proof||p.sourceImageConflict)return p;const hash=proof.sha256;
   if(nativeFiles.has(hash))return {...p,browseNative:{...nativeFiles.get(hash),sourceUrl:source}};
+  const retailer=p.retailerId||'the-range';if(proof.bytes>3000000||nativeBytes>=96*1024*1024||(nativeRetailerBytes.get(retailer)||0)>=8*1024*1024)return p;
   for(const file of nativeImageCandidates(p).map(local).filter(Boolean)){
-   let buffer;try{buffer=await fs.readFile(path.join(sourceRoot,file));}catch(e){if(e.code==='ENOENT')continue;throw e;}
+   const buffer=await readInput({file:path.join(sourceRoot,file),bound:hash,remote:OWN+file});if(!buffer)continue;
    if(createHash('sha256').update(buffer).digest('hex')!==hash)continue;
    // Keep first-screen original transfers local without publishing the several
    // gigabytes of historical galleries. The other originals retain their URLs.
-   const retailer=p.retailerId||'the-range';if(buffer.length>3000000||nativeBytes+buffer.length>96*1024*1024||(nativeRetailerBytes.get(retailer)||0)+buffer.length>8*1024*1024)return p;
+   if(buffer.length>3000000||nativeBytes+buffer.length>96*1024*1024||(nativeRetailerBytes.get(retailer)||0)+buffer.length>8*1024*1024)return p;
    const url='native-first/'+hash+path.extname(file).toLowerCase();await fs.mkdir(path.join(root,'native-first'),{recursive:true});await fs.writeFile(path.join(root,url),buffer);nativeBytes+=buffer.length;nativeRetailerBytes.set(retailer,(nativeRetailerBytes.get(retailer)||0)+buffer.length);const entry={url,sha256:hash};nativeFiles.set(hash,entry);return {...p,browseNative:{...entry,sourceUrl:source}};
   }
   return p;
  }
- return {build,warmNative,stats:()=>({generated,reused,bytes,invalidImages,firstScreenNativeBytesByRetailer:Object.fromEntries(nativeRetailerBytes),firstScreenNativeFiles:nativeFiles.size,firstScreenNativeBytes:nativeBytes,sourceRequests:imageRequests,officialPreviewImageRequests:imageRequests,officialPreviewImageFailures:imageFailures,officialPreviewAccessDenied:remoteDenied,sourceDirectoriesRequested:0,firecrawlCredits:0,originalFilesChanged:0})};
+ return {build,warmNative,stats:()=>({generated,reused,bytes,invalidImages,firstScreenNativeBytesByRetailer:Object.fromEntries(nativeRetailerBytes),firstScreenNativeFiles:nativeFiles.size,firstScreenNativeBytes:nativeBytes,sourceRequests:imageRequests,officialPreviewImageRequests:imageRequests,repositoryImageRequests,officialPreviewImageFailures:imageFailures,officialPreviewAccessDenied:remoteDenied,sourceDirectoriesRequested:0,firecrawlCredits:0,originalFilesChanged:0})};
 }

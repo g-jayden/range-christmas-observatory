@@ -1,10 +1,12 @@
 import {validRetailerAssetId} from '../web/retailers.mjs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import {execFileSync} from 'node:child_process';
 
 // Publish all referenced native files without copying historical cache versions
 // or private capture checkpoints. The repository keeps those resumable proofs.
-export async function copyPublishedAssets(source='web',destination='public',{repositoryImages=false}={}){
+export async function copyPublishedAssets(source='web',destination='public',{repositoryImages=false,trackedImages=null}={}){
+ if(repositoryImages&&trackedImages===null){try{trackedImages=new Set(execFileSync('git',['ls-files','-z','--',source+'/images'],{encoding:'utf8',stdio:['ignore','pipe','pipe'],maxBuffer:67108864}).split('\0'));}catch{trackedImages=new Set();}}
  const images=new Set();
  const jsonFiles=[];
  function visit(value){
@@ -14,8 +16,8 @@ export async function copyPublishedAssets(source='web',destination='public',{rep
  }
  async function scan(dir){for(const item of await fs.readdir(dir,{withFileTypes:true})){const file=path.join(dir,item.name);if(item.isDirectory())await scan(file);else if(item.name.endsWith('.json')){const data=JSON.parse(await fs.readFile(file,'utf8'));visit(data);jsonFiles.push({file,data});}}}
  await scan(destination);
- let imageBytes=0,mailBytes=0,mailFiles=0,repositoryNotificationFiles=0,repositoryNotificationBytes=0,repositoryImageBytes=0;
- for(const relative of images){const input=path.join(source,relative),bytes=(await fs.stat(input)).size;if(repositoryImages){repositoryImageBytes+=bytes;continue;}const output=path.join(destination,relative);await fs.mkdir(path.dirname(output),{recursive:true});await fs.copyFile(input,output);imageBytes+=bytes;}
+ let imageBytes=0,mailBytes=0,mailFiles=0,repositoryNotificationFiles=0,repositoryNotificationBytes=0,repositoryImageBytes=0,repositoryOnlyImages=0;
+ for(const relative of images){const input=path.join(source,relative);let bytes;try{bytes=(await fs.stat(input)).size;}catch(e){if(e.code!=='ENOENT'||!repositoryImages||!trackedImages.has(input))throw e;repositoryOnlyImages++;continue;}if(repositoryImages){repositoryImageBytes+=bytes;continue;}const output=path.join(destination,relative);await fs.mkdir(path.dirname(output),{recursive:true});await fs.copyFile(input,output);imageBytes+=bytes;}
  if(repositoryImages){
   const rewrite=value=>{if(typeof value==='string'&&images.has(value))return 'https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/'+value;if(Array.isArray(value))return value.map(rewrite);if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value).map(([key,v])=>[key,rewrite(v)]));return value;};
   // Only the built public JSON changes. Native files, source evidence and the
@@ -34,5 +36,5 @@ export async function copyPublishedAssets(source='web',destination='public',{rep
   const publishedManifest=JSON.stringify(manifest);await fs.writeFile(path.join(output,'manifest.json'),publishedManifest);mailBytes+=Buffer.byteLength(publishedManifest);mailFiles++;
   for(const file of files){await fs.copyFile(path.join(input,file),path.join(output,file));mailBytes+=(await fs.stat(path.join(input,file))).size;mailFiles++;}
  }
- const report={images:images.size,imageBytes,repositoryImages:repositoryImages?images.size:0,repositoryImageBytes,mailFiles,mailBytes,repositoryNotificationFiles,repositoryNotificationBytes,originalFilesRecompressed:false,sourceRequests:0,firecrawlCredits:0};console.log(JSON.stringify({phase:'publish-referenced-assets',...report}));return report;
+ const report={images:images.size,imageBytes,repositoryImages:repositoryImages?images.size:0,repositoryImageBytes,repositoryOnlyImages,mailFiles,mailBytes,repositoryNotificationFiles,repositoryNotificationBytes,originalFilesRecompressed:false,sourceRequests:0,firecrawlCredits:0};console.log(JSON.stringify({phase:'publish-referenced-assets',...report}));return report;
 }
