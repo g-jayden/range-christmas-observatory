@@ -3,7 +3,7 @@ import {DEPARTMENT_MAP,colourLabel,STYLE_EN,sourcePrice,treeHeightConflict} from
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';
 import {ensureMailImageFormat} from './mail-format.mjs';
 const HOME='https://g-jayden.github.io/range-christmas-observatory/';
-export const MAIL_CARD_VERSION='bilingual-card-v4-source-prices';
+export const MAIL_CARD_VERSION='bilingual-card-v5-raster-photo-composition';
 export function mailHeightLabel(p){const c=treeHeightConflict(p);return !c?p.heightLabel:c.usableHeightCm?c.usableHeightCm+(c.resolution==='title-and-SKU-height-agree'?'cm（商品名与官网独立树高一致 · Title / SKU tree height agree）':'cm（标题与官网长度一致 · Title / source length agree）'):'高度冲突，未确认 · Conflicting height, unconfirmed';}
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 function lines(text,width,font){const out=[];let line='',used=0;const units=String(text).match(/[A-Za-z0-9]+|[ \t]+|[\s\S]/g)||[];for(const unit of units){const size=[...unit].reduce((n,c)=>n+(/[\u0000-\u00ff]/.test(c)?.55:1),0);if((used+size)*font>width&&line){out.push(line.trimEnd());line='';used=0;}if(!line&&!unit.trim())continue;line+=unit;used+=size;}if(line)out.push(line.trimEnd());return out;}
@@ -18,11 +18,11 @@ export function verifyCardOnlyEvidence(p,original){
   if(!p.detailEvidence?.verifiedProductSection||String(p.detailEvidence.selectedSku)!==selected||!p.attributeObservedAt||!mapped||p.originalImageEvidence?.sourceUrl!==p.originalImageUrl||createHash('sha256').update(original).digest('hex')!==p.originalImageEvidence?.sha256)throw Error('具体SKU详情、官网图库对应关系或原图字节未通过核验，不能生成替代截图的信息卡');
  return true;
 }
-export async function buildMailAssets(p,pdpBase64=null,{verifiedCardOnly=false}={}){
+export async function buildMailAssets(p,pdpBase64=null,{verifiedCardOnly=false,render=renderer}={}){
  if(!validRetailerSku(p.retailerId,p.sku))throw Error('Invalid card SKU');
  if(!p.originalCachedImageUrl||!p.originalImageUrl)throw Error('官网原图尚未核验，不能用缩略图代替原图');
  const originalPath='web/'+p.originalCachedImageUrl,original=await fs.readFile(originalPath);if(verifiedCardOnly){if(pdpBase64)throw Error('信息卡不能标为官网页面截图');verifyCardOnlyEvidence(p,original);}
- const sharp=await renderer(),meta=await sharp(original).metadata();
+ const sharp=await render(),meta=await sharp(original).metadata();
  if(!meta.width||!meta.height||meta.width<64||meta.height<64)throw Error('Real original photo not available');
  const displayW=Math.min(meta.width,1800),displayH=Math.round(meta.height*displayW/meta.width),W=Math.max(960,displayW+100),left=(W-displayW)/2;
  const titleSize=Math.round(W*.039),bodySize=Math.round(W*.029),margin=50;let y=margin+titleSize;
@@ -36,9 +36,10 @@ export async function buildMailAssets(p,pdpBase64=null,{verifiedCardOnly=false}=
  for(const item of info)for(const line of lines(item,W-100,bodySize)){text.push(`<text x="50" y="${y}" font-size="${bodySize}">${esc(line)}</text>`);y+=bodySize*1.7;}
  y+=25;const noteSize=Math.round(bodySize*.65),notes=[`官网原图 · Source original：${meta.width} × ${meta.height} px；原文件未放大或二次压缩 · No enlargement or recompression`,`价格／NEW 核验 · Price / NEW verified：${p.newEvidence?.observedAt||p.observedAt?new Date(p.newEvidence?.observedAt||p.observedAt).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'}):'见商品证据 · See source evidence'}（北京时间 · Beijing）`,'完整信息卡与官网原图均为邮件图片附件，可直接保存到相册。','Save the full product card and original photo directly from the image attachments.'];
  for(const item of notes)for(const line of lines(item,W-100,noteSize)){text.push(`<text x="50" y="${y}" font-size="${noteSize}" fill="#5c6b63">${esc(line)}</text>`);y+=noteSize*1.6;}
- const H=Math.ceil(y+40),imageUri='data:'+({'jpeg':'image/jpeg',png:'image/png',webp:'image/webp',avif:'image/avif'}[meta.format]||'image/jpeg')+';base64,'+original.toString('base64');
- const svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}"><rect width="100%" height="100%" fill="white"/><g font-family="Noto Sans CJK SC" fill="#173c32">${text.join('')}</g><image x="${left}" y="${imageY}" width="${displayW}" height="${displayH}" xlink:href="${imageUri}"/></svg>`;
- const assetId=retailerAssetId(p);const dir='web/mail-assets/'+assetId;await fs.mkdir(dir,{recursive:true});const card=await sharp(Buffer.from(svg)).png({compressionLevel:9}).toBuffer();await fs.writeFile(dir+'/card.png',card);
+ const H=Math.ceil(y+40);
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><rect width="100%" height="100%" fill="white"/><g font-family="Noto Sans CJK SC" fill="#173c32">${text.join('')}</g></svg>`;
+ const photo=await sharp(original).resize({width:displayW,withoutEnlargement:true}).png().toBuffer();
+ const assetId=retailerAssetId(p);const dir='web/mail-assets/'+assetId;await fs.mkdir(dir,{recursive:true});const card=await sharp(Buffer.from(svg)).composite([{input:photo,left:Math.round(left),top:imageY}]).png({compressionLevel:9}).toBuffer();await fs.writeFile(dir+'/card.png',card);
  const ext=meta.format==='jpeg'?'jpg':meta.format;await fs.writeFile(dir+'/original.'+ext,original);let combined=card;
  if(pdpBase64){const pdp=Buffer.from(pdpBase64,'base64'),pm=await sharp(pdp).metadata(),pw=Math.min(pm.width,W),ph=Math.round(pm.height*pw/pm.width),proof=await sharp(pdp).resize({width:pw,withoutEnlargement:true}).png().toBuffer();await fs.writeFile(dir+'/proof.png',pm.format==='png'?pdp:await sharp(pdp).png().toBuffer());
   const divider=Buffer.from(`<svg width="${W}" height="110"><rect width="100%" height="100%" fill="#edf2ed"/><text x="50" y="75" font-family="Noto Sans CJK SC" font-size="38" fill="#173c32">以下为同一 SKU 的原站商品页真实截图</text></svg>`);
