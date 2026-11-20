@@ -4,7 +4,7 @@ import {collectPartitionedCategory} from './catalogue-partitions.mjs';
 import {atomicJson,correctKnownProductPath} from './sync.mjs';
 import {detailFingerprint,unchangedDetailInput,digest} from './collection-policy.mjs';
 import {selectGalleryImages} from './enrich-appearance.mjs';
-import {parseDetails,applyDetails,validProductImage} from './details.mjs';
+import {parseDetails,applyDetails,validProductImage,restoreExactRangeGalleryPreview} from './details.mjs';
 import {materialFacts} from './appearance.mjs';
 import {productDimensions,THEME_DEFINITIONS,sourcePrice} from '../web/catalogue-model.mjs';
 
@@ -56,6 +56,7 @@ export function inheritThemeArrivals(snapshot,shared=[]){
 export async function loadThemeDetails(products){
  await restoreVerifiedRegistry(products);
  const buckets=new Map();for(const p of products){const key=p.sku.slice(-2).padStart(2,'0');if(!buckets.has(key))buckets.set(key,await fs.readFile('web/theme-details/'+key+'.json','utf8').then(JSON.parse).catch(()=>({})));const q=buckets.get(key)[p.sku];if(q?.detailInputFingerprint===p.detailInputFingerprint&&q.detailsReady&&(!p.detailsReady||!p.detailEvidence?.verifiedProductSection||Date.parse(q.attributeObservedAt)>Date.parse(p.attributeObservedAt))){for(const k of evidenceFields)if(q[k]!==undefined)p[k]=q[k];}}
+ for(const p of products)restoreExactRangeGalleryPreview(p);
 }
 async function saveThemeDetails(products){await saveVerifiedRegistry(products);const groups=new Map();for(const p of products){const key=p.sku.slice(-2).padStart(2,'0');if(!groups.has(key))groups.set(key,{});groups.get(key)[p.sku]=p;}for(const [k,v]of groups)await atomicJson('web/theme-details/'+k+'.json',v);}
 export async function updateThemeDetails(snapshot,reader,{shared=[],refreshAfter=null,retryFailed=false,selectedSkus=null}={}){
