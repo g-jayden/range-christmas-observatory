@@ -1,6 +1,16 @@
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';import sharp from 'sharp';
 import {nativeSourceUrl,nativeImageCandidates} from '../web/product-facts.mjs';
 const OWN='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/';
+export async function inlineFirstCardPreviews(products,selected,{root,maxBytes=192*1024}={}){
+ let used=0;const results=[];
+ for(const p of products){let value=p;const preview=p.fastPreview;
+  if(selected.has(String(p.sku))&&/^card-previews\/[a-f0-9]{64}\.webp$/.test(preview?.url||''))try{
+   const bytes=await fs.readFile(path.join(root,preview.url));
+   if(bytes.length<=48*1024&&used+bytes.length<=maxBytes&&createHash('sha256').update(bytes).digest('hex')===path.basename(preview.url,'.webp')){value={...p,fastPreview:{...preview,inlineUrl:'data:image/webp;base64,'+bytes.toString('base64')}};used+=bytes.length;}
+  }catch(e){if(e.code!=='ENOENT')throw e;}
+  results.push(value);
+ }return results;
+}
 export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot='runtime/bq-source/preview-files',fetchVerified=process.env.BROWSE_FETCH_VERIFIED_PREVIEWS==='true',fetcher=globalThis.fetch,encodingCacheRoot='runtime/card-preview-encodings'}={}){
  const work=new Map(),nativeFiles=new Map(),downloads=new Map();let imageRequests=0,imageFailures=0,repositoryImageRequests=0,remoteDenied=false;let generated=0,reused=0,bytes=0,active=0,invalidImages=0,nativeBytes=0;const nativeRetailerBytes=new Map();const queue=[];
  const limit=fn=>new Promise((resolve,reject)=>{queue.push({fn,resolve,reject});drain();});

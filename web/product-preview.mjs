@@ -1,4 +1,4 @@
-export const cardPreviewSource=p=>p.fastPreview?.url||p.previewImage?.cachePath||p.displayImage?.cachePath||p.originalCachedImageUrl||p.originalImageUrl||p.cachedImageUrl||p.variantImageUrl||p.imageUrl||'';
+export const cardPreviewSource=p=>p.fastPreview?.inlineUrl||p.fastPreview?.url||p.previewImage?.cachePath||p.displayImage?.cachePath||p.originalCachedImageUrl||p.originalImageUrl||p.cachedImageUrl||p.variantImageUrl||p.imageUrl||'';
 export function productPreviewGallery(p,full=p){
  if(p.displayImage)return [{url:p.displayImage.sourceUrl,thumbnail:p.fastPreview?.url||p.displayImage.cachePath,fallback:p.displayImage.cachePath}];
  const items=[],seen=new Set,add=(url,thumbnail,fallback)=>{if(!url||seen.has(url))return;seen.add(url);items.push({url,thumbnail:thumbnail||url,fallback});};
