@@ -9,8 +9,9 @@ export function assertProductPhoto(p){
 }
 export function componentSizeFacts(p){
  const text=String(p.sourceDescription||p.productSummary||'');
- if(!/\bset\s+includes\s*:|\bpack\s+(?:contains|includes)\s*:/i.test(text))return null;
- const section=text.slice(text.search(/\b(?:set\s+includes|pack\s+(?:contains|includes))\s*:/i)),parts=[];
+ const heading=text.search(/\b(?:set|pack)\s+(?:includes|contains)\s*:/i);
+ if(heading<0&&!/\b(?:set|pack)\b/i.test(p.variantName||p.name||''))return null;
+ const section=heading<0?text:text.slice(heading),parts=[];
  for(const m of section.matchAll(/(?<![\d.])(\d{1,4})\s*[x×]\s*(\d+(?:\.\d+)?)\s*(mm|cm|m|inches?|ft)\s*(?=baubles?|balls?|ornaments?|decorations?|snowflakes?|stars?|garlands?|wreaths?)/ig)){
   if(Number(m[1])>0&&Number(m[2])>0)parts.push({quantity:Number(m[1]),measure:m[2]+m[3].toLowerCase(),source:m[0].trim()});
  }
