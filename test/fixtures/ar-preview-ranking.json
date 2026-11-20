@@ -1,0 +1,2823 @@
+[
+  {
+    "product": {
+      "sku": "zs86fjea",
+      "kind": "tree",
+      "variantName": "Christow Snowy Slim Pencil Christmas Tree – 6ft",
+      "department": "ar-tree",
+      "originalImages": [
+        {
+          "url": "https://media.4rgos.it/i/Argos/zs86fjea_R_Z001A",
+          "selectedSku": "zs86fjea",
+          "variantId": "zs86fjea",
+          "sourceParentId": "zs86fjea",
+          "sourceUrl": "https://www.argos.co.uk/product/zs86fjea",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:05.314Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/zs86fjea_R_Z002A",
+          "selectedSku": "zs86fjea",
+          "variantId": "zs86fjea",
+          "sourceParentId": "zs86fjea",
+          "sourceUrl": "https://www.argos.co.uk/product/zs86fjea",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:05.304Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/zs86fjea_R_Z003A",
+          "selectedSku": "zs86fjea",
+          "variantId": "zs86fjea",
+          "sourceParentId": "zs86fjea",
+          "sourceUrl": "https://www.argos.co.uk/product/zs86fjea",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:05.478Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/zs86fjea_R_Z004A",
+          "selectedSku": "zs86fjea",
+          "variantId": "zs86fjea",
+          "sourceParentId": "zs86fjea",
+          "sourceUrl": "https://www.argos.co.uk/product/zs86fjea",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:05.400Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/zs86fjea_R_Z005A",
+          "selectedSku": "zs86fjea",
+          "variantId": "zs86fjea",
+          "sourceParentId": "zs86fjea",
+          "sourceUrl": "https://www.argos.co.uk/product/zs86fjea",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:05.794Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/zs86fjea_R_Z006A",
+          "selectedSku": "zs86fjea",
+          "variantId": "zs86fjea",
+          "sourceParentId": "zs86fjea",
+          "sourceUrl": "https://www.argos.co.uk/product/zs86fjea",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:05.942Z"
+        }
+      ]
+    },
+    "candidates": [
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/zs86fjea_R_Z001A",
+          "selectedSku": "zs86fjea",
+          "variantId": "zs86fjea",
+          "sourceParentId": "zs86fjea",
+          "sourceUrl": "https://www.argos.co.uk/product/zs86fjea",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:05.314Z"
+        },
+        "a": {
+          "hash": "eb857c92c8e482d92d74ca3f0ca177a603093cc202ee88f693083293a3e9471f"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "detail": 0.5067731103702915,
+              "whole": 0.23739433548005054,
+              "packaging": 0.1037453200385083,
+              "room": 0.08880563436814189,
+              "logo": 0.03842286952046003,
+              "diagram": 0.024858730222547743
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.041,
+              "colour": 0.063,
+              "edge": 0.32,
+              "touchedSides": 3
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": true,
+          "backgroundEdgeShare": 0.7867063492063492,
+          "foregroundShare": 0.2576904296875,
+          "aspect": 0.984375,
+          "heightCoverage": 0.984375,
+          "widthCoverage": 1,
+          "greenShare": 0.5184746565608717,
+          "centreWhiteShare": 0.31265306122448977,
+          "touchesTop": false,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/zs86fjea_R_Z002A",
+          "selectedSku": "zs86fjea",
+          "variantId": "zs86fjea",
+          "sourceParentId": "zs86fjea",
+          "sourceUrl": "https://www.argos.co.uk/product/zs86fjea",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:05.304Z"
+        },
+        "a": {
+          "hash": "061c4a0da8a250403b23c8379d99e349a9f53d56634ea03b727b889fde7712b6"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "room": 0.755511986856889,
+              "packaging": 0.08492533378626316,
+              "logo": 0.05866381783178993,
+              "diagram": 0.04066896476617396,
+              "whole": 0.03498109116017036,
+              "detail": 0.02524880559871355
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.001,
+              "colour": 0.409,
+              "edge": 0.964,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.4236111111111111,
+          "foregroundShare": 0.96685791015625,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.08288618142794016,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/zs86fjea_R_Z003A",
+          "selectedSku": "zs86fjea",
+          "variantId": "zs86fjea",
+          "sourceParentId": "zs86fjea",
+          "sourceUrl": "https://www.argos.co.uk/product/zs86fjea",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:05.478Z"
+        },
+        "a": {
+          "hash": "4d02e1a00fa41fba6eae7343ebb19a7a79d82df4fa7f283a16efe59b037872c1"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "diagram": 0.379378954627981,
+              "logo": 0.2526996717591651,
+              "detail": 0.12761866091586038,
+              "room": 0.08883935020470297,
+              "packaging": 0.0809816133817678,
+              "whole": 0.07048174911052281
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.001,
+              "colour": 0.193,
+              "edge": 0.537,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.43253968253968256,
+          "foregroundShare": 0.73431396484375,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.4268971822791123,
+          "centreWhiteShare": 0.024489795918367346,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/zs86fjea_R_Z004A",
+          "selectedSku": "zs86fjea",
+          "variantId": "zs86fjea",
+          "sourceParentId": "zs86fjea",
+          "sourceUrl": "https://www.argos.co.uk/product/zs86fjea",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:05.400Z"
+        },
+        "a": {
+          "hash": "b78efb9811a6e8361774ad076b067c8f55d4f1b2b23b76cba9f7a080509b7adf"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "packaging": 0.4367492259718386,
+              "diagram": 0.25696573102752757,
+              "detail": 0.1391184433663169,
+              "room": 0.0738438260278607,
+              "whole": 0.049861274273677585,
+              "logo": 0.04346149933277867
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.026,
+              "colour": 0.153,
+              "edge": 0.406,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": true,
+          "backgroundEdgeShare": 0.7946428571428571,
+          "foregroundShare": 0.34918212890625,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.4756161510225485,
+          "centreWhiteShare": 0.6408163265306123,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/zs86fjea_R_Z005A",
+          "selectedSku": "zs86fjea",
+          "variantId": "zs86fjea",
+          "sourceParentId": "zs86fjea",
+          "sourceUrl": "https://www.argos.co.uk/product/zs86fjea",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:05.794Z"
+        },
+        "a": {
+          "hash": "be8fcfd7744015d756e053ad0b4ebf0de2b5ca78f75c53ce24cd81d29485120b"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "logo": 0.510510054993267,
+              "room": 0.20790345859921058,
+              "packaging": 0.13359885970225754,
+              "detail": 0.07988759295413332,
+              "diagram": 0.04102788950769863,
+              "whole": 0.027072144243432926
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.149,
+              "edge": 0.999,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.04861111111111111,
+          "foregroundShare": 0.998046875,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.2920132093933464,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/zs86fjea_R_Z006A",
+          "selectedSku": "zs86fjea",
+          "variantId": "zs86fjea",
+          "sourceParentId": "zs86fjea",
+          "sourceUrl": "https://www.argos.co.uk/product/zs86fjea",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:05.942Z"
+        },
+        "a": {
+          "hash": "af3cd657f9d5705564f0ee3c134c856debda78db2b3963e148ebe82aed836b0c"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "diagram": 0.959426126259246,
+              "detail": 0.018084206210240164,
+              "packaging": 0.010869989908105336,
+              "logo": 0.005506489347586989,
+              "whole": 0.0040510098974882785,
+              "room": 0.0020621783773332896
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.042,
+              "colour": 0.093,
+              "edge": 0.451,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": true,
+          "backgroundEdgeShare": 0.7380952380952381,
+          "foregroundShare": 0.2537841796875,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.29797979797979796,
+          "centreWhiteShare": 0.39102040816326533,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      }
+    ],
+    "selectedHash": "eb857c92c8e482d92d74ca3f0ca177a603093cc202ee88f693083293a3e9471f"
+  },
+  {
+    "product": {
+      "sku": "ydmhcxhn",
+      "kind": "tree",
+      "variantName": "Christow Slim Snowy Cone and Berry Christmas Tree – 5ft",
+      "department": "ar-tree",
+      "originalImages": [
+        {
+          "url": "https://media.4rgos.it/i/Argos/ydmhcxhn_R_Z001A",
+          "selectedSku": "ydmhcxhn",
+          "variantId": "ydmhcxhn",
+          "sourceParentId": "ydmhcxhn",
+          "sourceUrl": "https://www.argos.co.uk/product/ydmhcxhn",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.070Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/ydmhcxhn_R_Z002A",
+          "selectedSku": "ydmhcxhn",
+          "variantId": "ydmhcxhn",
+          "sourceParentId": "ydmhcxhn",
+          "sourceUrl": "https://www.argos.co.uk/product/ydmhcxhn",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.324Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/ydmhcxhn_R_Z003A",
+          "selectedSku": "ydmhcxhn",
+          "variantId": "ydmhcxhn",
+          "sourceParentId": "ydmhcxhn",
+          "sourceUrl": "https://www.argos.co.uk/product/ydmhcxhn",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.425Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/ydmhcxhn_R_Z004A",
+          "selectedSku": "ydmhcxhn",
+          "variantId": "ydmhcxhn",
+          "sourceParentId": "ydmhcxhn",
+          "sourceUrl": "https://www.argos.co.uk/product/ydmhcxhn",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.189Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/ydmhcxhn_R_Z005A",
+          "selectedSku": "ydmhcxhn",
+          "variantId": "ydmhcxhn",
+          "sourceParentId": "ydmhcxhn",
+          "sourceUrl": "https://www.argos.co.uk/product/ydmhcxhn",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.406Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/ydmhcxhn_R_Z006A",
+          "selectedSku": "ydmhcxhn",
+          "variantId": "ydmhcxhn",
+          "sourceParentId": "ydmhcxhn",
+          "sourceUrl": "https://www.argos.co.uk/product/ydmhcxhn",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.480Z"
+        }
+      ]
+    },
+    "candidates": [
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/ydmhcxhn_R_Z001A",
+          "selectedSku": "ydmhcxhn",
+          "variantId": "ydmhcxhn",
+          "sourceParentId": "ydmhcxhn",
+          "sourceUrl": "https://www.argos.co.uk/product/ydmhcxhn",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.070Z"
+        },
+        "a": {
+          "hash": "67768cb6e1319e5918c59d1937ed03281769a43c14e28344258b2e32d1151561"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "detail": 0.4778927889154944,
+              "whole": 0.30413935167406303,
+              "room": 0.06979750929457679,
+              "diagram": 0.05449517902275456,
+              "packaging": 0.04723150469647275,
+              "logo": 0.04644366639663844
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.001,
+              "colour": 0.031,
+              "edge": 0.427,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.2976190476190476,
+          "foregroundShare": 0.55230712890625,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.16101226654878992,
+          "centreWhiteShare": 0.0016326530612244899,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/ydmhcxhn_R_Z002A",
+          "selectedSku": "ydmhcxhn",
+          "variantId": "ydmhcxhn",
+          "sourceParentId": "ydmhcxhn",
+          "sourceUrl": "https://www.argos.co.uk/product/ydmhcxhn",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.324Z"
+        },
+        "a": {
+          "hash": "1a44ab87baa7d4e118989e067fa39d62b60c52f87baaf5592e241eab0c7e198b"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "room": 0.5131754645752528,
+              "diagram": 0.22032412249772607,
+              "packaging": 0.07428642680811652,
+              "detail": 0.07070163632986644,
+              "whole": 0.06969824218845877,
+              "logo": 0.05181410760057939
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.774,
+              "edge": 0.997,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.13095238095238096,
+          "foregroundShare": 0.9932861328125,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.050817254516406535,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/ydmhcxhn_R_Z003A",
+          "selectedSku": "ydmhcxhn",
+          "variantId": "ydmhcxhn",
+          "sourceParentId": "ydmhcxhn",
+          "sourceUrl": "https://www.argos.co.uk/product/ydmhcxhn",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.425Z"
+        },
+        "a": {
+          "hash": "d6ccfee89e1a8f9da5d7ed2e4c6d88549615fef8aa99ed2719170eaf3fb3b946"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "packaging": 0.34901801246609077,
+              "diagram": 0.30976887701224465,
+              "logo": 0.1598783661223241,
+              "detail": 0.08309930836080055,
+              "room": 0.053311114855884995,
+              "whole": 0.044924321182654936
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.002,
+              "colour": 0.087,
+              "edge": 0.632,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.4166666666666667,
+          "foregroundShare": 0.62939453125,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.16873545384018618,
+          "centreWhiteShare": 0.004897959183673469,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/ydmhcxhn_R_Z004A",
+          "selectedSku": "ydmhcxhn",
+          "variantId": "ydmhcxhn",
+          "sourceParentId": "ydmhcxhn",
+          "sourceUrl": "https://www.argos.co.uk/product/ydmhcxhn",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.189Z"
+        },
+        "a": {
+          "hash": "bddc4c0f038ed0f423c16d02b7b3d4cff449e13c7a1126da84a9f60e1e3c2f46"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "logo": 0.550196214655687,
+              "packaging": 0.20205910568925103,
+              "detail": 0.12169668477393474,
+              "room": 0.06139670424404822,
+              "whole": 0.033855365350448224,
+              "diagram": 0.030795925286630763
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.052,
+              "edge": 1,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.5446428571428571,
+          "foregroundShare": 0.9986572265625,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.18872998410952208,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/ydmhcxhn_R_Z005A",
+          "selectedSku": "ydmhcxhn",
+          "variantId": "ydmhcxhn",
+          "sourceParentId": "ydmhcxhn",
+          "sourceUrl": "https://www.argos.co.uk/product/ydmhcxhn",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.406Z"
+        },
+        "a": {
+          "hash": "bd9344180bc77796ad39e7a9ad1f7cff2d5c985a732604f7ee13e999e7985cef"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "diagram": 0.6994392438063928,
+              "detail": 0.12890611747883934,
+              "room": 0.05552977815865614,
+              "packaging": 0.0451769991195322,
+              "logo": 0.03815337686808922,
+              "whole": 0.032794484568490365
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.06,
+              "edge": 0.777,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.11507936507936507,
+          "foregroundShare": 0.82806396484375,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.23461340016215818,
+          "centreWhiteShare": 0.0008163265306122449,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/ydmhcxhn_R_Z006A",
+          "selectedSku": "ydmhcxhn",
+          "variantId": "ydmhcxhn",
+          "sourceParentId": "ydmhcxhn",
+          "sourceUrl": "https://www.argos.co.uk/product/ydmhcxhn",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.480Z"
+        },
+        "a": {
+          "hash": "2b810c6acdfa03ccf0533df5e6e4fa8522283e2ee3aa1c722667ed148dd38fe6"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "diagram": 0.970392694023798,
+              "detail": 0.016219261875464894,
+              "packaging": 0.006306588060236472,
+              "whole": 0.0032669877127475366,
+              "logo": 0.0019275320799139524,
+              "room": 0.0018869362478391367
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.002,
+              "colour": 0.079,
+              "edge": 0.581,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.623015873015873,
+          "foregroundShare": 0.655029296875,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.07044353335818114,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      }
+    ],
+    "selectedHash": "67768cb6e1319e5918c59d1937ed03281769a43c14e28344258b2e32d1151561"
+  },
+  {
+    "product": {
+      "sku": "y9d7p4rj",
+      "kind": "tree",
+      "variantName": "Christow Aspen Spruce Artificial Christmas Tree – 7ft",
+      "department": "ar-tree",
+      "originalImages": [
+        {
+          "url": "https://media.4rgos.it/i/Argos/y9d7p4rj_R_Z001A",
+          "selectedSku": "y9d7p4rj",
+          "variantId": "y9d7p4rj",
+          "sourceParentId": "y9d7p4rj",
+          "sourceUrl": "https://www.argos.co.uk/product/y9d7p4rj",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.415Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/y9d7p4rj_R_Z002A",
+          "selectedSku": "y9d7p4rj",
+          "variantId": "y9d7p4rj",
+          "sourceParentId": "y9d7p4rj",
+          "sourceUrl": "https://www.argos.co.uk/product/y9d7p4rj",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.813Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/y9d7p4rj_R_Z003A",
+          "selectedSku": "y9d7p4rj",
+          "variantId": "y9d7p4rj",
+          "sourceParentId": "y9d7p4rj",
+          "sourceUrl": "https://www.argos.co.uk/product/y9d7p4rj",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.513Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/y9d7p4rj_R_Z004A",
+          "selectedSku": "y9d7p4rj",
+          "variantId": "y9d7p4rj",
+          "sourceParentId": "y9d7p4rj",
+          "sourceUrl": "https://www.argos.co.uk/product/y9d7p4rj",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.705Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/y9d7p4rj_R_Z005A",
+          "selectedSku": "y9d7p4rj",
+          "variantId": "y9d7p4rj",
+          "sourceParentId": "y9d7p4rj",
+          "sourceUrl": "https://www.argos.co.uk/product/y9d7p4rj",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.814Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/y9d7p4rj_R_Z006A",
+          "selectedSku": "y9d7p4rj",
+          "variantId": "y9d7p4rj",
+          "sourceParentId": "y9d7p4rj",
+          "sourceUrl": "https://www.argos.co.uk/product/y9d7p4rj",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.907Z"
+        }
+      ]
+    },
+    "candidates": [
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/y9d7p4rj_R_Z001A",
+          "selectedSku": "y9d7p4rj",
+          "variantId": "y9d7p4rj",
+          "sourceParentId": "y9d7p4rj",
+          "sourceUrl": "https://www.argos.co.uk/product/y9d7p4rj",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.415Z"
+        },
+        "a": {
+          "hash": "78b917677ff52b7a226c25377599644dafb3d2ca29a182d1d69e1481ee62f6eb"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "detail": 0.3814331964621073,
+              "whole": 0.22235394364591393,
+              "packaging": 0.16884658947431536,
+              "room": 0.10103407684096691,
+              "logo": 0.08291757586640106,
+              "diagram": 0.04341461771029541
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.11,
+              "colour": 0.158,
+              "edge": 0.4,
+              "touchedSides": 3
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.5744047619047619,
+          "foregroundShare": 0.48284912109375,
+          "aspect": 0.9921875,
+          "heightCoverage": 0.9921875,
+          "widthCoverage": 1,
+          "greenShare": 0.49222601441031477,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/y9d7p4rj_R_Z002A",
+          "selectedSku": "y9d7p4rj",
+          "variantId": "y9d7p4rj",
+          "sourceParentId": "y9d7p4rj",
+          "sourceUrl": "https://www.argos.co.uk/product/y9d7p4rj",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.813Z"
+        },
+        "a": {
+          "hash": "076f1626949c2a4d567b5a44cb26ab93278d7c479c983781012d12d3eab0e75f"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "room": 0.5461335981788873,
+              "diagram": 0.18869445249007466,
+              "whole": 0.1001187653057824,
+              "packaging": 0.08136354074718016,
+              "logo": 0.05785308143123444,
+              "detail": 0.02583656184684101
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.694,
+              "edge": 1,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.1378968253968254,
+          "foregroundShare": 0.99969482421875,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.1133158312473289,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/y9d7p4rj_R_Z003A",
+          "selectedSku": "y9d7p4rj",
+          "variantId": "y9d7p4rj",
+          "sourceParentId": "y9d7p4rj",
+          "sourceUrl": "https://www.argos.co.uk/product/y9d7p4rj",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.513Z"
+        },
+        "a": {
+          "hash": "fd5036f5bae447f4ba45a656b642f45d6797550a366256f2b74acce90d95c3f4"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "detail": 0.3899278322068175,
+              "diagram": 0.24994059976764996,
+              "logo": 0.1480736010988919,
+              "whole": 0.10244518980579695,
+              "packaging": 0.055912216500077376,
+              "room": 0.053700560620766356
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.001,
+              "colour": 0.234,
+              "edge": 0.555,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.19444444444444445,
+          "foregroundShare": 0.7841796875,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.6109122042341221,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/y9d7p4rj_R_Z004A",
+          "selectedSku": "y9d7p4rj",
+          "variantId": "y9d7p4rj",
+          "sourceParentId": "y9d7p4rj",
+          "sourceUrl": "https://www.argos.co.uk/product/y9d7p4rj",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.705Z"
+        },
+        "a": {
+          "hash": "450f47b2b83b874e888b47a678fef8e64f736ee1270b274f4c4b0169e785f9e6"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "packaging": 0.5596177111884276,
+              "detail": 0.16190257988101878,
+              "diagram": 0.15544174043050496,
+              "logo": 0.06196704934580857,
+              "whole": 0.041588109473791005,
+              "room": 0.019482809680449062
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.065,
+              "colour": 0.24,
+              "edge": 0.402,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": true,
+          "backgroundEdgeShare": 0.7748015873015873,
+          "foregroundShare": 0.41192626953125,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.5954956289820714,
+          "centreWhiteShare": 0.6106122448979592,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/y9d7p4rj_R_Z005A",
+          "selectedSku": "y9d7p4rj",
+          "variantId": "y9d7p4rj",
+          "sourceParentId": "y9d7p4rj",
+          "sourceUrl": "https://www.argos.co.uk/product/y9d7p4rj",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.814Z"
+        },
+        "a": {
+          "hash": "c71df0a1263b6f11e12fff192c7ad3c4491bbae27d70de49577ee22353ce76ad"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "room": 0.5330565047935305,
+              "logo": 0.2759690915745644,
+              "detail": 0.07607882357319494,
+              "packaging": 0.07595182002639632,
+              "whole": 0.02590027331464762,
+              "diagram": 0.01304348671766624
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.176,
+              "edge": 0.999,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.17956349206349206,
+          "foregroundShare": 0.99835205078125,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.21556520144280736,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/y9d7p4rj_R_Z006A",
+          "selectedSku": "y9d7p4rj",
+          "variantId": "y9d7p4rj",
+          "sourceParentId": "y9d7p4rj",
+          "sourceUrl": "https://www.argos.co.uk/product/y9d7p4rj",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:08.907Z"
+        },
+        "a": {
+          "hash": "c72c9a8dd175fadacf2d9b065673ded0c88be28157922a4751282a7e0154c976"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "diagram": 0.892253900159317,
+              "packaging": 0.06764938598059317,
+              "detail": 0.020097799929510506,
+              "room": 0.009244982731149463,
+              "whole": 0.007024109506188761,
+              "logo": 0.003729821693241054
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.11,
+              "colour": 0.153,
+              "edge": 0.439,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": true,
+          "backgroundEdgeShare": 0.7896825396825397,
+          "foregroundShare": 0.40667724609375,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.3165240882485367,
+          "centreWhiteShare": 0.08244897959183674,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      }
+    ],
+    "selectedHash": "78b917677ff52b7a226c25377599644dafb3d2ca29a182d1d69e1481ee62f6eb"
+  },
+  {
+    "product": {
+      "sku": "ve28e78f",
+      "kind": "tree",
+      "variantName": "Christow 5ft 96 LED Cherry Blossom Tree – White",
+      "department": "ar-tree",
+      "originalImages": [
+        {
+          "url": "https://media.4rgos.it/i/Argos/ve28e78f_R_Z001A",
+          "selectedSku": "ve28e78f",
+          "variantId": "ve28e78f",
+          "sourceParentId": "ve28e78f",
+          "sourceUrl": "https://www.argos.co.uk/product/ve28e78f",
+          "sourceWidth": 1500,
+          "sourceHeight": 1500,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:13.383Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/ve28e78f_R_Z002A",
+          "selectedSku": "ve28e78f",
+          "variantId": "ve28e78f",
+          "sourceParentId": "ve28e78f",
+          "sourceUrl": "https://www.argos.co.uk/product/ve28e78f",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:13.544Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/ve28e78f_R_Z003A",
+          "selectedSku": "ve28e78f",
+          "variantId": "ve28e78f",
+          "sourceParentId": "ve28e78f",
+          "sourceUrl": "https://www.argos.co.uk/product/ve28e78f",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:13.427Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/ve28e78f_R_Z004A",
+          "selectedSku": "ve28e78f",
+          "variantId": "ve28e78f",
+          "sourceParentId": "ve28e78f",
+          "sourceUrl": "https://www.argos.co.uk/product/ve28e78f",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:13.542Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/ve28e78f_R_Z005A",
+          "selectedSku": "ve28e78f",
+          "variantId": "ve28e78f",
+          "sourceParentId": "ve28e78f",
+          "sourceUrl": "https://www.argos.co.uk/product/ve28e78f",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:13.618Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/ve28e78f_R_Z006A",
+          "selectedSku": "ve28e78f",
+          "variantId": "ve28e78f",
+          "sourceParentId": "ve28e78f",
+          "sourceUrl": "https://www.argos.co.uk/product/ve28e78f",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:13.605Z"
+        }
+      ]
+    },
+    "candidates": [
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/ve28e78f_R_Z001A",
+          "selectedSku": "ve28e78f",
+          "variantId": "ve28e78f",
+          "sourceParentId": "ve28e78f",
+          "sourceUrl": "https://www.argos.co.uk/product/ve28e78f",
+          "sourceWidth": 1500,
+          "sourceHeight": 1500,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:13.383Z"
+        },
+        "a": {
+          "hash": "2029509ac8efee35eb4c9057617a467a9dc604040aa92cc0e4fd0441cac5b5d9"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "whole": 0.2997148894888721,
+              "detail": 0.2986329766134501,
+              "packaging": 0.12512887080408652,
+              "diagram": 0.12217339657327117,
+              "room": 0.09991339104735934,
+              "logo": 0.05443647547296071
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.705,
+              "edge": 1,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.061507936507936505,
+          "foregroundShare": 1,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.0126953125,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/ve28e78f_R_Z002A",
+          "selectedSku": "ve28e78f",
+          "variantId": "ve28e78f",
+          "sourceParentId": "ve28e78f",
+          "sourceUrl": "https://www.argos.co.uk/product/ve28e78f",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:13.544Z"
+        },
+        "a": {
+          "hash": "d8de1e7e707eee149a8b0bd1a190d4385df96035e378793b4794a6ab92ade51d"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "diagram": 0.34216945159245016,
+              "room": 0.1851955894542403,
+              "detail": 0.167243584791998,
+              "whole": 0.14114194077285558,
+              "logo": 0.09115364005536186,
+              "packaging": 0.07309579333309411
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.014,
+              "colour": 0.049,
+              "edge": 0.988,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.5634920634920635,
+          "foregroundShare": 0.96893310546875,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.00031496062992125983,
+          "centreWhiteShare": 0.022857142857142857,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/ve28e78f_R_Z003A",
+          "selectedSku": "ve28e78f",
+          "variantId": "ve28e78f",
+          "sourceParentId": "ve28e78f",
+          "sourceUrl": "https://www.argos.co.uk/product/ve28e78f",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:13.427Z"
+        },
+        "a": {
+          "hash": "f11df453eb725713d1f551681cd3ab7f3848eb3de48649bd2aa54db7f8df84c6"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "packaging": 0.3116974898467432,
+              "room": 0.22704455904785031,
+              "logo": 0.19829218552967573,
+              "detail": 0.1087387101501336,
+              "diagram": 0.09036842732519974,
+              "whole": 0.06385862810039739
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.008,
+              "colour": 0.264,
+              "edge": 0.991,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": true,
+          "backgroundEdgeShare": 0.7033730158730159,
+          "foregroundShare": 0.36334228515625,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.00016798252981689904,
+          "centreWhiteShare": 0.6775510204081633,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/ve28e78f_R_Z004A",
+          "selectedSku": "ve28e78f",
+          "variantId": "ve28e78f",
+          "sourceParentId": "ve28e78f",
+          "sourceUrl": "https://www.argos.co.uk/product/ve28e78f",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:13.542Z"
+        },
+        "a": {
+          "hash": "a6f81506908135e1cc4aa07b0db8310a3f9d2e4a7b088731b8f7d0ed446ffbca"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "room": 0.8448804833279959,
+              "logo": 0.0613929248743237,
+              "packaging": 0.041294927945474284,
+              "detail": 0.033808433978566116,
+              "diagram": 0.014054662559917665,
+              "whole": 0.004568567313722286
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.093,
+              "edge": 0.993,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.3392857142857143,
+          "foregroundShare": 0.99871826171875,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.001650064169162134,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/ve28e78f_R_Z005A",
+          "selectedSku": "ve28e78f",
+          "variantId": "ve28e78f",
+          "sourceParentId": "ve28e78f",
+          "sourceUrl": "https://www.argos.co.uk/product/ve28e78f",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:13.618Z"
+        },
+        "a": {
+          "hash": "7b9ee0e7c20e2b67cb9339c56bf91cbe5ae4eaf1fbf4a402aa4ce687aeacfae3"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "diagram": 0.7612792148905595,
+              "room": 0.09073836642422638,
+              "detail": 0.06100431918699588,
+              "logo": 0.03671977128441614,
+              "whole": 0.033767175951204834,
+              "packaging": 0.016491152262597227
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.012,
+              "colour": 0.54,
+              "edge": 0.999,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.2152777777777778,
+          "foregroundShare": 0.98663330078125,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.015774822146613052,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/ve28e78f_R_Z006A",
+          "selectedSku": "ve28e78f",
+          "variantId": "ve28e78f",
+          "sourceParentId": "ve28e78f",
+          "sourceUrl": "https://www.argos.co.uk/product/ve28e78f",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:13.605Z"
+        },
+        "a": {
+          "hash": "dd81e06649fefa563cc9e6a3e6f860481cc402a522f66100a37824427e0b699c"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "diagram": 0.8626245592854,
+              "room": 0.069330059950843,
+              "packaging": 0.032253958301269675,
+              "detail": 0.024343547785452925,
+              "logo": 0.006660641372875939,
+              "whole": 0.00478723330415837
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.039,
+              "edge": 0.989,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": true,
+          "backgroundEdgeShare": 0.8998015873015873,
+          "foregroundShare": 0.1539306640625,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0,
+          "centreWhiteShare": 0.8416326530612245,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      }
+    ],
+    "selectedHash": "2029509ac8efee35eb4c9057617a467a9dc604040aa92cc0e4fd0441cac5b5d9"
+  },
+  {
+    "product": {
+      "sku": "tytn4d8z",
+      "kind": "tree",
+      "variantName": "Christow Snowy Cone and Berry Christmas Tree – 5ft",
+      "department": "ar-tree",
+      "originalImages": [
+        {
+          "url": "https://media.4rgos.it/i/Argos/tytn4d8z_R_Z001A",
+          "selectedSku": "tytn4d8z",
+          "variantId": "tytn4d8z",
+          "sourceParentId": "tytn4d8z",
+          "sourceUrl": "https://www.argos.co.uk/product/tytn4d8z",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:13.982Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/tytn4d8z_R_Z002A",
+          "selectedSku": "tytn4d8z",
+          "variantId": "tytn4d8z",
+          "sourceParentId": "tytn4d8z",
+          "sourceUrl": "https://www.argos.co.uk/product/tytn4d8z",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:14.327Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/tytn4d8z_R_Z003A",
+          "selectedSku": "tytn4d8z",
+          "variantId": "tytn4d8z",
+          "sourceParentId": "tytn4d8z",
+          "sourceUrl": "https://www.argos.co.uk/product/tytn4d8z",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:14.375Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/tytn4d8z_R_Z004A",
+          "selectedSku": "tytn4d8z",
+          "variantId": "tytn4d8z",
+          "sourceParentId": "tytn4d8z",
+          "sourceUrl": "https://www.argos.co.uk/product/tytn4d8z",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:14.488Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/tytn4d8z_R_Z005A",
+          "selectedSku": "tytn4d8z",
+          "variantId": "tytn4d8z",
+          "sourceParentId": "tytn4d8z",
+          "sourceUrl": "https://www.argos.co.uk/product/tytn4d8z",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:14.542Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/tytn4d8z_R_Z006A",
+          "selectedSku": "tytn4d8z",
+          "variantId": "tytn4d8z",
+          "sourceParentId": "tytn4d8z",
+          "sourceUrl": "https://www.argos.co.uk/product/tytn4d8z",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:14.258Z"
+        }
+      ]
+    },
+    "candidates": [
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/tytn4d8z_R_Z001A",
+          "selectedSku": "tytn4d8z",
+          "variantId": "tytn4d8z",
+          "sourceParentId": "tytn4d8z",
+          "sourceUrl": "https://www.argos.co.uk/product/tytn4d8z",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:13.982Z"
+        },
+        "a": {
+          "hash": "52b186c48754a015314dc78a4ded369fb5cfea1b117c812136a9753b68081927"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "detail": 0.37268736733353686,
+              "whole": 0.24194631830328742,
+              "room": 0.1378226805973702,
+              "packaging": 0.08768466255928477,
+              "logo": 0.08490635843513793,
+              "diagram": 0.07495261277138282
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.02,
+              "colour": 0.095,
+              "edge": 0.342,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.5932539682539683,
+          "foregroundShare": 0.48553466796875,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.4624764299182904,
+          "centreWhiteShare": 0.0008163265306122449,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/tytn4d8z_R_Z002A",
+          "selectedSku": "tytn4d8z",
+          "variantId": "tytn4d8z",
+          "sourceParentId": "tytn4d8z",
+          "sourceUrl": "https://www.argos.co.uk/product/tytn4d8z",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:14.327Z"
+        },
+        "a": {
+          "hash": "c27c0c9bf631db0e5b947f95e781f6a8279026b3d04e06d09effc7d2139a6cf8"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "room": 0.3286760360754968,
+              "logo": 0.20988295817154476,
+              "whole": 0.1891182569053176,
+              "packaging": 0.12013111191717396,
+              "detail": 0.10036794771394676,
+              "diagram": 0.051823689216520134
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.643,
+              "edge": 1,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.1746031746031746,
+          "foregroundShare": 0.999267578125,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.09858294649401417,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/tytn4d8z_R_Z003A",
+          "selectedSku": "tytn4d8z",
+          "variantId": "tytn4d8z",
+          "sourceParentId": "tytn4d8z",
+          "sourceUrl": "https://www.argos.co.uk/product/tytn4d8z",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:14.375Z"
+        },
+        "a": {
+          "hash": "448130dfa8bfed8d5ee9fefd0a5fd1a46530771a2e2292ac227374c68ae596b1"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "logo": 0.27197507583967123,
+              "diagram": 0.22507349067575175,
+              "detail": 0.198528966665761,
+              "room": 0.18173200476016574,
+              "whole": 0.07210773932736973,
+              "packaging": 0.05058272273128054
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.039,
+              "colour": 0.154,
+              "edge": 0.536,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.30357142857142855,
+          "foregroundShare": 0.6873779296875,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.5326762564375777,
+          "centreWhiteShare": 0.00816326530612245,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/tytn4d8z_R_Z004A",
+          "selectedSku": "tytn4d8z",
+          "variantId": "tytn4d8z",
+          "sourceParentId": "tytn4d8z",
+          "sourceUrl": "https://www.argos.co.uk/product/tytn4d8z",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:14.488Z"
+        },
+        "a": {
+          "hash": "6313e7654fd119257788e9e0b06a7ec77c292c2e97f565f95f4575a2c04272e4"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "packaging": 0.5616468046911901,
+              "room": 0.1652175778211874,
+              "diagram": 0.07620805620207284,
+              "logo": 0.06777011631175167,
+              "detail": 0.0646415401108034,
+              "whole": 0.06451590486299456
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.007,
+              "colour": 0.129,
+              "edge": 0.448,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": true,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.5138888888888888,
+          "foregroundShare": 0.59466552734375,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.2720927845632762,
+          "centreWhiteShare": 0.02122448979591837,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/tytn4d8z_R_Z005A",
+          "selectedSku": "tytn4d8z",
+          "variantId": "tytn4d8z",
+          "sourceParentId": "tytn4d8z",
+          "sourceUrl": "https://www.argos.co.uk/product/tytn4d8z",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:14.542Z"
+        },
+        "a": {
+          "hash": "138221bae7b2b08eb6bad6364c1eefbcf8da83da7c4ad778247c4c797c556bf3"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "logo": 0.5008652800008998,
+              "room": 0.21098429212203923,
+              "packaging": 0.14414908034706497,
+              "detail": 0.07886854938741703,
+              "whole": 0.035501137795372305,
+              "diagram": 0.029631660347206698
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.093,
+              "edge": 0.963,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.3273809523809524,
+          "foregroundShare": 0.99627685546875,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.23696624395025423,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/tytn4d8z_R_Z006A",
+          "selectedSku": "tytn4d8z",
+          "variantId": "tytn4d8z",
+          "sourceParentId": "tytn4d8z",
+          "sourceUrl": "https://www.argos.co.uk/product/tytn4d8z",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:14.258Z"
+        },
+        "a": {
+          "hash": "051c947fb7b3f5cbfde85c45a38004a2f6763affa0065f9178cadbf864966159"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "diagram": 0.9467849092422177,
+              "detail": 0.022363674429098836,
+              "packaging": 0.015803778052285365,
+              "whole": 0.005655490398776328,
+              "room": 0.005048118367417352,
+              "logo": 0.004344029510204418
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.023,
+              "colour": 0.1,
+              "edge": 0.463,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": true,
+          "backgroundEdgeShare": 0.8501984126984127,
+          "foregroundShare": 0.3199462890625,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.3197252956886684,
+          "centreWhiteShare": 0.11591836734693878,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      }
+    ],
+    "selectedHash": "52b186c48754a015314dc78a4ded369fb5cfea1b117c812136a9753b68081927"
+  },
+  {
+    "product": {
+      "sku": "t0bf2se2",
+      "kind": "tree",
+      "variantName": "Christow Pre-Lit Chamonix Spruce Christmas Tree – 6ft",
+      "department": "ar-tree",
+      "originalImages": [
+        {
+          "url": "https://media.4rgos.it/i/Argos/t0bf2se2_R_Z001A",
+          "selectedSku": "t0bf2se2",
+          "variantId": "t0bf2se2",
+          "sourceParentId": "t0bf2se2",
+          "sourceUrl": "https://www.argos.co.uk/product/t0bf2se2",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:15.514Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/t0bf2se2_R_Z002A",
+          "selectedSku": "t0bf2se2",
+          "variantId": "t0bf2se2",
+          "sourceParentId": "t0bf2se2",
+          "sourceUrl": "https://www.argos.co.uk/product/t0bf2se2",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:15.688Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/t0bf2se2_R_Z003A",
+          "selectedSku": "t0bf2se2",
+          "variantId": "t0bf2se2",
+          "sourceParentId": "t0bf2se2",
+          "sourceUrl": "https://www.argos.co.uk/product/t0bf2se2",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:15.850Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/t0bf2se2_R_Z004A",
+          "selectedSku": "t0bf2se2",
+          "variantId": "t0bf2se2",
+          "sourceParentId": "t0bf2se2",
+          "sourceUrl": "https://www.argos.co.uk/product/t0bf2se2",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:16.010Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/t0bf2se2_R_Z005A",
+          "selectedSku": "t0bf2se2",
+          "variantId": "t0bf2se2",
+          "sourceParentId": "t0bf2se2",
+          "sourceUrl": "https://www.argos.co.uk/product/t0bf2se2",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:15.658Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/t0bf2se2_R_Z006A",
+          "selectedSku": "t0bf2se2",
+          "variantId": "t0bf2se2",
+          "sourceParentId": "t0bf2se2",
+          "sourceUrl": "https://www.argos.co.uk/product/t0bf2se2",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:16.008Z"
+        }
+      ]
+    },
+    "candidates": [
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/t0bf2se2_R_Z001A",
+          "selectedSku": "t0bf2se2",
+          "variantId": "t0bf2se2",
+          "sourceParentId": "t0bf2se2",
+          "sourceUrl": "https://www.argos.co.uk/product/t0bf2se2",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:15.514Z"
+        },
+        "a": {
+          "hash": "510f1d3a7cb518b18fc3fda44d9726945fcb75671a40c46b03330a8b02a5cdcd"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "detail": 0.41655862226571316,
+              "whole": 0.31737230871740707,
+              "logo": 0.09660531630613443,
+              "room": 0.06281038396201108,
+              "diagram": 0.06054499473722602,
+              "packaging": 0.04610837401150823
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.135,
+              "edge": 0.665,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.2638888888888889,
+          "foregroundShare": 0.75933837890625,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.06253516598344185,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/t0bf2se2_R_Z002A",
+          "selectedSku": "t0bf2se2",
+          "variantId": "t0bf2se2",
+          "sourceParentId": "t0bf2se2",
+          "sourceUrl": "https://www.argos.co.uk/product/t0bf2se2",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:15.688Z"
+        },
+        "a": {
+          "hash": "f89c5d66effe6f2d8f8971c2f773036102de8149bf35c4e62ad1472314bd19a3"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "diagram": 0.5614046553627443,
+              "logo": 0.1644811538821311,
+              "detail": 0.09335850899258528,
+              "packaging": 0.08167154058406638,
+              "whole": 0.05835254770499039,
+              "room": 0.04073159347348252
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.005,
+              "colour": 0.124,
+              "edge": 0.473,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.40674603174603174,
+          "foregroundShare": 0.80731201171875,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.02888032055643759,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/t0bf2se2_R_Z003A",
+          "selectedSku": "t0bf2se2",
+          "variantId": "t0bf2se2",
+          "sourceParentId": "t0bf2se2",
+          "sourceUrl": "https://www.argos.co.uk/product/t0bf2se2",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:15.850Z"
+        },
+        "a": {
+          "hash": "df76083cc402ced9d3284af97455f44d4f4ef04c86a4a8a62f929fe2db7dc6b4"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "diagram": 0.40804328683901264,
+              "logo": 0.17351450885891012,
+              "room": 0.17292575594526385,
+              "whole": 0.08937879343287854,
+              "packaging": 0.0854325332655991,
+              "detail": 0.07070512165833577
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.138,
+              "edge": 1,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.31746031746031744,
+          "foregroundShare": 0.99822998046875,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.061877101803729746,
+          "centreWhiteShare": 0,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/t0bf2se2_R_Z004A",
+          "selectedSku": "t0bf2se2",
+          "variantId": "t0bf2se2",
+          "sourceParentId": "t0bf2se2",
+          "sourceUrl": "https://www.argos.co.uk/product/t0bf2se2",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:16.010Z"
+        },
+        "a": {
+          "hash": "bd613044e9f772d138fe6e7911939f3fcd556532b2c29da17f017fcccbce702f"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "diagram": 0.5353525625396919,
+              "logo": 0.1734332969256493,
+              "packaging": 0.11534828499115528,
+              "detail": 0.09377284671013866,
+              "whole": 0.061238585549875144,
+              "room": 0.02085442328348979
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0.002,
+              "colour": 0.214,
+              "edge": 0.948,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.05654761904761905,
+          "foregroundShare": 0.96258544921875,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.18001394965442902,
+          "centreWhiteShare": 0.0016326530612244899,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/t0bf2se2_R_Z005A",
+          "selectedSku": "t0bf2se2",
+          "variantId": "t0bf2se2",
+          "sourceParentId": "t0bf2se2",
+          "sourceUrl": "https://www.argos.co.uk/product/t0bf2se2",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:15.658Z"
+        },
+        "a": {
+          "hash": "c663925c93a05cfc389f7ced56efaa882c15acf427cef51df7e5f2f8f35ec96c"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "packaging": 0.4992286135652028,
+              "diagram": 0.23784303312429256,
+              "logo": 0.0916800464407702,
+              "whole": 0.0784740601939533,
+              "detail": 0.05487303482771215,
+              "room": 0.03790121184806899
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.119,
+              "edge": 0.497,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.44642857142857145,
+          "foregroundShare": 0.7286376953125,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.11676997822080751,
+          "centreWhiteShare": 0.0024489795918367346,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/t0bf2se2_R_Z006A",
+          "selectedSku": "t0bf2se2",
+          "variantId": "t0bf2se2",
+          "sourceParentId": "t0bf2se2",
+          "sourceUrl": "https://www.argos.co.uk/product/t0bf2se2",
+          "sourceWidth": 2000,
+          "sourceHeight": 2000,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:16.008Z"
+        },
+        "a": {
+          "hash": "fcfa34009adbfb1192a51e234165cbf81cfb1033ee3bf61faa2a8d12050e3e43"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "diagram": 0.949010672056554,
+              "detail": 0.02624716499911404,
+              "packaging": 0.010037487039552965,
+              "whole": 0.00849248856257604,
+              "logo": 0.003997330265498555,
+              "room": 0.00221485707670444
+            },
+            "geometry": {
+              "width": 400,
+              "height": 400,
+              "white": 0,
+              "colour": 0.093,
+              "edge": 0.62,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.5466269841269841,
+          "foregroundShare": 0.7777099609375,
+          "aspect": 1,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.0240150682781353,
+          "centreWhiteShare": 0.0008163265306122449,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      }
+    ],
+    "selectedHash": "510f1d3a7cb518b18fc3fda44d9726945fcb75671a40c46b03330a8b02a5cdcd"
+  },
+  {
+    "product": {
+      "sku": "z39e80am",
+      "kind": "decoration",
+      "variantName": "Dibor 185cm LED Wooden Christmas Garland - Green and Brown",
+      "department": "ar-garland",
+      "originalImages": [
+        {
+          "url": "https://media.4rgos.it/i/Argos/z39e80am_R_Z001A",
+          "selectedSku": "z39e80am",
+          "variantId": "z39e80am",
+          "sourceParentId": "z39e80am",
+          "sourceUrl": "https://www.argos.co.uk/product/z39e80am",
+          "sourceWidth": 1010,
+          "sourceHeight": 1263,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:33.806Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/z39e80am_R_Z002A",
+          "selectedSku": "z39e80am",
+          "variantId": "z39e80am",
+          "sourceParentId": "z39e80am",
+          "sourceUrl": "https://www.argos.co.uk/product/z39e80am",
+          "sourceWidth": 1010,
+          "sourceHeight": 1263,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:34.033Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/z39e80am_R_Z003A",
+          "selectedSku": "z39e80am",
+          "variantId": "z39e80am",
+          "sourceParentId": "z39e80am",
+          "sourceUrl": "https://www.argos.co.uk/product/z39e80am",
+          "sourceWidth": 1010,
+          "sourceHeight": 1263,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:34.115Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/z39e80am_R_Z004A",
+          "selectedSku": "z39e80am",
+          "variantId": "z39e80am",
+          "sourceParentId": "z39e80am",
+          "sourceUrl": "https://www.argos.co.uk/product/z39e80am",
+          "sourceWidth": 1010,
+          "sourceHeight": 1263,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:34.013Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/z39e80am_R_Z005A",
+          "selectedSku": "z39e80am",
+          "variantId": "z39e80am",
+          "sourceParentId": "z39e80am",
+          "sourceUrl": "https://www.argos.co.uk/product/z39e80am",
+          "sourceWidth": 1010,
+          "sourceHeight": 1263,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:34.001Z"
+        },
+        {
+          "url": "https://media.4rgos.it/i/Argos/z39e80am_R_Z006A",
+          "selectedSku": "z39e80am",
+          "variantId": "z39e80am",
+          "sourceParentId": "z39e80am",
+          "sourceUrl": "https://www.argos.co.uk/product/z39e80am",
+          "sourceWidth": 1010,
+          "sourceHeight": 1263,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:34.181Z"
+        }
+      ]
+    },
+    "candidates": [
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/z39e80am_R_Z001A",
+          "selectedSku": "z39e80am",
+          "variantId": "z39e80am",
+          "sourceParentId": "z39e80am",
+          "sourceUrl": "https://www.argos.co.uk/product/z39e80am",
+          "sourceWidth": 1010,
+          "sourceHeight": 1263,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:33.806Z"
+        },
+        "a": {
+          "hash": "a23ade32dc837269e326ecd1c9ff67a60194ea858fd55421bf78425ec0e121ba"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "detail": 0.4536381976123594,
+              "whole": 0.26313722238444986,
+              "room": 0.11987086498286055,
+              "packaging": 0.09134386834410375,
+              "logo": 0.05694965214790295,
+              "diagram": 0.015060194528323466
+            },
+            "geometry": {
+              "width": 320,
+              "height": 400,
+              "white": 0.022,
+              "colour": 0.319,
+              "edge": 0.953,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.31194690265486724,
+          "foregroundShare": 0.8009344362745098,
+          "aspect": 1.2549019607843137,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.0322272162188008,
+          "centreWhiteShare": 0.017733990147783252,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/z39e80am_R_Z002A",
+          "selectedSku": "z39e80am",
+          "variantId": "z39e80am",
+          "sourceParentId": "z39e80am",
+          "sourceUrl": "https://www.argos.co.uk/product/z39e80am",
+          "sourceWidth": 1010,
+          "sourceHeight": 1263,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:34.033Z"
+        },
+        "a": {
+          "hash": "c156cfed8c37b61e22c2603234146418221a15f66ddc422f5824200662eac167"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "room": 0.7975426157742725,
+              "detail": 0.07502283062350282,
+              "packaging": 0.04844096663600069,
+              "whole": 0.04474967225353437,
+              "logo": 0.030006569856932317,
+              "diagram": 0.0042373448557573076
+            },
+            "geometry": {
+              "width": 320,
+              "height": 400,
+              "white": 0.003,
+              "colour": 0.451,
+              "edge": 0.694,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.39048672566371684,
+          "foregroundShare": 0.8811274509803921,
+          "aspect": 1.2549019607843137,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.03172809457579972,
+          "centreWhiteShare": 0.0019704433497536944,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/z39e80am_R_Z003A",
+          "selectedSku": "z39e80am",
+          "variantId": "z39e80am",
+          "sourceParentId": "z39e80am",
+          "sourceUrl": "https://www.argos.co.uk/product/z39e80am",
+          "sourceWidth": 1010,
+          "sourceHeight": 1263,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:34.115Z"
+        },
+        "a": {
+          "hash": "44e70cd6b2b1fb6e1dba7854294f857596191b0ca810fd95d87c88a4187f41b4"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "packaging": 0.5496720540226593,
+              "detail": 0.1914364917118708,
+              "room": 0.1279874214522254,
+              "whole": 0.08583251003712747,
+              "logo": 0.03180412813760867,
+              "diagram": 0.013267394638508413
+            },
+            "geometry": {
+              "width": 320,
+              "height": 400,
+              "white": 0.005,
+              "colour": 0.368,
+              "edge": 0.992,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.375,
+          "foregroundShare": 0.983609068627451,
+          "aspect": 1.2549019607843137,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.03527487930228936,
+          "centreWhiteShare": 0.002955665024630542,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/z39e80am_R_Z004A",
+          "selectedSku": "z39e80am",
+          "variantId": "z39e80am",
+          "sourceParentId": "z39e80am",
+          "sourceUrl": "https://www.argos.co.uk/product/z39e80am",
+          "sourceWidth": 1010,
+          "sourceHeight": 1263,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:34.013Z"
+        },
+        "a": {
+          "hash": "ff80b6cc5a163de49ff8b26b48adfe20a0d7240bdc93b58c0db11693b51abe89"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "detail": 0.5384935417930071,
+              "whole": 0.199930721584664,
+              "packaging": 0.12004924179696873,
+              "room": 0.060938335864632445,
+              "logo": 0.048614769528176845,
+              "diagram": 0.03197338943255083
+            },
+            "geometry": {
+              "width": 320,
+              "height": 400,
+              "white": 0.084,
+              "colour": 0.471,
+              "edge": 0.894,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.206858407079646,
+          "foregroundShare": 0.8592218137254902,
+          "aspect": 1.2549019607843137,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.016134783383847388,
+          "centreWhiteShare": 0.022660098522167486,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/z39e80am_R_Z005A",
+          "selectedSku": "z39e80am",
+          "variantId": "z39e80am",
+          "sourceParentId": "z39e80am",
+          "sourceUrl": "https://www.argos.co.uk/product/z39e80am",
+          "sourceWidth": 1010,
+          "sourceHeight": 1263,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:34.001Z"
+        },
+        "a": {
+          "hash": "2e0777a58d382c15d36d5ab79d7785604d369a49771c84c04789e00a70ae1e45"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "detail": 0.5586465287571193,
+              "whole": 0.1978190606133445,
+              "logo": 0.09873832218940908,
+              "room": 0.06680433952059042,
+              "packaging": 0.06572399314914146,
+              "diagram": 0.012267755770395277
+            },
+            "geometry": {
+              "width": 320,
+              "height": 400,
+              "white": 0.026,
+              "colour": 0.63,
+              "edge": 0.9,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.2013274336283186,
+          "foregroundShare": 0.9297640931372549,
+          "aspect": 1.2549019607843137,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.03319878078919186,
+          "centreWhiteShare": 0.005911330049261084,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      },
+      {
+        "g": {
+          "url": "https://media.4rgos.it/i/Argos/z39e80am_R_Z006A",
+          "selectedSku": "z39e80am",
+          "variantId": "z39e80am",
+          "sourceParentId": "z39e80am",
+          "sourceUrl": "https://www.argos.co.uk/product/z39e80am",
+          "sourceWidth": 1010,
+          "sourceHeight": 1263,
+          "verification": "exact-public-Product-SKU-and-official-gallery",
+          "metadataVerifiedAt": "2026-11-20T02:38:34.181Z"
+        },
+        "a": {
+          "hash": "1e5b96e9f36213d6ee69459041e21ce7aa02f0ac1acb6871cfed99e96395ac6b"
+        },
+        "v": {
+          "quality": {
+            "scores": {
+              "detail": 0.6685948923185594,
+              "whole": 0.14662982269106759,
+              "packaging": 0.12855410600482509,
+              "room": 0.04076783072387518,
+              "logo": 0.00977344259728687,
+              "diagram": 0.005679905664385853
+            },
+            "geometry": {
+              "width": 320,
+              "height": 400,
+              "white": 0.007,
+              "colour": 0.596,
+              "edge": 1,
+              "touchedSides": 4
+            }
+          }
+        },
+        "shape": {
+          "version": "ar-foreground-v3",
+          "pyramid": false,
+          "flatBackground": false,
+          "backgroundEdgeShare": 0.23783185840707965,
+          "foregroundShare": 0.9495251225490197,
+          "aspect": 1.2549019607843137,
+          "heightCoverage": 1,
+          "widthCoverage": 1,
+          "greenShare": 0.01137371944825361,
+          "centreWhiteShare": 0.011822660098522168,
+          "touchesTop": true,
+          "touchesBottom": true,
+          "method": "native-source-foreground-geometry; not a calibrated semantic probability"
+        },
+        "agreement": {
+          "geometryAgreement": false
+        }
+      }
+    ],
+    "selectedHash": "44e70cd6b2b1fb6e1dba7854294f857596191b0ca810fd95d87c88a4187f41b4"
+  }
+]
