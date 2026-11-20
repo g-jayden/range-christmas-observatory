@@ -18,6 +18,13 @@ export function componentSizeFacts(p){
  if(!parts.length)return null;
  return{values:{},axes:[],maxCm:null,componentSizes:parts,evidence:{source:'exact-SKU source description',excerpt:section.slice(0,500)},label:'已标注组件尺寸 · Specified component sizes: '+[...new Set(parts.map(p=>p.quantity+' × '+p.measure))].join(' / ')};
 }
+export function titleSizeFacts(p){
+ const title=String(p.variantName||p.name||''),unit='(?:cm|mm|m|ft|feet|inches?)';
+ if(new RegExp('\\d+(?:\\.\\d+)?\\s*(?:'+unit+')?\\s*[-–¿]\\s*\\d+(?:\\.\\d+)?\\s*'+unit+'\\b','i').test(title)||/\d\s*[x×]\s*\d/i.test(title))return null;
+ const values=[...title.matchAll(/\b(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|feet|inches?)\b/ig)].map(m=>m[1]+m[2].toLowerCase()),unique=[...new Set(values)];
+ if(unique.length!==1||!/^\d/.test(unique[0])||!(parseFloat(unique[0])>0))return null;
+ return{values:{},axes:[],maxCm:null,evidence:{source:'exact-SKU official listing title',excerpt:title},label:'标题标注尺寸 · Size in source title: '+unique[0]};
+}
 export function productSize(p){
  const checked=productDimensions(p.specifications||{});if(checked.sourceConflict)return checked.label;if(p.dimensions?.sourceConflict)return p.dimensions.label;
  const conflict=treeHeightConflict(p);
@@ -28,6 +35,7 @@ export function productSize(p){
  const components=componentSizeFacts(p);if(components)return components.label;
  const realSize=value=>value&&!/^(?:one(?: size)?|os|n\/?a|not (?:specified|available))$/i.test(String(value).trim());
  if(realSize(d.sourceSize))return d.categoryLabel||d.sourceSize;
+ const stated=titleSizeFacts(p);if(stated)return stated.label;
  return [p.heightLabel,p.specifications?.Dimensions,p.specifications?.Size].find(realSize)||(p.skirtDiameterCm?p.skirtDiameterCm+'cm':'官网未注明尺寸 · Size not specified');
 }
 export const reportRetailer=p=>retailerName(productRetailer(p));
