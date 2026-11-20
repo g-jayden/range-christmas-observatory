@@ -1,7 +1,8 @@
 import fs from 'node:fs/promises';
 import {nativeContinuation} from '../server/native-continuation.mjs';
 import {loadUncappedCreditGrants} from '../server/credit-scope.mjs';
-const env=process.env,status=JSON.parse(await fs.readFile('web/native-original-recovery-status.json','utf8'));
+const env=process.env,deferred=await fs.readFile('runtime/native-archive-deferred.json','utf8').then(JSON.parse).catch(()=>null);if(env.GITHUB_REPOSITORY==='g-jayden/range-christmas-observatory'&&deferred?.runId===env.GITHUB_RUN_ID&&deferred.archiveRun===44707707847){console.log(JSON.stringify({phase:'Native continuation waits for saved archive restoration',sourceRequests:0,firecrawlCredits:0}));process.exit(0);}
+const status=JSON.parse(await fs.readFile('web/native-original-recovery-status.json','utf8'));
 if(env.GITHUB_REPOSITORY!=='g-jayden/range-christmas-observatory'||!env.GITHUB_TOKEN||status.runId!==env.GITHUB_RUN_ID||status.runAttempt!==env.GITHUB_RUN_ATTEMPT)throw Error('Only the exact saved native recovery run can continue');
 const depth=Number(env.NATIVE_CONTINUATION_DEPTH||0),policy=JSON.parse(await fs.readFile('web/collection-policy.json','utf8')),grant=(await loadUncappedCreditGrants()).some(g=>g.scope==='failed-native-originals-all-retailers');
 if(!grant)throw Error('The all-retailer native-image grant must still be active');
