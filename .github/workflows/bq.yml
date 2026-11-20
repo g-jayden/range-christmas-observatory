@@ -92,7 +92,7 @@ jobs:
         run: node scripts/recover-bq-source.mjs
       - name: Read exact official directories free first with bounded paid fallback
         env:
-          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          FIRECRAWL_API_KEY: ${{ inputs.rebuildOnly != true && secrets.FIRECRAWL_API_KEY || '' }}
           COLLECTION_CHECKPOINTS: '1'
           BQ_REBUILD_ONLY: ${{ inputs.rebuildOnly == true && 'true' || 'false' }}
         run: node scripts/update-bq.mjs
