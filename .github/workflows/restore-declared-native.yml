@@ -1,0 +1,40 @@
+name: Reconnect already committed exact originals without collection
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/restore-declared-native.yml']
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: restore-declared-native-responses
+  cancel-in-progress: false
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+      GITHUB_TOKEN: ${{ github.token }}
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/images/
+            !/web/mail-assets/
+            !/web/reports/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: node scripts/test-restore-declared-native.mjs
+      - run: node scripts/restore-declared-range-native.mjs
+      - run: node scripts/request-retailer-site-publish.mjs ar
