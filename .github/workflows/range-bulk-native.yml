@@ -1,8 +1,5 @@
 name: The Range bulk native originals independently of daily checks
 on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/range-bulk-native.yml']
   workflow_dispatch:
     inputs:
       continuationDepth:
@@ -36,7 +33,15 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /*
-            !/web/images/
+            !/web/
+            /web/*.mjs
+            /web/*.js
+            /web/*.json
+            /web/*.gz
+            /web/decoration-details/
+            /web/light-details/
+            /web/theme-details/
+            /web/original-image-map/
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
