@@ -83,7 +83,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   for(let attempt=0;;attempt++){
    metrics.firecrawlRequests++;
    const response=await fetcher('https://api.firecrawl.dev/v2/'+path,{method,headers:{authorization:'Bearer '+key,...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(105000)});
-   const result=await response.json();if(response.ok&&result.success!==false)return result;
+   const result=await response.json();if(path==='scrape'){metrics.scrapeReceipts||=[];metrics.scrapeReceipts.push({id:result.data?.metadata?.scrapeId||result.id||null,credits:result.data?.metadata?.creditsUsed??result.metadata?.creditsUsed??null,httpStatus:response.status,sourceStatus:result.data?.metadata?.statusCode??null});}if(response.ok&&result.success!==false)return result;
    const detail=String(result.error?.message||result.error||result.message||result.code||'').replace(/fc-[\w-]+/g,'[redacted]');
    const proxyFailure=path==='scrape'&&response.status>=500&&/ERR_TUNNEL_CONNECTION_FAILED|internal proxy error/i.test(detail);
    if(proxyFailure&&attempt===0&&(metrics.proxyRetries||0)<2&&fallbackReserved<availableFallback()){

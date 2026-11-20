@@ -38,10 +38,8 @@ on:
         options: [firecrawl-browser]
         default: firecrawl-browser
 permissions:
-  actions: read
+  actions: write
   contents: write
-  pages: write
-  id-token: write
 concurrency:
   group: range-source-and-pages-production
   cancel-in-progress: false
@@ -60,7 +58,7 @@ jobs:
       ONNXRUNTIME_NODE_INSTALL_CUDA: skip
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: https://g-jayden.github.io/range-christmas-observatory/
     steps:
       - uses: actions/checkout@v7.0.1
         with:
@@ -318,55 +316,12 @@ jobs:
           git diff --cached --quiet || git commit -m "Record durable NEW delivery result"
           node scripts/push-evidence.mjs
           exit "$mail_status"
-      - uses: actions/configure-pages@v6.0.0
-        if: steps.tick.outputs.publish == 'true'
-      - name: Reuse source-hash-bound display encodings
-        if: steps.tick.outputs.publish == 'true'
-        uses: actions/cache/restore@v6.1.0
-        with:
-          path: runtime/card-preview-encodings
-          key: card-preview-encodings-v2-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: card-preview-encodings-v2-
-      - name: Reuse reviewed B&Q source-image pixels without collection
-        if: steps.tick.outputs.publish == 'true'
-        uses: actions/cache/restore@v6.1.0
-        with:
-          path: |
-            runtime/bq-source
-            runtime/bq-staged-catalogue.json
-          key: bq-source-checkpoints-static-${{ github.run_id }}
-          restore-keys: bq-source-checkpoints-
-      - name: Build site
-        if: steps.tick.outputs.publish == 'true'
-        env:
-          BROWSE_FETCH_VERIFIED_PREVIEWS: 'true'
-        run: node scripts/build-static.mjs
-      - name: Keep source-hash-bound display encodings
-        if: steps.tick.outputs.publish == 'true'
-        uses: actions/cache/save@v6.1.0
-        with:
-          path: runtime/card-preview-encodings
-          key: card-preview-encodings-v2-${{ github.run_id }}-${{ github.run_attempt }}
-      - name: Keep exact reviewed B&Q preview pixels for future source-free builds
-        if: steps.tick.outputs.publish == 'true'
-        uses: actions/cache/save@v6.1.0
-        with:
-          path: |
-            runtime/bq-source
-            runtime/bq-staged-catalogue.json
-          key: bq-source-checkpoints-preview-${{ github.run_id }}-${{ github.run_attempt }}
-      - uses: actions/upload-pages-artifact@v5.0.0
-        if: steps.tick.outputs.publish == 'true'
-        with:
-          name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
-          path: public
-      - name: Publish permanent website
+      - name: Publish permanent website from committed evidence in the independent publisher
         id: deployment
-        if: steps.tick.outputs.publish == 'true'
+        if: steps.evidence.outcome == 'success' && steps.tick.outputs.publish == 'true'
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          PAGES_ARTIFACT_NAME: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
-        run: node scripts/publish-pages.mjs
+        run: node scripts/request-nx-site-publish.mjs
       - name: Save the real source and credit proof
         if: always() && ((inputs.mode == 'probe' || inputs.mode == 'catalogue-probe') || inputs.mode == 'monitor-probe' || inputs.mode == 'previews' || (inputs.mode == 'lights-init' || inputs.mode == 'themes-init'))
         uses: actions/upload-artifact@v7.0.2
