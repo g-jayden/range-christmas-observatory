@@ -1,8 +1,5 @@
 name: Release obsolete full-archive website checkout
 on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/release-old-publisher.yml']
   workflow_dispatch:
 permissions:
   actions: write
