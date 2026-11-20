@@ -31,6 +31,7 @@ export async function createPaidNativeOriginals({key=process.env.FIRECRAWL_API_K
  async function read(p){assertProductPhoto(p);const source=nativeSourceUrl(p);const reused=source&&await existing(source,p);if(reused)return reused;
   try{const result=await freeRead(p);if(result.nativeMirrorVerified!==false&&p.originalCachedImageUrl&&p.originalImageEvidence?.sourceUrl===source&&p.originalImageEvidence?.sha256===result.sha256)return result;exactPaidNativeTarget(p);return await preserve(p,source,result.bytes,'free-official-native-response');}catch(freeError){
    if(freeError.code==='NATIVE_SOURCE_VERSION_CHANGED')throw freeError;
+   if(productRetailer(p)==='the-range'&&index.rangeMailPreflight?.runId===process.env.GITHUB_RUN_ID&&index.rangeMailPreflight.failedUrls?.includes(source))throw Error('The exact enhanced native mail batch remains unavailable; this product stays queued without another paid browser attempt');
    // Unresolved source identity/price/image contradictions need evidence repair,
    // never an arbitrary replacement photo or a charge for a different product.
    const target=exactPaidNativeTarget(p);const taskKey=target.retailer+':'+p.sku+'|'+source;if(tasks.has(taskKey))return tasks.get(taskKey);
