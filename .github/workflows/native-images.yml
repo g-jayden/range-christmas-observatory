@@ -8,6 +8,7 @@ on:
         default: '0'
   workflow_run:
     workflows:
+      - Apply already captured free official product evidence
       - Credit controlled collection and permanent website
       - ASDA Christmas exact SKU collection
       - M&S Christmas exact SKU collection
@@ -57,7 +58,7 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - name: Reuse exact committed originals, then free and approved paid recovery
         id: recovery
-        run: node scripts/mirror-approved-native-images.mjs
+        run: xvfb-run -a node scripts/mirror-approved-native-images.mjs
       - name: Preserve original bytes and receipts after any outcome
         if: always() && steps.recovery.outputs.native_deferred != 'true'
         continue-on-error: true
