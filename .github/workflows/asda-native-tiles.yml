@@ -1,0 +1,53 @@
+name: ASDA free exact native pixel recovery
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/asda-native-tiles.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: range-source-and-pages-production
+  cancel-in-progress: false
+jobs:
+  exact-pixels:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/
+            /web/*.mjs
+            /web/*.json
+            /web/asda/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Verify exact source pixels and preserve the complete six-rose product photo
+        run: node scripts/recover-asda-native-tiles.mjs
+      - name: Preserve exact native recovery after any outcome
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: asda-exact-native-${{ github.run_id }}
+          path: |
+            web/asda/native-tile-evidence.json
+            web/images/source/
+            web/images/asda/
+          retention-days: 3
+      - name: Publish the saved native photo without collecting products
+        if: success()
+        run: node scripts/request-retailer-site-publish.mjs ar
