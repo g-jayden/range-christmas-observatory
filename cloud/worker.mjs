@@ -387,7 +387,7 @@ export class Control{
     const delivery=await this.deliveryStatus();await this.db.put('monitor',{...completeMonitorState(previous,b,delivery),nextRunAt:advanceNewCheck(previous.nextRunAt)});await this.db.delete('lease/monitor');return response({saved:true});
    }
    if(route==='/internal/deliver'&&req.method==='POST'){
-    if(this.env.DAILY_PDF_DIGEST==='true')return response({accepted:0,attempted:0,failed:0,morePending:false,waitingForDigest:true,...await this.deliveryStatus()});
+    if(this.env.DAILY_PDF_DIGEST==='true'){const digest=await dispatchDigestDue({storage:this.db,env:this.env});return response({accepted:0,attempted:0,failed:0,morePending:false,waitingForDigest:true,...await this.deliveryStatus(),digest});}
     const events=await this.db.list({prefix:'event/'}),subs=await this.db.list({prefix:'sub/'}),revision=await this.deliveryRevision();let accepted=0,attempted=0,failed=0;
     const failures=[];
     const recordFailure=async(key,p,fingerprint,e)=>{const record=deliveryFailure(await this.db.get(key),fingerprint,e);await this.db.put(key,record);failed++;failures.push({sku:p.sku,attempts:record.attempts,blocked:record.blocked,providerStatus:record.providerStatus,providerCode:record.providerCode,assetStatus:record.assetStatus});};
