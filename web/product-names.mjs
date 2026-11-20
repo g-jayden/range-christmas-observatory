@@ -1,6 +1,6 @@
 import {DEPARTMENT_MAP} from './catalogue-model.mjs';
 
-export const PDF_LAYOUT_VERSION='native-eight-bilingual-names-v2';
+export const PDF_LAYOUT_VERSION='native-eight-bilingual-names-v3';
 const clean=value=>String(value||'').replace(/\s+/g,' ').trim();
 const concepts=[
  [/\bnatural charm\b/i,'自然魅力'],[/\bstarry night\b/i,'星夜'],[/\bopulent\b/i,'华丽'],[/\bluxe\b/i,'奢华'],[/\bmajestic\b/i,'华美'],[/\btraditional\b/i,'传统风格'],[/\bvintage\b/i,'复古风格'],[/\brustic\b/i,'乡村风格'],[/\bnordic\b|\bscandi\b/i,'北欧风格'],[/\bmodern\b/i,'现代风格'],[/\bbright\b/i,'明亮色系'],[/\bpearl[ -]look\b/i,'仿珍珠光泽'],[/\bassorted\b/i,'混款'],[/\bfir\b/i,'冷杉'],[/\bspruce\b/i,'云杉'],[/\bpine\b/i,'松树型'],[/\bred berr(?:y|ies)\b/i,'红莓'],
@@ -18,6 +18,7 @@ function chineseProductName(p,en){
  const treeScope=['tree','trees'].includes(scope),smallTreeDecoration=['tree-decorations','baubles'].includes(scope);
  if(/tree[ -]?skirt/i.test(en))noun='圣诞树裙';else if(/tree[ -]?collar/i.test(en))noun='圣诞树围';else if(/tree[ -]?top(?:per)?\b/i.test(en))noun='圣诞树顶装饰';else if(/tree stand/i.test(en))noun='圣诞树底座';else if(/storage bag/i.test(en))noun='圣诞树收纳袋';
  else if(/wreath (?:hanger|hook)/i.test(en))noun='花环挂钩';
+ else if(/\bfairground\b.*\bmodel\b/i.test(en))noun='圣诞游乐场模型';
  else if(/garland/i.test(en))noun='圣诞长藤';
  else if(/wreath/i.test(en))noun=smallTreeDecoration?'花环造型挂饰':'圣诞圈';
  else if(!treeScope&&/\blights?\b/i.test(en)&&(/light/.test(scope)||!/\btree\b/i.test(en)))noun=category.includes('灯')?category:'圣诞灯饰';
