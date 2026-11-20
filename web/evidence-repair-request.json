@@ -2,8 +2,14 @@
   "state": "pending",
   "scope": "current-product-evidence",
   "requestId": "current-evidence-20261120-source-and-dimensions",
-  "requestedAt": "2026-11-20T02:27:00Z",
+  "requestedAt": "2026-11-20T03:46:09Z",
   "authorization": "Continue user-approved repairs under ordinary monthly cap 2000, max 60 per run, account reserve 5000. Repair only missing current exact-SKU details and contradictory dimensions; reuse exact native photo evidence and no catalogue discovery.",
   "monthlyCap": 2000,
-  "maxPaidRepairCredits": 20
+  "maxPaidRepairCredits": 20,
+  "retryAfterUnpaidPreflightFailure": {
+    "run": 44660849722,
+    "failedBeforeBudgetAndPaidRequests": true,
+    "scopeIsolationFix": "2628a92052e9c9455b4f086de787368348c2dd79",
+    "recollectDirectories": false
+  }
 }
