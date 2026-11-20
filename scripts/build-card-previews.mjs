@@ -21,7 +21,8 @@ export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot
   }catch{imageFailures++;return null;}}));return downloads.get(key);
  }
  async function build(p){
-  const candidates=[input(p.previewImage?.cachePath,p.previewImage?.sha256),input(p.displayImage?.cachePath,p.displayImage?.sha256),input(p.originalCachedImageUrl,p.nativeExportEvidence?.sha256||p.originalImageEvidence?.sha256),input(p.cachedImageUrl,p.imageCacheEvidence?.sha256)].filter(Boolean);
+  const reviewed=input(p.previewImage?.cachePath,p.previewImage?.sha256);if(reviewed&&p.previewImage?.method==='exact-SKU-reviewed-whole-native')reviewed.remote=OWN+local(p.previewImage.cachePath);
+  const candidates=[reviewed,input(p.displayImage?.cachePath,p.displayImage?.sha256),input(p.originalCachedImageUrl,p.nativeExportEvidence?.sha256||p.originalImageEvidence?.sha256),input(p.cachedImageUrl,p.imageCacheEvidence?.sha256)].filter(Boolean);
   for(const candidate of [...new Map(candidates.map(c=>[c.file,c])).values()]){const {file,bound}=candidate,buffer=await readInput(candidate);if(!buffer)continue;
    const digest=createHash('sha256').update(buffer).digest('hex');
    if(/^[a-f0-9]{64}$/.test(bound||'')&&bound!==digest)continue;
