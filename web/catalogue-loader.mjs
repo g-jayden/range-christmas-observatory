@@ -1,4 +1,14 @@
 const PATH=/^browse\/[a-z][a-z0-9-]*\.[a-f0-9]{20}\.json$/;
+export function waitForFirstPreviews(images,{signal,timeoutMs=6000}={}){
+ return new Promise(resolve=>{
+  const pending=new Set([...images].filter(image=>!image.complete)),cleanup=[];let timer,finished=false;
+  const done=()=>{if(finished)return;finished=true;clearTimeout(timer);for(const remove of cleanup)remove();resolve();};
+  if(signal?.aborted||!pending.size){done();return;}
+  for(const image of pending){const settled=()=>{pending.delete(image);if(!pending.size)done();};image.addEventListener('load',settled,{once:true});image.addEventListener('error',settled,{once:true});cleanup.push(()=>{image.removeEventListener('load',settled);image.removeEventListener('error',settled);});}
+  if(signal){signal.addEventListener('abort',done,{once:true});cleanup.push(()=>signal.removeEventListener('abort',done));}
+  timer=setTimeout(done,timeoutMs);
+ });
+}
 export async function currentCatalogueProduct(sku,{loadFirst,loadFull}){
  const find=source=>source.products.find(p=>String(p.sku)===String(sku)||p.aliasSkus?.some(alias=>String(alias)===String(sku)));
  let source=await loadFirst(),product=find(source);

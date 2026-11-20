@@ -1,9 +1,6 @@
 name: Recover exact missing image galleries using approved native allowance
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/range-image-gallery-discovery.yml']
 permissions:
   contents: write
   actions: write
