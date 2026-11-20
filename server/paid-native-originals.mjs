@@ -14,7 +14,7 @@ export function nativePaidPolicy(grant){if(grant?.enabled!==true||grant.scope!==
 export function exactPaidNativeTarget(p){assertProductPhoto(p);const retailer=productRetailer(p),source=nativeSourceUrl(p),page=new URL(p.sourceUrl);if(page.protocol!=='https:'||page.hostname!==STORES[retailer]||page.username||page.password||page.port||!allowedPublicImage(source)||new URL(source).hostname==='raw.githubusercontent.com')throw Error('Exact official public image target required');if(!p.originalImages?.some(g=>g.url===source&&exactNativeGalleryMember(p,g)))throw Error('Paid original must belong to this exact SKU gallery');return {retailer,source,page:page.href};}
 // One lazily opened, shared ordinary browser session. Never invoked by a public
 // website endpoint; only the repository's owner-authenticated collectors use it.
-export async function createPaidNativeOriginals({key=process.env.FIRECRAWL_API_KEY,fetcher=fetch,freeRead=digestNativeOriginal,connect,root='web',grant,index,now=Date.now}={}){
+export async function createPaidNativeOriginals({key=process.env.FIRECRAWL_API_KEY,fetcher=fetch,freeRead=digestNativeOriginal,connect,root='web',grant,index,now=Date.now,skipPaidRetailers=[]}={}){
  grant=nativePaidPolicy(grant||JSON.parse(await fs.readFile(root+'/image-collection-authorization.json','utf8')));
  index??=await fs.readFile(root+'/paid-native-index.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return {version:1,entries:{}};throw e;});
  const file=root+'/paid-native-index.json',tasks=new Map(),ttl=600,receipts=[],active=new Set();let session,browser,context,opening,closed=false,sessionAt=0,lastUseAt=0,sessionsStarted=0,startFailures=0,admission=Promise.resolve(),saving=Promise.resolve();
@@ -33,6 +33,7 @@ export async function createPaidNativeOriginals({key=process.env.FIRECRAWL_API_K
  async function read(p){assertProductPhoto(p);const source=nativeSourceUrl(p);const reused=source&&await existing(source,p);if(reused)return reused;
   try{const result=await freeRead(p);if(result.nativeMirrorVerified!==false&&p.originalCachedImageUrl&&p.originalImageEvidence?.sourceUrl===source&&p.originalImageEvidence?.sha256===result.sha256)return result;exactPaidNativeTarget(p);return await preserve(p,source,result.bytes,'free-official-native-response');}catch(freeError){
    if(freeError.code==='NATIVE_SOURCE_VERSION_CHANGED')throw freeError;
+   if(skipPaidRetailers.includes(productRetailer(p)))throw Object.assign(Error('Exact originals are queued in the independent verified bulk-image channel'),{code:'NATIVE_BULK_DEFERRED'});
    if(productRetailer(p)==='the-range'&&index.rangeMailPreflight?.runId===process.env.GITHUB_RUN_ID&&index.rangeMailPreflight.failedUrls?.includes(source))throw Error('The exact enhanced native mail batch remains unavailable; this product stays queued without another paid browser attempt');
    // Unresolved source identity/price/image contradictions need evidence repair,
    // never an arbitrary replacement photo or a charge for a different product.
