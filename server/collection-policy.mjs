@@ -52,19 +52,19 @@ export function planDetails(previous,next,{policy,failures={},now=Date.now(),lim
   const prior=old.get(p.sku),same=unchangedDetailInput(prior,p),key=productKey(p,policy),failure=failures[key],fingerprint=detailFingerprint(p);
   p.retailerId=policy.retailerId;
   if(/[\u0000-\u001f]/.test(p.sourceUrl||'')){invalid.push({sku:p.sku,reason:'原站链接格式异常，等待目录地址修复；不重复付费请求'});continue;}
-  const currentProof=verified(p)&&p.detailInputFingerprint===fingerprint;
-  if(currentProof&&completed.has(key)){reused.push(p.sku);continue;}
+  const currentProof=verified(p)&&p.detailInputFingerprint===fingerprint,sourceFieldsComplete=!policy.completeTreeSourceFields||!['tree','skirt'].includes(p.kind)||p.detailEvidence?.completeSourceFieldsVersion===1;
+  if(currentProof&&sourceFieldsComplete&&completed.has(key)){reused.push(p.sku);continue;}
   if(attempted[key]===fingerprint){backoff.push({sku:p.sku,reason:failure?.error||'此SKU已在本轮核验，不重复请求'});continue;}
   const trusted=(currentProof||same&&verified(prior))&&verified(p);
   if(trusted)p.detailInputFingerprint=fingerprint;
   if(failure&&failure.fingerprint===fingerprint&&Date.parse(failure.retryAt)>now){backoff.push({sku:p.sku,retryAt:failure.retryAt,reason:failure.error});continue;}
   const observed=Date.parse(p.attributeObservedAt),expired=!Number.isFinite(observed)||now-observed>=policy.detailMaxAgeDays*86400000;
-  const reason=currentProof&&!expired?null:!prior?'new-sku':!same&&!currentProof?'metadata-changed':!trusted?'missing-proof':expired?'aged-proof':null;
+  let reason=currentProof&&!expired?null:!prior?'new-sku':!same&&!currentProof?'metadata-changed':!trusted?'missing-proof':expired?'aged-proof':null;if(!reason&&!sourceFieldsComplete)reason='source-fields-not-preserved';
   if(!reason){p.detailStatus='复用已核验档案，核验日期保留';reused.push(p.sku);continue;}
   if(reason==='metadata-changed'){
    p.previousAttributeEvidence={height:p.heightLabel,colour:p.treeColor,observedAt:p.attributeObservedAt};
    p.attributeObservedAt=null;p.heightLabel='高度未确认';p.heightCm=null;p.heightValues=[];p.treeColor='颜色未确认';p.colorValues=[];p.material='材质未确认';
-   p.skirtDiameterCm=null;p.skirtBaseDiameterCm=null;p.skirtTopDiameterCm=null;delete p.specifications;delete p.detailEvidence;delete p.productSummary;
+   p.skirtDiameterCm=null;p.skirtBaseDiameterCm=null;p.skirtTopDiameterCm=null;delete p.specifications;delete p.detailEvidence;delete p.productSummary;delete p.sourceDescription;
    p.features={...(p.listingFeatures||{})};p.style=[['potted','圣诞树盆栽'],['popUp','折叠式圣诞树'],['slim','纤细圣诞树'],['snow','雪景款'],['prelit','预亮灯款']].find(([key])=>p.features[key])?.[1]||'标准／其他装饰待核验';
   }
   queue.push({product:p,key,fingerprint,reason,priority:reason==='new-sku'?0:reason==='metadata-changed'?1:reason==='missing-proof'?2:3,observed:Number.isFinite(observed)?observed:0});

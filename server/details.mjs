@@ -60,13 +60,13 @@ export function restoreExactRangeGalleryPreview(p){
  if(p.imageCacheEvidence?.sourceUrl!==chosen.url){delete p.cachedImageUrl;delete p.imageCacheEvidence;}return true;
 }
 export function applyDetails(p,d){
- const s=d.specs,t=d.featuresText,lower=t.toLowerCase();
+ const s=d.specs,t=d.featuresText,lower=t.toLowerCase();p.sourceDescription=t;
  if(p.kind==='decoration'){p.sourceDescription=t;p.dimensions=productDimensions(s,t);p.detailsReady=true;delete p.detailIssue;delete p.detailError;}
  const keepGallery=d.htmlAvailable===false&&!d.originalImages?.length&&p.originalSourceEvidence?.selectedSku===p.sku&&p.originalSourceEvidence.sourceUrl?.replace(/\/$/,'')===d.sourceUrl.replace(/\/$/,'')&&p.originalImages?.some(g=>g.thumbnail===(p.listingVariantImageUrl||p.variantImageUrl)||g.url===p.variantImageUrl);
  if(!keepGallery){p.originalImages=d.originalImages||[];if(p.originalImages.length)p.originalSourceEvidence={version:'verified-official-gallery-v1',selectedSku:p.sku,sourceUrl:d.sourceUrl,observedAt:d.observedAt};p.originalImageUrl=p.originalImages.find(g=>g.thumbnail===p.variantImageUrl)?.url||p.originalImages[0]?.url||null;}
  p.appearanceSource=descriptionFacts(p,s,t);p.sourceColour=s.Colour||s.Color||null;p.sourceMaterial=s.Material||s['Material Composition']||null;
  const info=productInformation(p,s);
- p.attributeObservedAt=d.observedAt;p.detailEvidence={url:d.sourceUrl,text:info.text,sourceContentHash:d.contentHash,verifiedProductSection:true,selectedSku:d.sku,observedAt:d.observedAt,verificationMethod:d.verificationMethod||'selected-SKU-DOM',sourceTransport:d.sourceTransport,breadcrumbs:d.breadcrumbs||[],jsonSource:d.jsonSource};p.productSummary=info.summary;p.specifications=p.kind==='decoration'?s:info.specifications;p.descriptionHash=d.contentHash;
+ p.attributeObservedAt=d.observedAt;p.detailEvidence={url:d.sourceUrl,text:info.text,sourceContentHash:d.contentHash,verifiedProductSection:true,selectedSku:d.sku,observedAt:d.observedAt,verificationMethod:d.verificationMethod||'selected-SKU-DOM',sourceTransport:d.sourceTransport,breadcrumbs:d.breadcrumbs||[],jsonSource:d.jsonSource};p.productSummary=info.summary;p.detailEvidence.completeSourceFieldsVersion=1;p.specifications=s;p.descriptionHash=d.contentHash;
  const originalHeight=s['Christmas Tree Height'],heightCm=cm(s.Height)||cm(originalHeight);p.heightLabel=originalHeight||(heightCm?heightCm.toFixed(1)+'cm':'高度未确认');p.heightCm=heightCm;p.heightValues=originalHeight?[originalHeight]:[];
  p.treeColor=s.Colour||s.Color||'颜色未确认';p.colorValues=p.treeColor==='颜色未确认'?[]:[p.treeColor];p.material=s.Material||'材质未确认';
  p.skirtDiameterCm=cm(s.Diameter);p.skirtBaseDiameterCm=cm(s['Base Diameter']||s['Bottom Diameter']);p.skirtTopDiameterCm=cm(s['Top Diameter']);
