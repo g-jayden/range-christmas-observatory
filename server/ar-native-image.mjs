@@ -9,7 +9,7 @@ export async function ensureArNativeImage(p,{fetcher=fetch,sharp,root='web'}={})
  const gallery=p.originalImages?.find(g=>g.url===source&&g.selectedSku===p.sku);
  if(!gallery||new URL(source).origin!=='https://media.4rgos.it')throw Error('Argos exact-SKU native gallery mapping absent');
  const prior=p.originalImageEvidence;
- if(prior?.sourceUrl===source&&prior.sourcePreviewHash===p.previewImage.sha256&&p.originalCachedImageUrl){
+ if(prior?.sourceUrl===source&&prior.sourcePreviewHash===p.previewImage.sha256&&prior.width===p.previewImage.sourceWidth&&prior.height===p.previewImage.sourceHeight&&p.originalCachedImageUrl){
   try{const bytes=await fs.readFile(root+'/'+p.originalCachedImageUrl);if(createHash('sha256').update(bytes).digest('hex')===prior.sha256)return prior;}catch{}
  }
  let responseUrl=source;let r=await fetcher(source,{signal:AbortSignal.timeout(30000)});
