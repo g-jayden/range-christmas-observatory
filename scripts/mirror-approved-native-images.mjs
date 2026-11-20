@@ -7,7 +7,7 @@ import {applyRangeNativeIndex} from '../server/range-native-index.mjs';
 import {mergeReportProduct} from '../server/report-product-evidence.mjs';
 import {publishBqCommittedEvidence} from '../server/bq-committed-evidence.mjs';
 import {applySavedRetailerReview} from '../server/saved-retailer-reviews.mjs';
-import {recoverNativeBatch,prioritizePendingOriginals} from '../server/native-recovery-batch.mjs';
+import {recoverNativeBatch,prioritizePendingOriginals,publishedNativeCandidates} from '../server/native-recovery-batch.mjs';
 import {atomicJson} from '../server/sync.mjs';
 const tracked=new Set(execFileSync('git',['ls-files','web/images'],{encoding:'utf8',maxBuffer:33554432}).trim().split('\n')),read=p=>fs.readFile('web/'+p,'utf8').then(JSON.parse),products=[],byKey=new Map();
 const range=await rebuildStoredRangeViews({persist:false,includeProducts:true,verifyImageFiles:false});if(!range.rebuilt)throw Error('Canonical Range source required');
@@ -18,7 +18,7 @@ for(const retailer of ['asda','ms','bm','hb','du','nx','jl','mt','bq','ar']){
  if(d.departmentShards)rows=(await Promise.all([...new Set(Object.values(d.departmentShards))].map(p=>json(p)))).flatMap(s=>s.products||[]);
  const reviews=['asda','du'].includes(retailer)?await json(retailer+'/reviews.json'):null;
  rows=await Promise.all(rows.map(async p=>{if(p.detailsUrl){if(!detailCache.has(p.detailsUrl))detailCache.set(p.detailsUrl,json(p.detailsUrl));p=mergeReportProduct(p,(await detailCache.get(p.detailsUrl))[p.sku]);}if(reviews)applySavedRetailerReview(p,reviews[p.sku],retailer);return p;}));
- products.push(...rows.filter(p=>p.sourceListed!==false&&p.taxonomyAudit?.disposition!=='exclude'));
+ products.push(...publishedNativeCandidates(rows));
 }
 for(const p of products)byKey.set(productRetailer(p)+':'+p.sku,p);
 const recovery=await createPaidNativeOriginals(),checked=new Set(),entries=[];
