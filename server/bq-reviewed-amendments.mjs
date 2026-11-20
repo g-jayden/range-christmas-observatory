@@ -8,7 +8,7 @@ export function applyBqReviewedAmendments(products,{index,visual,reviews,selecti
   let applied=0;
   for(const p of products) {
     const a=amendments[p.sku];
-    const prior=reviews[p.sku];if(prior?.sourceFingerprint===a?.sourceFingerprint&&Date.parse(prior.reviewedAt)>Date.parse(a.review?.reviewedAt))continue;
+    const prior=reviews[p.sku];if(a&&prior&&prior.sourceFingerprint===a.sourceFingerprint&&Date.parse(prior.reviewedAt)>Date.parse(a.review?.reviewedAt))continue;
     if(!a||a.sourceFingerprint!==bqFingerprint(p))continue;
     const gallery=[...new Set(p.originalImages.map(g=>bqAsset(g.url)))];
     if(!gallery.includes(a.asset)||a.galleryFingerprint!==createHash('sha256').update(JSON.stringify(gallery)).digest('hex'))continue;

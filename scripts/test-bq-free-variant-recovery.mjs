@@ -4,3 +4,5 @@ const merged=mergeBqFreeVariants(source,[parent],recovery,{now});assert.equal(me
 console.log('Free B&Q variants merge only into the matching closed source with exact EAN, listed parent option, captured official HTTP and timestamp proof; no source scan, paid transport, duplicate insertion or fabricated observation date.');
 
 const fs=await import('node:fs/promises');const workflow=await fs.readFile('.github/workflows/bq.yml','utf8');assert(workflow.includes("FIRECRAWL_API_KEY: ${{ inputs.rebuildOnly != true && secrets.FIRECRAWL_API_KEY || '' }}"),'The source-free rebuild must not receive a paid source credential');
+
+const resumed=mergeBqFreeVariants(merged.source,merged.records,recovery,{now});assert.equal(resumed.added.length,0);assert.equal(resumed.records.length,2);assert.equal(resumed.remaining,1);

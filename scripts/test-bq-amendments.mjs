@@ -15,3 +15,5 @@ for(const [product,hash]of [[{...conflicted,bqSource:{rawFingerprint:'new-source
  applyBqSourceImageConflict(product,conflictReview,hash);assert.equal(product.sourceImageConflict,undefined);
 }
 console.log('PASS: exact-photo source conflicts cannot become labelled images or PDF photos; changed source facts or photo bytes expire the conflict.');
+
+assert.doesNotThrow(()=>applyBqReviewedAmendments([{sku:'no-saved-source'}],{index:{},visual:{},reviews:{},selections:{}},{}),'A product with neither a saved amendment nor review must remain unchanged');
