@@ -1,0 +1,48 @@
+name: Verify malformed official product links with a four-credit ceiling
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/range-source-link-probe.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: range-source-link-diagnostic
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/
+            /web/*.mjs
+            /web/*.json
+            /web/*.gz
+            /web/decoration-details/
+            /web/light-details/
+            /web/theme-details/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Check only observed malformed links and exact SKU responses
+        run: node scripts/probe-range-source-links.mjs
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: range-exact-source-link-probe-${{ github.run_id }}
+          path: |
+            web/range-source-link-probe.json
+            web/collection-ledger.json
+          retention-days: 3
