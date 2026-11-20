@@ -30,6 +30,15 @@ export function nativeSourceUrl(p,item){
  const fallback=matching||p.originalImages?.find(known);return fallback?.url||(usableNativeUrl(selected)?selected:null);
 }
 
+export function nativeDownloadUrl(p,source=nativeSourceUrl(p)){
+ if(productRetailer(p)!=='bq'||!source)return source;
+ const declared=p.originalImageEvidence,exported=p.nativeExportEvidence;
+ if(declared?.sourceUrl!==source||!Number.isInteger(declared.width)||!Number.isInteger(declared.height)||declared.width<64||declared.height<64||declared.sourceVersion==null||!p.originalImages?.some(g=>g.url===source&&String(g.selectedSku)===String(p.sku)))return source;
+ const u=new URL(source);if(u.origin!=='https://media.diy.com'||!/^\/is\/image\/(?:Kingfisher|KingfisherDigital)\//.test(u.pathname))return source;
+ if(exported?.sourceUrl===source&&String(exported.selectedSku)===String(p.sku)&&exported.sourceVersion===declared.sourceVersion&&exported.width===declared.width&&exported.height===declared.height){const e=new URL(exported.exportUrl);if(e.origin===u.origin&&e.pathname===u.pathname&&Number(e.searchParams.get('wid'))===declared.width&&Number(e.searchParams.get('hei'))===declared.height&&e.searchParams.get('fit')==='fit,0')return e.href;}
+ if(declared.sha256)return source;
+ u.search=new URLSearchParams({wid:String(declared.width),hei:String(declared.height),fit:'fit,0',fmt:'jpg',qlt:'100'});u.hash='';return u.href;
+}
 export function nativeImageCandidates(p,item){
  const source=nativeSourceUrl(p,item);
  const candidates=[];const gallery=p.originalImages?.find(g=>g.url===source&&(!g.selectedSku||String(g.selectedSku)===String(p.sku)));
@@ -40,6 +49,6 @@ export function nativeImageCandidates(p,item){
  // source-bound original mirror may replace a remote source image.
  if(source===p.originalImageEvidence?.sourceUrl&&p.originalCachedImageUrl)candidates.push(p.originalCachedImageUrl);
  if(p.displayImage?.nativeCachePath&&source===p.displayImage.sourceUrl)candidates.push(p.displayImage.nativeCachePath);
- if(source)candidates.push(source);
+ if(source)candidates.push(nativeDownloadUrl(p,source),source);
  return [...new Set(candidates)];
 }
