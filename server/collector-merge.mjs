@@ -6,6 +6,7 @@ function mergeValue(base,a,b,label){
  throw Error('Conflicting collector evidence: '+label);
 }
 const receiptKey=r=>r.receipt?.id||r.key;
+const newestReceipt=(...values)=>clone(values.filter(Boolean).sort((a,b)=>String(b.completedAt||'').localeCompare(String(a.completedAt||''))||String(b.id||'').localeCompare(String(a.id||'')))[0]);
 export function mergeCollectorLedgers(base={},a={},b={}){
  const periods={},ids=new Set([...Object.keys(base.periods||{}),...Object.keys(a.periods||{}),...Object.keys(b.periods||{})]);
  for(const id of ids){
@@ -17,9 +18,24 @@ export function mergeCollectorLedgers(base={},a={},b={}){
   const fields=x=>Object.fromEntries(Object.entries(x).filter(([k])=>!['used','runs','reservations'].includes(k)));
   periods[id]={...mergeValue(fields(prior),fields(left),fields(right),'period.'+id),used,reservations:mergeValue(prior.reservations||{},left.reservations||{},right.reservations||{},'reservations'),runs:[...new Map([...(left.runs||[]),...(right.runs||[])].map(x=>[receiptKey(x),x])).values()].sort((x,y)=>String(x.completedAt||'').localeCompare(String(y.completedAt||''))).slice(-80)};
  }
- const strip=x=>Object.fromEntries(Object.entries(x).filter(([k])=>!['periods','lastRun'].includes(k)));
+ const strip=x=>Object.fromEntries(Object.entries(x).filter(([k])=>!['periods','lastRun','nativeImageFallback'].includes(k)));
  const lastRun=[a.lastRun,b.lastRun].filter(Boolean).sort((x,y)=>Date.parse(y.completedAt||0)-Date.parse(x.completedAt||0))[0];
- return {...mergeValue(strip(base),strip(a),strip(b),'ledger'),periods,...(lastRun?{lastRun}: {})};
+ const nativeImageFallback=newestReceipt(a.nativeImageFallback,b.nativeImageFallback);
+ return {...mergeValue(strip(base),strip(a),strip(b),'ledger'),periods,...(lastRun?{lastRun}: {}),...(nativeImageFallback?{nativeImageFallback}: {})};
+}
+// Multiple exact-SKU consumers can preserve the same unchanged original. A
+// concurrent receipt must add bindings, never erase the other consumer's image.
+export function mergeCollectorNativeIndexes(base={},a={},b={}){
+ const entries={};for(const source of new Set([...Object.keys(a.entries||{}),...Object.keys(b.entries||{})])){
+  const prior=base.entries?.[source],x=a.entries?.[source],y=b.entries?.[source];
+  if(!x||!y||same(x,y)||same(y,prior)){entries[source]=clone(x||y);continue;}
+  if(same(x,prior)){entries[source]=clone(y);continue;}
+  if(x.url!==source||y.url!==source||x.ok!==true||y.ok!==true||!x.hash||x.hash!==y.hash||x.cachedImageUrl!==y.cachedImageUrl||x.width!==y.width||x.height!==y.height||x.bytes!==y.bytes)throw Error('Conflicting exact native image evidence: '+source);
+  const latest=Date.parse(y.observedAt||0)>Date.parse(x.observedAt||0)?y:x;
+  entries[source]={...clone(latest),bindings:[...new Set([...(x.bindings||[]),...(y.bindings||[])])].sort(),selectedSkus:[...new Set([...(x.selectedSkus||[]),...(y.selectedSkus||[])])].sort()};
+ }
+ const strip=x=>Object.fromEntries(Object.entries(x).filter(([k])=>!['entries','lastReceipt'].includes(k))),lastReceipt=newestReceipt(a.lastReceipt,b.lastReceipt);
+ return {...mergeValue(strip(base),strip(a),strip(b),'native-index'),entries,...(lastReceipt?{lastReceipt}: {})};
 }
 export function mergeCollectorImageCaches(base={},a={},b={}){
  const entries={};for(const key of new Set([...Object.keys(a.entries||{}),...Object.keys(b.entries||{})])){
