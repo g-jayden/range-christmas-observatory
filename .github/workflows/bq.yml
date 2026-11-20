@@ -36,6 +36,10 @@ jobs:
     if: needs.acceptance.outputs.active == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    concurrency:
+      group: range-source-and-pages-production
+      cancel-in-progress: false
+      queue: max
     env:
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
@@ -57,6 +61,13 @@ jobs:
             /test/
             /web/*.mjs
             /web/settings.json
+            /web/collection-policy.json
+            /web/collection-ledger.json
+            /web/collection-diagnostics.json
+            /web/image-collection-authorization.json
+            /web/next-collection-authorization.json
+            /web/jl-collection-authorization.json
+            /web/argos-collection-authorization.json
             /web/preview-quality-cache.json.gz
             /web/bq/
             /web/images/bq/
@@ -79,8 +90,10 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           BQ_RECOVERY_ARTIFACT_ID: ${{ inputs.recoverArtifact }}
         run: node scripts/recover-bq-source.mjs
-      - name: Read all ten official directories, NEW badges and exact variant offers free
+      - name: Read exact official directories free first with bounded paid fallback
         env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          COLLECTION_CHECKPOINTS: '1'
           BQ_REBUILD_ONLY: ${{ inputs.rebuildOnly == true && 'true' || 'false' }}
         run: node scripts/update-bq.mjs
       - name: Save the closed source before image processing
@@ -115,7 +128,7 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           mkdir -p web/bq web/images/bq web/mail-assets
-          git add web/bq web/images/bq
+          git add web/bq web/images/bq web/collection-ledger.json
           for retailer_mail_dir in web/mail-assets/bq-*/; do
             if [ -d "$retailer_mail_dir" ]; then git add "$retailer_mail_dir"; fi
           done

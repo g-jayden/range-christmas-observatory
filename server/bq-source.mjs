@@ -36,10 +36,10 @@ export async function requestBqDirectory(url,{fresh=false,session=null,requestPa
   const htmlResponse=await requestPage(u.href,{attempts:1,fresh,cookieFile:session?.cookieFile});
   return{...htmlResponse,sourceUrl:u.href,sourceApiUrl:u.href,sourceTransport:'official-html-loader',nativeTransportError:{status:e.status,attempts:e.attempts||null},lister:bqRoute(htmlResponse.html)};
  }
- return{...response,sourceUrl:u.href,sourceApiUrl:api.href,sourceTransport:'official-native-loader',lister:bqDataRouteField(response.html,'routes/plp','lister')};
+ return{...response,sourceUrl:u.href,sourceApiUrl:api.href,sourceTransport:'official-native-loader',lister:response.sourceFormat&&response.sourceFormat!=='native-loader'?bqRoute(response.html):bqDataRouteField(response.html,'routes/plp','lister')};
 }
 
 // Vary: Cookie is part of the official response contract. Keep one clean,
 // anonymous visit across pagination; never load the user's browser/login state.
 // The jar stays outside source caches/artifacts and is deleted after this run.
-export async function createBqPublicSession(url,{requestPage=requestBqPage}={}){const u=new URL(url);if(u.origin!=='https://www.diy.com'||!u.pathname.endsWith('.cat'))throw Error('Official B&Q category required for anonymous session');await fs.mkdir('runtime/bq-public-session',{recursive:true,mode:0o700});const dir=await fs.mkdtemp('runtime/bq-public-session/run-'),cookieFile=dir+'/cookies.txt';try{u.pathname+='.data';u.searchParams.set('_routes','routes/plp');await requestPage(u.href,{fresh:true,writeCookieJar:cookieFile});await fs.chmod(cookieFile,0o600);return{cookieFile,close:()=>fs.rm(dir,{recursive:true,force:true})};}catch(e){await fs.rm(dir,{recursive:true,force:true});throw e;}}
+export async function createBqPublicSession(url,{requestPage=requestBqPage}={}){const u=new URL(url);if(u.origin!=='https://www.diy.com'||!u.pathname.endsWith('.cat'))throw Error('Official B&Q category required for anonymous session');await fs.mkdir('runtime/bq-public-session',{recursive:true,mode:0o700});const dir=await fs.mkdtemp('runtime/bq-public-session/run-'),cookieFile=dir+'/cookies.txt';try{u.pathname+='.data';u.searchParams.set('_routes','routes/plp');const response=await requestPage(u.href,{fresh:true,writeCookieJar:cookieFile});if(response.providerManagedSession)return{cookieFile:null,close:()=>fs.rm(dir,{recursive:true,force:true})};await fs.chmod(cookieFile,0o600);return{cookieFile,close:()=>fs.rm(dir,{recursive:true,force:true})};}catch(e){await fs.rm(dir,{recursive:true,force:true});throw e;}}
