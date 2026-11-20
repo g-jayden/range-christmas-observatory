@@ -1,4 +1,10 @@
 const PATH=/^browse\/[a-z][a-z0-9-]*\.[a-f0-9]{20}\.json$/;
+export async function currentCatalogueProduct(sku,{loadFirst,loadFull}){
+ const find=source=>source.products.find(p=>String(p.sku)===String(sku)||p.aliasSkus?.some(alias=>String(alias)===String(sku)));
+ let source=await loadFirst(),product=find(source);
+ if(!product&&source.browsePartial){source=await loadFull();product=find(source);}
+ return{source,product};
+}
 const CACHE='observatory-catalogue-views-v1',MAX_BYTES=64*1024*1024;
 let writes=Promise.resolve();
 const sha=async text=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)))].map(b=>b.toString(16).padStart(2,'0')).join('');
