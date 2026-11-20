@@ -52,8 +52,10 @@ if(retailerEnabled('bq')){const{publishBqCommittedEvidence}=await import('../ser
 if(retailerEnabled('ar'))await fs.cp('web/ar/details','public/ar/details',{recursive:true});
 const{applyRangeNativeFiles}=await import('../server/range-native-index.mjs');console.log(JSON.stringify({phase:'Apply exact official native original mirrors',...await applyRangeNativeFiles('public','web')}));
 await copyPublishedAssets('web','public',{repositoryImages:true});
+const{publishedEvidenceHealth}=await import('../server/published-evidence-health.mjs');await fs.writeFile('public/product-evidence-health.json',JSON.stringify(await publishedEvidenceHealth('public')));
 const{deriveCatalogueIdentities}=await import('../server/catalogue-identities.mjs');console.log(JSON.stringify({phase:'all-retailer-source-and-photo-identity-audit',...await deriveCatalogueIdentities('public')}));
 // ASDA productSetProduct marks a set member; numeric members remain individual SKUs.
 try{const p='public/asda/catalogue.json',d=JSON.parse(await fs.readFile(p,'utf8'));for(const item of d.products)item.recordType=item.sku.startsWith('SET')?'product-set':item.sku.startsWith('GEM')?'product-family':'sku';await fs.writeFile(p,JSON.stringify(d));}catch(e){if(e.code!=='ENOENT')throw e;}
 const {buildBrowseCatalogues}=await import('./build-browse-catalogues.mjs');console.log(JSON.stringify({phase:'immutable-department-browsing-views',...await buildBrowseCatalogues('public')}));
 await fs.writeFile('public/.nojekyll','');console.log('Static cloud website built.');
+
