@@ -57,9 +57,10 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
       - name: Reuse exact committed originals, then free and approved paid recovery
+        id: recovery
         run: node scripts/mirror-approved-native-images.mjs
       - name: Preserve original bytes and receipts after any outcome
-        if: always()
+        if: always() && steps.recovery.outputs.native_deferred != 'true'
         continue-on-error: true
         timeout-minutes: 8
         uses: actions/upload-artifact@v7.0.2
@@ -72,12 +73,12 @@ jobs:
             web/images/source/
           retention-days: 3
       - name: Commit original bytes and their exact source bindings
-        if: always()
+        if: always() && steps.recovery.outputs.native_deferred != 'true'
         run: |
           node scripts/publish-native-recovery.mjs
       - name: Publish without catalogue recollection
-        if: success()
+        if: success() && steps.recovery.outputs.native_deferred != 'true'
         run: node scripts/request-retailer-site-publish.mjs ar
       - name: Continue only saved progress and never a failed publication
-        if: success()
+        if: success() && steps.recovery.outputs.native_deferred != 'true'
         run: node scripts/continue-approved-native.mjs

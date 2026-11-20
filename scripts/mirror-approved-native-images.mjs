@@ -1,3 +1,4 @@
+import{savedNativeArchivePending}from'../server/native-archive-gate.mjs';
 import fs from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {nativeSourceUrl,productRetailer} from '../web/product-facts.mjs';
@@ -11,6 +12,7 @@ import {applySavedRetailerReview} from '../server/saved-retailer-reviews.mjs';
 import {recoverNativeBatch,prioritizePendingOriginals,publishedNativeCandidates} from '../server/native-recovery-batch.mjs';
 import {atomicJson} from '../server/sync.mjs';
 const tracked=new Set(execFileSync('git',['ls-files','web/images'],{encoding:'utf8',maxBuffer:33554432}).trim().split('\n')),read=p=>fs.readFile('web/'+p,'utf8').then(JSON.parse),products=[],byKey=new Map();
+if(await savedNativeArchivePending(await read('collection-ledger.json'),{token:process.env.GITHUB_TOKEN})){if(process.env.GITHUB_OUTPUT)await fs.appendFile(process.env.GITHUB_OUTPUT,'native_deferred=true\n');console.log(JSON.stringify({phase:'Reuse durable native archive before any new capture',deferred:true,archiveRun:44707707847,sourceRequests:0,firecrawlCredits:0}));process.exit(0);}
 const range=await rebuildStoredRangeViews({persist:false,includeProducts:true,verifyImageFiles:false});if(!range.rebuilt)throw Error('Canonical Range source required');
 const rangeBulkSources=rangeNativeTargets(range.products);
 for(const name of ['range-native-index.json','new-original-recovery.json'])applyRangeNativeIndex(range.products,await read(name).catch(()=>({entries:{}})));products.push(...range.products.filter(p=>p.taxonomyAudit?.disposition==='include'));
