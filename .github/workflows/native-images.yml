@@ -69,6 +69,7 @@ jobs:
             web/collection-ledger.json
             web/paid-native-index.json
             web/native-original-recovery-status.json
+            web/native-verification-index.json
             web/range-native-gallery.json
             runtime/image-gallery-discovery-proof.json
             web/images/source/
