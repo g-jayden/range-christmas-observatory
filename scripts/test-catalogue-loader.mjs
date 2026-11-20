@@ -20,6 +20,7 @@ try{
  for(const key of storage.keys())storage.set(key,new Response('corrupt'));await make().load(id);assert.equal(directoryCalls,2,'A bad stored category is replaced by a digest-verified response');
  const changed={...a,products:[{...a.products[0],priceGBP:19.99}]},text=JSON.stringify(changed),hash=createHash('sha256').update(text).digest('hex'),entry={...m.scopes[id],url:'browse/'+id+'.'+hash.slice(0,20)+'.json',sha256:hash};await fs.writeFile(path.join(root,entry.url),text);manifest={...m,scopes:{...m.scopes,[id]:entry}};assert.deepEqual(await loader.check(),[id]);assert.equal((await loader.load(id)).products[0].priceGBP,19.99,'A source update cannot reuse the earlier price from RAM or disk');
  const absent=createCatalogueLoader({fetcher:async()=>new Response('',{status:404}),disk:null});assert.deepEqual(await absent.load('tree',async()=>({legacy:true})),{legacy:true});
+ for(const d of selected){const list=await loader.loadIndex(d.id);assert.equal(list.browseTransport,'lazy-exact-records-v1');assert.equal(list.products.length,1);const full=await loader.loadProduct(list.products[0]);assert.deepEqual(full,originals.get(d.id).products[0],'Every retailer restores the exact price, size, description and native gallery from a small hash-verified record chunk');}
  console.log('All 11 retailers: exact complete department views, unchanged originals/prices/sizes, no full-shop download, request coalescing, persistent cache, corrupt-cache recovery and source-revision invalidation passed.');
 }finally{await fs.rm(root,{recursive:true,force:true});}
 
