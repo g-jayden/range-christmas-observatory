@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
-import {createFreeFirstRangeSource} from '../server/range-free-source.mjs';
+import {createFreeFirstRangeSource,ProductDOMParser} from '../server/range-free-source.mjs';
 import {createFirecrawlBrowserReader,readFamilyBundle} from '../server/firecrawl-browser.mjs';
 import {parseDetails} from '../server/details.mjs';
 import {apiUrl} from '../server/sync.mjs';
@@ -9,6 +9,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import sharp from 'sharp';
 const url=apiUrl('test'),data={products:[{sku:'100',newIn:false,inStock:true,sponsored:false,price:1000}],totalResults:1};
+assert.equal(new ProductDOMParser().parseFromString('','text/html').body.textContent,'','An empty exact-variant description must not abort a saved native-image recovery');assert.equal(new ProductDOMParser().parseFromString('<p>Exact variant</p>','text/html').body.textContent,'Exact variant');
 for(const healthy of ['http','http2','browser',null]){
  const calls=[],reader=createFreeFirstRangeSource({fetcher:async u=>{calls.push('http');return healthy==='http'?Response.json(data):new Response('Denied',{status:403});},http2:async u=>{calls.push('http2');return{status:healthy==='http2'?200:403,url:u,text:JSON.stringify(data)};},browserRead:async u=>{calls.push('browser');return{status:healthy==='browser'?200:403,url:u,text:JSON.stringify(data)};}});
  const rows=await reader.catalogues([url]);assert.equal(rows.length,healthy?1:0);assert.deepEqual(calls,healthy==='http'?['http']:healthy==='http2'?['http','http2']:['http','http2','browser']);

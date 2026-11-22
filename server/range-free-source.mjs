@@ -2,7 +2,7 @@ import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {DOMParser} from 'linkedom';
 const exec=promisify(execFile),ORIGINS=new Set(['https://www.therange.co.uk','https://search-lon.therange.co.uk']);
-class ProductDOMParser extends DOMParser{parseFromString(text,type){return super.parseFromString(type==='text/html'&&!/<(?:html|body)\b/i.test(text)?'<html><body>'+text+'</body></html>':text,type);}}
+export class ProductDOMParser extends DOMParser{parseFromString(text,type){return super.parseFromString(type==='text/html'&&!/<(?:html|body)\b/i.test(text)?'<html><body>'+text+'</body></html>':text,type);}}
 const target=raw=>{const u=new URL(raw);if(!ORIGINS.has(u.origin)||u.username||u.password||u.port)throw Error('Unsupported free source origin');return u;};
 export async function ordinaryHttp2(url,{timeoutMs=12000}={}){
  target(url);try{const{stdout}=await exec('curl',['--disable','--http2','--location','--max-time',String(Math.ceil(timeoutMs/1000)),'--silent','--show-error','--write-out','\n%{http_code}\n%{url_effective}',url],{timeout:timeoutMs+1000,maxBuffer:25000000});const end=stdout.lastIndexOf('\n'),before=stdout.lastIndexOf('\n',end-1);return{status:Number(stdout.slice(before+1,end)),url:stdout.slice(end+1),text:stdout.slice(0,before)};}catch(e){return{status:0,error:String(e.message).slice(0,140)};}

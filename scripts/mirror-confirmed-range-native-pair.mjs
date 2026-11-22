@@ -1,12 +1,13 @@
 import fs from 'node:fs/promises';
-import {DOMParser} from 'linkedom';
+import {ProductDOMParser as DOMParser} from '../server/range-free-source.mjs';
 import {readFamilyBundle,createFirecrawlBrowserReader} from '../server/firecrawl-browser.mjs';
 import {parseDetails} from '../server/details.mjs';
 import {createFreeFirstRangeImages} from '../server/range-free-images.mjs';
 import {loadPolicy} from '../server/collection-policy.mjs';
-import {openCreditBudget} from '../server/credit-budget.mjs';
+import {openCreditBudget,readLedger} from '../server/credit-budget.mjs';
 import {atomicJson} from '../server/sync.mjs';
 const reportFile='web/range-native-resolution-inspection.json',report=JSON.parse(await fs.readFile(reportFile,'utf8')),record=report.results.find(r=>r.sku==='4338038');
+const ledger=await readLedger();for(const period of Object.values(ledger.periods)){const key='45065012462-1';if(period.reservations?.[key]){delete period.reservations[key];period.runs||=[];period.runs.push({key,credits:0,completedAt:new Date().toISOString(),receipt:{sourceRequests:0,sourceCollectionStarted:false,reason:'Saved job log proves local empty-fragment parser failed before opening a provider reader; release only the unused reservation.'}});await atomicJson('web/collection-ledger.json',ledger);}}
 if(!record||record.jsonStatus!==200||record.htmlStatus!==200||record.json.variant_arr.length!==1||String(record.json.variant_arr[0].sku)!=='4338038')throw Error('The saved exact single-SKU source is required');
 const familyUrl=record.sourceUrl.split('#')[0].replace(/\/$/,''),parse=new Function('DOMParser','payload','return ('+readFamilyBundle.toString()+')(payload)'),bundle=await parse(DOMParser,{url:familyUrl,jsonUrl:familyUrl+'?json',initial:record.json,providedHtml:record.sourceHtml,anchors:[{sku:'4338038',variantId:String(record.json.variant_arr[0].id)}]});bundle.evidence.observedAt=record.observedAt;
 const data={success:true,data:{metadata:{statusCode:200},sourceVariant:bundle.variants[0],familyEvidence:bundle.evidence}},details=parseDetails(data,'4338038',record.sourceUrl),images=details.originalImages;
