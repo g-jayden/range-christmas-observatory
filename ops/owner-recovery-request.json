@@ -1,8 +1,11 @@
 {
-  "requestId": "owner-recovery-20261123-range-new-current",
+  "requestId": "owner-recovery-20261123-bm-fresh-connection",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-22T16:23:46Z",
+  "requestedAt": "2026-11-22T16:35:48Z",
   "targets": [
-    "range-new-current"
+    "bm-current"
+  ],
+  "supersedeBmBeforeCollection": [
+    44972969097
   ]
 }
