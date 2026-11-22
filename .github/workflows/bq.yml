@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     concurrency:
-      group: range-source-and-pages-production
+      group: range-bq-source-and-photos
       cancel-in-progress: false
       queue: max
     env:
