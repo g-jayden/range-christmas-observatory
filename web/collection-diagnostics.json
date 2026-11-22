@@ -640,6 +640,30 @@
       "sourceUrl": "https://www.argos.co.uk/product/yaafhe7r",
       "sourceStatus": 200,
       "observedAt": "2026-11-22T16:01:05Z"
+    },
+    {
+      "id": "mcp-01a20456-f804-7601-abff-2a44100fd278",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-unlimited-ordinary-source-20261122",
+      "retailerId": "the-range",
+      "purpose": "Exact current SKU 1493532 alternate public path diagnosis after the free path returned 403; source returned 404, no product facts promoted.",
+      "sourceUrl": "https://www.therange.co.uk/p/product/m1493532/?json",
+      "sourceStatus": 404,
+      "observedAt": "2026-11-22T17:40:18.391Z"
+    },
+    {
+      "id": "mcp-01a20457-22bf-7353-bcb9-003f7f65306a",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-unlimited-ordinary-source-20261122",
+      "retailerId": "the-range",
+      "purpose": "Exact current SKU 1493532 alternate public path diagnosis after the free path returned 403; source returned 404, no product facts promoted.",
+      "sourceUrl": "https://www.therange.co.uk/p/white-berry-and-pine-cone-decorative-wreath-%C2%BF-35cm/m1493532/?json",
+      "sourceStatus": 404,
+      "observedAt": "2026-11-22T17:40:18.391Z"
     }
   ],
   "unreceipted": [
@@ -706,3 +730,4 @@
     }
   ]
 }
+
