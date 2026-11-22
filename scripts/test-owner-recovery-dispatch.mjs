@@ -7,3 +7,5 @@ const precollect=[];await dispatchOwnerRecovery({...request,supersedeBmBeforeCol
 await dispatchOwnerRecovery({...request,targets:['bm-publish-current']},{env,fetcher,now});assert.deepEqual(calls.at(-1).body,{ref:'main',inputs:{mode:'activate'}});assert(calls.at(-1).url.endsWith('/bm.yml/dispatches'));
 
 await dispatchOwnerRecovery({...request,targets:['nx-review-current','mt-review-current']},{env,fetcher,now});assert.deepEqual(calls.at(-2).body.inputs,{force:false,rebuildOnly:true});assert.deepEqual(calls.at(-1).body.inputs,{rebuildOnly:true});
+
+await dispatchOwnerRecovery({...request,targets:['range-publish-current']},{env,fetcher,now});assert.equal(calls.at(-1).body.inputs.mode,'publish');assert.equal(calls.at(-1).body.inputs.refresh,false);assert.equal(calls.at(-1).body.inputs.checkNew,false);

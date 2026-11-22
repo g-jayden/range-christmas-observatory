@@ -28,7 +28,7 @@ export async function maintainDailyCatalogue({previous,gathered,decorations,ligh
  snapshot.products=notificationSnapshot(gathered.snapshot,decorations,lights,themes).products;
  await selectGalleryImages(snapshot.products);
  const candidateIds=new Set(candidates.map(p=>p.sku)),deltaIds=new Set(deltaProducts.map(p=>p.sku));
- const changedImages=snapshot.products.filter(p=>!candidateIds.has(p.sku)&&p.variantImageUrl&&(!p.cachedImageUrl||deltaIds.has(p.sku)));
+ const changedImages=snapshot.products.filter(p=>!candidateIds.has(p.sku)&&p.variantImageUrl&&(!p.cachedImageUrl||!p.imageCacheEvidence?.sha256||p.imageCacheEvidence.sourceUrl!==p.variantImageUrl||deltaIds.has(p.sku)));
  const changedImageAudit=changedImages.length?await reader.auditImages(changedImages,{entries:{...previous.browserImageAudit?.entries,...previousDecorations.browserImageAudit?.entries,...previousLights.browserImageAudit?.entries}}):null;
  await optimiseChangedProductPreviews(snapshot.products,reader);
  const changedIds=new Set([...deltaProducts.map(p=>p.sku),...(deltaDetails?.issues||[]).map(p=>p.sku),...changedImages.map(p=>p.sku)]);
