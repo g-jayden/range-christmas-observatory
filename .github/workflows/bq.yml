@@ -1,5 +1,7 @@
 name: B&Q free exact SKU collection and native photos
 on:
+  push:
+    paths: [web/bq/free-variant-recovery-request.json]
   schedule:
     - cron: '0 23 * * *'
   workflow_dispatch:
@@ -98,9 +100,9 @@ jobs:
       - name: Read exact official directories free first with bounded paid fallback
         if: inputs.notificationsOnly != true
         env:
-          FIRECRAWL_API_KEY: ${{ inputs.rebuildOnly != true && inputs.notificationsOnly != true && secrets.FIRECRAWL_API_KEY || '' }}
+          FIRECRAWL_API_KEY: ${{ github.event_name != 'push' && inputs.rebuildOnly != true && inputs.notificationsOnly != true && secrets.FIRECRAWL_API_KEY || '' }}
           COLLECTION_CHECKPOINTS: '1'
-          BQ_REBUILD_ONLY: ${{ inputs.rebuildOnly == true && 'true' || 'false' }}
+          BQ_REBUILD_ONLY: ${{ (github.event_name == 'push' || inputs.rebuildOnly == true) && 'true' || 'false' }}
         run: node scripts/update-bq.mjs
       - name: Save the closed source before image processing
         if: inputs.notificationsOnly != true
