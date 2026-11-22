@@ -42,6 +42,8 @@ jobs:
           path: |
             web/range-residual-diagnostic-20261123.json
             web/collection-ledger.json
+            web/range-residual-reviewed-evidence.json
+            web/images/source
           retention-days: 7
       - name: Save source evidence and actual receipt without changing catalogue facts
         if: always()
