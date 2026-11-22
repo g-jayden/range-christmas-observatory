@@ -32,8 +32,8 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - name: Verify account balance and retain existing reserve
         run: node scripts/reserve-credits.mjs
-      - name: Capture exact source records and native gallery bytes for review
-        run: node scripts/inspect-range-native-resolution.mjs
+      - name: Mirror only the two already observed exact-SKU full originals
+        run: node scripts/mirror-confirmed-range-native-pair.mjs
       - name: Preserve source evidence independently of Git publication
         if: always()
         uses: actions/upload-artifact@v7.0.2
@@ -48,6 +48,7 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add --sparse -- web/range-native-resolution-inspection.json web/collection-ledger.json
+          git add --sparse -- web/range-native-resolution-inspection.json web/collection-ledger.json web/range-residual-reviewed-evidence.json
+          if test -d web/images/source; then git add --sparse -- web/images/source; fi
           git diff --cached --quiet || git commit -m "Save exact four low-resolution product source documents for review [skip ci]"
           node scripts/push-evidence.mjs

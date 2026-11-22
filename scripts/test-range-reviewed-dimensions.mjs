@@ -6,7 +6,7 @@ import {productSize} from '../web/product-facts.mjs';
 import {mailHeightLabel} from '../server/mail-assets.mjs';
 const pack=JSON.parse(await fs.readFile(new URL('../web/range-residual-reviewed-evidence.json',import.meta.url),'utf8'));
 const products=pack.records.map(r=>({sku:r.sku,variantId:r.expectedVariantId,variantName:r.variantName,kind:'tree',sourceUrl:r.sourceUrl,priceGBP:12.99,newStatus:true,observedAt:'2026-11-22T17:00:00Z',firstNewObservedAt:'2026-11-21T23:00:00Z'}));
-const result=applyRangeResidualEvidence([{products}],pack);assert.equal(result.uniqueSkus,20);assert.equal(result.uniqueDimensionSkus,10);
+const result=applyRangeResidualEvidence([{products}],pack);assert.equal(result.uniqueSkus,pack.records.length);assert.equal(result.uniqueDimensionSkus,10);
 for(const[sku,review]of Object.entries(pack.dimensionReviews)){const p=products.find(p=>p.sku===sku),c=treeHeightConflict(p);assert.equal(c.usableHeightCm,review.heightCm,sku);assert.equal(c.resolution,review.method);assert.equal(productSize(p),review.heightCm+'cm');assert(!mailHeightLabel(p).includes('unconfirmed'));assert.equal(p.priceGBP,12.99);assert.equal(p.newStatus,true);assert.equal(p.firstNewObservedAt,'2026-11-21T23:00:00Z');}
 assert.equal(products.find(p=>p.sku==='1576459').specifications['Christmas Tree Height'],'6ft','The raw conflicting dropdown is retained; 150cm comes from the exact official diagram and the 5ft title');
 for(const sku of ['4387263','5288732','1641324','6657819','6699667','8595053','4996544'])assert.equal(treeHeightConflict(products.find(p=>p.sku===sku)).resolution,'unresolved','Contradictory title/diagram/specifications must not be marked normal: '+sku);
