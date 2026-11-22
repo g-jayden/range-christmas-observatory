@@ -1,1 +1,1 @@
-{"state":"error","error":"B&M collector connection failed (UND_ERR_SOCKET)","checkedAt":"2026-11-22T16:21:58.144Z","firecrawlCredits":0,"billingVerified":false,"transportCode":"UND_ERR_SOCKET","requestMayHaveBeenSent":true}
+{"state":"collected","observedAt":"2026-11-22T16:37:01.976Z","sourceCounts":{"trees":35,"baubles":165,"lights":48,"wreaths-garlands":44,"outdoor":16},"products":297,"uniqueSourceSkus":297,"uniqueParentCodes":273,"details":297,"firecrawlCredits":1}
