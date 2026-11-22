@@ -104,6 +104,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  policy=normalizeCollectionLimits(policy);
  const freeSource=unrestrictedCollection(policy)&&(fetcher===fetch||freeFetcher)?createFreeFirstRangeSource({fetcher:freeFetcher||fetch,http2:freeHttp2,browserRead:freeBrowserRead}):null;
  const freeImages=unrestrictedCollection(policy)&&(fetcher===fetch||freeFetcher)?createFreeFirstRangeImages({fetcher:freeFetcher||fetch,http2:freeImageHttp2,browserRead:freeImageBrowserRead}):null;
+ const currentNativeImages=new Map();
  const key=process.env.FIRECRAWL_API_KEY;if(!key)throw new SourceError('Firecrawl服务器密钥尚未配置',401);
  let session,browser,context,starting,closed=false,created=0,deadline=0,allocatedPages=0,browserReceipt,sessionClosed=false,browserEndedAt=0;const runDeadline=now()+(policy.maxRunSeconds||1800)*1000;
  const pages=[],waiting=[],families=new Map(),familyFailures=new Map(),partialFamilies=new Map(),active=new Map(),verifiedCaptures=new Map(),priorityRepairs=new Map(),nativeTransportFailures=new Set();
@@ -291,7 +292,18 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   const script='(async()=>{const sku='+JSON.stringify(String(p.sku))+';let variants=typeof g_variantArr!=="undefined"?g_variantArr:[];const selected=variants.find(v=>String(v.sku)===sku);if(selected&&typeof selectAttrFilterByVariant==="function")selectAttrFilterByVariant(selected);const end=Date.now()+7000;while(Date.now()<end&&(document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"").replace(/^0+(?=\\d)/,"")!==sku)await new Promise(r=>setTimeout(r,200));const visible=(document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"").replace(/^0+(?=\\d)/,"");if(visible!==sku)throw Error("Rendered page selected another SKU");const text=selector=>Array.from(document.querySelectorAll(selector)).map(e=>e.textContent.trim().replace(/\\s+/g," "));const features=text("#product-dyn-features-ul li"),specs=text("#product-dyn-specification-ul li");if(!features.length&&!specs.length)throw Error("Rendered product has no source specification section");const markdown="## Features\\n"+features.map(x=>"- "+x).join("\\n")+"\\n## Information\\n"+(document.querySelector("#product-description")?.textContent||"")+"\\n## Specification\\n"+specs.map(x=>"- "+x).join("\\n")+"\\nAdditional Information";return [{success:true,data:{rawHtml:document.documentElement.outerHTML,markdown,metadata:{statusCode:200,renderedProductSection:true,sourceURL:location.href}}}]})()';
   const rows=await scriptAction(script,{entryUrl:sourceUrl(p.sourceUrl)});if(rows.length!==1||!rows[0].data?.rawHtml)throw Error('Rendered exact-SKU details were unavailable');return rows[0];
  };
- reader.previewAssets=async(urls,options={})=>scriptAction('('+readPreviewAssets.toString()+')('+JSON.stringify({urls,maxSide:options.maxSide||320})+')',{needsImages:true});
+ reader.previewAssets=async(urls,options={})=>{
+  const maxSide=options.maxSide||320;if(!freeImages)return scriptAction('('+readPreviewAssets.toString()+')('+JSON.stringify({urls,maxSide})+')',{needsImages:true});
+  const rows=new Map(),pending=[],sharp=(await import('sharp')).default;
+  for(const url of new Set(urls)){
+   let e=currentNativeImages.get(url),bytes;if(e)try{bytes=await fs.readFile('web/'+e.cachedImageUrl);if(createHash('sha256').update(bytes).digest('hex')!==e.hash)bytes=null;}catch{}
+   if(!bytes){e=await freeImages.read(url);if(e.ok){bytes=await fs.readFile('web/'+e.cachedImageUrl);currentNativeImages.set(url,e);}else if(e.sourceMissing){rows.set(url,{url,ok:false,status:404,error:'Official image missing through all ordinary free methods'});continue;}else{pending.push(url);continue;}}
+   const {data,info}=await sharp(bytes).rotate().resize({width:maxSide,height:maxSide,fit:'inside',withoutEnlargement:true}).webp({quality:86}).toBuffer({resolveWithObject:true});rows.set(url,{url,ok:true,sourceWidth:e.width,sourceHeight:e.height,width:info.width,height:info.height,sourceHash:e.hash,dataBase64:data.toString('base64')});metrics.localNativePreviewRenders=(metrics.localNativePreviewRenders||0)+1;
+  }
+  metrics.freeImageAttempts=freeImages.attempts.slice(-100);
+  if(pending.length){const paid=await scriptAction('('+readPreviewAssets.toString()+')('+JSON.stringify({urls:pending,maxSide})+')',{needsImages:true});if(paid.length!==pending.length||new Set(paid.map(r=>r.url)).size!==pending.length||paid.some(r=>!pending.includes(r.url)))throw Error('Preview fallback did not reconcile exact unresolved image URLs');for(const r of paid)rows.set(r.url,r);}
+  return urls.map(url=>rows.get(url));
+ };
  reader.prepareNativeCapture=async()=>{if(policy.nativeCaptureEnabled!==false&&!sessionClosed)await start();};
  reader.captureVerified=(url,options={})=>{const id=JSON.stringify([sourceUrl(url),options.preferredThumbnail||null]);if(!verifiedCaptures.has(id))verifiedCaptures.set(id,(async()=>{if(session&&!sessionClosed)try{const u=new URL(sourceUrl(url));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');const family=await families.get(u.href);return await capture(url,family,options);}catch(e){metrics.nativeCaptureFailures=(metrics.nativeCaptureFailures||0)+1;console.error(JSON.stringify({phase:'native-NEW-capture-fallback',sku:new URL(url).hash.slice(1),status:e.status||0,error:String(e.message).slice(0,160)}));
    if(/net::ERR_QUIC_PROTOCOL_ERROR/.test(String(e.message))){nativeTransportFailures.add(sourceUrl(url));if(nativeTransportFailures.size>=2){metrics.nativeCaptureDisabled='repeated-QUIC-transport-failure';await reader.closeBrowser();console.log(JSON.stringify({phase:'native-NEW-session-stopped',reason:metrics.nativeCaptureDisabled,failedPages:nativeTransportFailures.size}));}}
@@ -361,7 +373,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    console.log(JSON.stringify({phase:'image-verification',checked:results.length,total:allUrls.length,changed}));
   }
   const byUrl=new Map(results.map(r=>[r.url,r]));for(const p of products){const r=byUrl.get(p.variantImageUrl||p.imageUrl);if(r?.ok){p.cachedImageUrl=r.cachedImageUrl;p.imageCacheEvidence={sourceUrl:r.url,sha256:r.hash,observedAt:r.observedAt};}}
-  metrics.sourceImageChecks+=rechecked;const loaded=results.filter(r=>r.ok).length;
+  metrics.sourceImageChecks+=rechecked;for(const r of results)if(r.ok)currentNativeImages.set(r.url,r);const loaded=results.filter(r=>r.ok).length;
   return {mode:'live-enhanced-batches-and-original-image-cache',checked:results.length,rechecked,retained:results.filter(r=>r.ok&&r.retained).length,changed,loaded,failed:results.length-loaded,failures:results.filter(r=>!r.ok),entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString(),perImageScrapeRequests:0,batchScrapeRequests:metrics.imageBatchRequests||0};
  };
  // Only failed NEW photos reach this path. Load their own product page in a

@@ -9,6 +9,8 @@ const SELECTION_VERSION='complete-border-selection-20261104-v3';
 // is eligible only while the current verified SKU gallery still contains it.
 import{REVIEWED_WHOLE_SOURCES}from'../web/source-photo-selection.mjs';
 import{exactNativeGalleryMember}from'./native-gallery-identity.mjs';
+import{loadPolicy}from'./collection-policy.mjs';
+import{unrestrictedCollection}from'./collection-limits.mjs';
 const digest=v=>createHash('sha256').update(JSON.stringify(v)).digest('hex');
 const readGzip=async(file,fallback)=>{try{return JSON.parse(gunzipSync(await fs.readFile(file)));}catch(e){if(e.code!=='ENOENT')throw e;return fallback;}};
 const writeGzip=async(file,value)=>{await fs.writeFile(file+'.tmp',gzipSync(JSON.stringify(value)));await fs.rename(file+'.tmp',file);};
@@ -47,7 +49,7 @@ export async function readPreviewAssets({urls,maxSide=600}){
   result.push({url,ok:true,sourceWidth,sourceHeight,width:canvas.width,height:canvas.height,sourceHash,dataBase64:btoa(binary)});
  }catch(e){result.push({url,ok:false,error:String(e.message).slice(0,160)});}}}));while(cursor<urls.length)result.push({url:urls[cursor++],ok:false,deferred:true});return result;
 }
-export async function optimiseProductPreviews(products,{reader=null,maxBatches=30,maxCandidates=5,batchSize=320,prioritySkus=[]}={}){
+export async function optimiseProductPreviews(products,{reader=null,maxBatches=Infinity,maxCandidates=5,batchSize=320,prioritySkus=[]}={}){
  const {cache:quality}=await analysePreviewFiles(products.flatMap(p=>{const hash=p.displayImage?.sha256||p.imageCacheEvidence?.sha256,file=p.displayImage?.cachePath||p.cachedImageUrl;return hash&&file?[{hash,file:'web/'+file}]:[]}));
  const registry=await readGzip(REGISTRY,{version:PREVIEW_QUALITY_VERSION,products:{}}),index=await readGzip(SOURCE_INDEX,{version:1,entries:{}}),work=[];
  for(const p of products){if(p.taxonomyAudit&&p.taxonomyAudit.disposition!=='include')continue;const prior=registry.products[p.sku],inputFingerprint=previewInput(p),unchangedSafe=prior?.status==='kept'&&!prior.compared&&previewProblems(quality.entries[p.displayImage?.sha256||p.imageCacheEvidence?.sha256]||{}).length===0;if(prior?.version===PREVIEW_QUALITY_VERSION&&prior.inputFingerprint===inputFingerprint&&!['pending','pending-asset'].includes(prior.status)&&(prior.selectionVersion===SELECTION_VERSION||unchangedSafe||prior.status==='unavailable'))continue;
@@ -84,7 +86,8 @@ export async function optimiseProductPreviews(products,{reader=null,maxBatches=3
 }
 
 // Normal updates reuse every unchanged proof. Only new/changed SKU galleries
-// share the already-authorised collection reader, with at most two batches;
+// share the already-authorised collection reader. An unrestricted owner grant
+// removes the legacy two-batch ceiling while retaining the outage circuit;
 // this helper never opens a separate paid session or retries a whole catalogue.
 export async function optimiseChangedProductPreviews(products,reader){
  if(!reader?.previewAssets)return {changed:0,sourceRequestsMade:false};
@@ -92,6 +95,7 @@ export async function optimiseChangedProductPreviews(products,reader){
  const unique=[...new Map(products.map(p=>[p.sku,p])).values()],changed=unique.filter(p=>p.imageCacheEvidence?.sha256&&(!registry.products[p.sku]||registry.products[p.sku].inputFingerprint!==previewInput(p)));
  if(!changed.length)return {changed:0,sourceRequestsMade:false};
  const previous=await fs.readFile('web/preview-status.json','utf8').then(JSON.parse).catch(()=>({}));
- try{const result=await optimiseProductPreviews(changed,{reader,maxBatches:2,batchSize:160,maxCandidates:3});await fs.writeFile('web/preview-status.json',JSON.stringify({...previous,revision:result.revision,registered:result.registered,lastIncremental:result}));return result;}
- catch(error){const result={changed:changed.length,error:String(error.message).slice(0,200),checkedAt:new Date().toISOString(),boundedBatches:2};await fs.writeFile('web/preview-status.json',JSON.stringify({...previous,lastIncremental:result}));console.error(JSON.stringify({phase:'incremental-preview-bounded-stop',...result}));return result;}
+ const maxBatches=unrestrictedCollection(await loadPolicy())?Infinity:2;
+ try{const result=await optimiseProductPreviews(changed,{reader,maxBatches,batchSize:160,maxCandidates:3});await fs.writeFile('web/preview-status.json',JSON.stringify({...previous,revision:result.revision,registered:result.registered,lastIncremental:result}));return result;}
+ catch(error){const result={changed:changed.length,error:String(error.message).slice(0,200),checkedAt:new Date().toISOString(),boundedBatches:Number.isFinite(maxBatches)?maxBatches:null};await fs.writeFile('web/preview-status.json',JSON.stringify({...previous,lastIncremental:result}));console.error(JSON.stringify({phase:'incremental-preview-bounded-stop',...result}));return result;}
 }

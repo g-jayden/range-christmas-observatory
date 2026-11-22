@@ -9,6 +9,7 @@ import {optimiseProductPreviews} from '../server/product-previews.mjs';
 import {createFirecrawlBrowserReader} from '../server/firecrawl-browser.mjs';
 import {openCreditBudget} from '../server/credit-budget.mjs';
 import {loadPolicy} from '../server/collection-policy.mjs';
+import {unrestrictedCollection} from '../server/collection-limits.mjs';
 import {atomicJson} from '../server/sync.mjs';
 const d=JSON.parse(await fs.readFile('web/catalogue.json','utf8')),c=await readDecorations(),l=await readLights(),t=await readThemes();
 await loadDecorationDetails(c.products);await loadLightingDetails(l.products);await loadThemeDetails(t.products);
@@ -24,7 +25,7 @@ try{
   for(const [key,bucket]of buckets)await atomicJson('web/original-image-map/'+key+'.json',bucket);
   console.log(JSON.stringify({phase:'preview-exact-SKU-gallery-repair',families:Math.min(offset+240,urls.length),total:urls.length,restored,sourceBatches}));
  }
- report=await optimiseProductPreviews(products,{reader,maxBatches:Math.min(45,Math.max(0,policy.maxFallbackScrapesPerRun-sourceBatches-1)),batchSize:320,maxCandidates:5,prioritySkus:['1492333','1459857','474493','3414647']});success=report.pending===0;
+ report=await optimiseProductPreviews(products,{reader,maxBatches:unrestrictedCollection(policy)?Infinity:Math.min(45,Math.max(0,policy.maxFallbackScrapesPerRun-sourceBatches-1)),batchSize:320,maxCandidates:5,prioritySkus:['1492333','1459857','474493','3414647']});success=report.pending===0;
 }finally{
  await reader.close();const native=reader.metrics();await budget.settle({credits:native.firecrawlCredits,receipt:native.receipt,report:{mode:'whole-product-previews',success,at:new Date().toISOString(),...report,native}});await fs.mkdir('runtime',{recursive:true});await atomicJson('runtime/preview-collection-proof.json',{success,...report,native});console.log(JSON.stringify({phase:'preview-billing',success,...native}));
 }
