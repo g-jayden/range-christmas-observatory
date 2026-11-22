@@ -12,7 +12,7 @@ import fs from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {createFirecrawlBrowserReader} from './firecrawl-browser.mjs';
 import {openCreditBudget,budgetError} from './credit-budget.mjs';
-import {loadPolicy,digest,imageMapFingerprint,productKey,unchangedDetailInput} from './collection-policy.mjs';
+import {loadPolicy,collectionRunPolicy,digest,imageMapFingerprint,productKey,unchangedDetailInput} from './collection-policy.mjs';
 import {catalogueSnapshot,readState,refreshDetails,preserveImages,saveState,cacheProduct,restoreProducts} from './incremental.mjs';
 import {checkNew,finishNewEvents,captureNewScreenshots,retainVerifiedNewImages} from './new-events.mjs';
 import {restoreVerifiedRegistry,reconcileVerifiedEvidence} from './verified-evidence.mjs';
@@ -29,6 +29,7 @@ export async function runUpdate({readerFactory=createFirecrawlBrowserReader,budg
  const previousStatus=await fs.readFile('web/status.json','utf8').then(JSON.parse).catch(()=>({}));
  const engine='firecrawl-browser';
  let tick;try{tick=JSON.parse(await fs.readFile('runtime/tick.json','utf8'))}catch{tick={full:true,monitor:false,lease:null}}
+ Object.assign(policy,collectionRunPolicy(policy,tick));
  if(tick.full===false||['monitor-probe','mail-recovery'].includes(process.env.COLLECTION_MODE))return runMonitorDaily({previous,policy,readerFactory,budgetFactory,now,tick,recoveryOnly:process.env.COLLECTION_MODE==='mail-recovery'||tick.evidenceRecovery===true});
  let config;try{config=JSON.parse(await fs.readFile('web/settings.json','utf8'))}catch{config={intervalDays:7,time:'00:00'}}
  if(tick.config)config=tick.config;

@@ -2,6 +2,11 @@ import {createHash} from 'node:crypto';
 import fs from 'node:fs/promises';
 export const defaults={version:1,retailerId:'the-range-gb',catalogueId:'christmas-trees-skirts',provider:'firecrawl-browser',firecrawlEnabled:true,detailMaxAgeDays:0,maxDetailPagesPerRun:10000,maxScreenshotPagesPerRun:1000,maxCreditsPerRun:60,maxCreditsPerCalendarMonth:1000,accountReserveCredits:5000,maxSessionSeconds:1800,browserCreditsPerRun:20,maxFallbackScrapesPerRun:40,maxNativePagesPerRun:20000,browserConcurrency:4,catalogueReuseHours:0,failureRetryDays:[1,3,7,30],permanentFailureRetryDays:0};
 export function monthlyCreditLimit(policy){const value=policy.maxCreditsPerCalendarMonth;if(value===null){const a=policy.monthlyLimitAuthorization;if(a?.unlimited!==true||a.scope!=='ordinary project collection'||a.newLimit!==null||a.freeFirst!==true||!Number.isFinite(Date.parse(a.approvedAt))||policy.accountReserveCredits<5000)throw Error('Unlimited collection requires explicit owner authorisation and account reserve');return Infinity;}if(!Number.isFinite(value)||value<0)throw Error('Invalid collection policy: maxCreditsPerCalendarMonth');return value;}
+export function collectionRunPolicy(policy,tick={}){
+ if(tick.full!==true||!Number.isFinite(policy.fullRefreshMaxCreditsPerRun)||policy.fullRefreshMaxCreditsPerRun<=policy.maxCreditsPerRun||monthlyCreditLimit(policy)!==Infinity)return policy;
+ const limit=policy.fullRefreshMaxCreditsPerRun;
+ return {...policy,maxCreditsPerRun:limit,maxFallbackScrapesPerRun:Math.max(policy.maxFallbackScrapesPerRun,limit-policy.browserCreditsPerRun),runBudgetScope:'authorised-full-refresh-operational-envelope'};
+}
 export async function loadPolicy(file='web/collection-policy.json'){
  let supplied={};try{supplied=JSON.parse(await fs.readFile(file,'utf8'))}catch(e){if(e.code!=='ENOENT')throw e}
  const p={...defaults,...supplied};
