@@ -81,7 +81,15 @@ export async function collectPartitionedCategory(id,reader){
  async function checkedGroup(index){const values=groups[index];let failure;for(let attempt=0;attempt<3;attempt++)try{if(attempt){fetched.clear();if(reader.fresh){const u=urlFor(0,{in_stock_f:['true'],brand_f:values});fetched.set(u,await reader.fresh(u));}}const part=await collect({in_stock_f:['true'],brand_f:values});results.set(index,part);return;}catch(e){failure=e;if(e.status||!/Partition count changed|SKU changed|partition.*reconcile|coverage mismatch/i.test(e.message))throw e;reconciliations.push({brands:values,attempt:attempt+1,reason:e.message});}throw failure;}
  async function runGroups(indices){let cursor=0;const workers=await Promise.allSettled(Array.from({length:Math.min(4,indices.length)},async()=>{while(cursor<indices.length)await checkedGroup(indices[cursor++]);}));const failed=workers.find(r=>r.status==='rejected');if(failed)throw failed.reason;}
  await prime(groups.map(values=>urlFor(0,{in_stock_f:['true'],brand_f:values})));
- await runGroups(groups.map((_,i)=>i));
+ try{await runGroups(groups.map((_,i)=>i));}catch(error){
+  if(!reader.many||error.status||!/partition|SKU changed/i.test(error.message))throw error;
+  // A corrupt facet index must not prevent a separately complete official
+  // root observation from proving every SKU. Never union its stale members.
+  const freshRoot=await(reader.fresh||reader)(apiUrl(id,0,{in_stock_f:['true']},true)),independent=await collectRootFirst(id,reader,freshRoot);
+  console.log(JSON.stringify({phase:'independent-root-after-inconsistent-facet',category:id,complete:!independent.failure,reason:error.message,expected:independent.audit?.expected??independent.expected,observed:independent.audit?.observed??independent.observed,failure:independent.failure}));
+  if(independent.failure)throw new SourceError(error.message+'; independent root remains incomplete: '+independent.failure);
+  independent.audit.reconciliations.unshift({method:'inconsistent-facet-index-isolated',reason:error.message,complete:false});return independent;
+ }
  // Only changed brand groups are re-read. A fresh official facet response is
  // the final denominator; a moving initial count is never silently reused.
  for(let round=0;round<3;round++){
