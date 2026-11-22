@@ -1,1 +1,1 @@
-{"state":"error","error":"fetch failed","checkedAt":"2026-11-22T15:37:03.707Z","firecrawlCredits":1}
+{"state":"error","error":"B&M collector connection failed (UND_ERR_SOCKET)","checkedAt":"2026-11-22T16:21:58.144Z","firecrawlCredits":0,"billingVerified":false,"transportCode":"UND_ERR_SOCKET","requestMayHaveBeenSent":true}
