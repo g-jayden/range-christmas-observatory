@@ -664,6 +664,30 @@
       "sourceUrl": "https://www.therange.co.uk/p/white-berry-and-pine-cone-decorative-wreath-%C2%BF-35cm/m1493532/?json",
       "sourceStatus": 404,
       "observedAt": "2026-11-22T17:40:18.391Z"
+    },
+    {
+      "id": "mcp-01a2045b-2825-75e9-962c-b6fab2051bd1",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-unlimited-ordinary-source-20261122",
+      "retailerId": "the-range",
+      "purpose": "Inspect the official public product page/script after free access failed, to verify whether broken exact-SKU paths have a separate public details API; source product script uses relative ?json and stock-only variantdetails. No catalogue or product facts changed.",
+      "sourceUrl": "https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/",
+      "sourceStatus": 200,
+      "observedAt": "2026-11-22T17:44:32.188Z"
+    },
+    {
+      "id": "mcp-01a2045b-86a0-72be-9072-df4438fcd4bf",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-unlimited-ordinary-source-20261122",
+      "retailerId": "the-range",
+      "purpose": "Inspect the official public product page/script after free access failed, to verify whether broken exact-SKU paths have a separate public details API; source product script uses relative ?json and stock-only variantdetails. No catalogue or product facts changed.",
+      "sourceUrl": "https://www.therange.co.uk/js/product.js",
+      "sourceStatus": 200,
+      "observedAt": "2026-11-22T17:44:32.189Z"
     }
   ],
   "unreceipted": [
