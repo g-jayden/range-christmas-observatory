@@ -17,3 +17,8 @@ for(const [product,hash]of [[{...conflicted,bqSource:{rawFingerprint:'new-source
 console.log('PASS: exact-photo source conflicts cannot become labelled images or PDF photos; changed source facts or photo bytes expire the conflict.');
 
 assert.doesNotThrow(()=>applyBqReviewedAmendments([{sku:'no-saved-source'}],{index:{},visual:{},reviews:{},selections:{}},{}),'A product with neither a saved amendment nor review must remain unchanged');
+
+const ref={...a,referenceCurrentEvidence:true},live={index:{[bqImageKey(asset)]:{...a.index,sourceVersion:'current-version',checkedAt:'2026-11-22T00:00:00Z'}},visual:{[bqImageKey(asset)]:{imageHash:sha,quality:{scores:{whole:.9}}}},reviews:{},selections:{}};
+assert.equal(applyBqReviewedAmendments([p],live,{123:ref}),1);assert.equal(live.index[bqImageKey(asset)].sourceVersion,'current-version');assert.equal(live.visual[bqImageKey(asset)].quality.scores.whole,.9);
+for(const altered of [{index:{...live.index,[bqImageKey(asset)]:{...a.index,sha256:'b'.repeat(64)}},visual:live.visual},{index:live.index,visual:{}},{index:{},visual:live.visual}])assert.equal(applyBqReviewedAmendments([p],{...altered,reviews:{},selections:{}},{123:ref}),0);
+console.log('PASS: compact photo reviews require matching current source pixels and native dimensions, preserve concurrent source metadata, and cannot manufacture missing image evidence.');

@@ -13,9 +13,10 @@ export function applyBqReviewedAmendments(products,{index,visual,reviews,selecti
     const gallery=[...new Set(p.originalImages.map(g=>bqAsset(g.url)))];
     if(!gallery.includes(a.asset)||a.galleryFingerprint!==createHash('sha256').update(JSON.stringify(gallery)).digest('hex'))continue;
     const key=bqImageKey(a.asset),current=index[key];
+    if(a.referenceCurrentEvidence===true&&(!current||current.error||current.sha256!==a.index.sha256||visual[key]?.imageHash!==a.index.sha256||current.width!==a.index.width||current.height!==a.index.height))continue;
     if(current?.sha256!==a.index.sha256&&Date.parse(current?.checkedAt)>Date.parse(a.index.checkedAt))continue;
     if(a.visual.imageHash!==a.index.sha256||a.review.imageHash!==a.index.sha256||!a.index.width||!a.index.height)throw Error('Invalid bound B&Q photo review');
-    index[key]=current?.sha256===a.index.sha256&&Date.parse(current.checkedAt)>Date.parse(a.index.checkedAt)?current:{...a.index};visual[key]={...a.visual};
+    if(a.referenceCurrentEvidence!==true){index[key]=current?.sha256===a.index.sha256&&Date.parse(current.checkedAt)>Date.parse(a.index.checkedAt)?current:{...a.index};visual[key]={...a.visual};}
     // An old source version's colours/exclusion/gallery rejection must not be
     // promoted into fresh evidence merely by merging in a new fingerprint.
     reviews[p.sku]={...a.review};
