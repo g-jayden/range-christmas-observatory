@@ -8,4 +8,7 @@ export function mtDimensionFacts(specs,description,title,{kind}={}){const s={...
  if(!s.Size){const readings=[...String(title).matchAll(/\b(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|feet|inches?)\b/ig)];if(readings.length===1)s.Size=readings[0][1]+readings[0][2];}
  if(!s.Size&&!Object.keys(s).some(k=>/^(Height|Width|Depth|Length|Diameter)$/.test(k))){const m=body.match(/\bSize\s*:?\s*(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)\b/i);if(m)s.Size=m[1]+m[2];}
  if(!s.Size&&!Object.keys(s).some(k=>/^(Height|Width|Depth|Length|Diameter)$/.test(k))){const all=[...body.matchAll(/\b(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|feet|inches?)\b/ig)].filter(m=>!/lead|cable|cord|wire|package|box/i.test(body.slice(Math.max(0,m.index-25),m.index)));const unique=[...new Set(all.map(m=>m[1]+m[2].toLowerCase()))];if(unique.length===1)s.Size=unique[0];}
- return{specifications:s,dimensions:productDimensions(s,body),notes:[...new Set(notes)]};}
+ const mixed=String(title).match(/\b(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)\s*(?:&|and|\/)\s*(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)\b/i);let mixedSizes;
+ if(!s.Size&&mixed&&/\bbaubles?|balls?\b/i.test(title)){const labels=[mixed[1]+mixed[2].toLowerCase(),mixed[3]+mixed[4].toLowerCase()];if(labels.every(label=>new RegExp(label.replace(/([0-9])([a-z])/,'$1\\s*$2'),'i').test(body))){s.Size=labels.join(' / ');mixedSizes=labels;notes.push('套装内不同尺寸来自官网标题和商品描述，未合并为单件轴向尺寸 · Mixed component sizes confirmed by both official title and description');}}
+ const dimensions=productDimensions(s,body);if(mixedSizes){dimensions.mixedSizeCm=mixedSizes.map(toCentimetres);dimensions.label='混合尺寸 · Mixed sizes: '+mixedSizes.join(' / ');}
+ return{specifications:s,dimensions,notes:[...new Set(notes)]};}
