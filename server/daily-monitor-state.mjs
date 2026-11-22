@@ -7,7 +7,7 @@ export async function readDailyMonitor(now=new Date()){
  return m;
 }
 export async function saveDailyMonitor(m){await atomicJson(file,m);return m}
-export function dailyDue(m,now=new Date()){const day=d=>new Date(+d+28800000).toISOString().slice(0,10);return +now>=Date.parse(m.nextRunAt)&&(!m.lastAttemptAt||day(now)!==day(new Date(m.lastAttemptAt)))}
+export function dailyDue(m,now=new Date()){const due=Date.parse(m.nextRunAt),attempt=Date.parse(m.lastAttemptAt);return Number.isFinite(due)&&+now>=due&&(!Number.isFinite(attempt)||attempt<due)}
 export async function claimDailyMonitor(m,now=new Date()){
  const claimed={...m,lastAttemptAt:now.toISOString(),nextRunAt:nextNewCheck(now),state:'checking',lastError:null};return saveDailyMonitor(claimed);
 }

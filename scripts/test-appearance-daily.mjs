@@ -11,3 +11,5 @@ const due={nextRunAt:'2026-11-01T23:00:00Z',lastAttemptAt:null};assert(!dailyDue
 const o=JSON.parse(await fs.readFile('web/visual-overrides.json','utf8'));
 for(const [sku,colors]of Object.entries({'467028':['粉色','白色'],'7703310':['褐色'],'6414472':['深空灰色'],'515778':['红色','绿色'],'517224':['白色','红色'],'515110':['红色','白色']})){assert(o.products[sku],'The reviewed example must retain its original evidence');assert.match(o.products[sku].imageHash,/^[a-f0-9]{64}$/);assert.deepEqual(o.products[sku].colors,colors);}
 console.log('PASS: seven mutually exclusive tree classes, non-flocked/unlit negatives, normalized and multiple body colours, bilingual description materials, six customer examples and daily Beijing boundary/idempotency.');
+
+const afterMidnight={nextRunAt:'2026-11-22T23:00:00Z',lastAttemptAt:'2026-11-22T16:40:00Z'};assert(dailyDue(afterMidnight,new Date('2026-11-22T23:00:00Z')),'An owner verification at 00:40 Beijing must not consume the normal 07:00 check');assert(!dailyDue(afterMidnight,new Date('2026-11-22T22:59:59Z')));assert(!dailyDue({...afterMidnight,lastAttemptAt:'2026-11-22T23:00:01Z'},new Date('2026-11-22T23:05:00Z')));
