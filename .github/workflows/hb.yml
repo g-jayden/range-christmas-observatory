@@ -76,7 +76,7 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           mkdir -p web/hb web/images/hb web/mail-assets
-          git add web/hb web/images/hb web/mail-assets web/collection-ledger.json web/preview-quality-cache.json.gz
+          git add --sparse -- web/hb web/images/hb web/mail-assets web/collection-ledger.json web/preview-quality-cache.json.gz
           git diff --cached --quiet || git commit -m "Save verified Home Bargains exact SKU catalogue and image evidence [skip ci]"
           node scripts/push-evidence.mjs
       - name: Deliver verified published Home Bargains attachments

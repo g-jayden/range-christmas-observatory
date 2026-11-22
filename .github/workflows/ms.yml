@@ -71,7 +71,7 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           mkdir -p web/ms web/images/ms web/mail-assets
-          git add web/ms web/images/ms web/mail-assets web/collection-ledger.json
+          git add --sparse -- web/ms web/images/ms web/mail-assets web/collection-ledger.json
           git diff --cached --quiet || git commit -m "Save verified M&S exact SKU catalogue and image evidence [skip ci]"
           node scripts/push-evidence.mjs
       - name: Deliver verified published M&S attachments
