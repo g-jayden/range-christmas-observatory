@@ -1,3 +1,4 @@
+import{materializeCommittedImage}from'./committed-image-file.mjs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {descriptionFacts,applyAppearance,normaliseColors,materialFacts,APPEARANCE_VERSION,TREE_STYLES} from './appearance.mjs';
@@ -18,7 +19,7 @@ export async function enrichProducts(products,{infer=true}={}){
   const hash=p.imageCacheEvidence?.sha256,key=p.kind+':'+hash;let visual=cache.entries[key];
   if(!p.appearanceSource)p.appearanceSource=descriptionFacts(p,p.specifications||{},'');
   p.appearanceSource.materials=materialFacts(p.specifications||{},p.sourceDescription||p.appearanceSource.materials?.descriptionExcerpt||'');
-  if(hash&&!visual&&p.cachedImageUrl&&infer){const {analyseImage}=await import('./visual-model.mjs');visual=cache.entries[key]=await analyseImage(p,path.resolve('web',p.cachedImageUrl));analysed++;}
+  if(hash&&!visual&&p.cachedImageUrl&&infer){await materializeCommittedImage(p.cachedImageUrl,hash);const {analyseImage}=await import('./visual-model.mjs');visual=cache.entries[key]=await analyseImage(p,path.resolve('web',p.cachedImageUrl));analysed++;}
   visual={...(visual||{})};const manual=overrides.products[p.sku];
   if(manual?.imageHash===hash){visual={...visual,...manual};reviewed++;}
   else{
