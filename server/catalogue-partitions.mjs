@@ -39,6 +39,19 @@ export async function collectPartitionedCategory(id,reader){
   const url=urlFor(offset,filters,sort),d=fetched.get(url)||await reader(url);requests++;batches.push({url,offset,count:d.products.length,total:d.totalResults});return d;
  }
  function insert(map,p){const sku=String(p.sku),old=map.get(sku);if(old&&['price','newIn','inStock','variantImageUrl'].some(k=>old[k]!==p[k]))throw new SourceError('SKU changed during partitioned source observation: '+sku);map.set(sku,p);}
+ async function coherentFilteredPartition(filters){
+  // Rebuild this exact group independently. Never carry stale price/colour
+  // members into a new attempt or substitute a matching count for membership.
+  const firstUrl=urlFor(0,filters,'relevance'),first=await(reader.fresh||reader)(firstUrl),expected=first.totalResults,rows=new Map();requests++;const pages=[first],offsets=[];
+  for(let offset=100;offset<expected;offset+=100)offsets.push(offset);
+  await prime(offsets.map(offset=>urlFor(offset,filters,'relevance')));
+  for(const offset of offsets)pages.push(await fetchPage(filters,offset,'relevance'));
+  for(const page of pages){if(page.totalResults!==expected||expected&&!page.products.length)throw new SourceError('Coherent filtered partition count changed');for(const product of page.products)insert(rows,product);}
+  const closingUrl=new URL(firstUrl);closingUrl.searchParams.set('facets','true');const end=await(reader.fresh||reader)(closingUrl.href);requests++;
+  if(end.totalResults!==expected||rows.size!==expected)throw new SourceError('Coherent filtered partition coverage mismatch: '+rows.size+'/'+expected);
+  for(const product of end.products){if(!rows.has(String(product.sku)))throw new SourceError('Coherent filtered partition SKU changed');insert(rows,product);}
+  reconciliations.push({method:'independent-filtered-observation',filters,sort:'relevance',expected,observed:rows.size,complete:true});return rows;
+ }
  async function collect(filters,depth=0){
   const first=await fetchPage(filters),expected=first.totalResults,map=new Map();for(const p of first.products)insert(map,p);
   if(expected<=120){if(map.size!==expected)throw new SourceError('Small source partition did not reconcile');return map;}
@@ -47,6 +60,7 @@ export async function collectPartitionedCategory(id,reader){
    {const urls=[];for(let offset=sort==='price_lth'?80:0;offset<expected;offset+=80)urls.push(urlFor(offset,filters,sort));await prime(urls);}
    for(let offset=sort==='price_lth'?80:0;offset<expected;offset+=80){const d=await fetchPage(filters,offset,sort);if(d.totalResults!==expected)reconciliations.push({category:id,filters,offset,firstPageTotal:expected,pageTotal:d.totalResults,method:'retain-all-returned-SKUs-and-reconcile-root-union'});for(const p of d.products)insert(map,p);}
    if(map.size===expected)return map;
+   if(map.size>expected)return coherentFilteredPartition(filters);
   }
   if(depth>=3)throw new SourceError('Source partition remains incomplete; refusing omitted SKUs: '+map.size+'/'+expected);
   // price_f is a range facet; the source ignores arrays of exact prices.
@@ -57,7 +71,7 @@ export async function collectPartitionedCategory(id,reader){
   }else{
    const design=facets.find(f=>f.name==='Design');if(design)for(let n=0;n<design.options.length;n+=25)for(const p of (await collect({...filters,[design.id]:design.options.slice(n,n+25).map(o=>o.name)},depth+1)).values())insert(map,p);
   }
-  if(map.size!==expected)throw new SourceError('Partition coverage mismatch; no partial result published: '+map.size+'/'+expected);
+  if(map.size!==expected)return coherentFilteredPartition(filters);
   return map;
  }
  // Pack small brands into bounded OR groups; large brands get their own plan.
