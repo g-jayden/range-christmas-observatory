@@ -11,7 +11,7 @@
  boot.manifest.then(m=>{if(!m)return;const id=new URL(location.href).searchParams.get('scope')||'tree';warm(m.scopes[id]?.firstScreen,'high');
   if(navigator.connection?.saveData||/^(?:slow-)?2g$/.test(navigator.connection?.effectiveType||''))return;
   const defaults=['tree','asda-tree','bm-tree','ms-baubles','hb-baubles','du-tree','nx-baubles','jl-baubles','mt-baubles','bq-tree','ar-tree'];
-  const start=()=>{let at=0;const next=async()=>{while(at<defaults.length){const nextId=defaults[at++];if(nextId===id)continue;try{await warm(m.scopes[nextId]?.firstScreen,'low');}catch{}}};next();next();};
+  const start=()=>{let at=0;const next=async()=>{while(at<defaults.length){const nextId=defaults[at++];if(nextId===id||(m.scopes[nextId]?.firstScreen?.bytes||0)>600000)continue;try{await warm(m.scopes[nextId]?.firstScreen,'low');}catch{}}};next();next();};
   if(globalThis.requestIdleCallback)requestIdleCallback(start,{timeout:2000});else setTimeout(start,300);
  });
 })();
