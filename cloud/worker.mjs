@@ -236,7 +236,7 @@ export class Control{
    }
    if(route==='/internal/pending-evidence'&&req.method==='GET'){
     const pending=[...(await this.db.list({prefix:'pending/'})).values()],active=pending.filter(p=>!p.unavailableSince&&(!p.taxonomyAudit||p.taxonomyAudit.disposition==='include'));
-    return response({notificationContract:NOTIFICATION_CONTRACT,dailyPdfDigest:this.env.DAILY_PDF_DIGEST==='true',candidates:active.slice(0,128),totalActive:active.length,unavailable:pending.length-active.length,monitor:await this.monitorState()});
+    return response({notificationContract:NOTIFICATION_CONTRACT,dailyPdfDigest:this.env.DAILY_PDF_DIGEST==='true',candidates:active,totalActive:active.length,unavailable:pending.length-active.length,monitor:await this.monitorState()});
    }
    if(route==='/internal/evidence-recovered'&&req.method==='POST'){
     const b=await req.json(),m=await this.monitorState(),pending=[...(await this.db.list({prefix:'pending/'})).values()];
@@ -245,7 +245,7 @@ export class Control{
    }
    if(route==='/internal/seed'&&req.method==='POST'){
     if(await this.db.get('seeded'))return response({seeded:true,changed:false});
-    const b=await req.json();if(!Array.isArray(b.records)||b.records.length>10000)throw Error('Invalid baseline');
+    const b=await req.json();if(!Array.isArray(b.records))throw Error('Invalid baseline');
     const values={config:b.config?{...firstRun(),...b.config}:firstRun()};
     for(const p of b.records){if(!/^\d{1,12}$/.test(String(p.sku)))throw Error('Invalid SKU');if(p.everNew)values['seen/'+storageSku(p)]=true}
     // Only the first authenticated seed may migrate subscriptions with existing consent.
@@ -254,7 +254,7 @@ export class Control{
     const entries=Object.entries(values);for(let i=0;i<entries.length;i+=100)await this.db.put(Object.fromEntries(entries.slice(i,i+100)));await this.db.put('seeded',new Date().toISOString());return response({seeded:true,changed:true});
    }
    if(route==='/internal/extend-baseline'&&req.method==='POST'){
-    const b=await req.json();if(!['christmas-decorations-v1','christmas-lights-v1','christmas-themes-v1'].includes(b.scope)||!Array.isArray(b.records)||b.records.length>30000)throw Error('Invalid scoped baseline');
+    const b=await req.json();if(!['christmas-decorations-v1','christmas-lights-v1','christmas-themes-v1'].includes(b.scope)||!Array.isArray(b.records))throw Error('Invalid scoped baseline');
     if(await this.db.get('baseline/'+b.scope))return response({seeded:true,changed:false});
     const records=b.records;if(records.some(p=>!/^\d{1,12}$/.test(String(p.sku))))throw Error('Invalid baseline SKU');
     for(const p of records)if(p.everNew&&!await this.db.get('pending/'+storageSku(p))&&!await this.db.get('event/'+storageSku(p)))await this.db.put('seen/'+storageSku(p),true);
@@ -283,7 +283,7 @@ export class Control{
     await this.db.delete('lease/full');return response({config:await this.config()});
    }
    if(route==='/internal/hb-sync'&&req.method==='POST'){
-    const b=await req.json();if(!Array.isArray(b.products)||b.products.length>10000||!Number.isFinite(Date.parse(b.observedAt))||b.complete!==true)throw Error('Invalid complete Home Bargains scan');const baseline=await this.db.get('baseline/hb-christmas-v1'),now=new Date().toISOString(),ownerId=this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID;
+    const b=await req.json();if(!Array.isArray(b.products)||!Number.isFinite(Date.parse(b.observedAt))||b.complete!==true)throw Error('Invalid complete Home Bargains scan');const baseline=await this.db.get('baseline/hb-christmas-v1'),now=new Date().toISOString(),ownerId=this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID;
     if(/^[a-f0-9]{64}$/.test(ownerId||'')&&!await this.db.get('hb-owner-opt-in')){const sub=await this.db.get('sub/'+ownerId);if(sub?.confirmedAt){sub.scopes=[...new Set([...sub.scopes,...allowedScopes.filter(id=>id.startsWith('hb-'))])];await this.db.put('sub/'+ownerId,sub);await this.db.put('hb-owner-opt-in',now);}}
     const current=new Map();for(const p of b.products){if(p.retailerId!=='hb'||!validRetailerSku('hb',p.sku)||!p.departmentIds?.length||!p.departmentIds.every(id=>id.startsWith('hb-')&&allowedScopes.includes(id)))throw Error('Invalid Home Bargains exact-SKU classification');verifyProductUrl(p);const k=storageSku(p);current.set(k,p);
      if(!baseline)await this.db.put('seen/'+k,true);
@@ -294,7 +294,7 @@ export class Control{
    }
    if(['/internal/ar-sync','/internal/mt-sync','/internal/bq-sync'].includes(route)&&req.method==='POST'){const id=route.includes('/ar-')?'ar':route.includes('/mt-')?'mt':'bq';return response(await syncAdditionalRetailer({id,body:await req.json(),storage:this.db,allowedScopes,ownerId:this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID,verifyProduct:verifyProductUrl}));}
    if(route==='/internal/nx-sync'&&req.method==='POST'){
-    const b=await req.json();if(!Array.isArray(b.products)||b.products.length>10000||!Number.isFinite(Date.parse(b.observedAt))||b.complete!==true)throw Error('Invalid complete Next scan');const baseline=await this.db.get('baseline/nx-christmas-v1'),now=new Date().toISOString(),ownerId=this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID;
+    const b=await req.json();if(!Array.isArray(b.products)||!Number.isFinite(Date.parse(b.observedAt))||b.complete!==true)throw Error('Invalid complete Next scan');const baseline=await this.db.get('baseline/nx-christmas-v1'),now=new Date().toISOString(),ownerId=this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID;
     if(/^[a-f0-9]{64}$/.test(ownerId||'')&&!await this.db.get('nx-owner-opt-in')){const sub=await this.db.get('sub/'+ownerId);if(sub?.confirmedAt){sub.scopes=[...new Set([...sub.scopes,...allowedScopes.filter(id=>id.startsWith('nx-'))])];await this.db.put('sub/'+ownerId,sub);await this.db.put('nx-owner-opt-in',now);}}
     const current=new Map();for(const p of b.products){if(p.retailerId!=='nx'||!validRetailerSku('nx',p.sku)||!p.departmentIds?.length||!p.departmentIds.every(id=>id.startsWith('nx-')&&allowedScopes.includes(id)))throw Error('Invalid Next exact-SKU classification');verifyProductUrl(p);const k=storageSku(p);current.set(k,p);
      if(!baseline)await this.db.put('seen/'+k,true);
@@ -304,7 +304,7 @@ export class Control{
     if(!baseline)await this.db.put('baseline/nx-christmas-v1',{observedAt:b.observedAt,products:b.products.length});const priorMonitor=await this.db.get('nx-monitor');await this.db.put('nx-monitor',{...(priorMonitor?.observedAt===b.observedAt?{committedRevision:priorMonitor.committedRevision,committedAt:priorMonitor.committedAt}:{}),collectionComplete:true,observedAt:b.observedAt,scanned:b.products.length,checkedAt:now,automaticArrivalChecks:b.automaticArrivalChecks===true,evidencePending:Number.isInteger(b.evidencePending)?b.evidencePending:0});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('nx-owner-opt-in')),baselineReady:true,candidates:[...(await this.db.list({prefix:'pending/nx:'})).values()].filter(p=>!p.unavailableSince)});
    }
    if(route==='/internal/jl-sync'&&req.method==='POST'){
-    const b=await req.json();if(!Array.isArray(b.products)||b.products.length>10000||!Number.isFinite(Date.parse(b.observedAt))||b.complete!==true)throw Error('Invalid complete John Lewis scan');const baseline=await this.db.get('baseline/jl-christmas-v1'),now=new Date().toISOString(),ownerId=this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID;
+    const b=await req.json();if(!Array.isArray(b.products)||!Number.isFinite(Date.parse(b.observedAt))||b.complete!==true)throw Error('Invalid complete John Lewis scan');const baseline=await this.db.get('baseline/jl-christmas-v1'),now=new Date().toISOString(),ownerId=this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID;
     if(/^[a-f0-9]{64}$/.test(ownerId||'')&&!await this.db.get('jl-owner-opt-in')){const sub=await this.db.get('sub/'+ownerId);if(sub?.confirmedAt){sub.scopes=[...new Set([...sub.scopes,...allowedScopes.filter(id=>id.startsWith('jl-'))])];await this.db.put('sub/'+ownerId,sub);await this.db.put('jl-owner-opt-in',now);}}
     const current=new Map();for(const p of b.products){if(p.retailerId!=='jl'||!validRetailerSku('jl',p.sku)||!p.departmentIds?.length||!p.departmentIds.every(id=>id.startsWith('jl-')&&allowedScopes.includes(id)))throw Error('Invalid John Lewis exact-SKU classification');verifyProductUrl(p);const k=storageSku(p);current.set(k,p);
      if(!baseline)await this.db.put('seen/'+k,true);
@@ -314,7 +314,7 @@ export class Control{
     if(!baseline)await this.db.put('baseline/jl-christmas-v1',{observedAt:b.observedAt,products:b.products.length});const priorMonitor=await this.db.get('jl-monitor');await this.db.put('jl-monitor',{...(priorMonitor?.observedAt===b.observedAt?{committedRevision:priorMonitor.committedRevision,committedAt:priorMonitor.committedAt}:{}),collectionComplete:true,observedAt:b.observedAt,scanned:b.products.length,checkedAt:now,automaticArrivalChecks:b.automaticArrivalChecks===true});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('jl-owner-opt-in')),baselineReady:true,candidates:[...(await this.db.list({prefix:'pending/jl:'})).values()].filter(p=>!p.unavailableSince)});
    }
    if(route==='/internal/du-sync'&&req.method==='POST'){
-    const b=await req.json();if(!Array.isArray(b.products)||b.products.length>10000||!Number.isFinite(Date.parse(b.observedAt))||b.complete!==true)throw Error('Invalid complete Dunelm scan');const baseline=await this.db.get('baseline/du-christmas-v1'),now=new Date().toISOString(),ownerId=this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID;
+    const b=await req.json();if(!Array.isArray(b.products)||!Number.isFinite(Date.parse(b.observedAt))||b.complete!==true)throw Error('Invalid complete Dunelm scan');const baseline=await this.db.get('baseline/du-christmas-v1'),now=new Date().toISOString(),ownerId=this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID;
     if(/^[a-f0-9]{64}$/.test(ownerId||'')&&!await this.db.get('du-owner-opt-in')){const sub=await this.db.get('sub/'+ownerId);if(sub?.confirmedAt){sub.scopes=[...new Set([...sub.scopes,...allowedScopes.filter(id=>id.startsWith('du-'))])];await this.db.put('sub/'+ownerId,sub);await this.db.put('du-owner-opt-in',now);}}
     const current=new Map();for(const p of b.products){if(p.retailerId!=='du'||!/^\d{8}$/.test(p.sku)||!p.departmentIds?.length||!p.departmentIds.every(id=>id.startsWith('du-')&&allowedScopes.includes(id)))throw Error('Invalid Dunelm exact-SKU classification');verifyProductUrl(p);const k=storageSku(p);current.set(k,p);
      if(!baseline)await this.db.put('seen/'+k,true);
@@ -324,7 +324,7 @@ export class Control{
     if(!baseline)await this.db.put('baseline/du-christmas-v1',{observedAt:b.observedAt,products:b.products.length});await this.db.put('du-monitor',{observedAt:b.observedAt,scanned:b.products.length,checkedAt:now});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('du-owner-opt-in')),baselineReady:true,candidates:[...(await this.db.list({prefix:'pending/du:'})).values()].filter(p=>!p.unavailableSince)});
    }
    if(route==='/internal/bm-sync'&&req.method==='POST'){
-    const b=await req.json();if(!Array.isArray(b.products)||b.products.length>10000||!Number.isFinite(Date.parse(b.observedAt))||b.complete!==true)throw Error('Invalid complete B&M scan');const baseline=await this.db.get('baseline/bm-christmas-v1'),now=new Date().toISOString(),ownerId=this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID;
+    const b=await req.json();if(!Array.isArray(b.products)||!Number.isFinite(Date.parse(b.observedAt))||b.complete!==true)throw Error('Invalid complete B&M scan');const baseline=await this.db.get('baseline/bm-christmas-v1'),now=new Date().toISOString(),ownerId=this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID;
     if(/^[a-f0-9]{64}$/.test(ownerId||'')&&!await this.db.get('bm-owner-opt-in')){const sub=await this.db.get('sub/'+ownerId);if(sub?.confirmedAt){sub.scopes=[...new Set([...sub.scopes,...allowedScopes.filter(id=>id.startsWith('bm-'))])];await this.db.put('sub/'+ownerId,sub);await this.db.put('bm-owner-opt-in',now);}}
     const current=new Map();for(const p of b.products){if(p.retailerId!=='bm'||!/^\d{6,9}$/.test(p.sku)||!p.departmentIds?.length||!p.departmentIds.every(id=>id.startsWith('bm-')&&allowedScopes.includes(id)))throw Error('Invalid B&M exact-SKU classification');verifyProductUrl(p);const k=storageSku(p);current.set(k,p);
      if(!baseline)await this.db.put('seen/'+k,true);
@@ -334,7 +334,7 @@ export class Control{
     if(!baseline)await this.db.put('baseline/bm-christmas-v1',{observedAt:b.observedAt,products:b.products.length});await this.db.put('bm-monitor',{observedAt:b.observedAt,scanned:b.products.length,checkedAt:now});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('bm-owner-opt-in')),baselineReady:true,candidates:[...(await this.db.list({prefix:'pending/bm:'})).values()].filter(p=>!p.unavailableSince)});
    }
    if(route==='/internal/ms-sync'&&req.method==='POST'){
-    const b=await req.json();if(!Array.isArray(b.products)||b.products.length>10000||!Number.isFinite(Date.parse(b.observedAt))||b.complete!==true)throw Error('Invalid complete M&S scan');const baseline=await this.db.get('baseline/ms-christmas-v1'),now=new Date().toISOString(),ownerId=this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID;
+    const b=await req.json();if(!Array.isArray(b.products)||!Number.isFinite(Date.parse(b.observedAt))||b.complete!==true)throw Error('Invalid complete M&S scan');const baseline=await this.db.get('baseline/ms-christmas-v1'),now=new Date().toISOString(),ownerId=this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID;
     if(/^[a-f0-9]{64}$/.test(ownerId||'')&&!await this.db.get('ms-owner-opt-in')){const sub=await this.db.get('sub/'+ownerId);if(sub?.confirmedAt){sub.scopes=[...new Set([...sub.scopes,...allowedScopes.filter(id=>id.startsWith('ms-'))])];await this.db.put('sub/'+ownerId,sub);await this.db.put('ms-owner-opt-in',now);}}
     const current=new Map();for(const p of b.products){if(p.retailerId!=='ms'||!/^\d{8,12}$/.test(p.sku)||!p.departmentIds?.length||!p.departmentIds.every(id=>id.startsWith('ms-')&&allowedScopes.includes(id)))throw Error('Invalid M&S exact-SKU classification');verifyProductUrl(p);const k=storageSku(p);current.set(k,p);
      if(!baseline)await this.db.put('seen/'+k,true);
@@ -344,7 +344,7 @@ export class Control{
     if(!baseline)await this.db.put('baseline/ms-christmas-v1',{observedAt:b.observedAt,products:b.products.length});await this.db.put('ms-monitor',{observedAt:b.observedAt,scanned:b.products.length,checkedAt:now});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('ms-owner-opt-in')),baselineReady:true,candidates:[...(await this.db.list({prefix:'pending/ms:'})).values()].filter(p=>!p.unavailableSince)});
    }
    if(route==='/internal/asda-sync'&&req.method==='POST'){
-    const b=await req.json();if(!Array.isArray(b.products)||b.products.length>10000)throw Error('Invalid ASDA scan');const baseline=await this.db.get('baseline/asda-christmas-v1'),now=new Date().toISOString();
+    const b=await req.json();if(!Array.isArray(b.products))throw Error('Invalid ASDA scan');const baseline=await this.db.get('baseline/asda-christmas-v1'),now=new Date().toISOString();
     const ownerId=this.env.ASDA_OWNER_SUBSCRIPTION_ID;if(/^[a-f0-9]{64}$/.test(ownerId||'')&&!await this.db.get('asda-owner-opt-in')){const sub=await this.db.get('sub/'+ownerId);if(sub?.confirmedAt){sub.scopes=[...new Set([...sub.scopes,...allowedScopes.filter(s=>s.startsWith('asda-'))])];await this.db.put('sub/'+ownerId,sub);await this.db.put('asda-owner-opt-in',now);}}
     for(const p of b.products){if(p.retailerId!=='asda'||!/^\d{8,12}$/.test(p.sku)||!(p.departmentIds||[]).every(id=>id.startsWith('asda-')&&allowedScopes.includes(id)))throw Error('Invalid ASDA identity');verifyProductUrl(p);const k=storageSku(p);
      if(!baseline)await this.db.put('seen/'+k,true);
@@ -359,7 +359,7 @@ export class Control{
    }
    if(route==='/internal/monitor-plan'&&req.method==='POST'){
     const b=await req.json(),lease=await this.db.get('lease/monitor');if(lease?.lease!==b.lease)return response({error:'监测租约不匹配'},409);
-    if(!Array.isArray(b.products)||b.products.length>30000)throw Error('Invalid scan');
+    if(!Array.isArray(b.products))throw Error('Invalid scan');
     for(const p of b.products){if(!/^\d{1,12}$/.test(p.sku))throw Error('Invalid SKU');verifyProductUrl(p);if(p.newStatus&&!await this.db.get('seen/'+storageSku(p))){const pending=await this.db.get('pending/'+storageSku(p));if(!pending)await this.db.put('pending/'+storageSku(p),{...p,firstDetectedAt:new Date().toISOString()});else if(pending.unavailableSince){delete pending.unavailableSince;await this.db.put('pending/'+storageSku(p),pending);}}}
     return response({candidates:[...(await this.db.list({prefix:'pending/'})).values()].filter(p=>!independentRetailer(p)&&!p.unavailableSince&&(!p.taxonomyAudit||p.taxonomyAudit.disposition==='include'))});
    }

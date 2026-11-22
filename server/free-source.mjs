@@ -9,7 +9,7 @@ export function sourceUrl(raw){
 export function browserMarkdown({features,information,specs}){
  return '## Features\n\n'+features.map(s=>'- '+s).join('\n')+'\n\n## Information\n\n'+information+'\n\n## Specification\n\n'+specs.map(s=>'- '+s).join('\n')+'\n\nAdditional Information';
 }
-export async function createFreeReader({fetcher=fetch,browserFactory,concurrency=4,delayMs=750,maxPages=15000,headless=process.env.COLLECTION_HEADLESS==='true',browserEngine=process.env.COLLECTION_BROWSER_CHANNEL||'firefox'}={}){
+export async function createFreeReader({fetcher=fetch,browserFactory,concurrency=4,delayMs=750,maxPages=Infinity,headless=process.env.COLLECTION_HEADLESS==='true',browserEngine=process.env.COLLECTION_BROWSER_CHANNEL||'firefox'}={}){
  if(!browserFactory&&process.env.GITHUB_ACTIONS==='true'&&browserEngine==='chrome')return (await import('./native-chrome.mjs')).createNativeChromeReader({concurrency,delayMs,maxPages});
  let browser,context,warm,opened=0,cursor=0;const pages=[],waiters=[],blockedHosts=new Set,inflight=new Map;
  const metrics={provider:'self-hosted-browser',browserEngine,firecrawlRequests:0,firecrawlCredits:0,directRequests:0,browserPages:0,screenshots:0,deduplicated:0};

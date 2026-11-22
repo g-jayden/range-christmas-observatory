@@ -1,1 +1,25 @@
-{"id":"all-retailers-free-first-native-originals-20261119","enabled":true,"scope":"failed-native-originals-all-retailers","freeFirst":true,"maxCredits":null,"accountReserveCredits":5000,"authorizedAt":"2026-11-19","notes":"用户持续授权所有连锁店的图片采集在免费通道失败后使用不限积分的Firecrawl。仅取已绑定具体SKU的官网原始图片，不扩大其它目录采集的授权。"}
+{
+  "id": "all-retailers-free-first-native-originals-20261119",
+  "enabled": true,
+  "scope": "failed-native-originals-all-retailers",
+  "freeFirst": true,
+  "maxCredits": null,
+  "accountReserveCredits": 5000,
+  "authorizedAt": "2026-11-19",
+  "notes": "用户持续授权所有连锁店的图片采集在免费通道失败后使用不限积分的Firecrawl。仅取已绑定具体SKU的官网原始图片，不扩大其它目录采集的授权。",
+  "unlimitedCollectionAuthorization": {
+    "id": "owner-all-collection-unrestricted-20261123",
+    "enabled": true,
+    "scope": "all-enabled-retailers",
+    "approvedAt": "2026-11-23",
+    "freeFirst": true,
+    "paidFallback": true,
+    "productLimit": null,
+    "detailLimit": null,
+    "imageLimit": null,
+    "creditLimit": null,
+    "automaticPurchaseOrPlanUpgrade": false,
+    "approval": "Owner explicitly removed all collection quantity and credit ceilings for every retailer, only after ordinary free methods fail. Preserve the already approved 5000-credit account reserve, live balance checks, bounded failure retries and no automatic purchase or upgrade.",
+    "accountReserveCredits": 5000
+  }
+}

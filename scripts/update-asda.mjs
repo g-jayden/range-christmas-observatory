@@ -7,6 +7,7 @@ import {asdaBatchScript,parseSavedAsdaPage,asdaPageParserSource,asdaDirectoryScr
 import {normaliseAsdaProduct,asdaFingerprint,asdaVariantListings} from '../server/asda-products.mjs';
 import {ASDA_DEPARTMENTS,asdaMemberships} from '../web/asda-model.mjs';
 import {loadPolicy,collectionRunPolicy,monthlyCreditLimit} from '../server/collection-policy.mjs';
+import {unrestrictedCollection,ensureCollectionCreditReservation} from '../server/collection-limits.mjs';
 import {openCreditBudget,reserveCredits,readLedger,runKey} from '../server/credit-budget.mjs';
 import {atomicJson} from '../server/sync.mjs';
 const DIR='web/asda',ROOT='https://direct.asda.com/george/christmas/trees-decorations/D18M2G1,default,sc.html',read=async(name,fallback)=>fs.readFile(DIR+'/'+name,'utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return fallback;throw e;});
@@ -19,7 +20,8 @@ const nowBjt=new Date(Date.now()+28800000).toISOString().slice(0,10),dailyDueAt=
 const key=process.env.FIRECRAWL_API_KEY;if(!key)throw Error('Firecrawl server credential required');
 const policy=collectionRunPolicy(await loadPolicy(),await fs.readFile('runtime/tick.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return{};throw e;})),ledger=await readLedger(),period=new Date(Date.now()+28800000).toISOString().slice(0,7),alreadyUsed=(ledger.periods[period]?.runs||[]).filter(r=>r.key===runKey()).reduce((n,r)=>n+r.credits,0);policy.maxCreditsPerRun=policy.automaticBudgetExpansion===true&&monthlyCreditLimit(policy)===Infinity?Math.max(60,policy.maxCreditsPerRun-alreadyUsed):Math.max(0,policy.maxCreditsPerRun-alreadyUsed);let budget,credits=0,requests=0,uncertain=0;const receipts=[];
 async function api(body){
- if(credits>=budget.limit||requests>=Math.min(budget.limit,60))throw Error('ASDA bounded run request limit reached');requests++;
+ if(unrestrictedCollection(policy))await ensureCollectionCreditReservation(budget,policy,{spent:credits,confirmedCredits:receipts.filter(r=>r.billingVerified).reduce((n,r)=>n+r.credits,0)});
+ else if(credits>=budget.limit||requests>=Math.min(budget.limit,60))throw Error('ASDA bounded run request limit reached');requests++;
  const r=await fetch('https://api.firecrawl.dev/v2/scrape',{method:'POST',headers:{authorization:'Bearer '+key,'content-type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(115000)});const result=await r.json(),d=result.data;
  const cost=d?.metadata?.creditsUsed??result.metadata?.creditsUsed;credits+=Number.isFinite(cost)?cost:1;if(!Number.isFinite(cost))uncertain++;
  receipts.push({id:d?.metadata?.scrapeId||result.id||null,credits:Number.isFinite(cost)?cost:1,billingVerified:Number.isFinite(cost)});

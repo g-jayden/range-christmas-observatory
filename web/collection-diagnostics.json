@@ -700,6 +700,28 @@
       "sourceUrl": "https://www.therange.co.uk/p/white-berry-and-pine-cone-decorative-wreath-35cm/m1493532/?json",
       "sourceStatus": 404,
       "observedAt": "2026-11-22T17:48:14.488Z"
+    },
+    {
+      "id": "mcp-01a204a0-46b4-706b-814f-db5683ad4dd5",
+      "period": "2026-11",
+      "credits": 0,
+      "refunded": 0,
+      "authorizationId": "owner-all-collection-unrestricted-20261123",
+      "retailerId": "the-range",
+      "purpose": "Search official indexed URLs for exact missing source product; no matching indexed product was returned.",
+      "observedAt": "2026-11-22T19:18:38.874Z"
+    },
+    {
+      "id": "mcp-01a204a1-1b24-759a-90cd-20f5fb1eb49a",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-all-collection-unrestricted-20261123",
+      "retailerId": "the-range",
+      "purpose": "Check exact-source corrupted delimiter using the corresponding Unicode en dash; source returned 404, no facts promoted.",
+      "sourceUrl": "https://www.therange.co.uk/p/white-berry-and-pine-cone-decorative-wreath-%E2%80%93-35cm/m1493532/?json",
+      "sourceStatus": 404,
+      "observedAt": "2026-11-22T19:18:38.875Z"
     }
   ],
   "unreceipted": [

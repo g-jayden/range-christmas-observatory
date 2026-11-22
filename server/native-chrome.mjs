@@ -14,7 +14,7 @@ class Connection{
  send(method,params={},sessionId){return new Promise((resolve,reject)=>{const id=++this.sequence,timer=setTimeout(()=>{this.pending.delete(id);reject(Error('Chrome command timed out: '+method))},30000);this.pending.set(id,{resolve,reject,timer});this.socket.send(JSON.stringify({id,method,params,...(sessionId?{sessionId}:{})}))});}
  close(){this.socket.close()}
 }
-export async function createNativeChromeReader({concurrency=4,delayMs=750,maxPages=20000}={}){
+export async function createNativeChromeReader({concurrency=4,delayMs=750,maxPages=Infinity}={}){
  if(process.env.GITHUB_ACTIONS!=='true')throw Error('This isolated Chrome transport is restricted to the cloud runner');
  const profile=await fs.mkdtemp(path.join(os.tmpdir(),'range-native-chrome-'));
  const executable=process.platform==='darwin'?'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome':process.platform==='win32'?path.join(process.env.PROGRAMFILES||'C:\\Program Files','Google','Chrome','Application','chrome.exe'):'/opt/google/chrome/chrome';

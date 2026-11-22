@@ -11,5 +11,21 @@
   "scheduledPaidCollection": true,
   "automaticPurchaseOrPlanUpgrade": false,
   "dailyCheckBeijing": "07:00",
-  "scopeRestriction": "Argos seven requested Christmas physical categories only; no other retailer receives this grant"
+  "scopeRestriction": "Argos seven requested Christmas physical categories only; no other retailer receives this grant",
+  "unlimitedCollectionAuthorization": {
+    "id": "owner-all-collection-unrestricted-20261123",
+    "enabled": true,
+    "scope": "all-enabled-retailers",
+    "approvedAt": "2026-11-23",
+    "freeFirst": true,
+    "paidFallback": true,
+    "productLimit": null,
+    "detailLimit": null,
+    "imageLimit": null,
+    "creditLimit": null,
+    "automaticPurchaseOrPlanUpgrade": false,
+    "approval": "Owner explicitly removed all collection quantity and credit ceilings for every retailer, only after ordinary free methods fail. Preserve the already approved 5000-credit account reserve, live balance checks, bounded failure retries and no automatic purchase or upgrade.",
+    "accountReserveCredits": 5000
+  },
+  "accountReserveCredits": 5000
 }

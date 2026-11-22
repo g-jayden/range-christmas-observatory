@@ -1,0 +1,44 @@
+{
+  "checkedAt": "2026-11-22T19:15:06.363Z",
+  "freeOnly": true,
+  "firecrawlCredits": 0,
+  "cataloguePages": 0,
+  "families": 0,
+  "freeHttpRequests": 2,
+  "freeHttp2Requests": 2,
+  "freeBrowserRequests": 2,
+  "freeCataloguePages": 0,
+  "freeFamilies": 0,
+  "freeSourceAttempts": [
+    {
+      "method": "http",
+      "status": 403,
+      "url": "https://search-lon.therange.co.uk/api/productlist?categoryId=94637&offset=0&limit=120&sort=price_lth&filters=%7B%22in_stock_f%22%3A%5B%22true%22%5D%7D&facets=false&includePriceFacet=true"
+    },
+    {
+      "method": "http2",
+      "status": 403,
+      "url": "https://search-lon.therange.co.uk/api/productlist?categoryId=94637&offset=0&limit=120&sort=price_lth&filters=%7B%22in_stock_f%22%3A%5B%22true%22%5D%7D&facets=false&includePriceFacet=true"
+    },
+    {
+      "method": "browser",
+      "status": 403,
+      "url": "https://search-lon.therange.co.uk/api/productlist?categoryId=94637&offset=0&limit=120&sort=price_lth&filters=%7B%22in_stock_f%22%3A%5B%22true%22%5D%7D&facets=false&includePriceFacet=true"
+    },
+    {
+      "method": "http",
+      "status": 403,
+      "url": "https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776?json"
+    },
+    {
+      "method": "http2",
+      "status": 403,
+      "url": "https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776?json"
+    },
+    {
+      "method": "browser",
+      "status": 403,
+      "url": "https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776?json"
+    }
+  ]
+}

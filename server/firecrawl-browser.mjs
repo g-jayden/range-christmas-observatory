@@ -8,6 +8,8 @@ import {readPreviewAssets} from './product-previews.mjs';
 import {captureProductImageResponses} from './native-image-context.mjs';
 import {readRangeImageGalleries} from './range-image-gallery.mjs';
 import {monthlyCreditLimit} from './collection-policy.mjs';
+import {normalizeCollectionLimits,unrestrictedCollection} from './collection-limits.mjs';
+import {createFreeFirstRangeSource} from './range-free-source.mjs';
 
 export async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000,anchors=[]}){
  const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch(error){return {status:0,error:String(error.message).slice(0,180)}}};
@@ -69,7 +71,7 @@ export async function readExactVariantOriginal({sku,variantId,preferred}){
  const selected=(document.querySelector('#product-dyn-code')?.textContent||'').trim().replace(/^[PM]/i,'').replace(/^0+(?=\d)/,'');
  if(selected!==String(sku)||!variantId)return [];
  const candidates=Array.from(document.querySelectorAll('#available-imgs a.rsImg')).map(a=>({url:a.getAttribute('href')||a.getAttribute('data-rsBigImg'),thumbnail:a.querySelector('img[data-variant]')?.getAttribute('src'),variants:(a.querySelector('img[data-variant]')?.getAttribute('data-variant')||a.getAttribute('data-variant')||'').split(',')})).filter(a=>a.variants.includes(String(variantId))&&a.url&&/^https:\/\/www\.therange\.co\.uk\/media\//.test(a.url)).sort((a,b)=>Number(b.thumbnail===preferred)-Number(a.thumbnail===preferred));
- for(const item of candidates.slice(0,3))try{
+ for(const item of candidates)try{
   const r=await fetch(item.url,{credentials:'include',cache:'no-cache',signal:AbortSignal.timeout(15000)});if(r.status!==200||!r.headers.get('content-type')?.startsWith('image/'))continue;
   const bitmap=await createImageBitmap(await r.blob()),width=bitmap.width,height=bitmap.height;bitmap.close();
   if(width>=64&&height>=64)return [{url:item.url,width,height,selectedSku:selected,variantId:String(variantId),evidence:'official-exact-variant-gallery',visibleArea:0}];
@@ -97,13 +99,15 @@ async function readImageBatch(items){
     }catch(e){results.push({url,ok:false,debug,error:'image-fetch-or-decode-failed: '+String(e.message).slice(0,120)})}}}));while(cursor<items.length)results.push({url:items[cursor++].url,ok:false,deferred:true,error:"bounded image time limit"});return results;
    }
 
-export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,connect,now=()=>Date.now()}={}){
+export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,freeFetcher,freeHttp2,freeBrowserRead,connect,now=()=>Date.now()}={}){
+ policy=normalizeCollectionLimits(policy);
+ const freeSource=unrestrictedCollection(policy)&&(fetcher===fetch||freeFetcher)?createFreeFirstRangeSource({fetcher:freeFetcher||fetch,http2:freeHttp2,browserRead:freeBrowserRead}):null;
  const key=process.env.FIRECRAWL_API_KEY;if(!key)throw new SourceError('Firecrawl服务器密钥尚未配置',401);
  let session,browser,context,starting,closed=false,created=0,deadline=0,allocatedPages=0,browserReceipt,sessionClosed=false,browserEndedAt=0;const runDeadline=now()+(policy.maxRunSeconds||1800)*1000;
  const pages=[],waiting=[],families=new Map(),familyFailures=new Map(),partialFamilies=new Map(),active=new Map(),verifiedCaptures=new Map(),priorityRepairs=new Map(),nativeTransportFailures=new Set();
  const parallel=policy.browserConcurrency||4;let ttl=Math.min(1800,policy.maxSessionSeconds||1800,Math.floor(Math.min(budget.limit,policy.browserCreditsPerRun||20)*30));
  let fallbackLimit=Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-Math.ceil(ttl/30))),fallbackCache=new Map(),captureOriginals=new Map();let fallbackReserved=0,scrapeCredits=0,scrapeBillingVerified=true;
- if(ttl<60)throw budgetError('本轮积分不足以创建一个浏览器会话');
+ if(ttl<60&&policy.catalogueTransport!=='enhanced-batch')throw budgetError('本轮积分不足以创建一个浏览器会话');
  const metrics={provider:'firecrawl-browser',billingMode:'code-session-time',firecrawlRequests:0,scrapeRequests:0,firecrawlCredits:0,creditsEstimatedUpperBound:ttl/30+fallbackLimit,browserCreditUpperBound:ttl/30,fallbackLimit,browserPages:0,familyReads:0,familyReuse:0,screenshots:0,sourceImageChecks:0};
  async function api(path,method,body){
   for(let attempt=0;;attempt++){
@@ -124,11 +128,12 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  }
 
  const mayExpand=policy.automaticBudgetExpansion===true&&monthlyCreditLimit(policy)===Infinity;
+ const confirmedCredits=()=>metrics.scrapeReceipts?.filter(r=>Number.isFinite(r.credits)&&r.credits>=0).reduce((n,r)=>n+r.credits,0)+(Number.isFinite(browserReceipt?.creditsBilled)?browserReceipt.creditsBilled:0)||0;
  function availableFallback(){const ceiling=mayExpand?Infinity:policy.maxFallbackScrapesPerRun??40;if(policy.catalogueTransport==='enhanced-batch'&&!session&&!starting&&!sessionClosed)return Math.max(0,Math.min(ceiling,budget.limit));return sessionClosed&&Number.isFinite(browserReceipt?.creditsBilled)?Math.max(0,Math.min(ceiling,budget.limit-browserReceipt.creditsBilled)):fallbackLimit;}
  async function requireFallbackBudget(){
   if(fallbackReserved<availableFallback())return;
   if(!mayExpand||typeof budget.extend!=='function')throw budgetError('批量核验已达到本轮付费请求上限');
-  guard();await budget.extend({additionalCredits:32});fallbackLimit=Math.max(0,budget.limit-Math.ceil(ttl/30));metrics.fallbackLimit=fallbackLimit;metrics.creditsEstimatedUpperBound=budget.limit;metrics.authorisedBudgetExpansions=(metrics.authorisedBudgetExpansions||0)+1;
+  guard();await budget.extend({additionalCredits:32,creditsAlreadyBilled:confirmedCredits()});fallbackLimit=Math.max(0,budget.limit-Math.ceil(ttl/30));metrics.fallbackLimit=fallbackLimit;metrics.creditsEstimatedUpperBound=budget.limit;metrics.authorisedBudgetExpansions=(metrics.authorisedBudgetExpansions||0)+1;
   if(fallbackReserved>=availableFallback())throw budgetError('Account reserve prevents the next source request');
  }
  let fallbackClaims=Promise.resolve();
@@ -165,6 +170,11 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  async function start(){
   if(sessionClosed)throw Error('本轮浏览器已完成并关闭，不能重新创建付费会话');
   if(!starting)starting=(async()=>{
+   if(unrestrictedCollection(policy)&&typeof budget.extend==='function'){
+    const required=Math.ceil(Math.min(1800,policy.maxSessionSeconds||1800)/30);
+    while(budget.limit-fallbackReserved<required)await budget.extend({additionalCredits:Math.min(64,required-(budget.limit-fallbackReserved)),creditsAlreadyBilled:confirmedCredits()});
+    ttl=Math.min(1800,policy.maxSessionSeconds||1800);
+   }
    guard();if(policy.catalogueTransport==='enhanced-batch'){ttl=Math.min(ttl,Math.floor((budget.limit-fallbackReserved)*30));if(ttl<60)throw budgetError('剩余额度不足以开启浏览器；已保留目录结果，不超额创建会话');fallbackLimit=Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-ttl/30));metrics.browserCreditUpperBound=ttl/30;metrics.fallbackLimit=fallbackLimit;}created=now();deadline=created+ttl*1000;
    try{session=await api('interact','POST',{ttl,activityTtl:120,streamWebView:false,blockAds:policy.blockAds===true,location:{country:'GB'}});}
    catch(error){metrics.creationUncertain=![400,401,402,403,429].includes(error.status);throw error;}
@@ -252,7 +262,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    const section=page.locator('#variant_container');await section.scrollIntoViewIfNeeded();const bytes=await section.screenshot({type:'png',timeout:20000});metrics.screenshots++;return bytes.toString('base64');
   }finally{release(page)}
  }
- const catalogueBatch=createCatalogueTransport(async(fn,urls)=>{metrics.catalogueBatchRequests=(metrics.catalogueBatchRequests||0)+1;metrics.catalogueRequests=(metrics.catalogueRequests||0)+urls.length;const rows=await scriptAction('('+fn.toString()+')('+JSON.stringify(urls)+')',{entryUrl:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776'});console.log(JSON.stringify({phase:'catalogue-batch',requests:urls.length,failures:rows.filter(r=>r.status!==200||!r.body).map(({url,status,error,navigation})=>({url,status,error,navigation}))}));return rows;},{validate:body=>parseSource({success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200}}}),recover:async url=>{metrics.catalogueDirectRepairs=(metrics.catalogueDirectRepairs||0)+1;console.log(JSON.stringify({phase:'catalogue-exception-repair',url}));return JSON.parse(await scrapeRaw(url,{fresh:true}));},maxRepairs:Math.min(12,Math.floor(budget.limit/2))});
+ const catalogueBatch=createCatalogueTransport(async(fn,urls)=>{metrics.catalogueBatchRequests=(metrics.catalogueBatchRequests||0)+1;metrics.catalogueRequests=(metrics.catalogueRequests||0)+urls.length;const freeRows=freeSource?await freeSource.catalogues(urls):[],known=new Set(freeRows.map(r=>r.url)),paidUrls=urls.filter(u=>!known.has(u)),rows=[...freeRows,...(paidUrls.length?await scriptAction('('+fn.toString()+')('+JSON.stringify(paidUrls)+')',{entryUrl:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776'}):[])];console.log(JSON.stringify({phase:'catalogue-batch',requests:urls.length,failures:rows.filter(r=>r.status!==200||!r.body).map(({url,status,error,navigation})=>({url,status,error,navigation}))}));return rows;},{validate:body=>parseSource({success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200}}}),recover:async url=>{metrics.catalogueDirectRepairs=(metrics.catalogueDirectRepairs||0)+1;console.log(JSON.stringify({phase:'catalogue-exception-repair',url}));return JSON.parse(await scrapeRaw(url,{fresh:true}));},maxRepairs:Math.min(12,Math.floor(budget.limit/2))});
  async function raw(input,options={}){
   const url=sourceUrl(input),u=new URL(url),catalogue=u.pathname==='/api/productlist';
   const identifier=JSON.stringify({url,formats:options.formats||[]});if(active.has(identifier))return active.get(identifier);
@@ -295,7 +305,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   const urls=[...new Set(products.map(p=>{const u=new URL(sourceUrl(p.sourceUrl));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return u.href}))].filter(url=>!families.has(url)&&!familyFailures.has(url));
   if(!urls.length)return;const batchSize=policy.familyBatchSize||100;for(let offset=0;offset<urls.length;offset+=batchSize){const batchUrls=urls.slice(offset,offset+batchSize);
   const makeScript=(batchUrls,concurrency=policy.familyBatchConcurrency||4)=>'(async()=>{const read='+readFamilyBundle.toString()+';const anchors='+JSON.stringify(anchors)+';const urls='+JSON.stringify(batchUrls)+';let cursor=0;const results=[],end=Date.now()+50000;await Promise.all(Array.from({length:'+String(concurrency)+'},async()=>{while(cursor<urls.length&&Date.now()<end){const url=urls[cursor++];try{results.push({url,bundle:await read({url,jsonUrl:url+"?json",anchors:anchors[url]||[],timeoutMs:'+String(policy.familyFetchTimeoutMs||10000)+'})})}catch(e){results.push({url,error:e.message})}}}));while(cursor<urls.length)results.push({url:urls[cursor++],deferred:true,error:"bounded batch time limit"});return results})()';
-  const started=Date.now();let results=await scriptAction(makeScript(batchUrls));
+  const started=Date.now(),freeRows=freeSource?await freeSource.families(products.filter(p=>{const u=new URL(sourceUrl(p.sourceUrl));u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');return batchUrls.includes(u.href);}),readFamilyBundle):[],known=new Set(freeRows.map(r=>r.url)),paidUrls=batchUrls.filter(u=>!known.has(u));let results=[...freeRows,...(paidUrls.length?await scriptAction(makeScript(paidUrls)):[])];
   const check=(rows,expected)=>{if(rows.length!==expected.length||new Set(rows.map(r=>r.url)).size!==expected.length||rows.some(r=>!expected.includes(r.url)))throw Error('商品系列批量补查地址不一致')};check(results,batchUrls);
   // A failed subrequest is retried once in a new, smaller action. Successful
   // families and permanent source responses are never repeated.
@@ -357,7 +367,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  let contextImageRepairs=0;
  reader.recoverOriginalImages=async products=>{
   if(!session&&!starting)ttl=Math.min(ttl,120);
-  const entries={},failures=[],selected=products.slice(0,Math.max(0,12-contextImageRepairs)),sharp=(await import('sharp')).default;let cursor=0;
+  const entries={},failures=[],selected=unrestrictedCollection(policy)?products:products.slice(0,Math.max(0,12-contextImageRepairs)),sharp=(await import('sharp')).default;let cursor=0;
   await fs.mkdir('web/images/source',{recursive:true});
   await Promise.all(Array.from({length:Math.min(2,selected.length)},async()=>{while(cursor<selected.length){const p=selected[cursor++];let page;try{contextImageRepairs++;guard();page=await take();metrics.browserPages++;metrics.nativeImageContextPages=(metrics.nativeImageContextPages||0)+1;const capture=await captureProductImageResponses(page,p);failures.push(...capture.failures);
     for(const image of capture.images){const m=await sharp(image.bytes).metadata();if(!m.width||m.width<64||!m.height||m.height<64)throw Error('Native browser response is not a real product photo');const hash=createHash('sha256').update(image.bytes).digest('hex'),ext=m.format==='jpeg'?'jpg':m.format;if(!['jpg','png','webp','avif','gif'].includes(ext))throw Error('Unsupported native browser photo');const cachedImageUrl='images/source/'+hash+'.'+ext;await fs.writeFile('web/'+cachedImageUrl,image.bytes);entries[image.url]={url:image.url,ok:true,hash,cachedImageUrl,width:m.width,height:m.height,bytes:image.bytes.length,mime:'image/'+m.format,observedAt:new Date(now()).toISOString(),selectedSku:p.sku,sourceContextUrl:p.sourceUrl,method:'normal-product-page-native-response-bytes'};}
@@ -365,7 +375,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   for(const p of products.slice(selected.length))failures.push({sku:p.sku,url:p.originalImageUrl,deferred:true,error:'Bounded native-image recovery limit reached'});
   console.log(JSON.stringify({phase:'targeted-native-image-context',products:selected.length,loaded:Object.keys(entries).length,failed:failures.length}));return {entries,failures};
  };
- reader.metrics=()=>({...metrics,scrapeCredits,sessionSeconds:created?Math.ceil(((browserEndedAt||now())-created)/1000):0});
+ reader.metrics=()=>({...metrics,...freeSource?.metrics(),scrapeCredits,sessionSeconds:created?Math.ceil(((browserEndedAt||now())-created)/1000):0});
  reader.closeBrowser=async()=>{
   if(sessionClosed)return;sessionClosed=true;
   if(!session){browserReceipt={creditsBilled:0};metrics.fallbackLimit=availableFallback();return;}
@@ -375,6 +385,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  };
  reader.close=async()=>{
   if(closed)return;closed=true;for(const waiter of waiting.splice(0))waiter.reject(budgetError('浏览器会话已关闭'));
+  await freeSource?.close();
   await reader.closeBrowser();
   if(session){metrics.browserCredits=Number.isFinite(browserReceipt?.creditsBilled)?browserReceipt.creditsBilled:ttl/30;metrics.scrapeCredits=scrapeCredits;metrics.firecrawlCredits=metrics.browserCredits+scrapeCredits;metrics.billingVerified=Number.isFinite(browserReceipt?.creditsBilled)&&scrapeBillingVerified;metrics.sessionDurationMs=browserReceipt?.sessionDurationMs;metrics.receipt={sessionId:session.id,creditsBilled:metrics.firecrawlCredits,browserCredits:metrics.browserCredits,scrapeCredits,billingVerified:metrics.billingVerified};}
   else {metrics.browserCredits=created&&metrics.creationUncertain?ttl/30:0;metrics.scrapeCredits=scrapeCredits;metrics.firecrawlCredits=metrics.browserCredits+scrapeCredits;metrics.billingVerified=!metrics.creationUncertain&&scrapeBillingVerified;metrics.receipt={creditsBilled:metrics.firecrawlCredits,browserCredits:metrics.browserCredits,scrapeCredits,billingVerified:metrics.billingVerified};}

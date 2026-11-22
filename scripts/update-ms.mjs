@@ -4,6 +4,7 @@ import {MS_SOURCES} from '../web/ms-model.mjs';
 import {msBatchScript,parseMsPage} from '../server/ms-source.mjs';
 import {expandMsFamily} from '../server/ms-products.mjs';
 import {loadPolicy} from '../server/collection-policy.mjs';
+import {unrestrictedCollection,ensureCollectionCreditReservation} from '../server/collection-limits.mjs';
 import {reserveCredits,openCreditBudget,readLedger,periodKey,runKey} from '../server/credit-budget.mjs';
 import {publishCollectionCheckpoint} from '../server/collection-checkpoints.mjs';
 import {atomicJson} from '../server/sync.mjs';
@@ -14,7 +15,8 @@ const initial=!previous.notificationBaselineReady,policy=await loadPolicy(),key=
 let credits=0,requests=0,budget,uncertain=0;const receipts=[];
 async function paidBatch(items){if(!items.length)return [];if(!key)throw Error('Only the blocked M&S pages require the existing Firecrawl server credential');
  if(!budget){const r=await fetch('https://api.firecrawl.dev/v2/team/credit-usage',{headers:{authorization:'Bearer '+key},signal:AbortSignal.timeout(30000)}),b=await r.json();if(!r.ok||!Number.isFinite(b.data?.remainingCredits))throw Error('M&S account reserve not verified');await reserveCredits(policy,{accountRemaining:b.data.remainingCredits});budget=await openCreditBudget(policy);if(process.env.COLLECTION_CHECKPOINTS==='1')await publishCollectionCheckpoint({stage:'ms-budget-reserved'});}
- if(credits>=budget.limit||requests>=Math.min(30,budget.limit))throw Error('M&S bounded source budget reached');requests++;
+ if(unrestrictedCollection(policy))await ensureCollectionCreditReservation(budget,policy,{spent:credits,confirmedCredits:receipts.filter(r=>r.billingVerified).reduce((n,r)=>n+r.credits,0)});
+ else if(credits>=budget.limit||requests>=Math.min(30,budget.limit))throw Error('M&S bounded source budget reached');requests++;
  const r=await fetch('https://api.firecrawl.dev/v2/scrape',{method:'POST',headers:{authorization:'Bearer '+key,'content-type':'application/json'},body:JSON.stringify({url:MS_SOURCES[0].url,formats:['rawHtml'],onlyMainContent:false,proxy:'basic',maxAge:0,parsers:[],timeout:90000,actions:[{type:'executeJavascript',script:msBatchScript(items)}]}),signal:AbortSignal.timeout(115000)}),result=await r.json(),d=result.data,cost=d?.metadata?.creditsUsed??result.metadata?.creditsUsed;
  credits+=Number.isFinite(cost)?cost:1;if(!Number.isFinite(cost))uncertain++;receipts.push({id:d?.metadata?.scrapeId||result.id||null,credits:Number.isFinite(cost)?cost:1,billingVerified:Number.isFinite(cost)});
  if(!r.ok||result.success===false||d?.metadata?.statusCode!==200)throw Error('M&S Firecrawl source response HTTP '+r.status+' / '+d?.metadata?.statusCode);let rows=d.actions?.javascriptReturns?.[0]?.value;if(typeof rows==='string')rows=JSON.parse(rows);if(!Array.isArray(rows)||rows.length!==items.length)throw Error('M&S batch did not return every requested URL');return rows;
