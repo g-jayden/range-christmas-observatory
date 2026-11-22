@@ -1,0 +1,423 @@
+{
+  "scope": "current-exact-official-product-details-only",
+  "observedAt": "2026-11-22T16:01:05Z",
+  "products": [
+    {
+      "sku": "9631463",
+      "sourceUrl": "https://www.argos.co.uk/product/9631463",
+      "observedAt": "2026-11-22T16:01:05Z",
+      "structuredProduct": {
+        "@type": "Product",
+        "name": "Premier Decorations Rustic Glow Doe and Fawn 250 LED Warm Light - White",
+        "description": "Bring your seasonal display to life with this Rustic Glow Doe and Fawn, measuring 1m high with a 41cm fawn. Featuring 250 warm white LEDs and 8 multi-action effects including chasing, twinkle, slow fade and steady on, it offers a variety of lighting options. The 8 hours on/16 hours off timer provides automatic operation, while the 5m lead allows flexible positioning. . The doe and fawn design creates a distinctive illuminated display, with the smaller fawn adding extra detail and visual interest. . Featuring 8 multi-action lighting effects and an 8 hours on/16 hours off timer, it offers varied display options with automatic operation. . Dimensions: Size H68, W37cm.; Length: 136cm.; Bulb Information: Energy consumption/1000h (kwh): 0.0060.; Bulbs required: 250 x LED (included).; Recommended maximum wattage: 6 watts.; Colour rendering index 80.; Colour temperature 2848K.; Rated luminous flux 5 lumens.; Warm up time to 60% light: instant full light.; General Information: Minimal assembly.; Product is mains powered plug in.; (not included).; IP 44.; Suitable for indoor and outdoor use.; Suitable for people with epilepsy.; Suitable for age 16 years and over.; This lighting product is a class 3 fitting.; Manufacturer&apos;s 1 year guarantee.; EAN: 5053844467794.",
+        "sku": "9631463",
+        "url": "https://www.argos.co.uk/product/9631463",
+        "mainEntityOfPage": "https://www.argos.co.uk/product/9631463",
+        "itemCondition": "https://schema.org/NewCondition",
+        "image": [
+          "https://media.4rgos.it/i/Argos/9631463_R_Z001A",
+          "https://media.4rgos.it/i/Argos/9631463_R_Z003A",
+          "https://media.4rgos.it/i/Argos/9631463_R_Z004A"
+        ],
+        "brand": {
+          "@type": "Brand",
+          "name": "Premier Decorations Ltd"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "75.00",
+          "priceCurrency": "GBP",
+          "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "GB"
+            },
+            "doesNotShip": false,
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "currency": "GBP",
+              "value": "0.00"
+            }
+          },
+          "url": "https://www.argos.co.uk/product/9631463",
+          "seller": {
+            "@type": "Organization",
+            "name": "Argos"
+          }
+        }
+      },
+      "legacy": {
+        "attributes": {
+          "partNumber": "9631463",
+          "endOfLineOutOfStock": false,
+          "description": "<p>Bring your seasonal display to life with this Rustic Glow Doe and Fawn, measuring 1m high with a 41cm fawn. Featuring 250 warm white LEDs and 8 multi-action effects including chasing, twinkle, slow fade and steady on, it offers a variety of lighting options. The 8 hours on/16 hours off timer provides automatic operation, while the 5m lead allows flexible positioning. <br \\><br \\></p><p>The doe and fawn design creates a distinctive illuminated display, with the smaller fawn adding extra detail and visual interest. <br \\><br \\></p><p>Featuring 8 multi-action lighting effects and an 8 hours on/16 hours off timer, it offers varied display options with automatic operation. <br \\><br \\></p><p>Dimensions: </p><ul><li>Size H68, W37cm. </li><li>Length: 136cm. </li></ul><p>Bulb Information: </p><ul><li>Energy consumption/1000h (kwh): 0.0060. </li><li>Bulbs required: 250 x LED (included). </li><li>Recommended maximum wattage: 6 watts. </li><li>Colour rendering index 80. </li><li>Colour temperature 2848K. </li><li>Rated luminous flux 5 lumens. </li><li>Warm up time to 60% light: instant full light. </li></ul><p>General Information:</p><ul><li>Minimal assembly. </li><li>Product is mains powered plug in. </li><li>(not included). </li><li>IP 44. </li><li>Suitable for indoor and outdoor use. </li><li>Suitable for people with epilepsy. </li><li>Suitable for age 16 years and over. </li><li>This lighting product is a class 3 fitting. </li><li>Manufacturer&apos;s 1 year guarantee. </li><li>EAN: 5053844467794. </li></ul>",
+          "deliverable": true,
+          "digitalDownload": false,
+          "inStoreJewelleryItem": false,
+          "globallyOutOfStock": false,
+          "preorderUnavailable": false,
+          "prepay": "OPTIONAL",
+          "name": "Premier Decorations Rustic Glow Doe and Fawn 250 LED Warm Light - White",
+          "collectable": false,
+          "featureType": "0",
+          "brand": "Premier Decorations Ltd",
+          "isWarrantyItem": false,
+          "channels": [
+            "ARGOS_UK_WEB"
+          ],
+          "madeToOrder": false,
+          "fastTrack": false,
+          "ean": "5053844467794",
+          "brandRestrict": false,
+          "fulfilmentAgent": "ADDO",
+          "catentryId": "",
+          "maximumQuantity": 10,
+          "twoManDeliveryUnavailable": false,
+          "sdfType": "large",
+          "ageRestrictedFlag": false,
+          "freeDelivery": true,
+          "excludedFromMoneyBack": false,
+          "deliveryPrice": 0,
+          "fulfilmentPassEligible": false,
+          "variableDeliveryPrice": false,
+          "sdf": true
+        },
+        "badges": [
+          {
+            "id": 1641760,
+            "type": "badges",
+            "attributes": {
+              "badgeType": "BADGE_PRODUCT",
+              "badgeText": null,
+              "badgeReference": "new_badge",
+              "startDate": "2026-09-14T00:00:00.000Z",
+              "endDate": "2026-12-14T00:00:00.000Z",
+              "source": {
+                "sourceType": "PRODUCT_INFORMATION",
+                "sourceReference": "BADGES_UI"
+              },
+              "componentBadge": [],
+              "sku": "9631463"
+            }
+          }
+        ],
+        "media": {
+          "images": [
+            "https://media.4rgos.it/i/Argos/9631463_R_Z001A",
+            "https://media.4rgos.it/i/Argos/9631463_R_Z003A",
+            "https://media.4rgos.it/i/Argos/9631463_R_Z004A"
+          ],
+          "meta": {
+            "https://media.4rgos.it/i/Argos/9631463_R_Z001A": {
+              "type": "image",
+              "width": "1043",
+              "height": "1382",
+              "format": "JPEG"
+            },
+            "https://media.4rgos.it/i/Argos/9631463_R_Z003A": {
+              "type": "image",
+              "width": "1382",
+              "height": "1382",
+              "format": "JPEG"
+            },
+            "https://media.4rgos.it/i/Argos/9631463_R_Z004A": {
+              "type": "image",
+              "width": "1382",
+              "height": "1382",
+              "format": "JPEG"
+            }
+          },
+          "pdfs": [],
+          "threesixty": [],
+          "videos": []
+        },
+        "prices": {
+          "id": "9631463",
+          "type": "prices",
+          "attributes": {
+            "now": 75,
+            "flashText": "Save 25%",
+            "was": 100,
+            "delivery": {
+              "deliveryPrice": 0,
+              "variableDeliveryPrice": false,
+              "freeDelivery": true
+            }
+          }
+        },
+        "variants": null,
+        "dimensions": {
+          "id": "9631463",
+          "type": "dimensions",
+          "attributes": {
+            "size": "H68, W37, D136cm",
+            "height": "68cm",
+            "width": "37cm",
+            "depth": "136cm"
+          },
+          "relationships": {},
+          "links": {
+            "self": "https://argos-pdp-backend-product-api.int.prd.jspaas.uk/dimensions/9631463"
+          }
+        },
+        "breadcrumb": [],
+        "productId": "9631463"
+      },
+      "flight": null,
+      "sourceReceipt": {
+        "scrapeId": "01a203fb-8998-717a-b398-cbebc23b5f01",
+        "credits": 1,
+        "statusCode": 200,
+        "transport": "official-supported-default-route"
+      },
+      "detailIdentityFingerprint": "e0e89acb3480f4edb5de90f46f3cb191f183cd2f7c2635a1b36b549e6b38ccf9"
+    },
+    {
+      "sku": "ya7jnvwj",
+      "sourceUrl": "https://www.argos.co.uk/product/ya7jnvwj",
+      "observedAt": "2026-11-22T16:01:05Z",
+      "structuredProduct": {
+        "@type": "Product",
+        "name": "Outsunny 7.9ft Christmas Inflatable Santa on Sleigh with Two Reindeer - Red",
+        "description": "Tired of decorations that can&apos;t withstand winter weather? This 7.9ft Outsunny Christmas inflatable outdoor decoration features Santa&apos;s sleigh, creating a captivating display. It glows warmly with internal LED lights, visible from a distance. Concerned about wind or snow? Included stakes, tethers and sandbags keep this water-resistant inflatable stable and secure, ensuring your display brings joy throughout the season. ● Grand 7.9ft long design with Santa and reindeer becomes a dazzling garden centerpiece ● Equipped with six bright LEDs, turning your garden into a stunning nighttime display ● Built-in blower inflates quickly, ensuring simple, fast setup ● Includes eight ground stakes, four tethers and four sandbags, providing strong, steady stability ● Made from IP44 water-resistant polyester, delivering reliable, all-weather durability ● Suitable for gardens and events, spreading seasonal cheer to all ● Colour: Red, Brown ● Material: Polyester Fabric ● Overall Dimension: 240W x 75D x 100H cm ● Power Cable Length: 3 m ● Each LED Light Power: 0.48W ● Fan: DC 12V/1.0A ● Input Voltage: 220-240V, 50/60Hz ● Output Voltage: DC 12V/1.25A ● IP Rating: IP44 ● Item Label: 84J-121V70RD Warning: this product is not a toy. Keep away from children unless under adult supervision. Keep away from open flames and heat sources. If powered, disconnect before cleaning or storage and do not use if damaged. Keep batteries away from children and dispose of used batteries safely. MH Star UK Ltd, 1 Northampton Cross Logistics Park, Northampton Cross Road, Northampton, NN4 9FH, United Kingdom",
+        "sku": "ya7jnvwj",
+        "url": "https://www.argos.co.uk/product/ya7jnvwj",
+        "mainEntityOfPage": "https://www.argos.co.uk/product/ya7jnvwj",
+        "itemCondition": "https://schema.org/NewCondition",
+        "image": [
+          "https://media.4rgos.it/i/Argos/ya7jnvwj_R_Z001A",
+          "https://media.4rgos.it/i/Argos/ya7jnvwj_R_Z002A",
+          "https://media.4rgos.it/i/Argos/ya7jnvwj_R_Z003A",
+          "https://media.4rgos.it/i/Argos/ya7jnvwj_R_Z004A",
+          "https://media.4rgos.it/i/Argos/ya7jnvwj_R_Z005A",
+          "https://media.4rgos.it/i/Argos/ya7jnvwj_R_Z006A"
+        ],
+        "brand": {
+          "@type": "Brand",
+          "name": "Outsunny"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "49.99",
+          "priceCurrency": "GBP",
+          "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "GB"
+            },
+            "doesNotShip": false,
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "currency": "GBP",
+              "value": "0.00"
+            }
+          },
+          "url": "https://www.argos.co.uk/product/ya7jnvwj",
+          "seller": {
+            "@type": "Organization",
+            "name": "Argos"
+          }
+        }
+      },
+      "legacy": null,
+      "flight": {
+        "availability": {
+          "deliverable": true,
+          "collectable": false,
+          "globallyOutOfStock": false,
+          "endOfLineOutOfStock": false,
+          "preorderUnavailable": false,
+          "inStoreJewelleryItem": false,
+          "digitalDownload": false,
+          "twoManDeliveryUnavailable": false,
+          "sdf": false,
+          "fulfilmentAgent": "ADMP",
+          "fulfilmentPassEligible": false,
+          "deliveryPrice": "$undefined",
+          "fastTrack": false,
+          "freeDelivery": false,
+          "variableDeliveryPrice": false
+        },
+        "pricing": {
+          "flashText": "",
+          "now": 49.99,
+          "was": null,
+          "uomPriceNow": null
+        }
+      },
+      "sourceReceipt": {
+        "scrapeId": "01a203fc-1abc-7519-a1fd-2472ca66b9bf",
+        "credits": 1,
+        "statusCode": 200,
+        "transport": "official-supported-default-route"
+      },
+      "detailIdentityFingerprint": "4c984ec49871df9d722e6284b5ac5723155cc617c383ebb489649d531a6217e2"
+    },
+    {
+      "sku": "hsqaq33q",
+      "sourceUrl": "https://www.argos.co.uk/product/hsqaq33q",
+      "observedAt": "2026-11-22T16:01:05Z",
+      "structuredProduct": {
+        "@type": "Product",
+        "name": "HOMCOM 4ft Christmas Inflatable Santa Claus with Sledge Sleigh Reindeer - Red",
+        "description": "Create the ultimate festive Christmas display in your yard this holiday season with our large Christmas display with Santa and reindeer riding a sled inflatable from HomCom. Designed with ultra-durable, weather-resistant, waterproof polyester and featuring an internal white LED glow, this holiday tree will create a festive focal point in your yard, invoking the holiday spirit for years to come. Self-inflating in minutes, this display plugs into any standard outlet creating a super simple set-up process that anyone can do. Build the perfect holiday yard display this year to outdo the neighbors and bring holiday cheer in classic Christmas fashion. &bull; 1.9m long x 1.22m tall Santa riding a sled with a reindeer &bull; 8 built-in internal white LED lights &bull; Self-inflates in minutes when plugged into any standard electrical outlet &bull; Made from weather-resistant, polyester cloth material &bull; Comes with all necessary hardware and accessories &bull; Item Name: Inflatable Christmas Decoration &bull; Brand Name: HOMCOM &bull; Type: Santa Riding a Sled with a Reindeer &bull; Material: Polyester Fabric &bull; Overall Dimensions: 190L x 72W x 122H cm &bull; Certification: IP64 Waterproof, CE、EMC Certified &bull; Transformer power: 1000MA &bull; Fan Motor Voltage: 0.8A &bull; Flat Pack: YES &bull; Assembly Required: YES &bull; Custom Label: 844-194 NOTE: Please don&apos;t place it outdoor in hard rain or snow! Warning: this product is not a toy. Keep away from children unless under adult supervision. Keep away from open flames and heat sources. If powered, disconnect before cleaning or storage and do not use if damaged. Keep batteries away from children and dispose of used batteries safely. MH Star UK Ltd, 1 Northampton Cross Logistics Park, Northampton Cross Road, Northampton, NN4 9FH, United Kingdom",
+        "sku": "hsqaq33q",
+        "url": "https://www.argos.co.uk/product/hsqaq33q",
+        "mainEntityOfPage": "https://www.argos.co.uk/product/hsqaq33q",
+        "itemCondition": "https://schema.org/NewCondition",
+        "image": [
+          "https://media.4rgos.it/i/Argos/hsqaq33q_R_Z001A",
+          "https://media.4rgos.it/i/Argos/hsqaq33q_R_Z002A",
+          "https://media.4rgos.it/i/Argos/hsqaq33q_R_Z003A",
+          "https://media.4rgos.it/i/Argos/hsqaq33q_R_Z004A",
+          "https://media.4rgos.it/i/Argos/hsqaq33q_R_Z005A",
+          "https://media.4rgos.it/i/Argos/hsqaq33q_R_Z006A"
+        ],
+        "brand": {
+          "@type": "Brand",
+          "name": "HOMCOM"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "31.99",
+          "priceCurrency": "GBP",
+          "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "GB"
+            },
+            "doesNotShip": false,
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "currency": "GBP",
+              "value": "0.00"
+            }
+          },
+          "url": "https://www.argos.co.uk/product/hsqaq33q",
+          "seller": {
+            "@type": "Organization",
+            "name": "Argos"
+          }
+        }
+      },
+      "legacy": null,
+      "flight": {
+        "availability": {
+          "deliverable": true,
+          "collectable": false,
+          "globallyOutOfStock": false,
+          "endOfLineOutOfStock": false,
+          "preorderUnavailable": false,
+          "inStoreJewelleryItem": false,
+          "digitalDownload": false,
+          "twoManDeliveryUnavailable": false,
+          "sdf": false,
+          "fulfilmentAgent": "ADMP",
+          "fulfilmentPassEligible": false,
+          "deliveryPrice": "$undefined",
+          "fastTrack": false,
+          "freeDelivery": false,
+          "variableDeliveryPrice": false
+        },
+        "pricing": {
+          "flashText": "",
+          "now": 31.99,
+          "was": null,
+          "uomPriceNow": null
+        }
+      },
+      "sourceReceipt": {
+        "scrapeId": "01a203fc-1a4f-712e-82ec-325fdc50a4f0",
+        "credits": 1,
+        "statusCode": 200,
+        "transport": "official-supported-default-route"
+      },
+      "detailIdentityFingerprint": "59a6b857bd6ba7a106874a94e4fb1df4bff7e0faf5cd7963763efff9c76bd1af"
+    },
+    {
+      "sku": "yaafhe7r",
+      "sourceUrl": "https://www.argos.co.uk/product/yaafhe7r",
+      "observedAt": "2026-11-22T16:01:05Z",
+      "structuredProduct": {
+        "@type": "Product",
+        "name": "HOMCOM 4ft Inflatable Christmas Santa Claus Gift with LED - White and Red",
+        "description": "Light up your family and guest’s Christmas this year with help from this inflatable Santa Claus from HOMCOM. Standing at a compact but impressive 4FT tall, it is made from weather-resistant polyester (with EMC and RoHS certification) so it is safe to use outdoors for years to come. Cute and colourful in design, LED lights and fan are placed inside so it moves around illuminates your outdoors at night for a fun effect. Inflating in seconds to save you time, it is finished with a zip fastening so it deflates just as fast. A novelty piece that will create the perfect seasonal cheer for your home. &bull; Fun and cheerful sitting Santa holding a present design that moves around with the internal fan &bull; Made from weather-resistant and durable polyester for safe use indoors and outdoors (IP44 rated) &bull; Internal LED lights that illuminate from the inside for a fun feel after dark &bull; Mains powered to inflate and a zip fastening to deflate quickly and easily &bull; Can be used indoors and outdoors &bull; Two tether ropes and two ground stakes included to keep attached to the ground &bull; Item name: Inflatable Santa Claus &bull; Brand name: HOMCOM &bull; Type: Sitting Santa Holding a gift box &bull; Material:Polyester Fabric &bull; Colour: White and Red &bull; Overall Dimensions: 70L x 50W x 120Hcm &bull; Power Cord Length:3M &bull; Rated Voltage: 100-240V,12V/750MA &bull; Certification: IP44,EMC,RoHS &bull; Net Weight: 1.1kg &bull; Accessary: 1 x internal fan(0.6A) 2 x tether ropes 2 x ground stakes&bull; Flat pack: Yes &bull; Custom label: 844-166V70 NOTE: Please don&apos;t place it outdoor in hard rain or snow! Warning: this product is not a toy. Keep away from children unless under adult supervision. Keep away from open flames and heat sources. If powered, disconnect before cleaning or storage and do not use if damaged. Keep batteries away from children and dispose of used batteries safely. MH Star UK Ltd, 1 Northampton Cross Logistics Park, Northampton Cross Road, Northampton, NN4 9FH, United Kingdom",
+        "sku": "yaafhe7r",
+        "url": "https://www.argos.co.uk/product/yaafhe7r",
+        "mainEntityOfPage": "https://www.argos.co.uk/product/yaafhe7r",
+        "itemCondition": "https://schema.org/NewCondition",
+        "image": [
+          "https://media.4rgos.it/i/Argos/yaafhe7r_R_Z001A",
+          "https://media.4rgos.it/i/Argos/yaafhe7r_R_Z002A",
+          "https://media.4rgos.it/i/Argos/yaafhe7r_R_Z003A",
+          "https://media.4rgos.it/i/Argos/yaafhe7r_R_Z004A",
+          "https://media.4rgos.it/i/Argos/yaafhe7r_R_Z005A",
+          "https://media.4rgos.it/i/Argos/yaafhe7r_R_Z006A"
+        ],
+        "brand": {
+          "@type": "Brand",
+          "name": "HOMCOM"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "13.99",
+          "priceCurrency": "GBP",
+          "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "GB"
+            },
+            "doesNotShip": false,
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "currency": "GBP",
+              "value": "0.00"
+            }
+          },
+          "url": "https://www.argos.co.uk/product/yaafhe7r",
+          "seller": {
+            "@type": "Organization",
+            "name": "Argos"
+          }
+        }
+      },
+      "legacy": null,
+      "flight": {
+        "availability": {
+          "deliverable": true,
+          "collectable": false,
+          "globallyOutOfStock": false,
+          "endOfLineOutOfStock": false,
+          "preorderUnavailable": false,
+          "inStoreJewelleryItem": false,
+          "digitalDownload": false,
+          "twoManDeliveryUnavailable": false,
+          "sdf": false,
+          "fulfilmentAgent": "ADMP",
+          "fulfilmentPassEligible": false,
+          "deliveryPrice": "$undefined",
+          "fastTrack": false,
+          "freeDelivery": false,
+          "variableDeliveryPrice": false
+        },
+        "pricing": {
+          "flashText": "",
+          "now": 13.99,
+          "was": null,
+          "uomPriceNow": null
+        }
+      },
+      "sourceReceipt": {
+        "scrapeId": "01a203fc-c330-7519-9ba0-8363cf3f119f",
+        "credits": 1,
+        "statusCode": 200,
+        "transport": "official-supported-default-route"
+      },
+      "detailIdentityFingerprint": "f111719eba945a9b99a38a54a113fb1aee22c974f50e6ee7b3c114f30bd98d99"
+    }
+  ]
+}
