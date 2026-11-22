@@ -53,6 +53,7 @@ if(retailerEnabled('bq')){const{publishBqCommittedEvidence}=await import('../ser
 if(retailerEnabled('ar'))await fs.cp('web/ar/details','public/ar/details',{recursive:true});
 const{applyRecoveredRangeGalleryFiles}=await import('../server/range-gallery-recovery.mjs');console.log(JSON.stringify({phase:'Apply independently verified image-only galleries',...await applyRecoveredRangeGalleryFiles('public','web')}));
 const{applyRangeNativeFiles}=await import('../server/range-native-index.mjs');console.log(JSON.stringify({phase:'Apply exact official native original mirrors',...await applyRangeNativeFiles('public','web')}));
+const{applyRangeResidualFiles}=await import('../server/range-residual-evidence.mjs');console.log(JSON.stringify({phase:'Publish exact-SKU reviewed facts consistently in cards and lazy details',...await applyRangeResidualFiles('public','web')}));
 await copyPublishedAssets('web','public',{repositoryImages:true});
 const{publishedEvidenceHealth}=await import('../server/published-evidence-health.mjs');await fs.writeFile('public/product-evidence-health.json',JSON.stringify(await publishedEvidenceHealth('public')));
 const{deriveCatalogueIdentities}=await import('../server/catalogue-identities.mjs');console.log(JSON.stringify({phase:'all-retailer-source-and-photo-identity-audit',...await deriveCatalogueIdentities('public')}));

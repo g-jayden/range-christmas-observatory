@@ -21,6 +21,7 @@ try{
  // code, never added to the JSON validation list or omitted from the artifact.
  const fixture=path.join(tmp,'build-smoke');await fs.mkdir(fixture+'/web/bq/departments',{recursive:true});await fs.mkdir(fixture+'/web/bq/details',{recursive:true});await fs.writeFile(fixture+'/web/bq/catalogue.json',JSON.stringify({format:'department-shards-v1',departmentShards:{},products:[]}));
  for(const file of await fs.readdir('web')){if(file.endsWith('.json'))await fs.writeFile(fixture+'/web/'+file,'{}');else if(/\.(?:mjs|js|css|html)$/.test(file))await fs.copyFile('web/'+file,fixture+'/web/'+file);}
+ await fs.writeFile(fixture+'/web/range-residual-reviewed-evidence.json',JSON.stringify({version:1,method:'exact-SKU-official-source-and-manually-read-native-dimensions',records:[]}));
  await fs.mkdir(fixture+'/web/ar/details',{recursive:true});await fs.writeFile(fixture+'/web/ar/details/00.json','{}');await fs.writeFile(fixture+'/web/ar/catalogue.json',JSON.stringify({products:[]}));
  for(const name of ['status.json','settings.json','service.json','next-collection-authorization.json','argos-collection-authorization.json','argos-acquisition-status.json','collection-policy.json','collection-ledger.json','monitor-state.json','new-arrivals.json','monitor-proof.json'])try{await fs.access(fixture+'/web/'+name)}catch{await fs.writeFile(fixture+'/web/'+name,'{}');}
  // This smoke build has no real retailer caches; exact B&Q active-data publication is covered in test-bq.
