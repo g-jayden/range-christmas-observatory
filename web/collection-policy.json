@@ -68,7 +68,10 @@
     "automaticPurchaseOrPlanUpgrade": false,
     "approval": "User explicitly authorised ongoing unlimited ordinary catalogue/detail collection and B&Q completion; always minimise paid credits.",
     "fullRefreshOperationalEnvelope": 160,
-    "fullRefreshNote": "Owner unlimited ordinary-source approval covers completion of the current full update. Daily checks retain a 60-credit operational envelope; full checks may reserve up to 160, bill only actual receipts, reuse current closed directories, and preserve at least 5000 account credits."
+    "fullRefreshNote": "Owner unlimited ordinary-source approval covers completion of the current full update. Daily checks retain a 60-credit operational envelope; full checks may reserve up to 160, bill only actual receipts, reuse current closed directories, and preserve at least 5000 account credits.",
+    "automaticBudgetExpansion": true,
+    "expansionNote": "Owner standing unlimited authorisation: the initial run envelope is not a completion cap. Further exact unfinished source requests may reserve small increments after verifying live account balance, preserving other reservations and the 5000-credit account floor. Actual fees remain separate receipts; failures and elapsed-time guards remain bounded."
   },
-  "fullRefreshMaxCreditsPerRun": 160
+  "fullRefreshMaxCreditsPerRun": 160,
+  "automaticBudgetExpansion": true
 }

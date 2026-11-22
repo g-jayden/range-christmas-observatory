@@ -7,6 +7,7 @@ import {createCatalogueTransport} from './catalogue-transport.mjs';
 import {readPreviewAssets} from './product-previews.mjs';
 import {captureProductImageResponses} from './native-image-context.mjs';
 import {readRangeImageGalleries} from './range-image-gallery.mjs';
+import {monthlyCreditLimit} from './collection-policy.mjs';
 
 export async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000,anchors=[]}){
  const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch(error){return {status:0,error:String(error.message).slice(0,180)}}};
@@ -122,11 +123,21 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   }
  }
 
- function availableFallback(){if(policy.catalogueTransport==='enhanced-batch'&&!session&&!starting&&!sessionClosed)return Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit));return sessionClosed&&Number.isFinite(browserReceipt?.creditsBilled)?Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-browserReceipt.creditsBilled)):fallbackLimit;}
+ const mayExpand=policy.automaticBudgetExpansion===true&&monthlyCreditLimit(policy)===Infinity;
+ function availableFallback(){const ceiling=mayExpand?Infinity:policy.maxFallbackScrapesPerRun??40;if(policy.catalogueTransport==='enhanced-batch'&&!session&&!starting&&!sessionClosed)return Math.max(0,Math.min(ceiling,budget.limit));return sessionClosed&&Number.isFinite(browserReceipt?.creditsBilled)?Math.max(0,Math.min(ceiling,budget.limit-browserReceipt.creditsBilled)):fallbackLimit;}
+ async function requireFallbackBudget(){
+  if(fallbackReserved<availableFallback())return;
+  if(!mayExpand||typeof budget.extend!=='function')throw budgetError('批量核验已达到本轮付费请求上限');
+  guard();await budget.extend({additionalCredits:32});fallbackLimit=Math.max(0,budget.limit-Math.ceil(ttl/30));metrics.fallbackLimit=fallbackLimit;metrics.creditsEstimatedUpperBound=budget.limit;metrics.authorisedBudgetExpansions=(metrics.authorisedBudgetExpansions||0)+1;
+  if(fallbackReserved>=availableFallback())throw budgetError('Account reserve prevents the next source request');
+ }
+ let fallbackClaims=Promise.resolve();
+ function claimFallbackBudget(){
+  const claim=fallbackClaims.then(async()=>{guard();while(fallbackReserved>=availableFallback())await requireFallbackBudget();guard();fallbackReserved++;metrics.scrapeRequests++;});fallbackClaims=claim.catch(()=>{});return claim;
+ }
  async function scrapeRaw(url,{fresh=false}={}){
   guard();if(fresh)fallbackCache.delete(url);if(fallbackCache.has(url))return fallbackCache.get(url);
-  if(fallbackReserved>=availableFallback())throw budgetError('受阻地址的定额抓取已达本轮上限，未启动更多付费请求');
-  fallbackReserved++;metrics.scrapeRequests++;
+  await claimFallbackBudget();
   const promise=(async()=>{
    let charged=false;try{
     const result=await api('scrape','POST',{url,formats:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,parsers:[],timeout:45000});
@@ -139,7 +150,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  }
 
  async function scriptAction(script,{needsImages=false,entryUrl='https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776'}={}){
-  guard();if(fallbackReserved>=availableFallback())throw budgetError('批量核验已达到本轮付费请求上限');fallbackReserved++;metrics.scrapeRequests++;
+  guard();await claimFallbackBudget();
   let charged=false;try{
    const result=await api('scrape','POST',{url:entryUrl,formats:needsImages?['rawHtml',{type:'screenshot',fullPage:false}]:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,blockAds:false,parsers:[],timeout:90000,actions:[{type:'executeJavascript',script}]});
    const cost=result.data?.metadata?.creditsUsed;scrapeCredits+=Number.isFinite(cost)?cost:1;charged=true;if(!Number.isFinite(cost))scrapeBillingVerified=false;
@@ -199,7 +210,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   })();families.set(canonical,promise);return promise;
  }
  async function enhancedCapture(url,options={}){
-  guard();if(fallbackReserved>=availableFallback())throw budgetError('新品截图已达到本轮付费上限');fallbackReserved++;metrics.scrapeRequests++;
+  guard();await claimFallbackBudget();
   const expected=new URL(url).hash.slice(1).replace(/^0+(?=\d)/,'');let charged=false;
   let script='(async()=>{const preferred='+JSON.stringify(options.preferredThumbnail||null)+';const sku='+JSON.stringify(expected)+';const selectedSku=()=>(document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"").replace(/^0+(?=\\d)/,"");let v=typeof g_variantArr!=="undefined"?g_variantArr.find(v=>String(v.sku)===sku):null;if(selectedSku()!==sku){for(let n=0;n<30&&typeof initJson!=="function";n++)await new Promise(r=>setTimeout(r,300));if(typeof initJson!=="function")throw Error("Official product initializer missing for SKU selection");if(typeof g_variantArr==="undefined"||!g_variantArr.length){const data=await(await fetch("?json",{credentials:"include",cache:"no-store"})).json();initJson(data)}v=g_variantArr.find(v=>String(v.sku)===sku);if(!v)throw Error("SKU not present");selectAttrFilterByVariant(v);}v||={id:null};if(preferred){const thumb=Array.from(document.querySelectorAll("#product-gallery .rsThumb img")).find(i=>i.src===preferred);thumb?.parentElement?.click();}const wait=async()=>{for(let n=0;n<30;n++){const selected=(document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"").replace(/^0+(?=\\d)/,"");const images=Array.from(document.querySelectorAll("#variant_container img")).filter(i=>i.complete&&i.naturalWidth>=64&&i.naturalHeight>=64);if(selected===sku&&images.length){document.querySelector("#variant_container").scrollIntoView();const root=document.querySelector("#product-gallery .rsOverflow"),box=root?.getBoundingClientRect();const originals=Array.from(document.querySelectorAll("#product-gallery .rsMainSlideImage")).filter(i=>i.complete&&i.naturalWidth>=64&&i.naturalHeight>=64).map(i=>{const r=i.getBoundingClientRect();const area=box?Math.max(0,Math.min(r.right,box.right)-Math.max(r.left,box.left))*Math.max(0,Math.min(r.bottom,box.bottom)-Math.max(r.top,box.top)):0;return {url:i.currentSrc||i.src,width:i.naturalWidth,height:i.naturalHeight,visibleArea:area,selectedSku:selected}}).filter(i=>i.visibleArea>0).sort((a,b)=>b.visibleArea-a.visibleArea);if(originals.length)return {sku:selected,images:images.length,originals};if(n%5===0){const thumbs=Array.from(document.querySelectorAll("#product-gallery .rsThumb img")).filter(i=>i.src!==preferred&&i.getBoundingClientRect().width>0&&(!i.getAttribute("data-variant")||i.getAttribute("data-variant").split(",").includes(String(v.id))));thumbs[Math.floor(n/5)]?.parentElement?.click();}}await new Promise(r=>setTimeout(r,300))}throw Error("Selected SKU or real product image not ready")};return await wait()})()';
   const canonical=new URL(url);canonical.hash='';canonical.search='';canonical.pathname=canonical.pathname.replace(/\/$/,'');
