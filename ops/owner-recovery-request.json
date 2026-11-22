@@ -1,8 +1,8 @@
 {
-  "requestId": "owner-recovery-20261123-verify-hydrated-current-photos",
+  "requestId": "owner-recovery-20261123-range-source-residuals",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-22T17:27:26.453533Z",
+  "requestedAt": "2026-11-22T19:44:15.961Z",
   "targets": [
-    "range-current-photos"
+    "range-residual-diagnostic"
   ]
 }

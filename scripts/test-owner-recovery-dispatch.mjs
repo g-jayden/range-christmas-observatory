@@ -11,3 +11,5 @@ await dispatchOwnerRecovery({...request,targets:['nx-review-current','mt-review-
 await dispatchOwnerRecovery({...request,targets:['range-publish-current']},{env,fetcher,now});assert.equal(calls.at(-1).body.inputs.mode,'publish');assert.equal(calls.at(-1).body.inputs.refresh,false);assert.equal(calls.at(-1).body.inputs.checkNew,false);
 
 await dispatchOwnerRecovery({...request,targets:['range-current-photos']},{env,fetcher,now});assert(calls.at(-1).url.endsWith('/range-current-photos.yml/dispatches'));assert.deepEqual(calls.at(-1).body.inputs,{});
+
+await dispatchOwnerRecovery({...request,targets:['range-residual-diagnostic']},{env,fetcher,now});assert(calls.at(-1).url.endsWith('/range-residual-diagnostic.yml/dispatches'));assert.deepEqual(calls.at(-1).body.inputs,{});
