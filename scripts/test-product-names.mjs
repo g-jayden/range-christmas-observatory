@@ -43,6 +43,6 @@ const scheduled=[],keys=[],states=[];let builds=0;
 const controller=createFavoritesReportController({cache:{get:async key=>{keys.push(key);return key.startsWith('[["')?new Blob(['old']):null;},set:async()=>{},remove:async()=>{}},build:async()=>{builds++;return [new Uint8Array([1])];},urls:{createObjectURL:()=> 'blob:report',revokeObjectURL:()=>{}},schedule:f=>(scheduled.push(f),f),cancel:()=>{}});
 for(const item of [tree,{...tree,variantName:'8ft Pre-Lit Opulent Artificial Fir Tree'},reviewed]){controller.prepare([item],s=>states.push(s));await scheduled.shift()();}
 assert.equal(builds,3);assert.equal(new Set(keys).size,3);assert(keys.every(k=>JSON.parse(k)[0]===PDF_LAYOUT_VERSION));assert(states.at(-1).ready);
-const build=await fs.readFile('scripts/build-static.mjs','utf8');assert(build.includes("'product-names.mjs'"));
+const {STATIC_FRONTEND_ENTRIES}=await import('../server/static-front-end-assets.mjs');assert(STATIC_FRONTEND_ENTRIES.includes('product-names.mjs'));
 const daily=await fs.readFile('scripts/prepare-daily-digests.mjs','utf8');assert(daily.includes('names:productNames(p)'));assert(daily.includes('layoutVersion:PDF_LAYOUT_VERSION'));
 console.log('Bilingual names: exact official English, source-bound Chinese, unchanged source price/size, eight native photos per page, favorites cache migration and both report entry points passed.');
