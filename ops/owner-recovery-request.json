@@ -1,7 +1,7 @@
 {
-  "requestId": "owner-recovery-20261123-repair-only-current-photos",
+  "requestId": "owner-recovery-20261123-verify-hydrated-current-photos",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-22T17:17:52.027414Z",
+  "requestedAt": "2026-11-22T17:27:26.453533Z",
   "targets": [
     "range-current-photos"
   ]
