@@ -1,5 +1,8 @@
 name: Argos free native gallery review
 on:
+  push:
+    branches: [main]
+    paths: ['web/ar/manual-image-review.json', '.github/workflows/ar-images.yml']
   workflow_dispatch:
   workflow_run:
     workflows: [Argos exact public product baseline]
@@ -12,7 +15,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   images:
-    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main')
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
