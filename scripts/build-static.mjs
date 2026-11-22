@@ -1,3 +1,4 @@
+import{copyStaticFrontendAssets}from'../server/static-front-end-assets.mjs';
 import{pathToFileURL}from'node:url';import path from'node:path';
 const{retailerEnabled}=await import(pathToFileURL(path.resolve('web/retailer-activation.mjs')).href);
 import fs from 'node:fs/promises';
@@ -8,7 +9,7 @@ const{rebuildStoredRangeViews}=await import('../server/rebuild-range-views.mjs')
 await fs.rm('public',{recursive:true,force:true});
 await fs.mkdir('public',{recursive:true});
 for(const name of ['catalogue.json','status.json','settings.json','service.json','next-collection-authorization.json','argos-collection-authorization.json','argos-acquisition-status.json','collection-policy.json','collection-ledger.json','monitor-state.json','new-arrivals.json','monitor-proof.json'])JSON.parse(await fs.readFile('web/'+name,'utf8'));
-for(const name of ['index.html','dashboard-full.css','dashboard-full.js','catalogue.json','status.json','image-check.html','image-check.js','controls.js','settings.json','service.json','next-collection-authorization.json','argos-collection-authorization.json','argos-acquisition-status.json','collection-policy.json','collection-ledger.json','monitor-state.json','monitor-labels.mjs','new-arrivals.json','monitor-proof.json','confirm.html','product.html','catalogue-model.mjs','ar-model.mjs','asda-model.mjs','ms-model.mjs','bm-model.mjs','hb-model.mjs','du-model.mjs','mt-model.mjs','bq-model.mjs','nx-model.mjs','nx-physical.mjs','jl-model.mjs','jl-physical.mjs','retailers.mjs','retailer-activation.mjs','theme-model.mjs','taxonomy.mjs','product-preview.mjs','product-preview-dialog.js','product-facts.mjs','source-photo-selection.mjs','report-layout.mjs','catalogue-pdf.mjs','product-names.mjs','catalogue-loader.mjs','preview-warmup.mjs','favorites-store.mjs','favorites-report.mjs','native-image-browser.mjs','native-image-cache.mjs','image-download.mjs','catalogue-navigation.mjs','dashboard-navigation.js'])await fs.copyFile('web/'+name,'public/'+name);
+await copyStaticFrontendAssets('web','public');
 
 const activationHash=createHash('sha256').update(await fs.readFile('public/retailer-activation.mjs')).digest('hex').slice(0,12);for(const f of ['retailers.mjs','catalogue-model.mjs','catalogue-navigation.mjs','controls.js']){const text=await fs.readFile('public/'+f,'utf8');await fs.writeFile('public/'+f,text.replaceAll("'./retailer-activation.mjs'","'./retailer-activation.mjs?v="+activationHash+"'"));}
 for(const id of ['nx','jl']){await fs.mkdir('public/'+id,{recursive:true});for(const name of (retailerEnabled(id)?['catalogue.json','status.json','reviews.json','gallery-audit.json']:[]))try{await fs.copyFile('web/'+id+'/'+name,'public/'+id+'/'+name)}catch(e){if(e.code!=='ENOENT')throw e;}const physicalHash=createHash('sha256').update(await fs.readFile('public/'+id+'-physical.mjs')).digest('hex').slice(0,12);let model=await fs.readFile('public/'+id+'-model.mjs','utf8');await fs.writeFile('public/'+id+'-model.mjs',model.replaceAll("'./"+id+"-physical.mjs'","'./"+id+"-physical.mjs?v="+physicalHash+"'"));const hash=createHash('sha256').update(await fs.readFile('public/'+id+'-model.mjs')).digest('hex').slice(0,12);for(const f of ['catalogue-model.mjs','catalogue-navigation.mjs','dashboard-full.js','controls.js']){const text=await fs.readFile('public/'+f,'utf8');await fs.writeFile('public/'+f,text.replaceAll("'./"+id+"-model.mjs'","'./"+id+"-model.mjs?v="+hash+"'"));}}
@@ -37,7 +38,7 @@ function moduleHash(file,parents=new Set()){if(moduleHashes.has(file))return mod
 for(const [file,source]of browserSources)await fs.writeFile('public/'+file,source.replace(/(['"])(\.\/([^'"]+\.(?:mjs|js)))(?:\?v=[a-f0-9]+)?\1/g,(all,q,relative,dependency)=>browserSources.has(dependency)?q+relative+'?v='+moduleHash(dependency)+q:all));
 for(const page of ['index.html','image-check.html']){
  let html=await fs.readFile('public/'+page,'utf8');
- for(const asset of ['dashboard-full.css','dashboard-full.js','controls.js','image-check.js']){
+ for(const asset of ['catalogue-bootstrap.js','dashboard-full.css','dashboard-full.js','controls.js','image-check.js']){
   const hash=createHash('sha256').update(await fs.readFile('public/'+asset)).digest('hex').slice(0,12);html=html.replaceAll('"'+asset+'"','"'+asset+'?v='+hash+'"');
  }
  // Load the exact versioned dependency graph in parallel with the page instead
