@@ -1,3 +1,4 @@
+import {monthlyCreditLimit} from './collection-policy.mjs';
 import fs from 'node:fs/promises';
 import {atomicJson,SourceError} from './sync.mjs';
 import {loadUncappedCreditGrants,indexUncappedCreditReceipts,ordinaryCreditUsage,indexScopedNativeReservations,ordinaryReservationTotal} from './credit-scope.mjs';
@@ -20,7 +21,7 @@ export async function reserveCredits(policy,{now=Date.now(),key=runKey(),account
  const ledger=await readLedger(),period=periodKey(now),p=ledger.periods[period]||={used:0,reservations:{}};p.reservations||={};
  if(p.reservations[key])return {ledger,period,key,limit:p.reservations[key].amount};
  const reserved=ordinaryReservationTotal(p,await loadUncappedCreditGrants());
- const limit=Math.floor(Math.min(policy.maxCreditsPerRun,policy.maxCreditsPerCalendarMonth-ordinaryCreditUsage(p).ordinary-reserved,accountRemaining-policy.accountReserveCredits));
+ const limit=Math.floor(Math.min(policy.maxCreditsPerRun,monthlyCreditLimit(policy)-ordinaryCreditUsage(p).ordinary-reserved,accountRemaining-policy.accountReserveCredits));
  if(limit<(policy.minimumReservationCredits===1?1:2))throw budgetError('本项目积分上限或账户保留额度不足，尚未创建付费会话');
  p.reservations[key]={amount:limit,createdAt:new Date(now).toISOString()};
  ledger.provider='firecrawl-browser';await atomicJson(file,ledger);

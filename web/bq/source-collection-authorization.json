@@ -1,0 +1,13 @@
+{
+  "id": "bq-free-first-unlimited-source-20261122",
+  "enabled": true,
+  "retailerId": "bq",
+  "scope": "ongoing-ten-category-collection-and-exact-variant-repairs",
+  "freeFirst": true,
+  "monthlyCreditsLimit": null,
+  "maxCreditsPerRun": 60,
+  "accountReserveCredits": 5000,
+  "authorizedAt": "2026-11-22",
+  "automaticPurchaseOrPlanUpgrade": false,
+  "notes": "Ongoing owner approval, unlimited total credits when free sources fail. Preserve completed missing-EAN repairs and never recollect completed repair targets."
+}

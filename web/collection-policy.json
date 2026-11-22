@@ -6,7 +6,7 @@
   "maxDetailPagesPerRun": 10000,
   "maxScreenshotPagesPerRun": 1000,
   "maxCreditsPerRun": 60,
-  "maxCreditsPerCalendarMonth": 2000,
+  "maxCreditsPerCalendarMonth": null,
   "accountReserveCredits": 5000,
   "catalogueReuseHours": 0,
   "failureRetryDays": [
@@ -57,11 +57,15 @@
     }
   ],
   "monthlyLimitAuthorization": {
-    "approvedAt": "2026-11-19",
+    "approvedAt": "2026-11-22",
     "scope": "ordinary project collection",
-    "previousLimit": 1500,
-    "newLimit": 2000,
-    "maximumAdditionalCreditsThisMonth": 500,
-    "automaticPurchaseOrPlanUpgrade": false
+    "newLimit": null,
+    "maximumAdditionalCreditsThisMonth": null,
+    "unlimited": true,
+    "freeFirst": true,
+    "maxCreditsPerRun": 60,
+    "accountReserveCredits": 5000,
+    "automaticPurchaseOrPlanUpgrade": false,
+    "approval": "User explicitly authorised ongoing unlimited ordinary catalogue/detail collection and B&Q completion; always minimise paid credits."
   }
 }
