@@ -1,9 +1,8 @@
 {
-  "requestId": "owner-recovery-20261123-reviewed-next-matalan",
+  "requestId": "owner-recovery-20261123-rebind-current-photo-evidence",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-22T16:51:06.540177Z",
+  "requestedAt": "2026-11-22T17:09:50.642435Z",
   "targets": [
-    "nx-review-current",
-    "mt-review-current"
+    "range-publish-current"
   ]
 }
