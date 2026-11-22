@@ -4,7 +4,7 @@ import {createHash} from 'node:crypto';
 import fs from 'node:fs/promises';
 import sharp from 'sharp';
 const exec=promisify(execFile);
-const allowed=url=>{const u=new URL(url);if(!['https://www.therange.co.uk','https://kube-media-unpublished.rstore.com'].includes(u.origin)||!/^\/media\/.+\.(?:jpe?g|png|webp|avif)$/i.test(u.pathname))throw Error('An observed official source image is required');return u.origin;};
+const allowed=url=>{const u=new URL(url);if(u.username||u.password||u.port||!['https://www.therange.co.uk','https://kube-media-unpublished.rstore.com'].includes(u.origin)||!/^\/media\/.+\.(?:jpe?g|png|webp|avif|gif)$/i.test(u.pathname))throw Error('An observed official source image is required');return u.origin;};
 export async function ordinaryBinaryHttp2(url){
  allowed(url);try{const{stdout}=await exec('curl',['--disable','--http2','--location','--max-time','12','--silent','--show-error','--write-out','\n%{http_code}',url],{encoding:'buffer',timeout:13000,maxBuffer:25000000});const cut=stdout.lastIndexOf(10);return{status:Number(stdout.subarray(cut+1).toString('ascii')),bytes:stdout.subarray(0,cut)};}catch(e){return{status:0,error:String(e.message).slice(0,150)};}
 }
@@ -16,7 +16,7 @@ export function createFreeFirstRangeImages({fetcher=fetch,http2=ordinaryBinaryHt
   for(const[method,run]of methods){const denialKey=origin+' '+method;if(denied.has(denialKey)){own.push({method,cachedOriginDenial:true,status:403});continue;}
    let r;try{r=await run(url);}catch(e){r={status:0,error:e.message};}const a={url,method,status:r.status,error:r.error};attempts.push(a);own.push(a);
    if(r.status===403||r.status===401)denied.add(denialKey);
-   if(r.status===200&&r.bytes)try{const bytes=Buffer.from(r.bytes),m=await sharp(bytes).metadata();if(bytes.length>25000000||m.width<64||m.height<64)throw Error('Invalid source image dimensions');const hash=createHash('sha256').update(bytes).digest('hex'),ext=m.format==='jpeg'?'jpg':m.format;if(!['jpg','png','webp','avif'].includes(ext))throw Error('Unsupported original source format');const cachedImageUrl='images/source/'+hash+'.'+ext;await save(cachedImageUrl,bytes);return{ok:true,url,hash,cachedImageUrl,width:m.width,height:m.height,bytes:bytes.length,mime:'image/'+m.format,sourceBytesUnchanged:true,observedAt:new Date().toISOString(),method:'ordinary-free-'+method};}catch(e){a.error=String(e.message).slice(0,150);}
+   if(r.status===200&&r.bytes)try{const bytes=Buffer.from(r.bytes),m=await sharp(bytes).metadata();if(bytes.length>25000000||m.width<64||m.height<64)throw Error('Invalid source image dimensions');const hash=createHash('sha256').update(bytes).digest('hex'),ext=m.format==='jpeg'?'jpg':m.format;if(!['jpg','png','webp','avif','gif'].includes(ext))throw Error('Unsupported original source format');const cachedImageUrl='images/source/'+hash+'.'+ext;await save(cachedImageUrl,bytes);return{ok:true,url,hash,cachedImageUrl,width:m.width,height:m.height,bytes:bytes.length,mime:'image/'+m.format,sourceBytesUnchanged:true,observedAt:new Date().toISOString(),method:'ordinary-free-'+method};}catch(e){a.error=String(e.message).slice(0,150);}
   }
   return{ok:false,url,attempts:own,freeMethodsExhausted:own.length===3,sourceMissing:own.length===3&&own.every(a=>a.status===404)};
  },async close(){await browser?.close();}};
