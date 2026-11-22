@@ -38,7 +38,17 @@ export async function collectArDirectories({key,fetcher=fetch,root='web/ar',runt
    }catch(e){lastFailures=lastFailures.filter(f=>f.id!==id);lastFailures.push({id,error:String(e.message).slice(0,200),status:e.status});await checkpoint();}
   }
  }
- const audit=await checkpoint();console.log(JSON.stringify({phase:'Argos current directory reconciliation',complete:audit.complete,reusedDirectories,acceptedDirectories:accepted.size,failures:lastFailures,paidRequests:receipts.length}));
+ if(allowIsolatedPages&&accepted.size===ENTRIES.length){
+  const offers=createArDefaultPageReader({key,fetcher,root:runtime+'/isolated-pages',now,onReceipt:async receipt=>{receipts.push(receipt);await atomic(runtime+'/isolated-page-receipts.json',{receipts});}});
+  const knownOffers=new Set([...accepted.values()].flatMap(c=>c.pages.flatMap(p=>p.props.productData.filter(r=>typeof r.attributes?.name==='string'&&Number.isFinite(r.attributes?.price)).map(r=>String(r.id)))));
+  for(const category of accepted.values())for(let i=0;i<category.pages.length;i++){
+   const page=category.pages[i];if(page.props.productData.every(r=>knownOffers.has(String(r.id))))continue;
+   try{const fresh=await offers.read(page.url,{fresh:true}),props=arDirectoryPageProps(fresh.html),ids=new Set(page.props.productData.map(p=>String(p.id)));if(props.productMetadata.currentPage!==page.props.productMetadata.currentPage||props.productMetadata.numberOfResults!==category.expected||props.productData.length!==ids.size||!props.productData.every(p=>ids.has(String(p.id))))throw Error('Argos offer-only page changed directory identities or counters');
+    const enriched=new Map(props.productData.map(p=>[String(p.id),p]));category.pages[i]={...fresh,html:undefined,props:{...page.props,productData:page.props.productData.map(p=>{const next=enriched.get(String(p.id)),attributes={...p.attributes,...next.attributes};if(Number.isFinite(next.attributes?.price)){attributes.priceObservedAt=fresh.observedAt;knownOffers.add(String(p.id));}else if(Number.isFinite(p.attributes?.price))attributes.priceObservedAt=p.attributes.priceObservedAt||page.observedAt;return{...p,attributes};})}};await checkpoint();
+   }catch(e){lastFailures.push({id:category.id,stage:'current-offers',url:page.url,error:String(e.message).slice(0,160),status:e.status});}
+  }
+ }
+ const audit=await checkpoint(),allRows=audit.categories.flatMap(c=>c.pages.flatMap(p=>p.props.productData)),priced=new Set(allRows.filter(r=>Number.isFinite(r.attributes?.price)).map(r=>String(r.id)));audit.offerPending=[...new Set(allRows.filter(r=>!priced.has(String(r.id))).map(r=>String(r.id)))];audit.offersVerified=audit.offerPending.length===0;console.log(JSON.stringify({phase:'Argos current directory reconciliation',complete:audit.complete,reusedDirectories,acceptedDirectories:accepted.size,offerPending:audit.offerPending.length,failures:lastFailures,paidRequests:receipts.length}));
  let ledger;try{ledger=JSON.parse(await fs.readFile(root+'/collection-ledger.json','utf8'));}catch{ledger={retailerId:'ar',receipts:[]};}ledger.receipts.push(...receipts);await atomic(root+'/collection-ledger.json',ledger);
  if(!audit.complete)throw Error('Argos directory closure incomplete; no old snapshot is marked current');await atomic(root+'/source-directory.json',audit);return audit;
 }

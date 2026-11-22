@@ -55,7 +55,7 @@ export function arDirectoryAudit(source){
 }
 export function buildArSnapshot(source,details,{previous={products:[]},allowIncomplete=false}={}){
  const sourceAudits=arDirectoryAudit(source),sourceRows=new Map(),old=new Map(previous.products.map(p=>[p.sku,p]));
- for(const c of source.categories)for(const page of c.pages)for(const r of page.props.productData){const sku=String(r.id);if(!arValidSku(sku))throw Error('Invalid Argos public product ID');const saved=sourceRows.get(sku)||{row:r,groups:[]};if(!saved.listedAt||r.attributes?.price!=null&&(saved.row.attributes?.price==null||Date.parse(page.observedAt)>Date.parse(saved.listedAt))){saved.row=r;saved.listedAt=page.observedAt;saved.listedUrl=page.url;}saved.groups.push(c.id);sourceRows.set(sku,saved);}
+ for(const c of source.categories)for(const page of c.pages)for(const r of page.props.productData){const sku=String(r.id);if(!arValidSku(sku))throw Error('Invalid Argos public product ID');const saved=sourceRows.get(sku)||{row:r,groups:[]};if(!saved.listedAt||r.attributes?.price!=null&&(saved.row.attributes?.price==null||Date.parse(r.attributes?.priceObservedAt||page.observedAt)>Date.parse(saved.listedAt))){saved.row=r;saved.listedAt=r.attributes?.priceObservedAt||page.observedAt;saved.listedUrl=page.url;}saved.groups.push(c.id);sourceRows.set(sku,saved);}
  const baseline=!previous.notificationBaselineReady,products=[],pending=[];
  for(const[sku,{row,groups,listedAt,listedUrl}]of sourceRows){
   const d=details[sku];if(!d){pending.push(sku);continue;}
