@@ -1,0 +1,31 @@
+name: Dispatch explicitly approved source recovery
+on:
+  push:
+    branches: [main]
+    paths: ['ops/owner-recovery-request.json']
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: approved-owner-recovery-dispatch
+  cancel-in-progress: false
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /ops/owner-recovery-request.json
+            /scripts/dispatch-owner-recovery.mjs
+            /server/owner-recovery-dispatch.mjs
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - name: Dispatch only the approved current-source task
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/dispatch-owner-recovery.mjs
