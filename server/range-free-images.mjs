@@ -4,7 +4,7 @@ import {createHash} from 'node:crypto';
 import fs from 'node:fs/promises';
 import sharp from 'sharp';
 const exec=promisify(execFile);
-const allowed=url=>{const u=new URL(url);if(u.origin!=='https://www.therange.co.uk'||!/^\/media\/.+\.(?:jpe?g|png|webp|avif)$/i.test(u.pathname))throw Error('An observed official source image is required');};
+const allowed=url=>{const u=new URL(url);if(!['https://www.therange.co.uk','https://kube-media-unpublished.rstore.com'].includes(u.origin)||!/^\/media\/.+\.(?:jpe?g|png|webp|avif)$/i.test(u.pathname))throw Error('An observed official source image is required');return u.origin;};
 export async function ordinaryBinaryHttp2(url){
  allowed(url);try{const{stdout}=await exec('curl',['--disable','--http2','--location','--max-time','12','--silent','--show-error','--write-out','\n%{http_code}',url],{encoding:'buffer',timeout:13000,maxBuffer:25000000});const cut=stdout.lastIndexOf(10);return{status:Number(stdout.subarray(cut+1).toString('ascii')),bytes:stdout.subarray(0,cut)};}catch(e){return{status:0,error:String(e.message).slice(0,150)};}
 }
@@ -12,11 +12,11 @@ export function createFreeFirstRangeImages({fetcher=fetch,http2=ordinaryBinaryHt
  const denied=new Set(),attempts=[];let browser,context;
  const ordinary=browserRead||async function(url){try{if(!browser){const{chromium}=await import('playwright');browser=await chromium.launch({channel:'chrome',headless:true});context=await browser.newContext();}const p=await context.newPage();try{const r=await p.goto(url,{waitUntil:'domcontentloaded',timeout:15000});return{status:r?.status()||0,bytes:r?.ok()?await r.body():null};}finally{await p.close();}}catch(e){return{status:0,error:String(e.message).slice(0,150)};}};
  const methods=[['http',async url=>{try{const r=await fetcher(url,{signal:AbortSignal.timeout(12000)});return{status:r.status,bytes:r.ok?Buffer.from(await r.arrayBuffer()):null};}catch(e){return{status:0,error:String(e.message).slice(0,150)};}}],['http2',http2],['browser',ordinary]];
- return{attempts,async read(url){allowed(url);const own=[];
-  for(const[method,run]of methods){if(denied.has(method)){own.push({method,cachedOriginDenial:true,status:403});continue;}
+ return{attempts,async read(url){const origin=allowed(url),own=[];
+  for(const[method,run]of methods){const denialKey=origin+' '+method;if(denied.has(denialKey)){own.push({method,cachedOriginDenial:true,status:403});continue;}
    let r;try{r=await run(url);}catch(e){r={status:0,error:e.message};}const a={url,method,status:r.status,error:r.error};attempts.push(a);own.push(a);
-   if(r.status===403||r.status===401)denied.add(method);
-   if(r.status===200&&r.bytes)try{const bytes=Buffer.from(r.bytes),m=await sharp(bytes).metadata();if(bytes.length>25000000||m.width<64||m.height<64)throw Error('Invalid source image dimensions');const hash=createHash('sha256').update(bytes).digest('hex'),ext=m.format==='jpeg'?'jpg':m.format;if(!['jpg','png','webp','avif'].includes(ext))throw Error('Unsupported original source format');const cachedImageUrl='images/source/'+hash+'.'+ext;await save(cachedImageUrl,bytes);return{ok:true,url,hash,cachedImageUrl,width:m.width,height:m.height,bytes:bytes.length,sourceBytesUnchanged:true,observedAt:new Date().toISOString(),method:'ordinary-free-'+method};}catch(e){a.error=String(e.message).slice(0,150);}
+   if(r.status===403||r.status===401)denied.add(denialKey);
+   if(r.status===200&&r.bytes)try{const bytes=Buffer.from(r.bytes),m=await sharp(bytes).metadata();if(bytes.length>25000000||m.width<64||m.height<64)throw Error('Invalid source image dimensions');const hash=createHash('sha256').update(bytes).digest('hex'),ext=m.format==='jpeg'?'jpg':m.format;if(!['jpg','png','webp','avif'].includes(ext))throw Error('Unsupported original source format');const cachedImageUrl='images/source/'+hash+'.'+ext;await save(cachedImageUrl,bytes);return{ok:true,url,hash,cachedImageUrl,width:m.width,height:m.height,bytes:bytes.length,mime:'image/'+m.format,sourceBytesUnchanged:true,observedAt:new Date().toISOString(),method:'ordinary-free-'+method};}catch(e){a.error=String(e.message).slice(0,150);}
   }
   return{ok:false,url,attempts:own,freeMethodsExhausted:own.length===3,sourceMissing:own.length===3&&own.every(a=>a.status===404)};
  },async close(){await browser?.close();}};

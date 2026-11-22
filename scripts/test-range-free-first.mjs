@@ -4,6 +4,10 @@ import {createFreeFirstRangeSource} from '../server/range-free-source.mjs';
 import {createFirecrawlBrowserReader,readFamilyBundle} from '../server/firecrawl-browser.mjs';
 import {parseDetails} from '../server/details.mjs';
 import {apiUrl} from '../server/sync.mjs';
+import os from 'node:os';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import sharp from 'sharp';
 const url=apiUrl('test'),data={products:[{sku:'100',newIn:false,inStock:true,sponsored:false,price:1000}],totalResults:1};
 for(const healthy of ['http','http2','browser',null]){
  const calls=[],reader=createFreeFirstRangeSource({fetcher:async u=>{calls.push('http');return healthy==='http'?Response.json(data):new Response('Denied',{status:403});},http2:async u=>{calls.push('http2');return{status:healthy==='http2'?200:403,url:u,text:JSON.stringify(data)};},browserRead:async u=>{calls.push('browser');return{status:healthy==='browser'?200:403,url:u,text:JSON.stringify(data)};}});
@@ -22,5 +26,10 @@ try{
  assert.deepEqual((await paid(url)).products,data.products);await paid.close();assert.deepEqual(order,['http','http2','browser','paid']);assert.equal(charged,1);assert.equal(paid.metrics().firecrawlCredits,1);
  let unexpectedPaid=0;const free=await createFirecrawlBrowserReader({policy,budget:{limit:16},freeFetcher:async()=>Response.json(data),freeHttp2:async()=>assert.fail(),freeBrowserRead:async()=>assert.fail(),fetcher:async()=>{unexpectedPaid++;throw Error('A working free source must not use Firecrawl');}});
  assert.deepEqual((await free(url)).products,data.products);await free.close();assert.equal(unexpectedPaid,0);assert.equal(free.metrics().firecrawlCredits,0);
+ const bytes=await sharp({create:{width:100,height:120,channels:3,background:'red'}}).png().toBuffer(),hash=createHash('sha256').update(bytes).digest('hex'),imageUrl='https://www.therange.co.uk/media/verified-free-original.png',cwd=process.cwd(),tmp=await fs.mkdtemp(path.join(os.tmpdir(),'range-free-images-'));
+ try{process.chdir(tmp);
+  let bought=0;const images=await createFirecrawlBrowserReader({policy,budget:{limit:16},freeFetcher:async()=>new Response(bytes),freeImageHttp2:async()=>assert.fail('Free HTTP image succeeded'),freeImageBrowserRead:async()=>assert.fail('Free HTTP image succeeded'),fetcher:async()=>{bought++;throw Error('Working native originals must not use paid retrieval');}});const item={sku:'same',variantImageUrl:imageUrl};const audit=await images.auditImages([item]);await images.close();assert.equal(audit.loaded,1);assert.equal(item.imageCacheEvidence.sha256,hash);assert.equal(bought,0);assert.equal(images.metrics().firecrawlCredits,0);assert.deepEqual(await fs.readFile('web/'+item.cachedImageUrl),bytes);
+  const order=[],fallback=await createFirecrawlBrowserReader({policy,budget:{limit:16},freeFetcher:async()=>{order.push('http');return new Response('',{status:403});},freeImageHttp2:async()=>{order.push('http2');return{status:403};},freeImageBrowserRead:async()=>{order.push('browser');return{status:403};},fetcher:async()=>{order.push('paid');return Response.json({success:true,data:{metadata:{statusCode:200,creditsUsed:1},actions:{javascriptReturns:[{value:[{url:imageUrl,ok:true,width:100,height:120,mime:'image/png',hash,dataBase64:bytes.toString('base64'),bytes:bytes.length}]}]}}});}});assert.equal((await fallback.auditImages([{sku:'fallback',variantImageUrl:imageUrl}])).loaded,1);await fallback.close();assert.deepEqual(order,['http','http2','browser','paid']);assert.equal(fallback.metrics().firecrawlCredits,1);
+ }finally{process.chdir(cwd);await fs.rm(tmp,{recursive:true,force:true});}
 }finally{if(saved===undefined)delete process.env.FIRECRAWL_API_KEY;else process.env.FIRECRAWL_API_KEY=saved;}
 console.log('Free HTTP, HTTP2 and isolated ordinary browser are attempted before paid fallback; working free catalogues and exact-SKU descriptions/specifications/original galleries require zero Firecrawl credits, and paid batches contain only unresolved URLs.');

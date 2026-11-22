@@ -10,6 +10,7 @@ import {readRangeImageGalleries} from './range-image-gallery.mjs';
 import {monthlyCreditLimit} from './collection-policy.mjs';
 import {normalizeCollectionLimits,unrestrictedCollection} from './collection-limits.mjs';
 import {createFreeFirstRangeSource} from './range-free-source.mjs';
+import {createFreeFirstRangeImages} from './range-free-images.mjs';
 
 export async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000,anchors=[]}){
  const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch(error){return {status:0,error:String(error.message).slice(0,180)}}};
@@ -99,9 +100,10 @@ async function readImageBatch(items){
     }catch(e){results.push({url,ok:false,debug,error:'image-fetch-or-decode-failed: '+String(e.message).slice(0,120)})}}}));while(cursor<items.length)results.push({url:items[cursor++].url,ok:false,deferred:true,error:"bounded image time limit"});return results;
    }
 
-export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,freeFetcher,freeHttp2,freeBrowserRead,connect,now=()=>Date.now()}={}){
+export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,freeFetcher,freeHttp2,freeBrowserRead,freeImageHttp2,freeImageBrowserRead,connect,now=()=>Date.now()}={}){
  policy=normalizeCollectionLimits(policy);
  const freeSource=unrestrictedCollection(policy)&&(fetcher===fetch||freeFetcher)?createFreeFirstRangeSource({fetcher:freeFetcher||fetch,http2:freeHttp2,browserRead:freeBrowserRead}):null;
+ const freeImages=unrestrictedCollection(policy)&&(fetcher===fetch||freeFetcher)?createFreeFirstRangeImages({fetcher:freeFetcher||fetch,http2:freeImageHttp2,browserRead:freeImageBrowserRead}):null;
  const key=process.env.FIRECRAWL_API_KEY;if(!key)throw new SourceError('Firecrawl服务器密钥尚未配置',401);
  let session,browser,context,starting,closed=false,created=0,deadline=0,allocatedPages=0,browserReceipt,sessionClosed=false,browserEndedAt=0;const runDeadline=now()+(policy.maxRunSeconds||1800)*1000;
  const pages=[],waiting=[],families=new Map(),familyFailures=new Map(),partialFamilies=new Map(),active=new Map(),verifiedCaptures=new Map(),priorityRepairs=new Map(),nativeTransportFailures=new Set();
@@ -329,6 +331,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    const old=previous.entries?.[url];let valid=false;if(old?.ok&&old.width>=64&&old.height>=64&&/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(old.cachedImageUrl||'')){try{valid=createHash('sha256').update(await fs.readFile('web/'+old.cachedImageUrl)).digest('hex')===old.hash;}catch{}}
    if(valid){validPrior[url]={retrievedFrom:old.retrievedFrom,hash:old.hash,cachedImageUrl:old.cachedImageUrl,etag:old.etag,lastModified:old.lastModified,width:old.width,height:old.height,bytes:old.bytes,mime:old.mime};if(policy.repairImagesOnly||policy.imageRefreshAfter&&Date.parse(old.observedAt)>=Date.parse(policy.imageRefreshAfter))results.push({...old,observedAt:old.observedAt||previous.observedAt,retained:true});else known.push(url);}else newUrls.push(url);
   }
+  if(freeImages){const handled=new Set();for(const url of [...known,...newUrls]){const r=await freeImages.read(url);if(r.ok){results.push(r);handled.add(url);metrics.freeImageChecks=(metrics.freeImageChecks||0)+1;}else if(r.sourceMissing){results.push({url,ok:false,status:404,error:'Official source image is missing through all ordinary free methods'});handled.add(url);}}for(const list of [known,newUrls])for(let n=list.length-1;n>=0;n--)if(handled.has(list[n]))list.splice(n,1);metrics.freeImageAttempts=freeImages.attempts.slice(-100);}
   const tasks=[];const hashBatch=policy.imageHashBatchSize||400;for(let offset=0;offset<known.length;offset+=hashBatch)tasks.push({urls:known.slice(offset,offset+hashBatch),hashOnly:true});
   for(let offset=0;offset<newUrls.length;){const size=policy.imageBatchProbe&&offset===0?3:Math.min(500,options.bodyBatchSize||policy.imageBodyBatchSize||200);tasks.push({urls:newUrls.slice(offset,offset+size),hashOnly:false});offset+=size;}
   await fs.mkdir('web/images/source',{recursive:true});let rechecked=0,changed=0;const retryUrls=new Set(),retried=new Set();
@@ -386,6 +389,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  reader.close=async()=>{
   if(closed)return;closed=true;for(const waiter of waiting.splice(0))waiter.reject(budgetError('浏览器会话已关闭'));
   await freeSource?.close();
+  await freeImages?.close();
   await reader.closeBrowser();
   if(session){metrics.browserCredits=Number.isFinite(browserReceipt?.creditsBilled)?browserReceipt.creditsBilled:ttl/30;metrics.scrapeCredits=scrapeCredits;metrics.firecrawlCredits=metrics.browserCredits+scrapeCredits;metrics.billingVerified=Number.isFinite(browserReceipt?.creditsBilled)&&scrapeBillingVerified;metrics.sessionDurationMs=browserReceipt?.sessionDurationMs;metrics.receipt={sessionId:session.id,creditsBilled:metrics.firecrawlCredits,browserCredits:metrics.browserCredits,scrapeCredits,billingVerified:metrics.billingVerified};}
   else {metrics.browserCredits=created&&metrics.creationUncertain?ttl/30:0;metrics.scrapeCredits=scrapeCredits;metrics.firecrawlCredits=metrics.browserCredits+scrapeCredits;metrics.billingVerified=!metrics.creationUncertain&&scrapeBillingVerified;metrics.receipt={creditsBilled:metrics.firecrawlCredits,browserCredits:metrics.browserCredits,scrapeCredits,billingVerified:metrics.billingVerified};}
