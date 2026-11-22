@@ -1,5 +1,9 @@
 export const BQ_DEPARTMENTS=[['bq-tree','圣诞树','Christmas Trees'],['bq-baubles','圣诞装饰球','Christmas Baubles'],['bq-tree-decorations','圣诞树装饰','Christmas Tree Decorations'],['bq-wreath','圣诞圈','Christmas Wreaths'],['bq-garland','圣诞长藤','Christmas Garlands'],['bq-skirt','圣诞树裙','Christmas Tree Skirts'],['bq-standing','圣诞节立式装饰品','Christmas Standing Decorations'],['bq-inflatables','充气圣诞装饰','Christmas Inflatables'],['bq-hanging','圣诞悬挂装饰','Christmas Hanging Decorations'],['bq-topper','圣诞树顶装饰','Christmas Tree Toppers']].map(([id,zh,en])=>({id,zh,en,label:zh+' · '+en,retailerId:'bq'}));
 export const isBqScope=id=>BQ_DEPARTMENTS.some(d=>d.id===id);
+export function bqCorroboratedLongGarland(p,visual={}){
+ const title=String(p.baseName||p.variantName||''),design=String(p.specifications?.Design||''),nativeCategory=(p.bqSource?.groups||[]).includes('garland')||/garlands?/i.test(p.bqSource?.primaryCategoryName||''),top=visual.objectTop?.[0],wreath=visual.objectTop?.find(t=>t.id==='bq-wreath')?.score||0;
+ return !/\b(?:set|kit|pack|bundle|combination)\b/i.test(title)&&nativeCategory&&/\bgarlands?\b/i.test(design)&&!/\bwreaths?\b/i.test(design)&&p.dimensions?.values?.Length>=100&&top?.id==='bq-garland'&&top.score>=.3&&top.score-wreath>=.04;
+}
 export function bqMemberships(p,visual={}){
  const name=String(p.baseName||p.variantName||'').toLowerCase(),head=name.split(/\b(?:with|for|ideal|including)\b/)[0],desc=String(p.sourceDescription||'').toLowerCase(),groups=p.bqSource?.groups||[],has=s=>groups.includes(s),small=(p.dimensions?.maxCm||0)>0&&p.dimensions.maxCm<25;
  const festive=/christmas|xmas|yuletide|no[eë]l|santa|snowman|nutcracker|nativity|reindeer|poinsettia|holly|pine|spruce|fir|baubles?|tree toppers?/i.test(name+' '+desc);
@@ -42,6 +46,7 @@ export function bqMemberships(p,visual={}){
  if(/\b(?:wreath|bauble) (?:house|lantern|bottle)\b/.test(head))return result('bq-standing');
  if(/\b(?:tree skirt|tree collar|tree stand cover)\b/.test(head)||/\btrees?\b/.test(head)&&/\bskirt\b/.test(head))return result('bq-skirt');
  if(/\b(?:inflatable|airblown)\b/.test(head)||has('inflatables')&&/air.?filled|inflate/.test(desc))return result('bq-inflatables');
+ if(bqCorroboratedLongGarland(p,visual))return{...result('bq-garland'),method:'B&Q-official-design-length-native-category-and-current-photo-consensus',sourceTitleConflict:/\bwreath\b/.test(head)?'官网标题写圣诞圈，但官网设计、长度、原生类目与完整图片一致指向长藤 · Source title says wreath; official design, length, native category and complete photograph identify a garland':null};
  if(/\bwreaths?\b/.test(head)&&/\bgarlands?\b/.test(head)&&head.search(/\bwreaths?\b/)<head.search(/\bgarlands?\b/)&&!/\b(?:kit|stocking)\b/.test(head))return result('bq-wreath');
  if(/\bgarlands?\b/.test(head))return result('bq-garland');
  if(/\bwreaths?\b/.test(head)&&!/\bwreath (?:hooks?|hangers?)\b/.test(head)&&!/\b(?:kit|stocking)\b/.test(head)){
