@@ -2,10 +2,15 @@ import fs from 'node:fs/promises';
 import {createFreeFirstRangeSource} from '../server/range-free-source.mjs';
 import {readFamilyBundle,createFirecrawlBrowserReader} from '../server/firecrawl-browser.mjs';
 import {loadPolicy} from '../server/collection-policy.mjs';
-import {openCreditBudget} from '../server/credit-budget.mjs';
+import {openCreditBudget,readLedger} from '../server/credit-budget.mjs';
 import {atomicJson} from '../server/sync.mjs';
 const request=JSON.parse(await fs.readFile('web/range-native-resolution-request.json','utf8'));
 if(request.authorization!=='owner-all-collection-unrestricted-20261123'||request.products.some(p=>!['4338038','1641214','1042266','1042268'].includes(p.sku)))throw Error('Only the existing four exact low-resolution products may be inspected');
+// The previous completed collection reported one credit, but its Git step
+// failed before saving the full receipt. Retain that logged amount once, with
+// its uncertainty explicit, rather than silently treating it as free.
+const ledger=await readLedger(),priorKey='45064093750-1',period=ledger.periods['2026-11']||={used:0,reservations:{},runs:[]};period.runs||=[];
+if(!period.runs.some(r=>r.key===priorKey)){period.used+=1;period.runs.push({key:priorKey,credits:1,completedAt:'2026-11-22T20:04:17.967Z',receipt:{creditsBilled:1,billingVerified:false,source:'completed-collector-log-recovery',workflowUrl:'https://github.com/g-jayden/range-christmas-observatory/actions/runs/45064093750',note:'Collector output reported one credit; full provider receipt was lost before Git publication, and no zero-cost or refund claim is made.'}});await atomicJson('web/collection-ledger.json',ledger);}
 const free=createFreeFirstRangeSource(),report={startedAt:new Date().toISOString(),products:request.products,sourceFactsChanged:false,emailsSent:0};let reader,budget;
 try{
  report.freeFamilies=(await free.families(request.products,readFamilyBundle)).map(r=>({url:r.url,status:r.bundle?.status,free:true}));report.freeMetrics=free.metrics();
@@ -19,4 +24,4 @@ try{
   }));return out;
  },{products:request.products});
 }catch(e){report.error=String(e.message).slice(0,250);process.exitCode=1;}
-finally{await free.close();await reader?.close();report.completedAt=new Date().toISOString();report.metrics=reader?.metrics()||{firecrawlCredits:0};report.firecrawlCredits=report.metrics.firecrawlCredits||0;if(budget)await budget.settle({credits:report.firecrawlCredits,receipt:report.metrics.receipt,report:{mode:'exact-four-native-resolution-source-inspection'}});await atomicJson('web/range-native-resolution-inspection.json',report);console.log(JSON.stringify({results:report.results?.length||0,firecrawlCredits:report.firecrawlCredits,error:report.error||null}));}
+finally{await free.close();await reader?.close();report.completedAt=new Date().toISOString();report.metrics=reader?.metrics()||{firecrawlCredits:0};report.firecrawlCredits=report.metrics.firecrawlCredits||0;if(budget)await budget.settle({credits:report.firecrawlCredits,receipt:report.metrics.receipt,report:{mode:'exact-four-native-resolution-source-inspection'}});await atomicJson('web/range-native-resolution-inspection.json',report);console.log(JSON.stringify({results:report.results?.length||0,firecrawlCredits:report.firecrawlCredits,billingVerified:report.metrics.billingVerified,scrapeReceipts:report.metrics.scrapeReceipts,error:report.error||null}));}
