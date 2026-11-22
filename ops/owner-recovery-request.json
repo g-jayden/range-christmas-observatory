@@ -1,8 +1,9 @@
 {
-  "requestId": "owner-recovery-20261123-range-filtered-closure",
+  "requestId": "owner-recovery-20261123-reviewed-next-matalan",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-22T16:48:52.843332Z",
+  "requestedAt": "2026-11-22T16:51:06.540177Z",
   "targets": [
-    "range-new-current"
+    "nx-review-current",
+    "mt-review-current"
   ]
 }

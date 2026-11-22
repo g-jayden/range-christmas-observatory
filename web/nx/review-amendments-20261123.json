@@ -1,0 +1,886 @@
+{
+  "G22864-33": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "7e3db549357c8633ad733a028209af4f1a0a3f084254f34b87822a7875248a98",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "红色",
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 A，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter A. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 A，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter A. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-02": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "240fcd97b924321824cc1ac0c0c127f2af990d74ff533cbe1e84639d742271da",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "蓝色",
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 B，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter B. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 B，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter B. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-03": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "41cba6089c93d5246a1c9f0010df1fec7b711c929c35f8db5666c56542cf2ec3",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 C，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter C. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 C，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter C. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-04": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "db7c71f6adf88153251b6c7c4e5336275fcd6d7744c6e41545cbdabc66dfb7c6",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "红色",
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 D，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter D. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 D，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter D. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-05": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "5a28f7961cec455456d606a79673da42a6950f30995e827e3a430ff22fcfd6af",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "蓝色",
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 E，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter E. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 E，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter E. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-06": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "ddd7130ad379df51c346bd6061ecb7048fa6534879985ce145bdbdb7e9da9138",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 F，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter F. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 F，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter F. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-07": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "3bd3f674ec220c933baf748ac8e80a4720de4709e7c947febb61849ad8f8adba",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "红色",
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 G，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter G. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 G，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter G. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-08": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "c939b83de56cab81f34b467b6c9f8f9b02be5ed7219e8f5eabd34c83d1e30458",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "蓝色",
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 H，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter H. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 H，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter H. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-09": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "a979ff8887f6747d34f31f204388d014d2760d9d7e285032f2daa24a573dc14e",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 I，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter I. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 I，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter I. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-10": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "a50fc888d867d3b0109b67f928786cbdce41d15ac53a841dffe5cf58d87440a1",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "红色",
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 J，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter J. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 J，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter J. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-11": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "29b2ca6c91ca310dd4fba3fc0452802acd2869ceaf50314af8d3ed7fa8c759f9",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "蓝色",
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 K，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter K. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 K，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter K. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-12": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "4f711a857f63e5f9e9158168e72b138fc4c9be40929993ed23eccb1d70d73b38",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 L，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter L. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 L，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter L. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-13": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "311819af0e184bfa38221970429077ec6639de5b89d021e558efaa5294a92d0b",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "红色",
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 M，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter M. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 M，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter M. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-14": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "f191a4e44907f781487833b895ca6e051e9afa9a07635e264dfdd4530134e379",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "蓝色",
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 N，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter N. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 N，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter N. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-15": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "06f61c5e0d6da93fbb772da8033493ed555a0726810f4e04ecf4e1b5d143716b",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 O，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter O. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 O，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter O. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-16": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "b4a37ae5f13ed31bbf668830e599a9eb28367f1c7c8e8ba393557621eb7f9945",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "红色",
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 P，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter P. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 P，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter P. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-18": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "536902f9b1f799021b084ab593983709e44e8ea12ad7474242eb8ea585471d86",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "蓝色",
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 R，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter R. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 R，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter R. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-19": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "31eb38eb2f527b28e228a6516d8cdb6ffec1b9922e4591963d37e6b6b63a1cd0",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 S，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter S. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 S，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter S. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-20": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "02eae8fece7d096ef341f762d7f4792257926b5f2746cfafb7b032b4ec6c234e",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "红色",
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 T，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter T. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 T，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter T. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "G22864-23": {
+    "imageHash": "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+    "departmentIds": [
+      "nx-baubles"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "3ca8d8f36c20c5b25680ed9a571902253f7578be11dc45a044324bb8c5c1a725",
+    "reviewedImageHashes": [
+      "7d9bd68aea69e844d57982d111c3346a2cb047cec1cab84d67abb225cc00ff75",
+      "9869941629c8ad1995037e4227ec48f286f791bbe8eca7b9cf05eb2a3473d5b8",
+      "d4b41d5ad82f01b78a656a855eb20f24ef47ad62d28cafbe4a5bb669cc7f0d84",
+      "b5760de570298f3cc81edc9ec9ba9a8bff3bd6a89704966f3faddb1be231912e",
+      "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+      "9e6b11a71da1566020d7fbe1e82d267a5bf53461cf4d961fa52dde56aed16a89",
+      "fc9ef7710fd5f44cdc761eccad02e15f37b1a9ec1d5667afab3ea7e051aa69ca"
+    ],
+    "previewSourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+    "previewImageHash": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+    "department": "nx-baubles",
+    "colors": [
+      "蓝色",
+      "绿色"
+    ],
+    "exclude": false,
+    "sharedGallery": true,
+    "sharedGalleryNote": "官网共用字母款图库；当前选择字母 W，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter W. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "colourNote": "官网共用字母款图库；当前选择字母 W，字母屋身颜色按官网字母对照原图核对，无字母配件颜色官网未单列 · Official family-shared gallery; selected letter W. Letter-house body checked against the official letter chart; the plain companion house has no separately specified colour.",
+    "evidenceFrames": [
+      {
+        "sourceUrl": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/G22864s5.jpg",
+        "sha256": "2957beb15a5d737b3362dee175dc7365a41a15a9ef6e4e8c05b5441cfaeb7521",
+        "role": "official-letter-to-body-colour-chart"
+      }
+    ]
+  },
+  "474371-01": {
+    "imageHash": "237ddbd0ec425a57827fb561883b67d71d66f70f8389bfcad4218f60e872e1d2",
+    "sourceFingerprint": "c9cd364352033f59a81aa7b216f074ea38071cacf5be55e9aba77b5aab6b8c5b",
+    "department": "nx-wreath",
+    "departmentIds": [
+      "nx-wreath"
+    ],
+    "colors": [
+      "绿色",
+      "红色"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours."
+  },
+  "W08269-01": {
+    "imageHash": "7beb7ec5386e62f3f9740d43d78283ae07f20f8841c345055adc5077eb54b617",
+    "sourceFingerprint": "e59c94094d7a9a9344eba847398413aeeecb427801b7d41082c4086cfdb7780b",
+    "department": "nx-wreath",
+    "departmentIds": [
+      "nx-wreath"
+    ],
+    "colors": [
+      "绿色",
+      "红色"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours."
+  },
+  "L74906-01": {
+    "imageHash": "2cdca23861a36d2ab545eaca27149d6ac420a277cc8d325f829fc7fa09cd69d8",
+    "departmentIds": [
+      "nx-garland"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours.",
+    "sourceFingerprint": "f8c607dc66d76b63151b25da83972379d788c644922d124b40f523b3d5633fe0",
+    "colors": [
+      "褐色"
+    ],
+    "colorReviewMethod": "assistant-vision-plus-official-product-description",
+    "department": "nx-garland"
+  },
+  "W08870-01": {
+    "imageHash": "09f4bcdae5986043cd5628724ea4f84048fa95f41d13bd6ac8ec95a49290c866",
+    "sourceFingerprint": "43609eb59f1cbac6756073836f754155c294e519d0c0c179dd2c199a2ec1904b",
+    "department": "nx-garland",
+    "departmentIds": [
+      "nx-garland"
+    ],
+    "colors": [
+      "绿色",
+      "白色",
+      "褐色"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours."
+  },
+  "273011-01": {
+    "imageHash": "4656094674ee868653ef70a969ad35fa7cde769f4ab17c08017e3139181e7828",
+    "sourceFingerprint": "b649d9f728e21eb293295a197f7fa5e31e35878fcf9ee16a0badf08286c4d6b5",
+    "department": "nx-tree",
+    "departmentIds": [
+      "nx-tree"
+    ],
+    "colors": [
+      "绿色",
+      "白色"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours."
+  },
+  "G11091-01": {
+    "imageHash": "d8da8aa47cc02d411864023ba7e0edcd13865ba95ffe9a4e41ecaf0824bd88af",
+    "sourceFingerprint": "7009e12b0cfcd777cdc8099d90177714345205275a07a3c3858461773ea629e3",
+    "department": "nx-tree",
+    "departmentIds": [
+      "nx-tree"
+    ],
+    "colors": [
+      "白色",
+      "绿色"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours."
+  },
+  "272972-01": {
+    "imageHash": "f0f2eb373a9ac9b1e6460fbcda00a8bda0a9cb5d2c20947d2659785ecaa5f00b",
+    "sourceFingerprint": "cd6fafa2550efe4b3ed5a97e31f12c5d225ecdc667cf85d26019022786bac887",
+    "department": "nx-tree",
+    "departmentIds": [
+      "nx-tree"
+    ],
+    "colors": [
+      "绿色",
+      "红色"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours."
+  },
+  "273299-01": {
+    "imageHash": "a81b0466ed88de00a5c583e6ea297fea3d5bcbaca79f0599f01a47279ba1a912",
+    "sourceFingerprint": "31d79220e5ebe361c77c2ca1a9889d25bebba91d9e2c39cafe4554a1c2829d20",
+    "department": "nx-tree",
+    "departmentIds": [
+      "nx-tree"
+    ],
+    "colors": [
+      "绿色",
+      "红色"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours."
+  },
+  "281204-01": {
+    "imageHash": "bc48812e8811c1bb9af905abe4f4c5869532708be4d5cc572ce27063c92cfe5f",
+    "sourceFingerprint": "9f9fbf6a363fef16019370a99a37368392ace6927fd86568f3a755bd4cd78406",
+    "department": "nx-tree",
+    "departmentIds": [
+      "nx-tree"
+    ],
+    "colors": [
+      "绿色"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours."
+  },
+  "272611-01": {
+    "imageHash": "1194d7a8ea3713f032646146adb0abbf6e07208de087874d88bc115e525cf77e",
+    "sourceFingerprint": "3442ed9b4e3183d013103ed0d2a54f4d321165d1ec5e67a0e43902c0134a008d",
+    "department": "nx-tree",
+    "departmentIds": [
+      "nx-tree"
+    ],
+    "colors": [
+      "绿色",
+      "白色"
+    ],
+    "reviewedAt": "2026-11-22T16:50:46.209Z",
+    "method": "human-review-of-SHA-verified-original-gallery-plus-official-exact-SKU-title-description-and-specifications",
+    "reason": "已查看原图并结合商品本体和官网描述核对分类与主要本体色；灯光、背景、包装与细小挂绳不作为本体颜色 · Original image, physical product and exact official description reviewed; lighting, backdrop, packaging and small ties excluded from body colours."
+  }
+}
