@@ -592,6 +592,54 @@
       "sourceUrl": "https://www.argos.co.uk/search/christmas-inflatables/",
       "sourceStatus": 200,
       "observedAt": "2026-11-22T15:13:29.977Z"
+    },
+    {
+      "id": "mcp-01a203fb-8998-717a-b398-cbebc23b5f01",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "argos-ongoing-collection-20261118",
+      "retailerId": "ar",
+      "purpose": "Final exact official Product JSON-LD, source dimensions, GBP price and native media recovery; no directory recollection.",
+      "sourceUrl": "https://www.argos.co.uk/product/9631463",
+      "sourceStatus": 200,
+      "observedAt": "2026-11-22T16:01:05Z"
+    },
+    {
+      "id": "mcp-01a203fc-1abc-7519-a1fd-2472ca66b9bf",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "argos-ongoing-collection-20261118",
+      "retailerId": "ar",
+      "purpose": "Final exact official Product JSON-LD, source dimensions, GBP price and native media recovery; no directory recollection.",
+      "sourceUrl": "https://www.argos.co.uk/product/ya7jnvwj",
+      "sourceStatus": 200,
+      "observedAt": "2026-11-22T16:01:05Z"
+    },
+    {
+      "id": "mcp-01a203fc-1a4f-712e-82ec-325fdc50a4f0",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "argos-ongoing-collection-20261118",
+      "retailerId": "ar",
+      "purpose": "Final exact official Product JSON-LD, source dimensions, GBP price and native media recovery; no directory recollection.",
+      "sourceUrl": "https://www.argos.co.uk/product/hsqaq33q",
+      "sourceStatus": 200,
+      "observedAt": "2026-11-22T16:01:05Z"
+    },
+    {
+      "id": "mcp-01a203fc-c330-7519-9ba0-8363cf3f119f",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "argos-ongoing-collection-20261118",
+      "retailerId": "ar",
+      "purpose": "Final exact official Product JSON-LD, source dimensions, GBP price and native media recovery; no directory recollection.",
+      "sourceUrl": "https://www.argos.co.uk/product/yaafhe7r",
+      "sourceStatus": 200,
+      "observedAt": "2026-11-22T16:01:05Z"
     }
   ],
   "unreceipted": [
@@ -622,6 +670,15 @@
       "source": "ASDA complete directory diagnostic",
       "error": "MCP transport closed; provider receipt not returned",
       "credits": null
+    },
+    {
+      "id": "ar-final-yaafhe7r-default-engine-failure-20261123",
+      "at": "2026-11-22T16:01:05Z",
+      "sourceUrl": "https://www.argos.co.uk/product/yaafhe7r",
+      "operation": "One exact official PDP default-route diagnostic",
+      "error": "SCRAPE_ALL_ENGINES_FAILED",
+      "credits": null,
+      "reason": "Failed connector response contained no confirmed billing receipt; successful later exact request is recorded separately."
     }
   ],
   "reservationScopes": [
