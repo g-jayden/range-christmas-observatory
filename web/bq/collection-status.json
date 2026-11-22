@@ -1,1 +1,1 @@
-{"complete":false,"checkedAt":"2026-11-22T23:37:52.583Z","error":"B&Q category did not close within bounded current membership passes: tree {\"expected\":7889,\"observed\":8075,\"drift\":true,\"pageFailures\":[]}","failedSourceUrl":null,"failedPageAttempts":null,"requests":1495,"firecrawlCredits":18,"sourceObservedAt":"2026-11-22T00:10:11.101Z"}
+{"complete":false,"checkedAt":"2026-11-22T23:59:14.584Z","error":"B&Q route source data missing","failedSourceUrl":null,"failedPageAttempts":null,"requests":1008,"firecrawlCredits":20,"sourceObservedAt":"2026-11-22T00:10:11.101Z"}
