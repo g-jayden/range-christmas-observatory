@@ -679,6 +679,15 @@
       "error": "SCRAPE_ALL_ENGINES_FAILED",
       "credits": null,
       "reason": "Failed connector response contained no confirmed billing receipt; successful later exact request is recorded separately."
+    },
+    {
+      "id": "range-observed-invalid-separator-1549692-20261123",
+      "at": "2026-11-22T16:53:12Z",
+      "sourceUrl": "https://www.therange.co.uk/p/christow-berry-bulb-christmas-string-lights-250%C2%BF1000/m1549692/?json",
+      "operation": "One exact-SKU canonical separator diagnostic after existing free access failures",
+      "error": "ERR_TOO_MANY_REDIRECTS",
+      "credits": null,
+      "reason": "Failed connector response returned no billing receipt; no fabricated zero-cost claim and no repeated request."
     }
   ],
   "reservationScopes": [
