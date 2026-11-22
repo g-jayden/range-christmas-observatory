@@ -11,6 +11,7 @@ import {monthlyCreditLimit} from './collection-policy.mjs';
 import {normalizeCollectionLimits,unrestrictedCollection} from './collection-limits.mjs';
 import {createFreeFirstRangeSource} from './range-free-source.mjs';
 import {createFreeFirstRangeImages} from './range-free-images.mjs';
+import {materializeCommittedImage} from './committed-image-file.mjs';
 
 export async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000,anchors=[]}){
  const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch(error){return {status:0,error:String(error.message).slice(0,180)}}};
@@ -105,6 +106,8 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  const freeSource=unrestrictedCollection(policy)&&(fetcher===fetch||freeFetcher)?createFreeFirstRangeSource({fetcher:freeFetcher||fetch,http2:freeHttp2,browserRead:freeBrowserRead}):null;
  const freeImages=unrestrictedCollection(policy)&&(fetcher===fetch||freeFetcher)?createFreeFirstRangeImages({fetcher:freeFetcher||fetch,http2:freeImageHttp2,browserRead:freeImageBrowserRead}):null;
  const currentNativeImages=new Map();
+ let savedNativeImages;
+ const loadSavedNativeImages=()=>savedNativeImages||=(async()=>{for(const file of ['range-native-index.json','paid-native-index.json','browser-image-recovery.json','new-original-recovery.json','range-residual-reviewed-evidence.json']){let d;try{d=JSON.parse(await fs.readFile('web/'+file,'utf8'));}catch(e){if(e.code==='ENOENT')continue;throw e;}for(const [url,e]of Object.entries(d.nativeEntries||d.entries||{}))if(!currentNativeImages.has(url)&&/^https:\/\/(?:www\.therange\.co\.uk|kube-media-unpublished\.rstore\.com)\/media\/.+\.(?:jpe?g|png|webp|avif|gif)(?:\?|$)/i.test(url)&&e?.ok===true&&e.url===url&&/^[a-f0-9]{64}$/.test(e.hash||'')&&new RegExp('^images/source/'+e.hash+'\\.(?:jpg|png|webp|avif|gif)$').test(e.cachedImageUrl||''))currentNativeImages.set(url,e);}})();
  const key=process.env.FIRECRAWL_API_KEY;if(!key)throw new SourceError('Firecrawl服务器密钥尚未配置',401);
  let session,browser,context,starting,closed=false,created=0,deadline=0,allocatedPages=0,browserReceipt,sessionClosed=false,browserEndedAt=0;const runDeadline=now()+(policy.maxRunSeconds||1800)*1000;
  const pages=[],waiting=[],families=new Map(),familyFailures=new Map(),partialFamilies=new Map(),active=new Map(),verifiedCaptures=new Map(),priorityRepairs=new Map(),nativeTransportFailures=new Set();
@@ -294,11 +297,12 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  };
  reader.previewAssets=async(urls,options={})=>{
   const maxSide=options.maxSide||320;if(!freeImages)return scriptAction('('+readPreviewAssets.toString()+')('+JSON.stringify({urls,maxSide})+')',{needsImages:true});
+  await loadSavedNativeImages();
   const rows=new Map(),pending=[],sharp=(await import('sharp')).default;
   for(const url of new Set(urls)){
-   let e=currentNativeImages.get(url),bytes;if(e)try{bytes=await fs.readFile('web/'+e.cachedImageUrl);if(createHash('sha256').update(bytes).digest('hex')!==e.hash)bytes=null;}catch{}
+   let e=currentNativeImages.get(url),bytes;if(e)try{try{bytes=await fs.readFile('web/'+e.cachedImageUrl);}catch(error){if(error.code!=='ENOENT')throw error;await materializeCommittedImage(e.cachedImageUrl,e.hash);bytes=await fs.readFile('web/'+e.cachedImageUrl);}if(bytes.length>25000000||createHash('sha256').update(bytes).digest('hex')!==e.hash)bytes=null;}catch{}
    if(!bytes){e=await freeImages.read(url);if(e.ok){bytes=await fs.readFile('web/'+e.cachedImageUrl);currentNativeImages.set(url,e);}else if(e.sourceMissing){rows.set(url,{url,ok:false,status:404,error:'Official image missing through all ordinary free methods'});continue;}else{pending.push(url);continue;}}
-   const {data,info}=await sharp(bytes).rotate().resize({width:maxSide,height:maxSide,fit:'inside',withoutEnlargement:true}).webp({quality:86}).toBuffer({resolveWithObject:true});rows.set(url,{url,ok:true,sourceWidth:e.width,sourceHeight:e.height,width:info.width,height:info.height,sourceHash:e.hash,dataBase64:data.toString('base64')});metrics.localNativePreviewRenders=(metrics.localNativePreviewRenders||0)+1;
+   const metadata=await sharp(bytes).metadata(),{data,info}=await sharp(bytes).rotate().resize({width:maxSide,height:maxSide,fit:'inside',withoutEnlargement:true}).webp({quality:86}).toBuffer({resolveWithObject:true});rows.set(url,{url,ok:true,sourceWidth:metadata.width,sourceHeight:metadata.height,width:info.width,height:info.height,sourceHash:e.hash,dataBase64:data.toString('base64')});metrics.localNativePreviewRenders=(metrics.localNativePreviewRenders||0)+1;
   }
   metrics.freeImageAttempts=freeImages.attempts.slice(-100);
   if(pending.length){const paid=await scriptAction('('+readPreviewAssets.toString()+')('+JSON.stringify({urls:pending,maxSide})+')',{needsImages:true});if(paid.length!==pending.length||new Set(paid.map(r=>r.url)).size!==pending.length||paid.some(r=>!pending.includes(r.url)))throw Error('Preview fallback did not reconcile exact unresolved image URLs');for(const r of paid)rows.set(r.url,r);}
