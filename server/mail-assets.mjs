@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';import path from 'node:path';import {createHas
 import {ensureMailImageFormat} from './mail-format.mjs';
 const HOME='https://g-jayden.github.io/range-christmas-observatory/';
 export const MAIL_CARD_VERSION='bilingual-card-v5-raster-photo-composition';
-export function mailHeightLabel(p){const c=treeHeightConflict(p);return !c?p.heightLabel:c.usableHeightCm?c.usableHeightCm+(c.resolution==='title-and-SKU-height-agree'?'cm（商品名与官网独立树高一致 · Title / SKU tree height agree）':'cm（标题与官网长度一致 · Title / source length agree）'):'高度冲突，未确认 · Conflicting height, unconfirmed';}
+export function mailHeightLabel(p){const c=treeHeightConflict(p);return !c?p.heightLabel:c.usableHeightCm?c.usableHeightCm+(c.resolution==='title-and-exact-SKU-native-dimension-diagram'?'cm（商品名与官网原图尺寸一致 · Title / native dimension diagram agree）':c.resolution==='title-and-exact-SKU-description'?'cm（商品名与SKU专属介绍一致 · Title / exact SKU description agree）':c.resolution==='title-and-SKU-height-agree'?'cm（商品名与官网独立树高一致 · Title / SKU tree height agree）':'cm（标题与官网长度一致 · Title / source length agree）'):'高度冲突，未确认 · Conflicting height, unconfirmed';}
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 function lines(text,width,font){const out=[];let line='',used=0;const units=String(text).match(/[A-Za-z0-9]+|[ \t]+|[\s\S]/g)||[];for(const unit of units){const size=[...unit].reduce((n,c)=>n+(/[\u0000-\u00ff]/.test(c)?.55:1),0);if((used+size)*font>width&&line){out.push(line.trimEnd());line='';used=0;}if(!line&&!unit.trim())continue;line+=unit;used+=size;}if(line)out.push(line.trimEnd());return out;}
 export async function renderer(){

@@ -35,7 +35,8 @@ export function parseVariantDetails(response,expectedSku,sourceUrl,observedAt=ne
  const rawImage=imageCandidates.find(raw=>{try{return raw&&validProductImage(new URL(decode(raw),f.url).href)}catch{return false}});
  const image=rawImage?new URL(decode(rawImage),f.url).href:null;
  const images=f.gallery.filter(g=>!g.variants.length||g.variants.includes(String(v.id))).map(g=>g.url);
- const originals=(f.originalGallery||[]).filter(g=>g.variants.includes(String(v.id))||g.thumbnail===image);
+ const soleSku=f.offers?.length===1&&String(f.offers[0].sku)===String(expectedSku)&&f.variantSkus?.length===1&&String(f.variantSkus[0])===String(expectedSku);
+ const originals=(f.originalGallery||[]).filter(g=>g.variants.includes(String(v.id))||g.thumbnail===image||soleSku&&!g.variants.length&&f.structuredOriginalImages?.includes(g.thumbnail));
  const originalImages=originals.map(g=>({url:new URL(decode(g.url),f.url).href,thumbnail:g.thumbnail?new URL(decode(g.thumbnail),f.url).href:null,variantId:String(v.id),source:f.url})).filter(g=>validProductImage(g.url));
  if(!originalImages.length&&f.structuredOriginalImages?.length&&f.offers?.length===1&&String(f.offers[0].sku)===String(expectedSku)&&(f.structuredOriginalImages.length===1||f.variantSkus?.length===1&&String(f.variantSkus[0])===String(expectedSku)))for(const raw of f.structuredOriginalImages){const url=new URL(raw,f.url);if(['https://www.therange.co.uk','https://kube-media-unpublished.rstore.com'].includes(url.origin)&&validProductImage(url.href))originalImages.push({url:url.href,variantId:String(v.id),selectedSku:String(expectedSku),source:f.url,method:'single-SKU-structured-image'});}
 

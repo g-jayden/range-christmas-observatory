@@ -1,0 +1,44 @@
+name: Inspect four exact low-resolution Range product galleries
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: range-native-resolution-inspection
+  cancel-in-progress: false
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/images/
+            !/web/reports/
+            !/web/mail-assets/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci --no-audit --no-fund
+      - name: Verify account balance and retain existing reserve
+        run: node scripts/reserve-credits.mjs
+      - name: Capture exact source records and native gallery bytes for review
+        run: node scripts/inspect-range-native-resolution.mjs
+      - name: Save source evidence and actual receipt without changing catalogue facts
+        if: always()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add --sparse -- web/range-native-resolution-inspection.json web/collection-ledger.json web/images/source
+          git diff --cached --quiet || git commit -m "Save exact four low-resolution product source documents for review [skip ci]"
+          node scripts/push-evidence.mjs
