@@ -1,4 +1,6 @@
 import{collectArDirectories}from'../server/ar-directory-collector.mjs';
+import{createArDefaultPageReader}from'../server/ar-default-page.mjs';
+import{arStructuredProduct,arProductFlightFacts,arPublicState}from'../server/ar-state-parser.mjs';
 import fs from'node:fs/promises';
 import{gzipSync,gunzipSync}from'node:zlib';
 import{createHash}from'node:crypto';
@@ -10,7 +12,7 @@ if(process.env.AR_REFRESH_DIRECTORIES==='true')await collectArDirectories({key:p
 const source=await read(base+'/source-directory.json',null);if(!source?.complete||source.categories.some(c=>!c.complete))throw Error('Complete accepted Argos directory membership required');
 const sourceRows=new Map;for(const c of source.categories)for(const page of c.pages)for(const row of page.props.productData){if(!/^[a-z0-9]{7,8}$/.test(String(row.id)))throw Error('Invalid exact Argos product ID');const old=sourceRows.get(String(row.id));if(!old||row.attributes?.price!=null)sourceRows.set(String(row.id),row);}
 const prior=await read(base+'/source-products.json.gz',{}),checkpoint=await read(runtime+'/checkpoint.json.gz',{}),records={...prior};for(const[k,v]of Object.entries(checkpoint))if(sourceRows.has(k)&&(!records[k]||Date.parse(v.observedAt)>Date.parse(records[k].observedAt)))records[k]=v;
-const receipts=await read(base+'/collection-ledger.json',{retailerId:'ar',receipts:[]}),attempts=new Map,failures=[],started=Date.now();let calls=0,batchSize=48,lastStatus,contextIndex=0,noProgress=0;const contexts=['https://www.argos.co.uk/search/christmas-inflatables/'];
+const receipts=await read(base+'/collection-ledger.json',{retailerId:'ar',receipts:[]}),attempts=new Map,failures=[],started=Date.now();let calls=0,batchSize=48,lastStatus,contextIndex=0,noProgress=0,isolateProducts=false;const contexts=['https://www.argos.co.uk/search/christmas-inflatables/'];
 const fingerprint=row=>createHash('sha256').update(JSON.stringify([row.attributes?.name,row.attributes?.productName,row.attributes?.image,row.attributes?.imageUrl,row.attributes?.imageURL])).digest('hex');
 const write=async(file,value)=>{const text=JSON.stringify(value),tmp=file+'.tmp';await fs.writeFile(tmp,file.endsWith('.gz')?gzipSync(text):text);await fs.rename(tmp,file);};
 const valid=(sku,d)=>String(d?.structuredProduct?.sku)===sku&&new URL(d.sourceUrl).origin==='https://www.argos.co.uk'&&new URL(d.sourceUrl).pathname.replace(/\/$/,'')==='/product/'+sku;
@@ -26,16 +28,27 @@ let pending=await save();while(pending.length&&calls<40&&Date.now()-started<70*6
   let data=d.actions?.javascriptReturns?.[0]?.value;if(typeof data==='string')data=JSON.parse(data);if(!Array.isArray(data?.products)||!Array.isArray(data.failures))throw Error('Source browser did not return exact product records');
   const selected=new Set(skus);for(const p of data.products){if(!selected.has(p.sku)||!valid(p.sku,p)||p.structuredProduct.offers?.priceCurrency!=='GBP')throw Error('Returned product identity/currency outside requested source');records[p.sku]={...p,detailIdentityFingerprint:fingerprint(sourceRows.get(p.sku))};}
   for(const f of data.failures){attempts.set(f.sku,(attempts.get(f.sku)||0)+1);failures.push({...f,scrapeId:receipt.scrapeId,observedAt:new Date().toISOString()});}
-  if(data.failures.some(f=>f.status===403||f.status===429))batchSize=Math.max(12,Math.floor(batchSize*.75));else if(data.products.length===skus.length)batchSize=Math.min(64,batchSize+8);
+  if(data.failures.some(f=>f.status===403||f.status===429)){batchSize=Math.max(12,Math.floor(batchSize*.75));isolateProducts=data.products.length<skus.length;}else if(data.products.length===skus.length)batchSize=Math.min(64,batchSize+8);
   receipt.received=data.products.length;receipt.sourceRequests=data.requests;receipt.failures=data.failures.length;
  }catch(e){contextIndex++;attempts.set(root,(attempts.get(root)||0)+1);failures.push({stage:'source-context',contextUrl,error:e.message,observedAt:new Date().toISOString()});receipt.localError=e.message;batchSize=Math.max(12,Math.floor(batchSize*.75));}
- receipt.completedAt=new Date().toISOString();receipts.receipts.push(receipt);await write(runtime+'/receipt-'+calls+'.json',receipt);pending=await save();noProgress=Object.keys(records).length>priorVerified?0:noProgress+1;if(noProgress>=3){console.log(JSON.stringify({phase:'Argos unchanged transport circuit stopped',consecutiveNoProgress:noProgress,pending:pending.length,receiptsPreserved:true}));break;}
+ receipt.completedAt=new Date().toISOString();receipts.receipts.push(receipt);await write(runtime+'/receipt-'+calls+'.json',receipt);pending=await save();noProgress=Object.keys(records).length>priorVerified?0:noProgress+1;if(isolateProducts||noProgress>=3){console.log(JSON.stringify({phase:'Argos cross-page transport stopped; use only missing isolated pages',consecutiveNoProgress:noProgress,pending:pending.length,receiptsPreserved:true}));break;}
  // Do not keep resubmitting an unchanged unavailable root or assume a failure is
  // a negative catalogue result. Other exact products continue independently.
  // A rejected exact product is not proof that another product is unavailable.
  // Context transport errors are not attributed to an unrequested product.
  // The finite run bound remains separate from individual product attempts.
  if(pending.length)await new Promise(r=>setTimeout(r,2000));
+}
+if(pending.length){
+ let receiptSaves=Promise.resolve(),isolatedFailures=0,isolatedCursor=0;const isolated=createArDefaultPageReader({key:process.env.FIRECRAWL_API_KEY,onReceipt:async receipt=>{receipts.receipts.push(receipt);receiptSaves=receiptSaves.then(()=>write(base+'/collection-ledger.json',receipts));await receiptSaves;}}),jobs=[...pending];
+ while(isolatedCursor<jobs.length&&Date.now()-started<70*60000&&isolatedFailures<3){
+  const batch=jobs.slice(isolatedCursor,isolatedCursor+12);isolatedCursor+=batch.length;let cursor=0;
+  await Promise.all(Array.from({length:2},async()=>{while(cursor<batch.length&&isolatedFailures<3){const sku=batch[cursor++];try{
+   const page=await isolated.read('https://www.argos.co.uk/product/'+sku),structuredProduct=arStructuredProduct(page.html,sku);if(structuredProduct.offers?.priceCurrency!=='GBP')throw Error('Official GBP offer required');let legacy=null;try{const data=arPublicState(page.html).productStore?.data;if(String(data?.productId)===sku)legacy=Object.fromEntries(['attributes','badges','media','prices','variants','dimensions','breadcrumb','productId'].map(k=>[k,data[k]??null]));}catch{}
+   const product={sku,sourceUrl:'https://www.argos.co.uk/product/'+sku,observedAt:page.observedAt,structuredProduct,legacy,flight:legacy?null:arProductFlightFacts(page.html,sku),detailIdentityFingerprint:fingerprint(sourceRows.get(sku))};if(!valid(sku,product))throw Error('Isolated Argos exact product identity mismatch');records[sku]=product;isolatedFailures=0;
+  }catch(e){isolatedFailures++;failures.push({sku,stage:'isolated-official-page',status:e.status,error:String(e.message).slice(0,200),observedAt:new Date().toISOString()});}}}));
+  await receiptSaves;pending=await save();console.log(JSON.stringify({phase:'Argos isolated exact product progress',verified:Object.keys(records).length,pending:pending.length,isolatedPageRequests:isolated.metrics().requests}));
+ }
 }
 if(pending.length)throw Error('Argos exact detail acceptance pending for '+pending.length+' products; current verified evidence is saved');
 console.log(JSON.stringify({complete:true,products:Object.keys(records).length,sourceCounts:Object.fromEntries(source.categories.map(c=>[c.id,c.expected])),callsThisRun:calls,confirmedCredits:lastStatus.confirmedCredits}));

@@ -13,10 +13,19 @@ export function arPublicState(html){
 // App-router lists carry the same business props inside JSON-encoded Flight
 // records. Decode their literal payloads, without evaluating a Flight script.
 export function arDirectoryPageProps(html){
+ const visible=props=>{
+  const decode=s=>String(s||'').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&pound;/g,'£').replace(/&nbsp;/g,' '),attr=(tag,key)=>decode(tag.match(new RegExp('\\b'+key+'=["\\\']([^"\\\']*)["\\\']','i'))?.[1]),tags=[...String(html).matchAll(/<div\b[^>]*\bdata-testid=["']component-product-card["'][^>]*>/gi)],byId=new Map();
+  for(let n=0;n<tags.length;n++){
+   const tag=tags[n],id=attr(tag[0],'data-product-id');if(!id||byId.has(id))continue;
+   const card=String(html).slice(tag.index,tags[n+1]?.index??String(html).length),links=[...card.matchAll(/<a\b[^>]*>/gi)],title=links.find(m=>attr(m[0],'title')&&attr(m[0],'href')?.replace(/\/$/,'')==='https://www.argos.co.uk/product/'+id),price=card.match(/<span\b[^>]*\bclass=["'][^"']*\bds-c-price__price\b[^"']*["'][^>]*>([\s\S]*?)<\/span>/i),amount=decode(price?.[1].replace(/<[^>]*>/g,'')).match(/^\s*£\s*([\d,]+(?:\.\d{2})?)\s*$/),image=card.match(/<img\b[^>]*>/i);
+   if(!title)continue;const facts={name:attr(title[0],'title'),image:attr(image?.[0]||'','src'),visibleCardSource:true};if(amount)facts.price=Number(amount[1].replaceAll(',',''));byId.set(id,facts);
+  }
+  return {...props,productData:props.productData.map(row=>{const card=byId.get(String(row.id));return card?{...row,attributes:{...row.attributes,...card}}:row;})};
+ };
  const sai=String(html).match(/<script\b[^>]*\bid=["']sai-product-data["'][^>]*>([\s\S]*?)<\/script>/i);let native;
  if(sai){const d=JSON.parse(sai[1]);if(d.version!=='1.0'||!Number.isInteger(d.currentPage)||d.currentPage<1||!Number.isInteger(d.totalPages)||d.totalPages<d.currentPage||!Number.isInteger(d.totalNumberOfAllProducts)||d.totalNumberOfAllProducts<0||!Array.isArray(d.products)||d.products.length!==d.rank1CountForCurrentPage||d.products.length>d.totalNumberOfAllProducts||new Set(d.products.map(p=>String(p.id))).size!==d.products.length||d.products.some(p=>!/^[a-z0-9]{7,8}$/.test(String(p.id))||typeof p.title!=='string'))throw Error('Argos native listing counters or exact identities are inconsistent');native={productMetadata:{currentPage:d.currentPage,totalPages:d.totalPages,numberOfResults:d.totalNumberOfAllProducts},productData:d.products.map(p=>({id:String(p.id),attributes:{name:p.title},sourceTransport:'official-sai-product-data'})),sourceTransport:'official-sai-product-data'};}
  const direct=String(html).match(/<script\b[^>]*id=["']__NEXT_DATA__["'][^>]*>([\s\S]*?)<\/script>/i);
- if(direct)return JSON.parse(direct[1]).props.pageProps;
+ if(direct)return visible(JSON.parse(direct[1]).props.pageProps);
  const matches=[];const visit=v=>{if(Array.isArray(v))for(const x of v)visit(x);else if(v&&typeof v==='object'){if(v.pageProps?.productData&&v.pageProps.productMetadata)matches.push(v.pageProps);for(const x of Object.values(v))visit(x);}};
  for(const m of String(html).matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)){
   const payload=m[1].trim().match(/^self\.__next_f\.push\((\[[\s\S]*\])\);?$/);if(!payload)continue;
@@ -24,8 +33,8 @@ export function arDirectoryPageProps(html){
   if(outer[0]!==1||typeof outer[1]!=='string')continue;
   for(const line of outer[1].split('\n')){if(!/^[a-f0-9]+:/.test(line))continue;try{visit(JSON.parse(line.slice(line.indexOf(':')+1)));}catch{}}
  }
- if(native){const full=matches.find(p=>p.productMetadata.currentPage===native.productMetadata.currentPage&&p.productMetadata.numberOfResults===native.productMetadata.numberOfResults&&p.productData.length>=native.productData.length&&native.productData.every(n=>p.productData.some(r=>String(r.id)===n.id)));return full||native;}
- if(matches.length!==1)throw Error('Argos listing business props absent or ambiguous');return matches[0];
+ if(native){const full=matches.find(p=>p.productMetadata.currentPage===native.productMetadata.currentPage&&p.productMetadata.numberOfResults===native.productMetadata.numberOfResults&&p.productData.length>=native.productData.length&&native.productData.every(n=>p.productData.some(r=>String(r.id)===n.id)));return visible(full||native);}
+ if(matches.length!==1)throw Error('Argos listing business props absent or ambiguous');return visible(matches[0]);
 }
 
 export function arStructuredProduct(html,expectedSku){

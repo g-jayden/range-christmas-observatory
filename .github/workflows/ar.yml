@@ -57,6 +57,8 @@ jobs:
           path: |
             web/ar/
             runtime/ar-source/receipt-*.json
+            runtime/ar-source/isolated-page-receipts.json
+            runtime/ar-source/isolated-pages/
           retention-days: 7
           compression-level: 9
       - name: Preserve verified public business records after any outcome
