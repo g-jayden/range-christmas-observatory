@@ -1,0 +1,58 @@
+name: Repair current Range photo pointers without catalogue collection
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: range-current-photo-repair
+  cancel-in-progress: false
+jobs:
+  photos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      COLLECTION_CHECKPOINTS: '1'
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/images/
+            !/web/reports/
+            !/web/mail-assets/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci --no-audit --no-fund
+      - name: Recover only missing current source photos, free first
+        run: node scripts/repair-range-current-photos.mjs
+      - uses: actions/cache@v6.1.0
+        with:
+          path: |
+            runtime/models
+            runtime/fonts
+          key: local-clip-vit-base-patch32-q8-v1
+      - name: Recheck changed images with saved exact SKU descriptions
+        run: node scripts/enrich-appearance.mjs
+      - name: Preserve verified photos and actual receipt
+        id: publication
+        if: always()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add --sparse -- web
+          git diff --cached --quiet || git commit -m "Repair current exact SKU photos without catalogue requests [skip ci]"
+          node scripts/push-evidence.mjs
+      - name: Publish the saved result without collecting any retailer
+        if: always() && steps.publication.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/request-nx-site-publish.mjs
