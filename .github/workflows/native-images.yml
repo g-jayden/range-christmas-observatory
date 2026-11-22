@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       continuationDepth:
-        description: Continue only durably saved native-image progress, maximum eight
+        description: Continue only durably saved native-image progress; no approved count ceiling
         type: string
         default: '0'
   workflow_run:

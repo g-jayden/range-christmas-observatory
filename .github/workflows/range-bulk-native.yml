@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       continuationDepth:
-        description: Continue only durably saved image progress, maximum eight
+        description: Continue only durably saved image progress; no approved count ceiling
         type: string
         default: '0'
 permissions:

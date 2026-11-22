@@ -8,7 +8,7 @@ on:
         options: [originals, listing-previews]
         default: originals
       continuationDepth:
-        description: Bounded missing-only continuation, maximum 8
+        description: Continue only durably saved image progress; no approved count ceiling
         type: string
         default: '0'
 permissions:
