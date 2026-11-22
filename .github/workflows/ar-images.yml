@@ -40,7 +40,7 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci
-      - uses: actions/cache@v6.1.0
+      - uses: actions/cache/restore@v6.1.0
         with:
           path: |
             runtime/models
@@ -49,6 +49,14 @@ jobs:
           restore-keys: ar-native-images-
       - name: Verify every saved exact product gallery through free native media
         run: node scripts/enrich-ar.mjs
+      - name: Preserve exact free gallery previews even if a later review remains pending
+        if: always()
+        uses: actions/cache/save@v6.1.0
+        with:
+          path: |
+            runtime/models
+            runtime/ar-previews
+          key: ar-native-images-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Release all seven departments only after complete source and original-image acceptance
         run: node scripts/activate-ar.mjs
       - uses: actions/upload-artifact@v7.0.2

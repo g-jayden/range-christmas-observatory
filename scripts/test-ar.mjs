@@ -1,0 +1,3 @@
+import assert from'node:assert/strict';import{arMemberships}from'../web/ar-model.mjs';
+
+for(const name of ['Artificial Wisteria Garland','Dried Effect Artificial Gypsophila Garland','Artificial Tropical Garland - Coral','Artificial Hydrangea and Foliage Wreath'])assert.equal(arMemberships({baseName:name,sourceDescription:'For weddings and year round floral displays',arSource:{groups:['wreath-garland']}}).primary,null);assert.equal(arMemberships({baseName:'Festive Gold Hydrangea Christmas Wreath',sourceDescription:'For Christmas doors',arSource:{groups:['wreath-garland']}}).primary,'ar-wreath');
