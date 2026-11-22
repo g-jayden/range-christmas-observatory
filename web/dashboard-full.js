@@ -19,7 +19,7 @@ import {setupCatalogueNavigation} from './dashboard-navigation.js';
 import {normaliseScope,readCatalogueLocation,catalogueLocation} from './catalogue-navigation.mjs';
 import {DEPARTMENTS,DEPARTMENT_MAP,ROOT_DEPARTMENTS,LIGHT_DEPARTMENTS,isLightingScope,THEME_DEFINITIONS,isThemeScope,sourcePrice,colourLabel,STYLE_EN,fieldLabel,heightCategoryLabel,treeHeightConflict,beijingDay,isToday,isNew,inDepartment,productDimensions,availableProducts} from './catalogue-model.mjs';
 const E=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),date=v=>v?new Date(v).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'}):'尚未采集 · Not collected';
-const read=async file=>{const url=new URL(file,location.href);url.searchParams.set('checked',String(Math.floor(Date.now()/30000)));const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error(file+' HTTP '+r.status);return r.json()};
+const read=async file=>{const boot=globalThis.__observatoryCatalogueBootstrap;if(boot?.base===new URL('.',location.href).href&&boot.reads.has(file)){const first=boot.reads.get(file);boot.reads.delete(file);try{return await first;}catch{}}const url=new URL(file,location.href);url.searchParams.set('checked',String(Math.floor(Date.now()/30000)));const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error(file+' HTTP '+r.status);return r.json()};
 const readStatus=()=>read('browse-status.json').catch(()=>read('status.json'));
 const previewWarmer=createPreviewWarmer();
 const BQviews=new Map(),BQrequests=new Map();
