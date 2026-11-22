@@ -40,6 +40,8 @@ jobs:
             runtime/models
             runtime/fonts
           key: local-clip-vit-base-patch32-q8-v1
+      - name: Materialize committed current preview bytes for the complete local audit
+        run: node scripts/hydrate-current-previews.mjs --range-only
       - name: Recheck changed images with saved exact SKU descriptions
         run: node scripts/enrich-appearance.mjs
       - name: Preserve verified photos and actual receipt
