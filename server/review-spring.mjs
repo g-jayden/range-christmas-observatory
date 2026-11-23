@@ -16,7 +16,7 @@ export async function reviewSpring({repair=true}={}){
    // guessing, generative enhancement or enlargement of low-resolution files.
    for(const p of candidates){const g=p.originalImages?.find(g=>g.url===p.originalImageUrl&&String(g.selectedSku)===p.sku&&String(g.variantId)===String(p.variantId));if(g)p.variantImageUrl=g.url;}
    snapshot.imageAudit=await reader.auditImages(candidates,snapshot.imageAudit||{},{bodyBatchSize:80});
-   snapshot.previewAudit=await optimiseProductPreviews(candidates,{reader,maxCandidates:5,batchSize:160});await applyProductPreviews(candidates);
+   snapshot.previewAudit=await optimiseProductPreviews(candidates,{reader,maxCandidates:Infinity,nativeGalleryOnly:true,batchSize:160});await applyProductPreviews(candidates);
    // Preserve the native bytes of the chosen whole-product preview for PDFs
    // and the annotated long-press image, independently of the small card WebP.
    const selected=candidates.filter(p=>p.previewImage?.sourceUrl&&p.originalImages?.some(g=>g.url===p.previewImage.sourceUrl&&exactNativeGalleryMember(p,g))).map(p=>({...p,variantImageUrl:p.previewImage.sourceUrl}));if(selected.length){const a=await reader.auditImages(selected,snapshot.imageAudit,{bodyBatchSize:80});const by=new Map(selected.map(p=>[p.sku,p]));for(const p of candidates){const s=by.get(p.sku);if(s?.imageCacheEvidence){p.originalCachedImageUrl=s.cachedImageUrl;p.originalImageUrl=s.variantImageUrl;p.originalImageEvidence={sourceUrl:s.variantImageUrl,sha256:s.imageCacheEvidence.sha256,observedAt:s.imageCacheEvidence.observedAt};}}snapshot.imageAudit.entries={...snapshot.imageAudit.entries,...a.entries};}
