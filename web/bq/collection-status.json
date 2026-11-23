@@ -1,1 +1,1 @@
-{"complete":false,"checkedAt":"2026-11-22T23:59:14.584Z","error":"B&Q route source data missing","failedSourceUrl":null,"failedPageAttempts":null,"requests":1008,"firecrawlCredits":20,"sourceObservedAt":"2026-11-22T00:10:11.101Z"}
+{"complete":false,"checkedAt":"2026-11-23T22:13:27.679Z","error":"Command failed: /opt/hostedtoolcache/node/24.22.3/x64/bin/node scripts/push-evidence.mjs","failedSourceUrl":null,"failedPageAttempts":null,"requests":905,"firecrawlCredits":11,"sourceObservedAt":"2026-11-22T00:10:11.101Z"}
