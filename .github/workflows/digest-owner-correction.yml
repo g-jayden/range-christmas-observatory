@@ -24,8 +24,16 @@ jobs:
           ref: main
           sparse-checkout-cone-mode: false
           sparse-checkout: |
-            /*
-            !/web/images/
+            /.gitignore
+            /package.json
+            /package-lock.json
+            /ops/digest-correction-request.json
+            /scripts/prepare-owner-consolidated-correction.mjs
+            /scripts/deliver-owner-consolidated-correction.mjs
+            /scripts/push-evidence.mjs
+            /server/
+            /cloud/
+            /web/*.mjs
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
