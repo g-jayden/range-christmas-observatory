@@ -1,4 +1,5 @@
 import assert from'node:assert/strict';
+import{collectPartitionedCategory}from'../server/catalogue-partitions.mjs';
 import{SPRING_DEPARTMENTS,SPRING_VERSION,springSourceDecision,springImageDecision}from'../web/spring-model.mjs';
 import{mergeSpring}from'../server/update-spring.mjs';import{inDepartment,isToday,isNew}from'../web/catalogue-model.mjs';
 import{catalogueLocation,readCatalogueLocation,cataloguePath}from'../web/catalogue-navigation.mjs';import{browseIndexProduct}from'../web/catalogue-loader.mjs';
@@ -24,3 +25,6 @@ await syncSpring({body:{...body,products:[product]},storage:db,verifyProduct:()=
 const fresh={...product,sku:'124',detailEvidence:{selectedSku:'124'}};await syncSpring({body:{...body,products:[fresh]},storage:db,verifyProduct:()=>{}});assert.equal((await db.list({prefix:'pending/'})).size,1);await assert.rejects(syncSpring({body:{...body,ready:false},storage:db,verifyProduct:()=>{}}));
 assert.equal((await dispatchSpringDue({storage:db,env:{GITHUB_DISPATCH_TOKEN:'test'},now:Date.parse('2026-11-23T21:59:00Z'),fetcher:()=>{throw Error('not due')}})).due,false);
 console.log('PASS: spring-only source and image conflicts, four categories, native-photo requirement, baseline, global SKU alert deduplication, one unified source barrier, bilingual names, lazy catalogue records, 8-per-page reports and Beijing midnight rollover.');
+
+let catalogueReads=0;const rows=Array.from({length:6231},(_,i)=>({sku:String(i+1),price:100,newIn:false,inStock:true,variantName:'Artificial botanical '+i,variantImageUrl:'https://www.therange.co.uk/media/'+i+'.jpg'}));
+const reader=async raw=>{catalogueReads++;const u=new URL(raw),f=JSON.parse(u.searchParams.get('filters'));assert.equal(f.brand_f,undefined,'A coherent root does not buy brand partitions');const offset=Number(u.searchParams.get('offset'));return{products:rows.slice(offset,offset+120),totalResults:rows.length,facets:[{id:'brand_f',options:[{name:'Source brand',count:rows.length}]}]};};reader.many=urls=>Promise.all(urls.map(reader));const complete=await collectPartitionedCategory('375964',reader,{preferRoot:true});assert.equal(complete.products.length,6231);assert.equal(complete.audit.complete,true);assert.equal(complete.audit.partitions.length,0);assert(catalogueReads<=66,'One complete root observation serves all four categories');console.log('PASS: a 6,231-SKU spring root closes with exact SKU/value reconciliation in 65 reads, shared by four category views without reading each brand or repeating the catalogue per category.');
