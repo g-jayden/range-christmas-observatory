@@ -66,6 +66,8 @@ jobs:
           restore-keys: bq-source-checkpoints-
       - name: Verify committed catalogue and publication logic without source requests
         run: npm test
+      - name: Restore this commit's catalogue after isolated tests
+        run: node scripts/restore-committed-build-inputs.mjs
       - uses: actions/configure-pages@v6.0.0
       - name: Build directly from the committed current catalogue
         env:
