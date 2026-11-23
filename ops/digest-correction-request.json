@@ -5,5 +5,11 @@
     "44b3e1c14edf4084944816be046843a625120b31ba6d64bc2411919256edf108",
     "69424fa6823526602bd55c49fb128992e9569ea4ed5792206b6b117b251f2f47"
   ],
-  "requestId": "owner-consolidate-20261123-three-emails"
+  "requestId": "owner-consolidate-20261123-three-emails",
+  "reviewedPublication": {
+    "visuallyReviewed": true,
+    "planId": "46e0bff706d426ae1bec482801baeb7a0295d4e2864b887ab1c75d2944bda116",
+    "revision": "09eec4104400b5fb02f1351fd2bf93c495918adc",
+    "pdfSha256": "baf2d7ffbf4bf71cc4c852af92a0b167d286ba5ad74312d5f74ff50f40b5c1c0"
+  }
 }
