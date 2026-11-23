@@ -31,7 +31,7 @@ async function savedGalleryHashes(products){
 }
 function titleSimilarity(a,b){const words=p=>new Set(normal(p.baseName||p.variantName||p.name).split(' ').filter(w=>w.length>1)),x=words(a),y=words(b);return [...x].filter(w=>y.has(w)).length/Math.max(1,new Set([...x,...y]).size);}
 export function catalogueIdentityIndex(products,{photoSignatures={},galleryHashes={},reviews={}}={}){
- const unique=new Map();for(const p of products){if(!p?.sku||p.recordType&&p.recordType!=='sku')continue;const k=key(p),prior=unique.get(k);if(!prior||Date.parse(p.observedAt)>Date.parse(prior.observedAt)||p.taxonomyAudit&&!prior.taxonomyAudit)unique.set(k,{...prior,...p});}
+ const unique=new Map();for(const p of products){if(!p?.sku||p.taxonomyAudit?.disposition==='exclude'||p.collectionId==='spring'&&p.springAudit?.disposition!=='include'||p.recordType&&p.recordType!=='sku')continue;const k=key(p),prior=unique.get(k);if(!prior||Date.parse(p.observedAt)>Date.parse(prior.observedAt)||p.taxonomyAudit&&!prior.taxonomyAudit)unique.set(k,{...prior,...p});}
  const canonical={},primary={},groups=new Map(),candidates=[],merged=[];
  for(const [k,p]of unique){const department=p.taxonomyAudit?.primary||p.department||p.kind,scopes=p.taxonomyAudit?.memberships||p.departmentIds||[];if(scopes.length>1&&department&&department!=='lights'&&!String(department).startsWith('theme-'))primary[k]=department;
   for(const sku of p.aliasSkus||[])if(String(sku)!==String(p.sku))canonical[productRetailer(p)+':'+sku]=String(p.sku);

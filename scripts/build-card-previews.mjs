@@ -50,7 +50,7 @@ export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot
   const source=nativeSourceUrl(p),proof=[p.nativeExportEvidence,p.originalImageEvidence,...(p.originalImages||[]).filter(g=>g.url===source).map(g=>({...g,sourceUrl:g.url,sha256:g.sha256||g.nativeSha256}))].find(e=>e?.sourceUrl===source&&(!e.selectedSku||String(e.selectedSku)===String(p.sku))&&/^[a-f0-9]{64}$/.test(e.sha256||''));
   if(!proof||p.sourceImageConflict)return p;const hash=proof.sha256;
   if(nativeFiles.has(hash))return {...(p.fastPreview?p:await build(p)),browseNative:{...nativeFiles.get(hash),sourceUrl:source}};
-  const retailer=p.retailerId||'the-range';if(proof.bytes>3000000||nativeBytes>=96*1024*1024||(nativeRetailerBytes.get(retailer)||0)>=8*1024*1024)return p;
+  const retailer=(p.retailerId||'the-range')+'/'+(p.collectionId||'christmas');if(proof.bytes>3000000||nativeBytes>=96*1024*1024||(nativeRetailerBytes.get(retailer)||0)>=8*1024*1024)return p;
   for(const file of nativeImageCandidates(p).map(local).filter(Boolean)){
    const buffer=await readInput({file:path.join(sourceRoot,file),bound:hash,remote:OWN+file});if(!buffer)continue;
    if(createHash('sha256').update(buffer).digest('hex')!==hash)continue;

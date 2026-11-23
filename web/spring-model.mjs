@@ -34,7 +34,8 @@ export function springImageDecision(p,visual){
  const source=springSourceDecision(p);if(source.disposition==='exclude')return source;
  if(!p.detailsReady||!visual?.imageHash||p.springNativePhotoVerified!==true)return{...source,disposition:'review',reason:'exact-SKU-description-or-photo-missing'};
  const scores=visual.season||{},bad=Math.max(scores.autumn||0,scores.christmas||0,scores.dried||0,scores.other||0),good=Math.max(scores.freshFlowers||0,scores.greenFoliage||0),top=visual.objects?.[0];
- if(bad>good&&bad>.33)return{...source,disposition:'exclude',reason:'source-photo-non-spring',visual};
+ if((scores.other||0)>good&&(scores.other||0)>.33)return{...source,disposition:'review',reason:'non-product-photo-needs-replacement',visual};
+ if(bad>good&&bad>.33)return{...source,disposition:/\b(?:spring|fresh|pink|white|green|yellow|blue|purple)\b/i.test(p.variantName||'')?'review':'exclude',reason:'source-photo-non-spring-or-source-conflict',visual};
  if(!source.department&&top?.id!=='other'&&top?.score>=.60&&/\b(?:artificial|faux|fake|floral|flowers?|foliage|plant|ferns?|orchid|succulent|tree|ivy|moss|leaves)\b/i.test((p.variantName||'')+' '+(p.sourceDescription||'')))source.department=top.id;
  if(!source.department||good<.30||bad>=good*.85||top?.id!==source.department&&top?.score>.60)return{...source,disposition:'review',reason:'source-photo-or-object-conflict',visual};
  return{...source,disposition:'include',reason:'exact-SKU-description-and-source-photo-agree',visual};
