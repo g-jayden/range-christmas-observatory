@@ -29,6 +29,7 @@ jobs:
       ONNXRUNTIME_NODE_INSTALL_CUDA: skip
       COLLECTION_CHECKPOINTS: '1'
       EVIDENCE_NATIVE_ONLY: '1'
+      EVIDENCE_ISOLATE_WORKTREE: '1'
       COLLECTION_BUDGET_PHASE: spring-source
       SPRING_RESUME: ${{ inputs.resume && '1' || '0' }}
       SPRING_LOCAL_ONLY: ${{ inputs.phase == 'classify' && '1' || '0' }}

@@ -1,4 +1,5 @@
 import {execFileSync} from 'node:child_process';
+import{publishedEvidenceRevision}from'./isolated-evidence-publication.mjs';
 // The flag is set on the real collection step, never on tests or publication.
 // Git's existing workflow credential is used; no credential is read or copied.
 export async function publishCollectionCheckpoint({stage}={}, {env=process.env,run=execFileSync}={}){
@@ -9,7 +10,7 @@ export async function publishCollectionCheckpoint({stage}={}, {env=process.env,r
  let changed=false;try{git('diff','--cached','--quiet')}catch(e){if(e.status!==1)throw e;changed=true;}
  if(changed)git('commit','-m',stage==='discovery'?'Checkpoint verified source discovery before NEW processing':'Checkpoint verified NEW files before queuing email');
  run(process.execPath,['scripts/push-evidence.mjs'],{stdio:'inherit'});
- const revision=String(run('git',['rev-parse','HEAD'],{encoding:'utf8'})).trim();
+ const localRevision=String(run('git',['rev-parse','HEAD'],{encoding:'utf8'})).trim(),revision=publishedEvidenceRevision({env,localRevision});
  if(!/^[a-f0-9]{40}$/.test(revision))throw Error('Checkpoint revision was not verified');
  console.log(JSON.stringify({phase:'durable-collection-checkpoint',stage,revision,sourceRequestsMade:false,firecrawlCredits:0}));
  return {published:true,revision,stage};

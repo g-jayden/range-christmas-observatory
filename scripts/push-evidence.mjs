@@ -4,6 +4,7 @@ import {execFileSync,spawn} from 'node:child_process';
 import {withDataPublicationLease} from '../server/pages-lease-client.mjs';
 import fs from 'node:fs';
 import {control,apiBase} from '../server/cloud-client.mjs';
+import{isolateEvidencePublication}from'../server/isolated-evidence-publication.mjs';
 const git=(...args)=>execFileSync('git',args,{stdio:'inherit'}),read=(...args)=>execFileSync('git',args,{encoding:'utf8',maxBuffer:67108864}).trim();
 if(!process.env.GITHUB_RUN_ID)throw Error('Evidence publishing is restricted to its GitHub workflow');
 // Rebase data onto the already-authorised workflow revision. Creating a new
@@ -16,12 +17,13 @@ const sharedCacheFiles=new Set(['web/preview-quality-cache.json.gz']);
 const dirty=execFileSync('git',['diff','--name-only','-z'],{encoding:'utf8'}).split('\0').filter(Boolean);
 const knownUntracked=execFileSync('git',['ls-files','--others','--exclude-standard','-z'],{encoding:'utf8'}).split('\0').filter(p=>sharedCacheFiles.has(p));
 if(dirty.length||knownUntracked.length){if(dirty.some(p=>!sharedCacheFiles.has(p)))throw Error('Uncommitted collector output needs an explicit publication path: '+dirty.join(', '));git('add','--',...dirty,...knownUntracked);git('commit','-m','Preserve shared source-photo quality evidence [skip ci]');}
+if(process.env.EVIDENCE_ISOLATE_WORKTREE==='1'&&process.env.EVIDENCE_ISOLATED_PUBLISHER!=='1'){console.log(JSON.stringify({phase:'isolated-evidence-publication',...await isolateEvidencePublication()}));process.exit(0);}
 const gitNetwork=(...args)=>new Promise((resolve,reject)=>{const child=spawn('git',args,{stdio:'inherit'});child.once('error',reject);child.once('exit',code=>code===0?resolve():reject(Error('Git publication exited '+code)));});
 const publishEvidence=async(assertLease=()=>{})=>{
 const maximumAttempts=process.env.EVIDENCE_NATIVE_ONLY==='1'?8:4;
 let saved=false;for(let attempt=1;attempt<=maximumAttempts;attempt++){
  try{
-  assertLease();try{await gitNetwork('pull','--rebase');}catch(error){
+  assertLease();try{await gitNetwork('pull','--rebase','origin','main');}catch(error){
    const conflicts=read('diff','--name-only','--diff-filter=U').split('\n').filter(Boolean),allowed=new Set(['web/collection-ledger.json','web/preview-quality-cache.json.gz','web/paid-native-index.json']);
    if(!conflicts.length||conflicts.some(p=>!allowed.has(p)))throw error;
    for(const file of conflicts){const packed=file.endsWith('.gz'),stages=[1,2,3].map(n=>{const raw=execFileSync('git',['show',':'+n+':'+file],{maxBuffer:67108864});return JSON.parse((packed?gunzipSync(raw):raw).toString('utf8'));}),merged=file.endsWith('collection-ledger.json')?mergeCollectorLedgers(...stages):file.endsWith('paid-native-index.json')?mergeCollectorNativeIndexes(...stages):mergeCollectorImageCaches(...stages),bytes=Buffer.from(JSON.stringify(merged));fs.writeFileSync(file,packed?gzipSync(bytes):bytes);git('add','--',file);}

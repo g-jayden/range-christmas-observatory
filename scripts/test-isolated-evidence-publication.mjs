@@ -1,0 +1,40 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import {execFileSync} from 'node:child_process';
+import {isolateEvidencePublication,publishedEvidenceRevision} from '../server/isolated-evidence-publication.mjs';
+
+const root=await fs.mkdtemp(path.join(os.tmpdir(),'range-isolated-evidence-test-'));
+const remote=path.join(root,'remote.git'),collector=path.join(root,'collector'),other=path.join(root,'other');
+const script=path.resolve('scripts/push-evidence.mjs');
+const git=(cwd,...args)=>execFileSync('git',args,{cwd,encoding:'utf8',stdio:['ignore','pipe','pipe']}).trim();
+const write=async(dir,file,text)=>{await fs.mkdir(path.dirname(path.join(dir,file)),{recursive:true});await fs.writeFile(path.join(dir,file),text);};
+const configure=dir=>{git(dir,'config','user.name','Evidence Test');git(dir,'config','user.email','test@example.invalid');git(dir,'config','commit.gpgsign','false');};
+const ledger=(n,runs=[])=>JSON.stringify({periods:{'2026-11':{used:n,runs,reservations:{}}}});
+const env={...process.env,CONTROL_API_URL:'',CONTROL_TOKEN:'',EVIDENCE_ISOLATE_WORKTREE:'1',GITHUB_RUN_ID:'isolated-local-fixture',GITHUB_RUN_ATTEMPT:'1',GITHUB_JOB:'evidence'};
+const publish=async(directory,childEnv)=>{const output=execFileSync(process.execPath,[script],{cwd:directory,env:childEnv,encoding:'utf8',stdio:['ignore','pipe','pipe']});assert(output.includes('"evidenceSaved":true'));};
+try{
+ git(root,'init','--bare','--initial-branch=main',remote);git(root,'clone',remote,collector);configure(collector);
+ await write(collector,'code.txt','collector executable still running');await write(collector,'web/images/source/base.jpg','original-base-bytes');await write(collector,'web/collection-ledger.json',ledger(100));git(collector,'add','.');git(collector,'commit','-m','baseline');git(collector,'push','-u','origin','main');
+ git(collector,'config','extensions.worktreeConfig','true');git(collector,'sparse-checkout','set','--no-cone','/code.txt','/web/collection-ledger.json');
+ git(root,'clone',remote,other);configure(other);
+ const ownReceipt={key:'paid-native',credits:2,receipt:{id:'native-2'},completedAt:'2026-11-24T00:00:00Z'},otherReceipt={key:'daily-mail',credits:1,receipt:{id:'mail-1'},completedAt:'2026-11-24T00:01:00Z'};
+ await write(collector,'web/images/source/new.jpg','newly-collected-native-bytes');await write(collector,'web/images/previews/new.webp','compared-whole-product-frame');await write(collector,'web/source.json','saved source offer');await write(collector,'web/collection-ledger.json',ledger(102,[ownReceipt]));git(collector,'add','--sparse','--ignore-removal','--','web');git(collector,'commit','-m','checkpoint native evidence');
+ await write(other,'code.txt','independently updated executable');await write(other,'web/other-store.json','concurrent source data');await write(other,'web/collection-ledger.json',ledger(101,[otherReceipt]));git(other,'add','.');git(other,'commit','-m','concurrent code and mail evidence');git(other,'push','origin','main');
+ const originalHead=git(collector,'rev-parse','HEAD'),sparse=git(collector,'config','--worktree','--get','core.sparseCheckout');
+ const first=await isolateEvidencePublication({root:collector,env,publish});
+ assert.notEqual(first.revision,originalHead);assert.equal(git(collector,'rev-parse','HEAD'),originalHead);assert.equal(git(collector,'config','--worktree','--get','core.sparseCheckout'),sparse);
+ assert.equal(await fs.readFile(path.join(collector,'code.txt'),'utf8'),'collector executable still running');assert.equal(await fs.readFile(path.join(collector,'web/images/source/new.jpg'),'utf8'),'newly-collected-native-bytes');assert.equal(await fs.readFile(path.join(collector,'web/images/previews/new.webp'),'utf8'),'compared-whole-product-frame');
+ assert.equal(git(remote,'show','main:code.txt'),'independently updated executable');assert.equal(git(remote,'show','main:web/other-store.json'),'concurrent source data');assert.equal(git(remote,'show','main:web/images/source/new.jpg'),'newly-collected-native-bytes');assert.equal(git(remote,'show','main:web/images/source/base.jpg'),'original-base-bytes');
+ const merged=JSON.parse(await fs.readFile(path.join(collector,'web/collection-ledger.json'),'utf8'));assert.equal(merged.periods['2026-11'].used,103);assert.equal(merged.periods['2026-11'].runs.length,2);assert.equal(publishedEvidenceRevision({root:collector,env}),first.revision);
+ await write(collector,'web/source.json','second source checkpoint');git(collector,'add','--sparse','--ignore-removal','--','web');git(collector,'commit','-m','next collected batch');assert.throws(()=>publishedEvidenceRevision({root:collector,env}),/no confirmed public revision/);
+ const secondHead=git(collector,'rev-parse','HEAD'),second=await isolateEvidencePublication({root:collector,env,publish});assert.equal(git(collector,'rev-parse','HEAD'),secondHead);assert.equal(publishedEvidenceRevision({root:collector,env}),second.revision);assert.equal(git(remote,'show','main:web/source.json'),'second source checkpoint');assert.equal(git(remote,'show','main:code.txt'),'independently updated executable');assert.equal(JSON.parse(git(remote,'show','main:web/collection-ledger.json')).periods['2026-11'].used,103);
+ assert.equal(await fs.readFile(path.join(collector,'web/images/source/new.jpg'),'utf8'),'newly-collected-native-bytes');
+ git(other,'pull','--ff-only','origin','main');
+ const localExtra={key:'native-next',credits:3,receipt:{id:'native-3'},completedAt:'2026-11-24T00:03:00Z'},remoteExtra={key:'mail-next',credits:4,receipt:{id:'mail-4'},completedAt:'2026-11-24T00:04:00Z'};
+ await write(collector,'web/collection-ledger.json',ledger(106,[ownReceipt,otherReceipt,localExtra]));await write(collector,'web/images/source/next.jpg','next native bytes');git(collector,'add','--sparse','--ignore-removal','--','web');git(collector,'commit','-m','next paid evidence');
+ await write(other,'web/collection-ledger.json',ledger(107,[ownReceipt,otherReceipt,remoteExtra]));await write(other,'code.txt','second independent executable update');git(other,'add','.');git(other,'commit','-m','another concurrent receipt');git(other,'push','origin','main');
+ const third=await isolateEvidencePublication({root:collector,env,publish});assert.equal(publishedEvidenceRevision({root:collector,env}),third.revision);assert.equal(JSON.parse(git(remote,'show','main:web/collection-ledger.json')).periods['2026-11'].used,110);assert.equal(git(remote,'show','main:code.txt'),'second independent executable update');assert.equal(await fs.readFile(path.join(collector,'code.txt'),'utf8'),'collector executable still running');assert.equal(git(remote,'show','main:web/images/source/next.jpg'),'next native bytes');
+ console.log('PASS: repeated isolated real-Git publications merge concurrent receipts and code, keep live collector HEAD/code/native photos/previews intact, and announce only their confirmed public revision; no source requests.');
+}finally{await fs.rm(root,{recursive:true,force:true});}
