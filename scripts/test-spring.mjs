@@ -56,3 +56,20 @@ assert.equal(springSourceDecision({variantName:'Evervine',sourceDescription:'## 
 assert.equal(springSourceDecision({variantName:'Artificial Single Dog Tail Fern Flower Stem - Green'}).department,'spring-stems');assert.equal(springSourceDecision({variantName:'Large Foliage Bundle - Green'}).department,'spring-stems');assert.equal(springImageDecision({...p,variantName:'Gypsophila Flower Bunch'}, {...visual,season:{dried:.85,freshFlowers:.02,greenFoliage:.01}}).disposition,'review','A weak visual model must not discard legitimate pale artificial flowers as dried material without source or human confirmation');console.log('PASS: loose fern stems and foliage bundles stay separate from planted containers; model-only season disagreement triggers review rather than silently omitting a potential spring product.');
 
 assert.deepEqual(springBodyColourFacts({variantName:'White Artificial Rose Spray',sourceColour:'White'},{imageHash:'c',colours:[{zh:'黄色',score:.20},{zh:'白色',score:.19},{zh:'粉色',score:.16}]}).colours,['白色'],'Flat visual colour scores do not invent yellow or turn the species name Rose into a pink colour');console.log('PASS: weak colour scores require corroborated source/body colour and species names such as rose are not treated as colour labels.');
+// Actual supplier cases: a loose leaf and a basket of flowers can resemble a
+// wreath in a contact sheet. The offered contents, not circular image shape,
+// determine which form is sold.
+for(const [name,description,expected]of [
+ ['Artificial Floral Hanging Basket UV Resistant 34cm','Supplied fully assembled with a durable hanging basket.','spring-potted'],
+ ['Rubber Leaf Foliage 58 cm - Green','## Information\nSilk-like polyester Rubber Leaf spray by Homescapes. Make custom garlands and wreaths.','spring-stems'],
+ ['Homescapes Green Monstera Tropical Leaf','## Information\nSilk-like polyester Monstera leaf stem by Homescapes.','spring-stems'],
+ ['Silk Artificial Flowers for Home Decoration','## Features\n- Bouquet only, the decorated vase is not included','spring-stems'],
+ ['Artificial Boxwood Ball Topiary Plant in Pot','A planted green topiary.','spring-potted'],
+ ['Artificial Topiary Double Ball Black Tin Window Box','A complete planted window box.','spring-potted'],
+ ['18 cm Green Artificial Freesia Plant Bundle with Weighted Pot','A planted flowering arrangement.','spring-potted']
+])assert.equal(springSourceDecision({variantName:name,sourceDescription:description}).department,expected,name);
+for(const name of ['Boxwood Topiary Hedging Screen - Green','12-Piece Decorative Milan Grass Fence Panel Set','Artificial Plant Wall Tiles - Green','Artificial Boxwood Topiary Balls Set of 2','Artificial Hanging Topiary Tree Boxwood Buxus Ball','Decorative Flower Petals - Cream','Floral Glory flower crown','Winter Elegance Pine And Eucalyptus Garland'])assert.equal(springSourceDecision({variantName:name}).disposition,'exclude',name);
+assert.equal(springSourceDecision({variantName:'Artificial Boxwood Ball Topiary Tree in Pot'}).department,'spring-tree');
+const unknownForm={variantName:'Artificial Green Foliage Decoration',detailsReady:true,springNativePhotoVerified:true};
+assert.equal(springImageDecision(unknownForm,{imageHash:'a'.repeat(64),season:{greenFoliage:.95},objects:[{id:'spring-wreath-garland',score:.99}]}).disposition,'review','Image similarity cannot create a wreath category without offered-form source evidence');
+console.log('PASS: offered loose stems, complete hanging baskets and real trees remain distinct from suspended balls, empty greenery screens, detached petals and winter garlands.');

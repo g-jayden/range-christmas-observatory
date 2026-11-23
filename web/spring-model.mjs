@@ -8,7 +8,7 @@ export const SPRING_DEPARTMENTS=[
 ].map(d=>({...d,collectionId:'spring',label:d.zh+' · '+d.en,charts:false}));
 export const isSpringScope=id=>SPRING_DEPARTMENTS.some(d=>d.id===id);
 export const collectionForScope=id=>isSpringScope(id)?'spring':'christmas';
-const seasonWords=/\b(?:autumn(?:al)?|fall[ -](?:colou?r|foliage|wreath|garland)|halloween|harvest|thanksgiving|pumpkins?|christmas|xmas|festive|poinsettia|snowy|snow[ -]?(?:covered|flocked)|holly|mistletoe)\b/i;
+const seasonWords=/\b(?:autumn(?:al)?|fall[ -](?:colou?r|foliage|wreath|garland)|halloween|harvest|thanksgiving|pumpkins?|christmas|xmas|festive|poinsettia|winter|snowy|frosted|snow[ -]?(?:covered|flocked)|holly|mistletoe)\b/i;
 const dried=/\b(?:dried|dried[ -]look|pampas|burnt orange|rust[ -]colou?red|copper[ -]foliage)\b/i;
 // A botanical subject sold already arranged in a vase is included. An empty
 // vase, planter, flower rack, live plant or craft component is not the object.
@@ -18,22 +18,31 @@ export function springSourceDecision(p){
  const context=description.match(/\b(?:autumn(?:al)?|halloween|harvest|christmas)\s+(?:colou?rs?|foliage|leaves|wreath|garland|arrangement|bouquet|decoration)|\b(?:rust|burnt orange)\s+(?:leaves|foliage)\b/i);if(context)return{disposition:'exclude',reason:'description-identifies-non-spring-product',evidence:context[0]};
  if(/\bblack\b.{0,35}\b(?:chrysanthemum|rose|dahlia|flower|foliage|leaf|leaves)\b/i.test(title)&&!/\b(?:pot|planter|vase)\b/i.test(title))return{disposition:'exclude',reason:'explicit-dark-non-spring-floral-palette',evidence:title};
  if(dried.test(title))return{disposition:'exclude',reason:'dried-or-autumn-palette',evidence:title.match(dried)[0]};
- const outside=/\b(?:living\s+wall|vertical\s+garden|(?:wall|foliage|grass|hedge)\s+panels?|hedge\s+(?:screen|fence)|privacy\s+(?:screen|fence)|artificial\s+(?:hedging|turf))\b/i,featureHead=description.split(/\n/).filter(l=>/^\s*[-*]\s+/.test(l)).slice(0,3).join(' ');
+ const outside=/\b(?:living\s+wall|vertical\s+garden|(?:wall|foliage|grass|hedge|fence)\s+(?:panels?|tiles?)|(?:plant|boxwood)\s+wall|hedg(?:e|ing)\s+(?:screen|fence|panel)|(?:conifer|privacy)(?:\s+leaf)?\s+screening|privacy\s+(?:screen|fence)|artificial\s+(?:hedging|turf))\b/i,featureHead=description.split(/\n/).filter(l=>/^\s*[-*]\s+/.test(l)).slice(0,3).join(' ');
  if((outside.test(title)||outside.test(featureHead)||/\b(?:interlocking|modular)\b.{0,80}\bpanels?\b/i.test(featureHead))&&!/\b(?:garlands?|wreaths?|stems?|sprays?|trees?|potted)\b/i.test(title))return{disposition:'exclude',reason:'botanical-panel-or-support-outside-four-forms',evidence:title+' '+featureHead};
  if(/\b(?:3d\s*printer|printer\s*filament|plant\s*stand|plantstand|plant\s*trellis|garden\s*trellis|raised\s*garden\s*bed|doorstop|bow\s*cushion\s*garland)\b/i.test(title))return{disposition:'exclude',reason:'unrelated-product-or-empty-garden-support',evidence:title};
+ if(/\b(?:flower\s+petals?|flower\s+crowns?)\b/i.test(title))return{disposition:'exclude',reason:'detached-petals-or-wearable-accessory-outside-four-forms',evidence:title};
+ // A suspended or bare ball is not a tree. A real topiary tree can have a
+ // ball-shaped crown; retain those when a trunk/tree or supplied pot is clear.
+ if(/\b(?:topiary|hanging|flower)\b.{0,65}\bballs?\b/i.test(title)&&!/\b(?:trunk|potted|window\s+box|planters?|pots?)\b/i.test(title)&&(!/\btrees?\b/i.test(title)||/\bhanging\b/i.test(title)))return{disposition:'exclude',reason:'suspended-or-bare-botanical-ball-outside-four-forms',evidence:title};
  if(/\b(?:live|living|real)\s+(?:plants?|trees?|flowers?)|\b(?:seeds?|bulbs?)\s+(?:for|to)\s+(?:plant|grow)|\b(?:flower heads?|petal confetti|plant stands?|plant racks?|vase fillers?|wall art|wall panels?|memorial vases?|flower pots? holders?)\b/i.test(title))return{disposition:'exclude',reason:'non-artificial-botanical-product',evidence:title};
  if(/\b(?:print|printed|pattern|embossed)\b/i.test(title)&&/\b(?:pots?|vases?|jugs?|planters?)\b/i.test(title)&&!/\b(?:artificial|faux|potted|arrangement)\b/i.test(title))return{disposition:'exclude',reason:'printed-empty-container',evidence:title};
- const foliage=/\b(?:artificial|faux|fake|silk|flower|floral|foliage|garland|wreath|stem|spray|bouquet|pick|tree|potted|plant|fern|orchid|rose|hydrangea|eucalyptus|tulip|daisy|peony|gypsophila|lavender|blossom)\b/i;
+ const foliage=/\b(?:artificial|faux|fake|silk|flower|floral|foliage|leaf|leaves|garland|wreath|stem|spray|bouquet|pick|tree|potted|plant|fern|orchid|rose|hydrangea|eucalyptus|tulip|daisy|peony|gypsophila|lavender|blossom)\b/i;
  if(/\b(?:vases?|planters?|pots?|baskets?|urns?|stands?|frames?|holders?|jugs?|bottles?|mugs?|watering cans?)\b/i.test(title)&&!(/\b(?:in|with)\b[\s\S]*\b(?:pots?|vases?|planters?|baskets?|jugs?)\b|\b(?:arrangement|potted|artificial|faux|fake|tree|fern|succulent|orchid|flowering)\b/i.test(title)))return{disposition:'exclude',reason:'empty-container-or-accessory',evidence:title};
  if(!foliage.test(title+' '+category))return{disposition:'review',reason:'botanical-object-unconfirmed',evidence:title};
  let department;
  if(/\b(?:garlands?|wreaths?|swags?)\b/i.test(title))department='spring-wreath-garland';
- else if(/\b(?:trees?|topiar(?:y|ies))\b/i.test(title)&&!/\b(?:stems?|sprays?|picks?|branches|branch)\b/i.test(title))department='spring-tree';
- else if(/\b(?:potted|in\s+(?:a\s+)?(?:\w+\s+){0,3}(?:pots?|vases?|planters?|baskets?|jugs?)|vase arrangement|pot arrangement)\b/i.test(title))department='spring-potted';
+ else if(/\btrees?\b/i.test(title)&&!/\b(?:stems?|sprays?|picks?|branches|branch)\b/i.test(title))department='spring-tree';
+ else if(/\b(?:potted|hanging\s+(?:flower\s+)?baskets?|window\s+box|(?:in|with)\s+(?:(?:a|an|weighted|decorative|metal|ceramic|plastic)\s+){0,3}(?:pots?|vases?|planters?|baskets?|jugs?)|vase arrangement|pot arrangement)\b/i.test(title))department='spring-potted';
  else if(/\b(?:bouquets?|picks?|stems?|sprays?|branches|branch|bunches|bunch|bushes|bush|bundle)\b/i.test(title))department='spring-stems';
  else if(/\b(?:succulent|cactus|cacti|fern|hanging plant|trailing plant|bonsai)\b/i.test(title))department='spring-potted';
  else if(/potted-(?:herbs|flowers|ferns)/i.test(category))department='spring-potted';
  else if(/picks-stems|bouquets-and/i.test(category))department='spring-stems';
+ // Read offered contents rather than copying an end-use list such as
+ // "make bouquets, wreaths and garlands" into the product's physical form.
+ const opening=(description.split(/## Information\s*/i)[1]||'').split(/(?<=[.!?])\s+/)[0]||'',offered=featureHead+' '+opening;
+ if(!department&&/\b(?:bouquet only|flower stem only|(?:supplied|pack|set)\b.{0,45}\bstems?\b|single stem|leaf stem|leaf spray|foliage spray)\b/i.test(offered))department='spring-stems';
+ if(!department&&/\b(?:supplied\b.{0,50}\b(?:hanging basket|weighted pot|planter)|fully assembled\b.{0,35}\bhanging basket|flowers? in (?:a )?(?:basket|pot|vase))\b/i.test(offered))department='spring-potted';
  return{disposition:department?'candidate':'review',department,reason:department?'offered-botanical-object-needs-photo':'object-needs-source-and-photo-review',evidence:title};
 }
 export function springImageDecision(p,visual){
@@ -42,7 +51,9 @@ export function springImageDecision(p,visual){
  const scores=visual.season||{},bad=Math.max(scores.autumn||0,scores.christmas||0,scores.dried||0,scores.other||0),good=Math.max(scores.freshFlowers||0,scores.greenFoliage||0),top=visual.objects?.[0];
  if((scores.other||0)>good&&(scores.other||0)>.33){const complete=['kept','selected'].includes(p.previewAudit?.status)&&!(p.previewAudit.issues||[]).some(i=>['logo','diagram','detail','cropped'].includes(i)),other=top?.id==='other'&&top.score>=.65&&/\b(?:vases?|planters?|bottles?|mugs?|jugs?|ceramic|pottery|ornament|holders?|watering cans?)\b/i.test((p.variantName||'')+' '+(p.sourceDescription||''));return{...source,disposition:complete&&other?'exclude':'review',reason:complete&&other?'whole-source-photo-and-description-confirm-non-botanical-object':'non-product-photo-needs-replacement',visual};}
  if(bad>good&&bad>.33)return{...source,disposition:'review',reason:'source-photo-non-spring-or-source-conflict',visual};
- if(!source.department&&top?.id!=='other'&&top?.score>=.60&&/\b(?:artificial|faux|fake|floral|flowers?|foliage|plant|ferns?|orchid|succulent|tree|ivy|moss|leaves)\b/i.test((p.variantName||'')+' '+(p.sourceDescription||'')))source.department=top.id;
+ // A circular arrangement of loose stems, a basket or a logo can all look
+ // like a wreath to a similarity model. The offered form must come from
+ // product facts or an exact source-and-photo human review, never shape alone.
  const objectScore=visual.objects?.find(o=>o.id===source.department)?.score||0;
  if(!source.department||good<.30||bad>=good*.85||objectScore<.25||top?.id!==source.department&&objectScore<top.score-.12)return{...source,disposition:'review',reason:'source-photo-or-object-conflict',visual};
  return{...source,disposition:'include',reason:'exact-SKU-description-and-source-photo-agree',visual};

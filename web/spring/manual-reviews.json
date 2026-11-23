@@ -213,6 +213,15 @@
       "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
     },
+    "1698370": {
+      "disposition": "exclude",
+      "reason": "Human native-photo review: Amber Cascade fern wreath has predominant yellow, amber and rusty orange foliage; this autumn palette is outside the requested spring colours.",
+      "imageHash": "c9cf335b2406eb0e43117623934e39a5a3456b51d8d54f1617ae6cad47580421",
+      "sourceContentHash": "8b1f0a14929913f379a4372b55361f6f95773898c4641a1b3e13991dca9fd948",
+      "listingFingerprint": "83e74f3d50de8d680e16c4f6668ab6fc94338a3dc06de0ba85b1a40e2a3b5f9f",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/8/1794416229_2156.jpg",
+      "reviewedAt": "2026-11-23T19:50:30.309Z"
+    },
     "3315438": {
       "disposition": "exclude",
       "reason": "Photo and description show a multi-level plant display stand; scene plants are not the offered product.",
