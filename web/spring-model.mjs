@@ -29,8 +29,9 @@ export function springSourceDecision(p){
  let department;
  if(/\b(?:garlands?|wreaths?|swags?)\b/i.test(title))department='spring-wreath-garland';
  else if(/\b(?:trees?|topiar(?:y|ies))\b/i.test(title)&&!/\b(?:stems?|sprays?|picks?|branches|branch)\b/i.test(title))department='spring-tree';
- else if(/\b(?:potted|in\s+(?:a\s+)?(?:\w+\s+){0,3}(?:pots?|vases?|planters?|baskets?|jugs?)|vase arrangement|pot arrangement|succulent|cactus|cacti|fern|hanging plant|trailing plant|bonsai)\b/i.test(title))department='spring-potted';
- else if(/\b(?:bouquets?|picks?|stems?|sprays?|branches|branch|bunches|bunch|bushes|bush)\b/i.test(title))department='spring-stems';
+ else if(/\b(?:potted|in\s+(?:a\s+)?(?:\w+\s+){0,3}(?:pots?|vases?|planters?|baskets?|jugs?)|vase arrangement|pot arrangement)\b/i.test(title))department='spring-potted';
+ else if(/\b(?:bouquets?|picks?|stems?|sprays?|branches|branch|bunches|bunch|bushes|bush|bundle)\b/i.test(title))department='spring-stems';
+ else if(/\b(?:succulent|cactus|cacti|fern|hanging plant|trailing plant|bonsai)\b/i.test(title))department='spring-potted';
  else if(/potted-(?:herbs|flowers|ferns)/i.test(category))department='spring-potted';
  else if(/picks-stems|bouquets-and/i.test(category))department='spring-stems';
  return{disposition:department?'candidate':'review',department,reason:department?'offered-botanical-object-needs-photo':'object-needs-source-and-photo-review',evidence:title};
@@ -40,7 +41,7 @@ export function springImageDecision(p,visual){
  if(!p.detailsReady||!visual?.imageHash||p.springNativePhotoVerified!==true)return{...source,disposition:'review',reason:'exact-SKU-description-or-photo-missing'};
  const scores=visual.season||{},bad=Math.max(scores.autumn||0,scores.christmas||0,scores.dried||0,scores.other||0),good=Math.max(scores.freshFlowers||0,scores.greenFoliage||0),top=visual.objects?.[0];
  if((scores.other||0)>good&&(scores.other||0)>.33){const complete=['kept','selected'].includes(p.previewAudit?.status)&&!(p.previewAudit.issues||[]).some(i=>['logo','diagram','detail','cropped'].includes(i)),other=top?.id==='other'&&top.score>=.65&&/\b(?:vases?|planters?|bottles?|mugs?|jugs?|ceramic|pottery|ornament|holders?|watering cans?)\b/i.test((p.variantName||'')+' '+(p.sourceDescription||''));return{...source,disposition:complete&&other?'exclude':'review',reason:complete&&other?'whole-source-photo-and-description-confirm-non-botanical-object':'non-product-photo-needs-replacement',visual};}
- if(bad>good&&bad>.33)return{...source,disposition:/\b(?:spring|fresh|pink|white|green|yellow|blue|purple)\b/i.test(p.variantName||'')?'review':'exclude',reason:'source-photo-non-spring-or-source-conflict',visual};
+ if(bad>good&&bad>.33)return{...source,disposition:'review',reason:'source-photo-non-spring-or-source-conflict',visual};
  if(!source.department&&top?.id!=='other'&&top?.score>=.60&&/\b(?:artificial|faux|fake|floral|flowers?|foliage|plant|ferns?|orchid|succulent|tree|ivy|moss|leaves)\b/i.test((p.variantName||'')+' '+(p.sourceDescription||'')))source.department=top.id;
  const objectScore=visual.objects?.find(o=>o.id===source.department)?.score||0;
  if(!source.department||good<.30||bad>=good*.85||objectScore<.25||top?.id!==source.department&&objectScore<top.score-.12)return{...source,disposition:'review',reason:'source-photo-or-object-conflict',visual};

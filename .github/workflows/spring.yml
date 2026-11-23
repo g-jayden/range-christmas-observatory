@@ -51,6 +51,8 @@ jobs:
         with:
           path: runtime/models
           key: local-clip-vit-base-patch32-q8-preflight-v2
+          restore-keys: |
+            local-clip-vit-base-patch32-q8-v1
       - name: Verify local visual model before any paid source work
         id: vision
         run: node scripts/prepare-local-vision-model.mjs

@@ -1,6 +1,53 @@
 {
   "version": 1,
   "products": {
+    "71015": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "白色"
+      ],
+      "reason": "Full 1500px native photo shows a tied pick/bunch of white fabric flowers with intact petals and short stems, matching the exact white flower-pick description. No dried grasses or autumn leaves are supplied.",
+      "imageHash": "c2584a08eb919d3cc9707b309957cb823a666e62bfe1d3ab689b75faa24a1450",
+      "sourceContentHash": "160198f85b2fb31ecfb0597bbd2aff7440928bfd6377a9d22b8787334003e775",
+      "listingFingerprint": "d5c4d3ef7c2931d79703a72b5b1f8677bc0ec356a23f46cbb8a85a89e448af9e",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/8/1726819070_11_7560.jpg",
+      "reviewedAt": "2026-11-23T19:29:08.671Z",
+      "reviewMethod": "full-exact-native-photo-and-source-description-human-review",
+      "reviewedSourceSnapshot": "88764e03a3b271dc0d32e49c5abce10436f4310b"
+    },
+    "494298": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "绿色"
+      ],
+      "reason": "The native photo and package text show loose green foliage components, eight kinds and 48 pieces, supplied for floral making; they are not an assembled wreath or a potted plant. Exact description confirms a foliage bundle.",
+      "imageHash": "6b7d82bd5fcaa0b602d6a194f5f41cf7f772979fcf652a73db67880356c2f974",
+      "sourceContentHash": "e3e750871f81db74699621b91f800bbccd9597cbd1358c277b3a13e97436eb70",
+      "listingFingerprint": "f3cdbbf6db4cf038ce6f683084ca5473dd987cfcea683569965d8f0230db45c9",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/2/1761823858_11_2762.jpg",
+      "reviewedAt": "2026-11-23T19:29:08.672Z",
+      "reviewMethod": "full-exact-native-photo-and-source-description-human-review",
+      "reviewedSourceSnapshot": "88764e03a3b271dc0d32e49c5abce10436f4310b"
+    },
+    "500349": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "colours": [
+        "绿色",
+        "粉色",
+        "蓝色"
+      ],
+      "reason": "The whole native photo shows a 150cm coiled garland of fresh green leaves, pale flower buds and pink/blue butterflies. Source label and description identify it as a spring-coloured botanical garland.",
+      "imageHash": "6eefe92f3118fdcaaab1636524c98df19efada48ae4a798246248e664a2ff2e2",
+      "sourceContentHash": "a5c525cdbca3aacceed9f1f0c7fc5938a3eaa13b6f52b5fdf333aacc2fc75048",
+      "listingFingerprint": "952d7f3fe3800b084a334ebb63329c94630ef49897a9135d44e002a0c31424b2",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/6/1773996241_6404.jpg",
+      "reviewedAt": "2026-11-23T19:29:08.672Z",
+      "reviewMethod": "full-exact-native-photo-and-source-description-human-review",
+      "reviewedSourceSnapshot": "88764e03a3b271dc0d32e49c5abce10436f4310b"
+    },
     "518998": {
       "disposition": "exclude",
       "reason": "Whole photo and exact description show a string of textile pink bows; no botanical flowers or foliage are the offered product.",
