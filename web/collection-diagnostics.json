@@ -770,6 +770,18 @@
       "sourceUrl": "https://www.therange.co.uk/js/product.js",
       "sourceStatus": 200,
       "observedAt": "2026-11-23T18:53:57.348Z"
+    },
+    {
+      "id": "mcp-01a20a2a-e58f-739c-9646-9c0899f1c43d",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-all-collection-unrestricted-20261123",
+      "retailerId": "the-range",
+      "purpose": "Verify the provider-indexed official alternate Christow address only after both ordinary public HTML and JSON requests returned 403; official page returned 404, no product facts promoted.",
+      "sourceUrl": "https://www-lon.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/christow-artificial-olive-tree-4ft-6ft?json",
+      "sourceStatus": 404,
+      "observedAt": "2026-11-23T20:49:52.320Z"
     }
   ],
   "unreceipted": [
@@ -836,6 +848,22 @@
       "error": "ERR_TOO_MANY_REDIRECTS",
       "credits": null,
       "reason": "No provider billing receipt returned; no zero-cost claim and no repeated request."
+    },
+    {
+      "id": "spring-christow-en-dash-diagnostic-20261124",
+      "recordedAt": "2026-11-23T20:49:52.320Z",
+      "source": "Exact Christow spring PDP Unicode en-dash address diagnostic",
+      "error": "The URL failed to load in the browser with error code \"ERR_TOO_MANY_REDIRECTS\". The page has too many redirects. The website may be misconfigured. Please verify the URL is correct and the website is accessible.",
+      "credits": null,
+      "reason": "Provider returned no billing receipt. No zero-cost assertion and no further identical request."
+    },
+    {
+      "id": "spring-christow-map-01a20a29-7d17-73d6-9b5e-e69e68e1a06d",
+      "at": "2026-11-23T20:49:52.320Z",
+      "sourceUrl": "https://www.therange.co.uk",
+      "operation": "Discover the indexed official Christow spring tree address",
+      "credits": null,
+      "reason": "Map connector returned links but no confirmed billing receipt; source facts require a separate exact-SKU verification."
     }
   ],
   "reservationScopes": [
