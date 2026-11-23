@@ -13,8 +13,7 @@ const PROMPTS=[
  ['room','a lifestyle room scene with a small product on furniture'],
  ['packaging','a product in retail packaging']
 ];
-let engine;
-async function classifier(){if(!engine)engine=(async()=>{const {pipeline,env}=await import('@huggingface/transformers');env.cacheDir=path.resolve('runtime/models');return pipeline('zero-shot-image-classification','Xenova/clip-vit-base-patch32',{dtype:'q8',device:'cpu'});})();return engine;}
+import{localVisualClassifier as classifier}from'./local-visual-classifier.mjs';
 export async function readPreviewQuality(file='web/preview-quality-cache.json.gz'){try{return JSON.parse(gunzipSync(await fs.readFile(file)));}catch(e){if(e.code!=='ENOENT')throw e;return {version:PREVIEW_QUALITY_VERSION,entries:{}};}}
 export async function savePreviewQuality(cache,file='web/preview-quality-cache.json.gz'){await fs.mkdir(path.dirname(file),{recursive:true});await fs.writeFile(file+'.tmp',gzipSync(JSON.stringify(cache)));await fs.rename(file+'.tmp',file);}
 export async function previewGeometry(file){

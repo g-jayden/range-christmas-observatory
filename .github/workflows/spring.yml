@@ -47,9 +47,19 @@ jobs:
           node-version: '24'
       - run: npm ci --no-audit --no-fund
       - uses: actions/cache@v6.1.0
+        id: local-model-cache
         with:
           path: runtime/models
-          key: local-clip-vit-base-patch32-q8-v1
+          key: local-clip-vit-base-patch32-q8-preflight-v2
+      - name: Verify local visual model before any paid source work
+        id: vision
+        run: node scripts/prepare-local-vision-model.mjs
+      - name: Preserve prepared model even when a later source cannot be verified
+        if: steps.local-model-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6.1.0
+        with:
+          path: runtime/models
+          key: local-clip-vit-base-patch32-q8-preflight-v2
       - name: Configure evidence publisher
         run: |
           git config user.name github-actions[bot]

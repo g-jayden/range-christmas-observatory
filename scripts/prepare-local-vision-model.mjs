@@ -1,0 +1,2 @@
+import fs from 'node:fs/promises';import {localVisualClassifier} from '../server/local-visual-classifier.mjs';
+await localVisualClassifier();await fs.mkdir('runtime/models',{recursive:true});await fs.writeFile('runtime/models/vision-ready.json',JSON.stringify({model:'Xenova/clip-vit-base-patch32',dtype:'q8',verifiedAt:new Date().toISOString()}));console.log(JSON.stringify({phase:'local-visual-model-ready-before-source-collection',sourceRequests:0,firecrawlCredits:0}));

@@ -6,7 +6,7 @@ import{readSpring}from'./update-spring.mjs';import{atomicJson}from'./sync.mjs';i
 import{materializeCommittedImage}from'./committed-image-file.mjs';import{optimiseProductPreviews,applyProductPreviews}from'./product-previews.mjs';
 const read=async(file,fallback)=>fs.readFile(file,'utf8').then(JSON.parse).catch(e=>{if(e.code!=='ENOENT')throw e;return fallback;});
 import{SPRING_VISUAL_PROMPTS,springVisualScores}from'./spring-visual-prompts.mjs';
-let engine;async function classifier(){if(!engine)engine=(async()=>{const{pipeline,env}=await import('@huggingface/transformers');env.cacheDir=path.resolve('runtime/models');return pipeline('zero-shot-image-classification','Xenova/clip-vit-base-patch32',{dtype:'q8',device:'cpu'});})();return engine;}
+import{localVisualClassifier as classifier}from'./local-visual-classifier.mjs';
 export async function reviewSpring({repair=true}={}){
  const snapshot=await readSpring();if(!snapshot.source?.complete||snapshot.source.expected!==snapshot.products.length)throw Error('Complete official spring root observation required');
  const reviews=await read('web/spring/manual-reviews.json',{products:{}}),candidates=snapshot.products.filter(p=>springSourceDecision(p).disposition!=='exclude'&&!springReviewExcludes(p,reviews.products[p.sku]));let reader,budget;
