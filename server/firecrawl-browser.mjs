@@ -366,7 +366,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
     if(item.ok)try{
      if(item.dataBase64){const bytes=Buffer.from(item.dataBase64,'base64');if(createHash('sha256').update(bytes).digest('hex')!==item.hash)throw Error('image hash mismatch');const ext=({'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif','image/avif':'avif'})[item.mime];if(!ext)throw Error('unsupported image type');item.cachedImageUrl='images/source/'+item.hash+'.'+ext;await fs.writeFile('web/'+item.cachedImageUrl,bytes);delete item.dataBase64;}
      if(!item.cachedImageUrl||!/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(item.cachedImageUrl))throw Error('image cache missing');
-     const stored=await fs.readFile('web/'+item.cachedImageUrl);if(createHash('sha256').update(stored).digest('hex')!==item.hash)throw Error('cached image hash mismatch');
+     let stored;try{stored=await fs.readFile('web/'+item.cachedImageUrl);}catch(error){if(error.code!=='ENOENT')throw error;await materializeCommittedImage(item.cachedImageUrl,item.hash);stored=await fs.readFile('web/'+item.cachedImageUrl);}if(createHash('sha256').update(stored).digest('hex')!==item.hash)throw Error('cached image hash mismatch');
     }catch(e){delete item.dataBase64;item.ok=false;item.error=e.message;}
     results.push(item);
    }
