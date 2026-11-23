@@ -1,6 +1,26 @@
 {
   "version": 1,
   "products": {
+    "37979": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "9a94ff33f985850bc932dac5f483830d3d071ceca5112d03de47aa1c36a93a82",
+      "sourceContentHash": "8324c69f7e744f3cef2622b106a496b63d703098916c2122bd2c73a03f4f46fa",
+      "reviewedAt": "2026-11-23T20:12:28.771Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "56543": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "4220e5756098642c6737fe8935eaefbe845e3aa62c61051fc1c2c08a8a527300",
+      "sourceContentHash": "ea5005351748834e1f9802ebe3cb5c390953b5b766444bf3b69f90864ede1fe6",
+      "reviewedAt": "2026-11-23T20:12:28.768Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
     "71015": {
       "disposition": "include",
       "department": "spring-stems",
@@ -16,6 +36,126 @@
       "reviewMethod": "full-exact-native-photo-and-source-description-human-review",
       "reviewedSourceSnapshot": "88764e03a3b271dc0d32e49c5abce10436f4310b"
     },
+    "87161": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "ba2e45e3cc4d9a748465f5e86d9cda442a47524583ec82a6f08c43632e55bd36",
+      "sourceContentHash": "01a84ac15f28785fdc3d0c21fb1c95ce3a9f7fac6f69730c6591dcceca35cb7d",
+      "reviewedAt": "2026-11-23T20:12:28.770Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "88842": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "8d9682d03c9a07c8544b6346375aed3f5a891a46418a4f3a29951b26d49d066b",
+      "sourceContentHash": "2f56a220e07dc15f9029ec0d950609c22b82213b8a04c4540d1cd602f3bd9335",
+      "reviewedAt": "2026-11-23T20:12:28.771Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "388900": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "db3505f90d67789c4a59aef351ac80e17d531305351ac5461c8c74337bae45a5",
+      "sourceContentHash": "a834574147627e937e885cabf559b8582e1ac84936c527808badc5d0d2aab56a",
+      "reviewedAt": "2026-11-23T20:12:28.767Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "399372": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "cc3ac35bbcc79238b363f1d06b0b357b04b3e381bb868c2f8b743fa20a6be063",
+      "sourceContentHash": "074db67bce9c18833179c113fa8ec8e35f343d7366886c5654a6bb545d4896a8",
+      "reviewedAt": "2026-11-23T20:12:28.767Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "399373": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "a8f560a5c862a359ff7db5c87108e2ef16d8920e9003535bffc1b79c1f786d21",
+      "sourceContentHash": "9450458faabd89972aa81a3004a07c9acd6a413c6a4fa5f5a9da40e7a7dac984",
+      "reviewedAt": "2026-11-23T20:12:28.766Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "406384": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "861552fe201dd131dd1e78ca5adf53f08e733e22d52384a1e68d2f8516dd0949",
+      "sourceContentHash": "9ba401acae57ea5f17d4ec431f7a5e8c1146274c6d9f51b3884670d772409c11",
+      "reviewedAt": "2026-11-23T20:12:28.766Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "406387": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "0d1fb1444d7d4bddd2667b34fc488a277084e52e1070fa66bba1b0960da94a29",
+      "sourceContentHash": "c294dc0d29105e9af316f73f72d1ecc9f62cde655633ee467a950d448dcb8949",
+      "reviewedAt": "2026-11-23T20:12:28.767Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "406388": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "4ef8b9249898691d160d36d57a6fbe8c09814e90384ed74146c442e58d584f8c",
+      "sourceContentHash": "09529de483adf8926da2580b3e459c592af4f3769913289be8c1fcfac0ee67cb",
+      "reviewedAt": "2026-11-23T20:12:28.766Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "409317": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "3a062b51c29e079f25557c8bb8478a38b53801c53f8823ad45fc1a9382f8611b",
+      "sourceContentHash": "0d6933251c63359053bbbaee4e4c7b67da8d058b12e8dbd505ab2d62199a22cf",
+      "reviewedAt": "2026-11-23T20:12:28.766Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "411878": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "5a2f618e0e19af1ce36685ed354f140e03ef83bf78bc48367199b85741e46384",
+      "sourceContentHash": "ebf7fdac3cb30872676344b33dd06c1f588d0d2edcf6c85f2ff018a2a2cce5b5",
+      "reviewedAt": "2026-11-23T20:12:28.768Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "490650": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "2bb4363b4b0d2d2dceee9d45009bf420307ffceb6f98af3608dc2731a4135937",
+      "sourceContentHash": "12dfb9cebf6fe65fbc0a11fdb125d39f74e2be20cd2a179175a469110f3d763b",
+      "reviewedAt": "2026-11-23T20:12:28.769Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "490863": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "944abadc06e2bff4e3df92aabae335f28b138c052154035b54bb2fb4efd7d810",
+      "sourceContentHash": "ea0012b052e7036538e087fd80b6f270101dde4d00cdbc983e8128670685bd61",
+      "reviewedAt": "2026-11-23T20:12:28.767Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
     "494298": {
       "disposition": "include",
       "department": "spring-stems",
@@ -30,6 +170,26 @@
       "reviewedAt": "2026-11-23T19:29:08.672Z",
       "reviewMethod": "full-exact-native-photo-and-source-description-human-review",
       "reviewedSourceSnapshot": "88764e03a3b271dc0d32e49c5abce10436f4310b"
+    },
+    "496366": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "8de807568f8f88cb8bae3401349b8eb249588a9bc706e157d841eeb8d55c83b4",
+      "sourceContentHash": "e37b09c1d7e6ce1f370cabe487e74c27eb0f4162884d658454598505b74a6e6d",
+      "reviewedAt": "2026-11-23T20:12:28.768Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "497068": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "692fae8454849854a94c708dd77e0a73d29907c476ce7144585e021942300e77",
+      "sourceContentHash": "3b75009db3486c119ee28b34a4cc302877bf7b772c96d5b9cbcc78bdfaf51fb3",
+      "reviewedAt": "2026-11-23T20:12:28.767Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
     },
     "500349": {
       "disposition": "include",
@@ -48,6 +208,26 @@
       "reviewMethod": "full-exact-native-photo-and-source-description-human-review",
       "reviewedSourceSnapshot": "88764e03a3b271dc0d32e49c5abce10436f4310b"
     },
+    "500350": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "a7b84ee63e28b513d9b8385f75b96c9df466f97a3bcccc66674a20e31168edf6",
+      "sourceContentHash": "3058add1ab43e4da84a2f02b24ef3314c039851c6f73468d9e02700f6a53736b",
+      "reviewedAt": "2026-11-23T20:12:28.766Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "510041": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "997274465ec3772b93ddb510d5905a022fc15c61e07167ec5b8e7bd47e4219cb",
+      "sourceContentHash": "a85fb3b4f69b8a2ac01962d04a93519eb784d5d979e6c80df85be0718ebee2ff",
+      "reviewedAt": "2026-11-23T20:12:28.770Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
     "518998": {
       "disposition": "exclude",
       "reason": "Whole photo and exact description show a string of textile pink bows; no botanical flowers or foliage are the offered product.",
@@ -58,6 +238,26 @@
       "reviewedAt": "2026-11-23T18:57:03.694Z",
       "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
+    },
+    "944399": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "23727dc06dc60cb77f0bae8fcfc698f6b97397e5337684d803a343f5ec2d6943",
+      "sourceContentHash": "fd687bc8f6babf334589a358b2f29a80797ab28b1766dd83edae93934d0e4769",
+      "reviewedAt": "2026-11-23T20:12:28.769Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "960837": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "3f1bab4bf624b8c16dc275577a7902d69354b7e052a528dee1ceef5767eb23be",
+      "sourceContentHash": "eefc3c554e58cb999d04ee68bad9ebf987ec4fc2756c4d8fdbd0f76eaa5351f9",
+      "reviewedAt": "2026-11-23T20:12:28.768Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
     },
     "1023197": {
       "disposition": "exclude",
@@ -70,6 +270,26 @@
       "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
     },
+    "1030037": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "751061026693c6efdbb123e1ac279aa9855124e91dc6328f2f882be7d3a2fe1d",
+      "sourceContentHash": "9a4e2f110ac1ddbf303af25aa84c4180af3408c5045256d19b66afc927a1b988",
+      "reviewedAt": "2026-11-23T20:12:28.734Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1030043": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "f0bae48c33d2c4c42c5c80eadf474f92950190544c1c5108da473d824abd9c93",
+      "sourceContentHash": "164fb023f19344810e2762c72cf4074374a032550edf537b409a01ba81f3f1ca",
+      "reviewedAt": "2026-11-23T20:12:28.737Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
     "1193354": {
       "disposition": "exclude",
       "reason": "Listing photo shows empty glass bud bottles decorated with printed tulips; the source description confirms bud vases, with no artificial flowers supplied.",
@@ -80,6 +300,16 @@
       "reviewedAt": "2026-11-23T18:57:03.695Z",
       "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
+    },
+    "1237721": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "3520f555e686df932387702d45c9f26fbfec5700cf3b0c7869e05f20c697de0e",
+      "sourceContentHash": "66eaf8b5181d71945a79e7b8004f242ff0709f09de8c7f65252f513368aeb7ca",
+      "reviewedAt": "2026-11-23T20:12:28.654Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
     },
     "1281025": {
       "disposition": "exclude",
@@ -158,6 +388,56 @@
       "reviewMethod": "full-source-product-photo-and-listing-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
     },
+    "1324882": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "4e3e590c37443f49731888d37fc7c2b26c9053870c632ce169b672f694ec09ab",
+      "sourceContentHash": "30a173f447c32b6a1a7ade1303c43afbf6b9ea1dafe2072d3d4c53d49c5c1d8e",
+      "reviewedAt": "2026-11-23T20:12:28.692Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1330698": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "0ae0b9425e3f2d9596fff8c610fb18f6f64af54c8036e340a9f3f4a58f4a65f6",
+      "sourceContentHash": "6436b8325db3616ab64b8807ddc1a1d14bd8b6dd74c7b09eefa55c8b7e967c82",
+      "reviewedAt": "2026-11-23T20:12:28.651Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1334093": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "540b4bd30eb0a44a76427f762fade0113b2fe109b9dc8fc08c8639686e6cee40",
+      "sourceContentHash": "ed76cdec6407dbaa6f836406ddb3b10a894cb77847d1b35c9a9df4f453781cfd",
+      "reviewedAt": "2026-11-23T20:12:28.657Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1354029": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "a3fb50568788371c002f80cf7490503904af450bfbb28b8716178c170bf00e06",
+      "sourceContentHash": "44967a1b7c59704064d4b7ce94c6e8e02bf5489d874f2fa27cdf42560a6479ce",
+      "reviewedAt": "2026-11-23T20:12:28.761Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1358287": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "f1d10b36ed0b9a2cad41c43b178058314ca222a01fb071fe2e9f6bac8a96cd33",
+      "sourceContentHash": "997f96b0da9394a7dbe53526d115003f3522f629c6f3fe590c495c10f1ba80a8",
+      "reviewedAt": "2026-11-23T20:12:28.769Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
     "1392411": {
       "disposition": "exclude",
       "reason": "Photo and description show an empty raised garden bed with trellis; foliage is display context, not an artificial arrangement.",
@@ -180,6 +460,246 @@
       "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
     },
+    "1415336": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "a758f3b021fd9bd760cdbb416f6ee9e7e157f85d0884f44e410f21d57a115856",
+      "sourceContentHash": "271fddc706cff422c19d01ea4d8946b4135a7d9665da86d40398679d4137d1bb",
+      "reviewedAt": "2026-11-23T20:12:28.691Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1434449": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "38b73adec6e2fc2b937ae2e71e58ec76a7bdb6e8faa5b64e26f09395867d8c66",
+      "sourceContentHash": "e0d57cf084a340f820940a2ff8cf75c06b8904fc067d57ee0107a9d6736daea1",
+      "reviewedAt": "2026-11-23T20:12:28.643Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438393": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "a034721051590119c59c7abf9da4eafe605700b7fc0073a52040983e73bb1f64",
+      "sourceContentHash": "b5509209bf95177efcdbb22ce5f2dbb41e7a5c7f29cf149a97acb85f7547b0fa",
+      "reviewedAt": "2026-11-23T20:12:28.686Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438461": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "7c9b514b6617f373ae974a431892e36acfe63e8b90e0f6740d4dcb4d08ea0c57",
+      "sourceContentHash": "75b5720ae8d793f122bcb85617d220f795cfc595d862ba461fe44f220347ca87",
+      "reviewedAt": "2026-11-23T20:12:28.674Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438487": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "935c059b3dfa18656cec0f2a249ce2c211a5cffec1ddf277c35a03005a9cf099",
+      "sourceContentHash": "239d7ae61f91dbc4577a76d016d2367f598288f6a45dcfa34b47ae2be5d8281e",
+      "reviewedAt": "2026-11-23T20:12:28.671Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438488": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "c0f1ef9c1ebdbf0abe2953208a695320c5fa77b78bd22009059b0a2a35fcb365",
+      "sourceContentHash": "46d26827fb076586e17e389357bd7115e878963c0622605664bfbaba6bf5122e",
+      "reviewedAt": "2026-11-23T20:12:28.685Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438705": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "460dc2cf1e205209bb7265e780b94b9fcf8f3b1d94328ca4160ce5e2feb5347c",
+      "sourceContentHash": "641f586b817a1af4a4c1861437cc40560904382e1ee2ac395d30745a90552723",
+      "reviewedAt": "2026-11-23T20:12:28.680Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438722": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "7d21e0e6c6fe2bd95747239f68aff9832b09a5543ae21087863097cef67ca470",
+      "sourceContentHash": "90ea3af6dfba0d88c713eaf27e7d26b3b82dcbf60d20e8e244e497e9c4105dc5",
+      "reviewedAt": "2026-11-23T20:12:28.683Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438738": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "45fd375ed715aa16a18993a4dd6676a084c7ec879457d5f6009a990cbda6135f",
+      "sourceContentHash": "1e8fd1f5b84253b898768d2e5bd18131054fe0bcc4c9a453597291f1114ed1c9",
+      "reviewedAt": "2026-11-23T20:12:28.687Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438739": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "6f748b0b7da036cbd9b4ee402ec11ca3c4ee6465774a43caeb101f92f8b76344",
+      "sourceContentHash": "f7d6928f5cce3beb2b4e8a24dd09b5626e9ed09e73f44498c841286fccb12320",
+      "reviewedAt": "2026-11-23T20:12:28.686Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438752": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "8be9a47f4cc820b22a371552ad88ee074a0a7d5b0990249f36392bd6f1baed32",
+      "sourceContentHash": "f5eee16c53de5943d90e0a45f2b16fb39263c13a8a1fb25867ba8de3c4811d08",
+      "reviewedAt": "2026-11-23T20:12:28.681Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438766": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "0d7b434a9bb7c5d52615a796e1378323c76cb39bd44be3b1471e64876abba9a8",
+      "sourceContentHash": "11d4e212dae6a4af5d364c4840f5d1c1e9061cafdd790e146061f4e43f668f5c",
+      "reviewedAt": "2026-11-23T20:12:28.670Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438778": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "88477cd2f93fdd531ff55c9d448c1429a5907ec7560c3f35f324e1cc030de555",
+      "sourceContentHash": "59d970a304879ccd57db852029c9013ce7726e6d7ff8d0902ba893e5ce3bb691",
+      "reviewedAt": "2026-11-23T20:12:28.677Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438784": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "748ced7cf9ec5aed3e9950a0147a7c58e4c5ad672cb16ada3aca01086b105d86",
+      "sourceContentHash": "699e6974cf38bf27062e7f446ee55139941116bcc0e90a88ac58ae042482698e",
+      "reviewedAt": "2026-11-23T20:12:28.682Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438797": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "d5ac1de7c94c4c79c52ce08f6f52494e8382ac65118e834903ff758a652fd85a",
+      "sourceContentHash": "ea3e9ac5e6cbe3d030ce039603b7bc136e9bb3cadc065a3c518e74d5267ec4d5",
+      "reviewedAt": "2026-11-23T20:12:28.675Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438832": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "d373dabe6f85b9410b83285e90e554cf805b65319df37e100583d6535577d215",
+      "sourceContentHash": "c656147f1080715b66e9b792baecb4709a6a8d6f379a801027dc19fa8b32a6b6",
+      "reviewedAt": "2026-11-23T20:12:28.688Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438852": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "44ee49f9e68baab16a5a11a63826c92213d064702ff9fbe4b23de650454a10fe",
+      "sourceContentHash": "465a44fad55e387985728b13da531b514cf7a73b63d856da994f33e59f094510",
+      "reviewedAt": "2026-11-23T20:12:28.687Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438875": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "c8c647d090910f268577f84f0dad8fe8c557897eb26c5c0e356510c3d0e54036",
+      "sourceContentHash": "2f5d9ed6fb8ca95e28e6bc6dbd0401e9dde8c44ff8b5b1f928c4c53e93f31a1d",
+      "reviewedAt": "2026-11-23T20:12:28.684Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438902": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "e70cb52b044fb89e0554b98e5b5dcb2b1bc2b2aad924ebd0e85a027cfdde8da7",
+      "sourceContentHash": "3adc59c20755a903be187ac9e8e0fc1a32334abd914e8cc694236747d98e99bf",
+      "reviewedAt": "2026-11-23T20:12:28.685Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438907": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "e155c07e9b90b1b49d6fa41182d9592a5bc95198ae7a05d48436ec75a37fc849",
+      "sourceContentHash": "8ce984df773cae08b8a7bfbd4cbab65f9fb0971bffd86bc90ca3641f85328f34",
+      "reviewedAt": "2026-11-23T20:12:28.666Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438910": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "cf747a39e0ddfd896b8b7fed2b55aa1f937a3732ac1410764a14343fd037af95",
+      "sourceContentHash": "c1e659e42e639471befdeaa4a290ce1cc88f4147c6cf85e5e4e5ee78e2b2d177",
+      "reviewedAt": "2026-11-23T20:12:28.685Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438916": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "ca21439fb3c7c316ceb2c209ebe1daae1aa505b0831a23b976f37c42d51fc453",
+      "sourceContentHash": "5ed663b8587645873fbb89ff86f0cf360be50767d05c0b015aa2bfdd173ebd37",
+      "reviewedAt": "2026-11-23T20:12:28.676Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438922": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "95ea47a433f2dc33300fc968cf3d4d721d8558f8472a7e8bbecac0f162928114",
+      "sourceContentHash": "1452f0b233b1b27376706c655762abcf7f98db723006651cd840e44d262528b1",
+      "reviewedAt": "2026-11-23T20:12:28.667Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438928": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "359cd5e6ca177fab3d10c8ffb8284c8475ff9164761f8d3e4406c8602008b259",
+      "sourceContentHash": "0763447a57b32dbb7baecc86f3bfa8ab33bd64b07bf836dc7182ac623023a0d6",
+      "reviewedAt": "2026-11-23T20:12:28.668Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
     "1438933": {
       "disposition": "exclude",
       "reason": "Reviewed source photo and offered title show hanging foliage or flower balls without a trunk or planted container; outside the four requested botanical forms.",
@@ -190,6 +710,566 @@
       "reviewedAt": "2026-11-23T18:22:29.797Z",
       "reviewMethod": "full-source-product-photo-and-listing-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
+    },
+    "1438936": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "077764e0c81608f2d198c4b97e9300f484e601c245f5f140878568c7eb3545a4",
+      "sourceContentHash": "e52b7383b8b0288794cdc28931dd1ca23f43c4056cb330cea28ae54bc04175f6",
+      "reviewedAt": "2026-11-23T20:12:28.673Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438939": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "6d67029ba025a99937ff104adfeeac825eba9de672103fd48178cc97395680a7",
+      "sourceContentHash": "aba64ffb9fd90b6b7ccb0a5c7ffbb2095f14a1398134ac2cd825c35dee5affe7",
+      "reviewedAt": "2026-11-23T20:12:28.680Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1438959": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "6be84de9b158bc1d49d808c7dab3ec40d5c4a65638deb4cdf984f1336c36b969",
+      "sourceContentHash": "087eef6dd0cd34fe750a8b97ca796c5aa82944cf27d08d69e4cf1455287c5f3d",
+      "reviewedAt": "2026-11-23T20:12:28.666Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1442517": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "0fbb16460d9d572b59129dcdabde6c801fb403befda39fac2696f39f5d1c838e",
+      "sourceContentHash": "7762c68373c9d6f59ca8ddeb500f5b60212602c162d8354af7ba9187544e9b7a",
+      "reviewedAt": "2026-11-23T20:12:28.667Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1444488": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "359cd5e6ca177fab3d10c8ffb8284c8475ff9164761f8d3e4406c8602008b259",
+      "sourceContentHash": "953144eaefebabd7fae682e66319b8e65aab9820326248e1e5e068a12f4c4286",
+      "reviewedAt": "2026-11-23T20:12:28.669Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1445752": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "f50eead4367bc80da5c6e45110b76525335dbc5d53e5adc76d1f9d88135695a5",
+      "sourceContentHash": "8254e01bd487f9e1e90143893bb8883172fc33dd47906fa6eb24669ccbfca865",
+      "reviewedAt": "2026-11-23T20:12:28.681Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1445763": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "fc58189380c4ecb0c95266f8f7a047a7611131a1000a5d57882de1235b55f575",
+      "sourceContentHash": "088edf1e2f3406062f58f93b98e22b8e900542eac083c44f78b79427d209bfcb",
+      "reviewedAt": "2026-11-23T20:12:28.686Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1447995": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "389c91d80ec38f6181ce898769fd9c5011fa5ff33edf7610f52f8d0282714b04",
+      "sourceContentHash": "75c59c41c3ca1d0603a0f4beff9974fda4221445662b9928a6c59cedf408638f",
+      "reviewedAt": "2026-11-23T20:12:28.733Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448026": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "9c4d69d8163182c2d8850d4e2d0acdb4e55e631aefca5e4c5712858701c494a3",
+      "sourceContentHash": "55e967693d7bce55e43f6b79cfd8e5edaf8a5c3e2c8df510eea47e486879b392",
+      "reviewedAt": "2026-11-23T20:12:28.735Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448394": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "de37a05bed6b99119b76a12ae9b8f0640116f5912277693f3fc200de1174eb79",
+      "sourceContentHash": "75f734e379e29619d08d71c595c41ec7b55c95b858f9e6d811cff30054f864ee",
+      "reviewedAt": "2026-11-23T20:12:28.733Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448399": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "482773c520cccc8a178f3624e6a445dd2d6a5a697427757b5772901273ed8239",
+      "sourceContentHash": "ce5b82c90e117336d4c56a01807037c8c5447fedec461aef11d418a1ff4ca362",
+      "reviewedAt": "2026-11-23T20:12:28.725Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448427": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "d5f5e625678e50a6b1dc2df1c96ea5aff314197dc255710bc8ed520e349e82c7",
+      "sourceContentHash": "0ba8683c4312f99795a43250fe7f329a224bd985f37c984c12ad717ee288a561",
+      "reviewedAt": "2026-11-23T20:12:28.704Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448437": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "fda9aadeeb2226653a7d1e99d011e3e873ad80aa96bcb85874c4df610d4292b4",
+      "sourceContentHash": "62f63081f6e28c4217bcd2422137d1ec4e209b59a3d02ffb4a30bb63e7346bbc",
+      "reviewedAt": "2026-11-23T20:12:28.727Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448439": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "130023bc05e73e6680e1a5db22faf526a15e49abcc46e48459a62ce80301d22a",
+      "sourceContentHash": "960e28874158a339c0f63996d19350aa3f9774b64fd678d94205652e0c8c907c",
+      "reviewedAt": "2026-11-23T20:12:28.731Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448442": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "ef9aac1bcc1da34a65cde3f5124e73eaa74a05bfc4cf81dabc1c9696cb43eebd",
+      "sourceContentHash": "69b74e68156713704a74138a8c907aa9b1cc89e4bd7b538d8ecf78551503d383",
+      "reviewedAt": "2026-11-23T20:12:28.705Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448449": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "5b1329dc1a32373c06525817a08b34f885b66488ef843448d0ef483eb2e9c1f7",
+      "sourceContentHash": "92209b1c1d08c4377d35db28e04a30cef44fff3b18dd466b1728d81c9a7c19f8",
+      "reviewedAt": "2026-11-23T20:12:28.730Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448463": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "edeca71b5d828175569a88b7309bed543d82250c9f2d5933171dfbc49057670a",
+      "sourceContentHash": "2b16e01502d633cc6d47db9fb13ad770855a05244d5d471f4d59ac57d68df45a",
+      "reviewedAt": "2026-11-23T20:12:28.713Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448466": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "471c8ddc467848a977c6c6a82fa91e8d18cc3dd7dfa55f8bba9d790a4897fa3a",
+      "sourceContentHash": "7deaa3c415bc8f92b587f2b1e83c8ac93f8e27f92eab366e9b7ae493124e6eb2",
+      "reviewedAt": "2026-11-23T20:12:28.721Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448480": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "69103d48b58404f3ab1c5e5c5c9c256e0745a19db19deb60abaee518e3dc4d1d",
+      "sourceContentHash": "dd831413547b86f6a1b16cc7a4d391accbc6bfcc3495edca04e8ed9e7b418941",
+      "reviewedAt": "2026-11-23T20:12:28.713Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448485": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "98e75359ad99d7c63f50b728fa8a1f4870c4c1c8c7c9e9d83cd5bfb9a0abb2a8",
+      "sourceContentHash": "305fefbaa7ba02e26815dd549296e4a6d1099889862a81cfd671dfd5530849a5",
+      "reviewedAt": "2026-11-23T20:12:28.705Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448503": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "a15bbf27eac700595cc816046ad16edd317737f202d9f2551997810f09fc931f",
+      "sourceContentHash": "f01ef27eec030f42b14040471ad728f6cc63e3c770e7cc9d2d5bad75a7601a0b",
+      "reviewedAt": "2026-11-23T20:12:28.709Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448509": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "98b465568e539094f795a1462e59c7efe7e7b415734db796d87875fc991f7286",
+      "sourceContentHash": "a08bf0a8c1d51e6cee0d4f194f739e79f426d6a59e4f1314db075db007340f72",
+      "reviewedAt": "2026-11-23T20:12:28.709Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448513": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "b10cc687b30bc53a26d42e1092fd62bf325943e8b887cb8df71515e8d0985122",
+      "sourceContentHash": "c0c46c52884c5f78c92cc3c2d42daa6181c026816f858f4ca374da9f06ba7ae8",
+      "reviewedAt": "2026-11-23T20:12:28.727Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448514": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "88ce27c4903e33507ab1ad06b76d9d59396745bcaaef91a5d167bbb7834df03c",
+      "sourceContentHash": "81886b718a6f5b0796cbd6fdca5af37fd3a29ce6bf8ff724d27ab5c77910b1b2",
+      "reviewedAt": "2026-11-23T20:12:28.739Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448533": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "4a8e9a1992fb1eb8bd28e55fc881f018e809028206a427ee5917a054c2b2a94a",
+      "sourceContentHash": "5999ba5074fbee9473a4105748d2ce996c3acfb0ce75b0b9a18d3fe51a857009",
+      "reviewedAt": "2026-11-23T20:12:28.708Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448536": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "b7bf4a593a9c7b82662d2213df52f056ce6077b3c0aed8cd03e3053ace7ec067",
+      "sourceContentHash": "d3788eb51d18cad4c2cb537410f182ad34e0abc12121cb86e206a2494638099d",
+      "reviewedAt": "2026-11-23T20:12:28.732Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448542": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "a39d125ee1e7119cd151a015635af0ecd9bc384c8869ed775b568fa1159293b6",
+      "sourceContentHash": "331cd63ac64b8149b9d4bbd8f09724ac33065c83e4024133377a37d29aaa4098",
+      "reviewedAt": "2026-11-23T20:12:28.740Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448558": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "3b06263fb0f555903223b409ede88ae98964758ad93cbda3451b80b5ae135645",
+      "sourceContentHash": "36579ae32fa696e1c539e5792e47e1b20524951a0dec2d7045f683fe6985186b",
+      "reviewedAt": "2026-11-23T20:12:28.707Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448565": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "6ed93144e8b5012cb7bea40610674afe8873d753dee52e271a3484cc9271fb9a",
+      "sourceContentHash": "4b024baa4289c43c47e4a8d0c7ec0fa2598cad7aff5b84b78bf4eba417408a7b",
+      "reviewedAt": "2026-11-23T20:12:28.713Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448569": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "d94e1980d8ddf83baf3ca097c3411b8c2290bc1d1f754c0db037587b5f9c1c1e",
+      "sourceContentHash": "4582bc4337a4e70ec150498caf0f2d28af4e5b6cede1f6f6d4212094acd2eb1c",
+      "reviewedAt": "2026-11-23T20:12:28.709Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448571": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "9e6a0dec94223a2b918f097e196884e3558f702088c7cf62adae09c7cc8eb836",
+      "sourceContentHash": "a8b58cd9bc0a3b223ba265f1a6487f589a66a76fb0870d307ac47c8ad4d7e3fc",
+      "reviewedAt": "2026-11-23T20:12:28.725Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448572": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "0eae7e3ba93f7079f607272a04ffda56bf09e00235a2a7a016b380ec20051ca4",
+      "sourceContentHash": "22656ace063e420e48cf55bf3fea5f73bf4141b22f385007d368c976c3884738",
+      "reviewedAt": "2026-11-23T20:12:28.731Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448574": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "e8a8b7c179130abc17f30c815ca9e756c01df691ba31bc8928de6a4d1d8936dd",
+      "sourceContentHash": "6b65defb94876b43365a38f0da35d895ad9bca3fd67a4617306f4b9cec790cfd",
+      "reviewedAt": "2026-11-23T20:12:28.728Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448594": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "bbfaf0ae4f91b8d4f34af79b87106059ac8fb7cdc70188e20e60107b6d4763ad",
+      "sourceContentHash": "97655c7cd08db24f74af037c1015e6b1d9c347ebfdc53cda22956eca04c78120",
+      "reviewedAt": "2026-11-23T20:12:28.714Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448603": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "46ad061f6a805c2ae20cac0af3922d351a05dc722cfe165b38f157e3ab843ad3",
+      "sourceContentHash": "47262bf02f09ab338817609074391b71e365988c997fbc8f6b30319d6cbddf8f",
+      "reviewedAt": "2026-11-23T20:12:28.705Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448611": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "e85faf5b0e5e29ba9b3aaa22a7872c853ab072b2c2ec21314902e8dc4472022b",
+      "sourceContentHash": "3ec36bf5216a2033f91cdb98794980b81571f2a7a235a9491d46ec552b18e25c",
+      "reviewedAt": "2026-11-23T20:12:28.729Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448612": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "6ed93144e8b5012cb7bea40610674afe8873d753dee52e271a3484cc9271fb9a",
+      "sourceContentHash": "e0bd01e1e2b310d2c42c0044ed9a3d5a58c1a4b6b76b1886ec4820e6d3cd2527",
+      "reviewedAt": "2026-11-23T20:12:28.708Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448617": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "fe2ea780e2358410efd88b7376b6a97be4ac498d80dbd92b8ff855720ceb474a",
+      "sourceContentHash": "a56d7d43eb84a4551974357b146548d577cc26d921e98a20631700043fa41fe9",
+      "reviewedAt": "2026-11-23T20:12:28.710Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448633": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "100af3f61d51bf5163202bdfcd7ac43c9f13923c2bc78959e452d86559077fe2",
+      "sourceContentHash": "ed2b40315c74fd31917d6bb63d30d1dd0f362435dbfb7922e5c74fb7f161b850",
+      "reviewedAt": "2026-11-23T20:12:28.739Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448635": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "02b43b247e4cb4cf654cfd7a295d8c65b63ee592aceb0888f67df2dd8bbd20f8",
+      "sourceContentHash": "1b714a6631b808f3487fbd5f94f88c9dc8c5db46c7ba2d294313b5784c6264fb",
+      "reviewedAt": "2026-11-23T20:12:28.728Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448648": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "7876ef24027a229e4dd0714edef6401879b51df5fcc41604472de1d089907756",
+      "sourceContentHash": "8987d6688a7b4db4f860ab78fafa356e435f730ed1c05459784d18ea6ff39d84",
+      "reviewedAt": "2026-11-23T20:12:28.740Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448652": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "69b0380775820106dba59ed9880a28841d6aaf8ee3459c6a877597574966dc50",
+      "sourceContentHash": "5a005f9a16e8daccb8eca1495db85b5499e140b3443599483793386948be81e6",
+      "reviewedAt": "2026-11-23T20:12:28.734Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448661": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "a61f4434065c790f07429860e0feb0370b619bd8868f0c813986ac893c9ca289",
+      "sourceContentHash": "a28ac29db797952d59adbecd84723169c3b751cb361eacc880b839769e6b19ae",
+      "reviewedAt": "2026-11-23T20:12:28.715Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448673": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "741ff6fe978e7b1a2284596dda893d109131d035e1564383a81db3a54f43ed0e",
+      "sourceContentHash": "2ec0a43ff0885f69c267dd85347af6f4337d30df134f400a0e619ffd207bf3d9",
+      "reviewedAt": "2026-11-23T20:12:28.726Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448675": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "1ef89530a79eadcb601092805d5df36d224f9ba2a35abc93b34c800da5c3ff0c",
+      "sourceContentHash": "681c7fc8f6e492628861470ff67987eea5bee74eadba3269a32435f771fe8a51",
+      "reviewedAt": "2026-11-23T20:12:28.730Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448679": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "07f5f0173d3edb11530596b58ffe20173ea92ed838723db4b1a81fc88ce5cbb7",
+      "sourceContentHash": "0447354499de8452328c9db82f9a8688b9d019525c6c2dd0b2337c5b1410d31f",
+      "reviewedAt": "2026-11-23T20:12:28.722Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448704": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "4255f4f7073ea6edf01a46598e8ae7c90dc9a6edcf458c85ce23aa08aaf00253",
+      "sourceContentHash": "c6e50a8a9df37da66c00ef14de82f45f0b600716dca1d2bd7f020a79744052c9",
+      "reviewedAt": "2026-11-23T20:12:28.723Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448722": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "b56f24b35171c2f761d0ff17bc63ac42c212eeb1f0c191184c462c300625a99e",
+      "sourceContentHash": "d3c888d175d7b1e0cebdf01b5c0e0d3679f7b028b4d8c27b2e0dc3081bfecd3d",
+      "reviewedAt": "2026-11-23T20:12:28.724Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448724": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "00483f150c1f298c9ba3ef896e15720d639a806bcf86d3696cca012ead36281a",
+      "sourceContentHash": "cc41841f8f1adba191d8a794a69f1419bdb219bda01050d97ad7b52129338b53",
+      "reviewedAt": "2026-11-23T20:12:28.736Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448728": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "dcc08b786b156735a1a4a8347596c6b71ffaf1d49ec50b6c58fa1e5300243880",
+      "sourceContentHash": "9ae7fa03cf2b530d1026516e72430f9e3527be1eda9294ff8cc481647540a282",
+      "reviewedAt": "2026-11-23T20:12:28.715Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448732": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "1746cfef235ddc09b25df99647dfdc80407b595571e44d26117ff4d735921cf7",
+      "sourceContentHash": "2919336b4973d50980f19c3e89d613a15e77b91b40a2af14383dd45fb79a7401",
+      "reviewedAt": "2026-11-23T20:12:28.738Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448749": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "b16be99f81425cef6164ecc789c5dd943f627be35225270abeaa2f314bdc6d6d",
+      "sourceContentHash": "39091636cb883933dc65a861883a98f970ff706ff62bc9afd3e96c66c300e81b",
+      "reviewedAt": "2026-11-23T20:12:28.728Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1448759": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "16fee5425a1b3a72c50d794ae6991c0836f89efec96134d2e2f10c5c7eeafdae",
+      "sourceContentHash": "726b43b9a75001da29d06757800aafd5be98453b5d833a306d181daef791c42b",
+      "reviewedAt": "2026-11-23T20:12:28.724Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1449785": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "69103d48b58404f3ab1c5e5c5c9c256e0745a19db19deb60abaee518e3dc4d1d",
+      "sourceContentHash": "d39b9edfc530bdc391dc6e80cf7e4bcd98dca1bdec16526053b4f53e7f42b14a",
+      "reviewedAt": "2026-11-23T20:12:28.706Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1449788": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "83a5087db2c244455a313f4f574b121ba3a0a9b0b5ec0de318bbc28e54a9450a",
+      "sourceContentHash": "6e4649347024419ece6d3265ff9d961b433e968892e7d30e59b957e36b568307",
+      "reviewedAt": "2026-11-23T20:12:28.706Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1449792": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "482773c520cccc8a178f3624e6a445dd2d6a5a697427757b5772901273ed8239",
+      "sourceContentHash": "ce9ef253d4a453caa4ddc9982630a51f2b65fa59ab636066838b9bd88f859def",
+      "reviewedAt": "2026-11-23T20:12:28.706Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
     },
     "1457281": {
       "disposition": "exclude",
@@ -202,6 +1282,76 @@
       "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
     },
+    "1525603": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "41b4c5edc4691870cba41543f5f2894b4a3785e3f96dc3aa855bf99483301233",
+      "sourceContentHash": "f04de0a59117c4de241c64c314b5b6fd886c18ad2dfabf569ade24c15ea4a4c2",
+      "reviewedAt": "2026-11-23T20:12:28.637Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1527707": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "fa37e5562bc595a697e5c68a9eb1d0e4fe10b2914d2e0d31ffaf5a4258c60c6f",
+      "sourceContentHash": "9d1b5bd95f08d404388e57947a4776802f4ea0e6bfacc96a8dccaa6a37fba455",
+      "reviewedAt": "2026-11-23T20:12:28.762Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1527737": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "efc96ebade3d966d4665190fcb769cf59b1b4a2704dbe719bf72c618c69b29a3",
+      "sourceContentHash": "eb5021182a507c1213b4cd7bc02a8b5134b92b13fffeedb249546ce3c30ff831",
+      "reviewedAt": "2026-11-23T20:12:28.687Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1529017": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "e190335ad04589f9fbbb651258ccca156774850b503049d76d4d04db94da570f",
+      "sourceContentHash": "4cf944bed43c1c5473942687dad14c54ae18f3cdcc8f8d21dfdf6172311386d9",
+      "reviewedAt": "2026-11-23T20:12:28.633Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1529221": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "28b39a00fdc3622d1c4c1030cc96d2852943ed813f1bc13952ecf35f3532f95f",
+      "sourceContentHash": "440761f8544df9aff79f45b5b040397612deb22cb90d7288c475d20b727f9513",
+      "reviewedAt": "2026-11-23T20:12:28.635Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1529287": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "b31b48f09ee4208ca5cd4f199384c7f0a38e9582e8f56238fc53050fb30a04da",
+      "sourceContentHash": "3c6110adef3e79d5e1ab3ea8edebb1167c5d6949a337ced81ce22cb572a39961",
+      "reviewedAt": "2026-11-23T20:12:28.636Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1529354": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "c0f1da48af98fec0eb5be813b6829096511756dc30044c0dff6be3f74e45823b",
+      "sourceContentHash": "4fac9140bc5f4c72f2fb79f26578e79e2f1ace94b3d271ff50a145151725d3c9",
+      "reviewedAt": "2026-11-23T20:12:28.636Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
     "1555664": {
       "disposition": "exclude",
       "reason": "Full source image shows a spool and packaging for 3D-printer filament, confirmed by the exact description.",
@@ -213,6 +1363,76 @@
       "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
     },
+    "1556315": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "e538ab0834aa6ff583564b93a20d45d6d928666b721b3ad5ffb29392413c16f2",
+      "sourceContentHash": "f23c2e1109cfb748caf95b1929b22ec573fd87eb7d23ffc7212688c9e1d46e92",
+      "reviewedAt": "2026-11-23T20:12:28.750Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1588069": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "61719d27b264ea2eda1c77f34727ebf79fa16089e4f6a57f53d2c00a754423ba",
+      "sourceContentHash": "85a6519da9f704932ceb7f55943b208ccd5e3ab4e53e779b08ca26f1fdd5da89",
+      "reviewedAt": "2026-11-23T20:12:28.663Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1588072": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "05f7852a906f9802afada9362a1b518684877709d75a50faf25ef3fadda6b346",
+      "sourceContentHash": "b18bcce0b0f0a487b5fdfe329148e837cc1882c34b6c3dfad7d9769421206227",
+      "reviewedAt": "2026-11-23T20:12:28.662Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1673658": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "ed25fc7e8e1cc5a09305451b864cb1c66e0d86057df165f40fd130709021e08e",
+      "sourceContentHash": "bf29eb7489de7194d29db6d90723b0c2495989179eda4ba6aba88b933ee44079",
+      "reviewedAt": "2026-11-23T20:12:28.707Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1673898": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "555d98c25428d0a6b76b50c15bcc4c348d8042fd4b2fcaa1536645d1f37c4285",
+      "sourceContentHash": "4e48afdf29f848df9c86aca23b3832076c4d63e9f91b3b07a5a448566ab248ff",
+      "reviewedAt": "2026-11-23T20:12:28.722Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1673993": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "cfd41e560358dc47d1e89eb69050ed3ed5b3dc3ecbaf79907e77691a8688774a",
+      "sourceContentHash": "6ab62a90bae1265eb5f61dec86f4f72959417d0a187d32b0de5b29af295ce445",
+      "reviewedAt": "2026-11-23T20:12:28.721Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1683466": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "be5869ca8c34ac2fbbdcafe61a10f24bca20bb2260b7dfb4fd96138ff7e7e97a",
+      "sourceContentHash": "8087e91c691ea3713c7b9ff75abf2f3e3466de1165d8f674757065d88866dfbb",
+      "reviewedAt": "2026-11-23T20:12:28.764Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
     "1698370": {
       "disposition": "exclude",
       "reason": "Human native-photo review: Amber Cascade fern wreath has predominant yellow, amber and rusty orange foliage; this autumn palette is outside the requested spring colours.",
@@ -221,6 +1441,116 @@
       "listingFingerprint": "83e74f3d50de8d680e16c4f6668ab6fc94338a3dc06de0ba85b1a40e2a3b5f9f",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/8/1794416229_2156.jpg",
       "reviewedAt": "2026-11-23T19:50:30.309Z"
+    },
+    "1700893": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "db71f1dcfc1112cdadabb5a8a76d5085b5ade709206204658d26ac3d723b8eb4",
+      "sourceContentHash": "7ca522eae69746729982a3dc4044bfa9dd721bbd3d4aea779c0ee794a33b25d4",
+      "reviewedAt": "2026-11-23T20:12:28.735Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "1894068": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "522b737ff357910697f5ed280dc756ba6ad12b83b264255e66688f5680173b9c",
+      "sourceContentHash": "97e64fb8e3afebca8c285e23287f3b458692d0393b2c212285cb33aedcf7f999",
+      "reviewedAt": "2026-11-23T20:12:28.757Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "2442225": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "b136090701c68768a041981d0716d284ab4c5f1455e8684c70b0e1d375286b56",
+      "sourceContentHash": "e8503a028a935e8e35f75863b8df4a9e9e78dc649a05086da79cf402fa196138",
+      "reviewedAt": "2026-11-23T20:12:28.765Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "2614283": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "8c57a5ba46db0517802633bb1be12dacb59f18dce7af8876153f63d553cce20d",
+      "sourceContentHash": "77df7a2aca215e704581ca78f9520e3c1d004760814404bc657f45978bc66fe2",
+      "reviewedAt": "2026-11-23T20:12:28.649Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "2749620": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "4ea76ae99c0ac6e69326cfb523d4ee3283cdb527985f19b29f110052e7f0555c",
+      "sourceContentHash": "2ddb2d7508fa135dfcb68194e009da2971854b3b2766c1b788b4dbe92a34a94f",
+      "reviewedAt": "2026-11-23T20:12:28.657Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "2775522": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "06642fed9e4bb22f0bf05465c8b66be0d899451a660aedb8f46622ddcafb2ac1",
+      "sourceContentHash": "b244babe2f671619ad599b123a651be38bdccf6725f2d0ac345c4d3545bf0881",
+      "reviewedAt": "2026-11-23T20:12:28.694Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "2817774": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "74c7c1aa437f64b2fe4a14bfb45bc4725b624959aa63909dfa312dba849d9dc3",
+      "sourceContentHash": "3b46a81251620fa5948d40f3b3c0d1d26882b28556dfd4ca43fb3914525b454b",
+      "reviewedAt": "2026-11-23T20:12:28.770Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "3069640": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "844cd1da16f56c086d8a9ad6498555cd7a755d0bc0b40eb5996cd5253c4bd579",
+      "sourceContentHash": "1958b4ccd4115abd4aa14d8932c58ded39308f54aba187cf4667bb3566fd765d",
+      "reviewedAt": "2026-11-23T20:12:28.723Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "3228241": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "dc8fb60d2b3ebce3f012d9197a9dbf96d154ba7268210093bd1a075418133fc7",
+      "sourceContentHash": "141e2ae77149ae714ed115849d296e91cc3df6f46d4bffcc0e5613669c50156e",
+      "reviewedAt": "2026-11-23T20:12:28.726Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "3231993": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "fac506e67090e714fe8362eb4cb62203b561c7f84997954e2cf65d00bf77d76b",
+      "sourceContentHash": "f59dd193cd87cf71cfcc3d7eba810cc3163b03a4acd0f7d5b69f03424ee85fab",
+      "reviewedAt": "2026-11-23T20:12:28.762Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "3300908": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "7e719579b9ba6e87cb78a7e6e48b777957ecfd93b22e78f191083115bec16fe5",
+      "sourceContentHash": "de8415591da3143ed2f100570abf08f2ce89b8b3b64772b38ad5b00dfb87b77f",
+      "reviewedAt": "2026-11-23T20:12:28.764Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
     },
     "3315438": {
       "disposition": "exclude",
@@ -232,6 +1562,736 @@
       "reviewedAt": "2026-11-23T18:57:03.695Z",
       "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
+    },
+    "3356531": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "2c7383ef5a30fbef4321f0956f47450d6972ce2202f607b96608c5bb25e4ffef",
+      "sourceContentHash": "b22c03a107b26b2c4c5b66dd1b09b00a46746bda16597463ce389e311e1ce676",
+      "reviewedAt": "2026-11-23T20:12:28.702Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "3435491": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "ab50f9d2f9969e1bc87e52550f937298b952ad5421ab490c6fc22015c5da5143",
+      "sourceContentHash": "6891ec3ffa2420107dabf91a9d26db34e978ac687a2ea3067bb86de0125d09b3",
+      "reviewedAt": "2026-11-23T20:12:28.759Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "3477157": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "89373d2e93449d4cbbe4572eae25afc0d6fb5d23e22143e83d30f0ed64375670",
+      "sourceContentHash": "a146423df950e60d230d092fe8fc4d562910f2f024cbbe9d9bf6f1176c23fb14",
+      "reviewedAt": "2026-11-23T20:12:28.757Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "3748561": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "36002e4208d2773b2b03abdebb5f5e945becb72c510b30c7a3c45ae3d37108d3",
+      "sourceContentHash": "fc885b50a6001c811d7d9009c48d9a67996d1a26afa58103d2d664973966b29a",
+      "reviewedAt": "2026-11-23T20:12:28.646Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "3804440": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "dcfa7f0a45d25b2f65498e9400ea8e59c5ac8a6f49fc0934bfba9735ab9ff8d8",
+      "sourceContentHash": "ae27eb63f2fb002e15d939d25809057c3e0b5cb4a75c3ade2e437dad8f8430b3",
+      "reviewedAt": "2026-11-23T20:12:28.650Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "3834273": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "b3ab7cbf48bb97eb58b1b16fb8462234dabe2832109cff73d4428e85be386a1a",
+      "sourceContentHash": "68e9b160aa4941d9ed945d5dca415b793402307c68dcb873f7cc483894748bb4",
+      "reviewedAt": "2026-11-23T20:12:28.762Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "3867842": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "60193c48070c31b544894de9e1fd03a0cf4c7742e4432ccb1ea2888e7f04cdb6",
+      "sourceContentHash": "c3ec0fc547c2bd3cc3c1f20f3939cfa42b403a97bdda30a45b47f43d37508f04",
+      "reviewedAt": "2026-11-23T20:12:28.696Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "3887227": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "43a9ab50c3fdb12779df3d75e550635de2d6d6af94da3293e2f18658460207e2",
+      "sourceContentHash": "06ecbaf6d8276b63885a57bf5dc591a9cfcd50166249f5a37e1883605e049ad0",
+      "reviewedAt": "2026-11-23T20:12:28.754Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "4293048": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "26875573a48434b3f2080dff943825a1737f839d5bc2c6172185e43c41031647",
+      "sourceContentHash": "ea533fef42963460de04c2fa58bd194a6404a3d4e350c81d019ce4f6b9bac6fa",
+      "reviewedAt": "2026-11-23T20:12:28.766Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "4331985": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "851f134a5d4522514759e85862727e832086e5e1ffea3c2e3f0e5ef7cc4ebc7c",
+      "sourceContentHash": "bd41fae13678eb813aa4ac6f8a3ee6bdac23f449f3786300fe87ffdb3564c74e",
+      "reviewedAt": "2026-11-23T20:12:28.729Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "4444771": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "edafbaac7970f65d928bd2288a4197d06efbd7997f79d15e7cecfc13ac8bdc7f",
+      "sourceContentHash": "1d41a5d512813c6c0e3ab20b86e4b6edb2f3ca7cbc6a6ef0deefcf2f554e55e6",
+      "reviewedAt": "2026-11-23T20:12:28.763Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "4548152": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "8221ea413ffeee3ff8f11167d39e475ab73dbaf198e5d4a385e030a567f67acc",
+      "sourceContentHash": "17d252a4f025489f359f6bc5f88c7c287b1e5b613811be9c57ac744f65a46094",
+      "reviewedAt": "2026-11-23T20:12:28.732Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "4588080": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "1311335fb78e903ab6fb4ed3db35115c76ae765f9a43f91b97fe4fc3559a87d0",
+      "sourceContentHash": "addf92464d37897d437378f8e7545a3241022775111084b92b3e6f1914b56047",
+      "reviewedAt": "2026-11-23T20:12:28.689Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "4664547": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "f28ab67e6caee9809c6860fdbf4f4215c90154674fb9842b14e34e4510306f15",
+      "sourceContentHash": "e5def41457d5598d2c2021c5753c68c7a5300337546fee85dfb4faa7d3959ebe",
+      "reviewedAt": "2026-11-23T20:12:28.752Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "4972238": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "7ce72bf193db91ec59d102398ab5dc0ee2611601ce4075ad68462103006607f7",
+      "sourceContentHash": "909d69f5888b68839e548e7f829f214969d3b8002beb70b67154a50aa9714c02",
+      "reviewedAt": "2026-11-23T20:12:28.763Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "5046161": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "7aafc08ce9e0b19c622e146a9baf2457245896e12e4a758bd7f8373d1f790326",
+      "sourceContentHash": "aac04504daa247260697d2fbdef403447ff38bbc7964d49063444a325eb6d568",
+      "reviewedAt": "2026-11-23T20:12:28.764Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "5050109": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "24ad502e1133e21a6eeb195f3496b6fa0fde285dee020d8523a9860a3413208e",
+      "sourceContentHash": "61086e6d71819e1874bc980746acaa70773b95b3fa162aa7d6efd57f078cbceb",
+      "reviewedAt": "2026-11-23T20:12:28.749Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "5280310": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "050bea18616a3d52b5eafd05b06951551d8f850a4701cedfb5855bb5703a0b1e",
+      "sourceContentHash": "b7d88d195509bb36c5198d4e57072060ab2e2995a8ff6932645d569d4012e60e",
+      "reviewedAt": "2026-11-23T20:12:28.711Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "5434133": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "b76a07c2b908d187aa7b0fee0880026f47b390cb19bca0ee62b41ef70466ce59",
+      "sourceContentHash": "a684036bfe5224db07c5387acf52af84ed5ea28beb1f4fe2a0864c0bbb4c0da8",
+      "reviewedAt": "2026-11-23T20:12:28.736Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "5504058": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "c8d7c8fea50e4646fb1eb156ccd1bd7bb263d1daea53c610978933e92ff380ed",
+      "sourceContentHash": "5bc1c928c2a7f31f061800e0d10ab9dd3ebdf2884a81097e1ca8a8e7fdb10308",
+      "reviewedAt": "2026-11-23T20:12:28.746Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "5624340": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "6565b975e0f29351be86e64a04062176dc93cda612492fe2970da84a33c88604",
+      "sourceContentHash": "16f9c6b0dd94842f74f98e0204b9bad34165006770f5a1cd6b0c5cef49f49b13",
+      "reviewedAt": "2026-11-23T20:12:28.648Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "5630152": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "51c5868ed455b1e57e95faefdaf75d58d86c92a60c2d8e24b213cb39f1af53e3",
+      "sourceContentHash": "14b1c71210f1c96b23476496e8083075f514278123b408caafaa2d957bed97e4",
+      "reviewedAt": "2026-11-23T20:12:28.651Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "5720571": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "57919d6fcc976ba99691113fed747789c898de123cfcf44b667f0e826a903340",
+      "sourceContentHash": "06dcc6daa56b1cded4a720175a503fa83f680929301e5b1150a5c197d1f4da3c",
+      "reviewedAt": "2026-11-23T20:12:28.765Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "5737964": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "0186200280a44d7dc7d74a6b60eb07b13d3bdaaedc261c7efef810efb935741a",
+      "sourceContentHash": "b3f10113de3407edca47d675f3bf23d926b0b4b170cf28103fd86299edada927",
+      "reviewedAt": "2026-11-23T20:12:28.747Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "5784619": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "6b881f9716a5d177e6114c1ebf6b3344c5551cd8cbd6722653a57988e78d5649",
+      "sourceContentHash": "1b1fc005c6a41890fd92d8b28a9600d10d4efc0c57345d570f4ef494fd30cee4",
+      "reviewedAt": "2026-11-23T20:12:28.658Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "5797179": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "51ca67137a158c97c5c99624b30f343cb1a465de8dfbb937c24516d629a394bf",
+      "sourceContentHash": "bf7c8621f4da8bc987ce70753773b88cd979561b2a2c667c9a64d268603bbcfa",
+      "reviewedAt": "2026-11-23T20:12:28.761Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "5890866": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "9a7fe67328f73faf847ab0b84e52cb508074f67bf26736c2473c8b1f34a2b731",
+      "sourceContentHash": "de3139d9f0c8c59f9ef275b5216691b5b15a8a70c324f0c462211d9617037167",
+      "reviewedAt": "2026-11-23T20:12:28.762Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "5891405": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "5c975b59223b7fbdd1c766d02a6a648dba7c322f89b2e7de560c786a464893e8",
+      "sourceContentHash": "5ebeaf6682913e7d9bf22bc5c2fc6625f246065cd740035345ce9544cdad128f",
+      "reviewedAt": "2026-11-23T20:12:28.688Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "5954629": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "79b69e428268ee3635be5a7b2e678c0e1e7449d136b2fdc33f3b4b6dc69e9dba",
+      "sourceContentHash": "5ecfe48243c19b3015ff952fe4aa7814970ff5d44c62352a37b9a6146a1d7c18",
+      "reviewedAt": "2026-11-23T20:12:28.742Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6032179": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "5d5cb1d5f6a978db31d8092933ae3f43d5b2d8f35637c1d1befe21823c3cc321",
+      "sourceContentHash": "19ed286006158c03885ec79410c9befa56bd76f57b970906a443afd4bad34f57",
+      "reviewedAt": "2026-11-23T20:12:28.733Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6171191": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "49811e27d82133c8df084bf306add0765b15318c0958020ef996318ed62a9a7e",
+      "sourceContentHash": "b66003259a7c0bf9401020aa35c9c53d3fa1e1985ec030c430c1bf4c3a74a0fa",
+      "reviewedAt": "2026-11-23T20:12:28.756Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6295081": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "b6314e2105ca40a1eb226e3388cdf941b7ecff3b162b072f186a4aaa024f4026",
+      "sourceContentHash": "c99abc1295feef248c9262087173a13cd634d0fb6c42ae84eaf37bb8dda1a348",
+      "reviewedAt": "2026-11-23T20:12:28.722Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6336093": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "9c7d1b014f75dd09ebba16cbe14d61dd40e8d6714a9957dfc8349d5d0ce907c7",
+      "sourceContentHash": "5bc565b279022ed42e8e723c9251a4f6fb6f5e1ee66e1a2aef99f0d2441f217d",
+      "reviewedAt": "2026-11-23T20:12:28.758Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6389728": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "fc9ca6577b9518b4bffacf3d76e9c42a2f94e6211d60663af499962957db50aa",
+      "sourceContentHash": "d2175dfc1ff1049e230e5a553e1d9251912c89e6656ae63f0f9045bfb1569b0c",
+      "reviewedAt": "2026-11-23T20:12:28.759Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6436932": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "c6915ea40b3256f8a8a4ae141aadcbbd936ebb26d9a7a47700f5efed9f865539",
+      "sourceContentHash": "dd81e63d7ada578e4b5f8de39bb11fe2e16a33b1357f3ae882eb7d57ae49ce64",
+      "reviewedAt": "2026-11-23T20:12:28.763Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6518665": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "1bbdb0887f6f82b19a2c925ce5cbb12258c1afc11aba145dad860f2412a4deae",
+      "sourceContentHash": "7bd5867811290bd0f3d2bb90c05e4fa72d16a5fdcc9cb620dd00961a9e06e0f2",
+      "reviewedAt": "2026-11-23T20:12:28.763Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6560208": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "77c26f91d0a73718f85ac03b7ff925974526d3b77f5afc2f113d5ab49543bef4",
+      "sourceContentHash": "205a8e14f2265aedd66c7d84250c416d9e7df93e204d0749d881dde6b03fcc57",
+      "reviewedAt": "2026-11-23T20:12:28.764Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6687889": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "a4f326896baa399cef58cfb9469ff1e9e6a7fc4f516ba178ab525ee0cf4189d8",
+      "sourceContentHash": "f31df0fa038b4872a6630f7acbf65652f72bea9a5ca4ff610c2c20926aef0951",
+      "reviewedAt": "2026-11-23T20:12:28.655Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6712276": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "9d59e93cb38ad345b6ffd48518caca10f4936d4d5d61b3cd4a5317c3153e86e8",
+      "sourceContentHash": "f826fa03015c4d5c8113d4e5911de690a2e808d11d634f2409e9f5af5858397f",
+      "reviewedAt": "2026-11-23T20:12:28.763Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6788159": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "3c1787762643e7558b5dc52bea9df62eed27950ab17959019b35301b27bb7621",
+      "sourceContentHash": "8eb0c8915e26363e5b1bec55da6182a05a9ba94d1947d611b8ab77c3e05be50e",
+      "reviewedAt": "2026-11-23T20:12:28.735Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6818084": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "c523c50ec0dc2c648b49a96ed58849cc38ca69a9bdced3395b6442bd487f66e9",
+      "sourceContentHash": "93e5a9516a88a266f56d53d0bf3ba105fd01afd79f102dc99518c61f72979cb0",
+      "reviewedAt": "2026-11-23T20:12:28.656Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6867941": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "aaa566e2ab2dc94094ef1673da922603349287aac83cba410ef810d3ff99cc2f",
+      "sourceContentHash": "8f4c2b7b174e8d6f53b4257a9a3d41b2a1e62925c50eb09611fd58d8c728efd9",
+      "reviewedAt": "2026-11-23T20:12:28.744Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6974914": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "3b53dbb31b8aa83c5c04e3009c947b19fe484e25d80c2d2a7f79d55189a9d58a",
+      "sourceContentHash": "48c5a53e5f49be834f48cb8235d74acc0b3abccbb756622467929b36c6a8ee6b",
+      "reviewedAt": "2026-11-23T20:12:28.712Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "6982326": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "8f3035930572fafbebaaf47e70505af28d75e57f7c0df2262d21455ffaa668de",
+      "sourceContentHash": "800993ee5fc8bbd3683e6e02c69b4b3ae8f370999b4b39ba11760d3e425d560e",
+      "reviewedAt": "2026-11-23T20:12:28.725Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "7035456": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "1bb88c726c03bfe94d75cbfb1584ab1b2fa369a234dabe429ca54e3f02aadc50",
+      "sourceContentHash": "db4d39c1f2b31ef9dfa1456acd825a401d54de9051e2a43a643ed080b2bbc67f",
+      "reviewedAt": "2026-11-23T20:12:28.764Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "7040041": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "9de6cb3e74f8f62c93dca3a3f87c0211ea71367ce8b67ee9a27888089c4cceec",
+      "sourceContentHash": "aeb78f0be337244a5e1ef9a993e13a961a0b7ea24d85f0af1c375a71bfa223b6",
+      "reviewedAt": "2026-11-23T20:12:28.747Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "7260485": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "dd1c0888bb94b4a1d21f8ca4f5188c67adba7e3d88288a0c47e1e8b5e5f0cb49",
+      "sourceContentHash": "3ad366f8e166d284340078495dc53046abd8ae42d611b2848dcc9aaa0954ccd7",
+      "reviewedAt": "2026-11-23T20:12:28.707Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "7443293": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "f251b70859b9929966e2404b028d6c9bc3addbfbb7ffd954a443809cc4713e99",
+      "sourceContentHash": "7d747ea5cf142a3370be791b9f6d89ae77f36a679bb64556f93d0e343dad007e",
+      "reviewedAt": "2026-11-23T20:12:28.755Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "7636810": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "7b163ebc82006d75c2e0a51520212e1bfa3e4d7c0f2cdeabab140a5f382c28cd",
+      "sourceContentHash": "cfaf5a9c42cd80ecc6309ec7fd59edc675dcefff0629b10b2f8bb83c18ed6d26",
+      "reviewedAt": "2026-11-23T20:12:28.762Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "7678203": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "af4ec4415127bfe794c5df8a7f53163748d684836429ae123e61c4d12bff0433",
+      "sourceContentHash": "f2c3709004b1a5c5877fc5acffefdfbe4adf14ec92c86a0150bacc7f51c4fcb9",
+      "reviewedAt": "2026-11-23T20:12:28.644Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "7785474": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "5ff6481b68fffcb0915e4c1b07d54f244c8074b70ff31f69b3df2aca55eae213",
+      "sourceContentHash": "f58d66ddbfada7dc57ef89751df700b4653b0f0281e53a3b20335ffd8732f2d5",
+      "reviewedAt": "2026-11-23T20:12:28.750Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "7831754": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "908f8bbb006b84fb64a6dd77ad2a515b988a013e69ab80b64e88658e675b83c5",
+      "sourceContentHash": "8e6d8020b2f511a0d846b1260be2d48acbd7944c6f64f4f533d7606d5fa7ac89",
+      "reviewedAt": "2026-11-23T20:12:28.703Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "8020287": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "2041caae68d9e61d5ce03e624d9428989da723630621a8a9d1ebad89f7f99793",
+      "sourceContentHash": "060e5f06ea4a540fe3cb60edc02db131746eda6e77bc47b58de6eca07d2f9215",
+      "reviewedAt": "2026-11-23T20:12:28.660Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "8293064": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "e5b50a2b66b73d4c544e357e38758b0f78d683fdb2959b8bf3a812094caece41",
+      "sourceContentHash": "667253245d3a5c33d91b276a83def8622519c8c78a541b66ea3b4d249a95c6e5",
+      "reviewedAt": "2026-11-23T20:12:28.760Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "8309046": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "81206853084f9e21a4d51b3e6c63d3869f64221af7730cdbaf0aba7aa0894818",
+      "sourceContentHash": "a85fbc04c2ff3fe7146ac943faba09c0e2d813011a860e8d26f45f413f48c117",
+      "reviewedAt": "2026-11-23T20:12:28.745Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "8348396": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "24890bc0c26255b88245dbd537ab6b943e39ed27dba5723b2a94b08309d3e0dc",
+      "sourceContentHash": "bd3bbf3ef0142d33e8a69eb584e0690a442502c461e81c4891f113ce9c609a59",
+      "reviewedAt": "2026-11-23T20:12:28.652Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "8430499": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "0b63f83338939b0a79e5a5c2593df50a4c87ba7230ba1d50de945d470a3d3566",
+      "sourceContentHash": "ad0d54499963af9e71629702e1d2707342f09fc3b8d5fc75ec079771a03834a9",
+      "reviewedAt": "2026-11-23T20:12:28.741Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "8441893": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "9a1b591be1a007b0ef87cf9117520489a00a3c271acf55c6299857e0b06c2452",
+      "sourceContentHash": "a1a1cceeef37563234fc905db0e2e0295c1dd03ec936049ffcc020b4bdbdd80b",
+      "reviewedAt": "2026-11-23T20:12:28.725Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "8500534": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "9bfe3af8922eab94873de0933617b5046038d733d5a340058046b7be7b64f2ca",
+      "sourceContentHash": "0fd8de0a785c91087ce13b2117a4dd8e6ea11f5ba3f6a2c06414bc72e29a5049",
+      "reviewedAt": "2026-11-23T20:12:28.741Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "8618201": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "4fdc88d11cd97be0d4fd3765f252f7c149f89bdc3d04449b16b01a07c8e5f594",
+      "sourceContentHash": "317abaa706bd1323780637cabc0dbfb9d92a017e36a237b911c69dbc52032c58",
+      "reviewedAt": "2026-11-23T20:12:28.741Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "8780626": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "b976b2021443edf5bc82bbc719114a0b82c0f9f32df1cf66cd19a9f3a9ab3554",
+      "sourceContentHash": "9e98cd2f20b24ad7285e414d40f8edaa1490803297d5e0ab96c93e3b4e6244d3",
+      "reviewedAt": "2026-11-23T20:12:28.653Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "9109845": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "b6a955d6e38c46e5bc0443e3b3ff0e8da2f81e6e1295bab0d6944ccad5b08d61",
+      "sourceContentHash": "e01f00a5aadb7037954d72e5747fd005e0ee01ab6abd8c5141821ea1f6f6b925",
+      "reviewedAt": "2026-11-23T20:12:28.661Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "9168798": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "811ca88687ccd6c16c6dbfbde6f04bf46f6fb6e0a159d24b29727f303841a888",
+      "sourceContentHash": "c1ea2ac3794da94ad992b9d3fb88a3d518118cef9a760803b268de4d46712a68",
+      "reviewedAt": "2026-11-23T20:12:28.762Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "9181137": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "f899092301cbc04034597c6c9e7bc8473af034800ebccc62b77ecd15ae31a522",
+      "sourceContentHash": "18aa70495d9975328111e3bb19a73680193ab89166d119205f874684c61ecc2a",
+      "reviewedAt": "2026-11-23T20:12:28.737Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "9204380": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "8435b483a0b1d13ee256eb754aef4f182cf5d7363921a65f7a8c4c40552cb76d",
+      "sourceContentHash": "982e7c1b2d3bd1165a8adf5f59fe7a1caeddcefb4043916d7dddcf1157f1b6f1",
+      "reviewedAt": "2026-11-23T20:12:28.763Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "9303772": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "e1b8645214cbd1ad04f1c68b6db170800f998d338cfdced33f8f524508a7d5c8",
+      "sourceContentHash": "24029dd0bc1cca29b1527e3717f92840cac895effb8818540f3af5bfa0687a03",
+      "reviewedAt": "2026-11-23T20:12:28.729Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "9359909": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "7548085c81b5db58cd77ae0841753af4eb1fbc9726f5d83bdbd88363c7e007b1",
+      "sourceContentHash": "8f6ecb7b74162d64eaeea1fb6bc24b45551ed3af3e0612fa78935032ff98fc55",
+      "reviewedAt": "2026-11-23T20:12:28.648Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "9457656": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "94fe1d1079246b6c369cd9890840f18e268c670571ef8ef4a85ace4432982fdc",
+      "sourceContentHash": "7ebf111987f6682f24547a509915e31991e6d18feed5d132b2d747a30f2e8587",
+      "reviewedAt": "2026-11-23T20:12:28.723Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "9459950": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "imageHash": "8d47b437594a10fa923e7c78b6e759589e35be3bbd29216d1402bc1bcb06d0e5",
+      "sourceContentHash": "0f29709735bee170c44d8cabf07329fefdcdbc42e57634bd75882ed11d968950",
+      "reviewedAt": "2026-11-23T20:12:28.732Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "9648733": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "f022f10527a47431b7d1ece26501f2062e41516b78924249ec4b98859714dece",
+      "sourceContentHash": "1d8b9f6204084e0af5b7dfb129d0261425c303f4e48e386219bd73364ac7cbd5",
+      "reviewedAt": "2026-11-23T20:12:28.695Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "9667099": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "imageHash": "bb7d821427935a0c4e9b8ba00c0471cfe7fcc0249ae70e5ecda1b76640b8aa01",
+      "sourceContentHash": "b99cad74ee24568c64721fb372c06c28012e0755435853b6d040ee34b1530a7a",
+      "reviewedAt": "2026-11-23T20:12:28.763Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "9675903": {
+      "disposition": "include",
+      "department": "spring-wreath-garland",
+      "reason": "The viewed native frame shows a continuous floral/greenery garland or an actual wreath, consistent with the exact offered source; it is not a loose stem, basket or unrelated circular accessory.",
+      "imageHash": "39bc36ce4992a123f8c61f938d73c03a476e1b65487a2876f1625b96ced21764",
+      "sourceContentHash": "0bd2ed4b15bb72b0851dda91b3a981552698a43aafbe61833a70dba6c68a5894",
+      "reviewedAt": "2026-11-23T20:12:28.747Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
+    },
+    "9950374": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "The viewed native frame shows the complete artificial tree/topiary structure and green crown; the exact offered source identifies the corresponding tree, rather than a suspended foliage ball or a wall panel.",
+      "imageHash": "d39cd75af84c3e72952172c2467981fbad09dc905b789334c5cb34396f696201",
+      "sourceContentHash": "78c3b0619832437347dfcb889bbe99a5e85772c8d63ebee2aadc89b11725e471",
+      "reviewedAt": "2026-11-23T20:12:28.738Z",
+      "reviewArtifact": "native-source-contact-sheets-1-to-15",
+      "wholeProductFrame": true
     }
   }
 }
