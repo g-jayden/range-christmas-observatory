@@ -2,7 +2,7 @@ import {DEPARTMENT_MAP} from './catalogue-model.mjs';
 
 export const PDF_LAYOUT_VERSION='native-eight-bilingual-names-v6';
 import{isSpringScope}from'./spring-model.mjs';
-const clean=value=>String(value||'').replace(/\s+/g,' ').trim();
+const clean=value=>String(value||'').replace(/&#x([a-f0-9]+);|&#(\d+);|&(amp|quot|apos|lt|gt|nbsp);/ig,(whole,hex,decimal,named)=>{if(named)return({amp:'&',quot:'\"',apos:"'",lt:'<',gt:'>',nbsp:' '})[named.toLowerCase()];const n=parseInt(hex||decimal,hex?16:10);return n>0&&n<=0x10ffff?String.fromCodePoint(n):whole;}).replace(/\s+/g,' ').trim();
 const concepts=[
  [/\bdark forest green\b/i,'深森林绿'],[/\bsage green\b/i,'鼠尾草绿'],[/\bmonochrome\b/i,'黑白色'],[/\bspots?\b/i,'波点'],[/\bbiscuits?\b/i,'饼干造型'],[/\bbakery\b/i,'烘焙点心造型'],[/\bpersonalised\b|\bpersonalized\b/i,'定制'],[/\bdog breeds?\b/i,'犬种图案'],[/\bcheck(?:ed)?\b/i,'格纹'],
  [/\bnatural charm\b/i,'自然魅力'],[/\bstarry night\b/i,'星夜'],[/\bopulent\b/i,'华丽'],[/\bluxe\b/i,'奢华'],[/\bmajestic\b/i,'华美'],[/\btraditional\b/i,'传统风格'],[/\bvintage\b/i,'复古风格'],[/\brustic\b/i,'乡村风格'],[/\bnordic\b|\bscandi\b/i,'北欧风格'],[/\bmodern\b/i,'现代风格'],[/\bbright\b/i,'明亮色系'],[/\bpearl[ -]look\b/i,'仿珍珠光泽'],[/\bassorted\b/i,'混款'],[/\bfir\b/i,'冷杉'],[/\bspruce\b/i,'云杉'],[/\bpine[ -]?cones?\b/i,'松果'],[/\bpine\b/i,'松树型'],[/\bred berr(?:y|ies)\b/i,'红莓'],

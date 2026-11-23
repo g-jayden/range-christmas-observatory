@@ -17,14 +17,15 @@ export function springSourceDecision(p){
  const seasonalIdentity=title+' '+String(p.specifications?.Season||p.specifications?.Occasion||'');if(seasonWords.test(seasonalIdentity))return{disposition:'exclude',reason:'explicit-non-spring-season',evidence:seasonalIdentity.match(seasonWords)[0]};
  const context=description.match(/\b(?:autumn(?:al)?|halloween|harvest|christmas)\s+(?:colou?rs?|foliage|leaves|wreath|garland|arrangement|bouquet|decoration)|\b(?:rust|burnt orange)\s+(?:leaves|foliage)\b/i);if(context)return{disposition:'exclude',reason:'description-identifies-non-spring-product',evidence:context[0]};
  if(dried.test(title))return{disposition:'exclude',reason:'dried-or-autumn-palette',evidence:title.match(dried)[0]};
- if(/\b(?:live|living|real)\s+(?:plants?|trees?|flowers?)|\b(?:seeds?|bulbs?)\s+(?:for|to)\s+(?:plant|grow)|\b(?:flower heads?|petal confetti|plant stand|vase filler|wall art|wall panels?|memorial vase|flower pots? holder)\b/i.test(title))return{disposition:'exclude',reason:'non-artificial-botanical-product',evidence:title};
+ if(/\b(?:live|living|real)\s+(?:plants?|trees?|flowers?)|\b(?:seeds?|bulbs?)\s+(?:for|to)\s+(?:plant|grow)|\b(?:flower heads?|petal confetti|plant stands?|plant racks?|vase fillers?|wall art|wall panels?|memorial vases?|flower pots? holders?)\b/i.test(title))return{disposition:'exclude',reason:'non-artificial-botanical-product',evidence:title};
+ if(/\b(?:print|printed|pattern|embossed)\b/i.test(title)&&/\b(?:pots?|vases?|jugs?|planters?)\b/i.test(title)&&!/\b(?:artificial|faux|potted|arrangement)\b/i.test(title))return{disposition:'exclude',reason:'printed-empty-container',evidence:title};
  const foliage=/\b(?:artificial|faux|fake|silk|flower|floral|foliage|garland|wreath|stem|spray|bouquet|pick|tree|potted|plant|fern|orchid|rose|hydrangea|eucalyptus|tulip|daisy|peony|gypsophila|lavender|blossom)\b/i;
- if(/\b(?:vase|planter|pot|basket|urn|stand|frame|holder)\b/i.test(title)&&!(/\b(?:in|with)\b[\s\S]*\b(?:pot|vase|planter|basket)\b|\b(?:arrangement|potted|artificial|faux|fake|tree|fern|succulent|orchid|flowering)\b/i.test(title)))return{disposition:'exclude',reason:'empty-container-or-accessory',evidence:title};
+ if(/\b(?:vases?|planters?|pots?|baskets?|urns?|stands?|frames?|holders?|jugs?)\b/i.test(title)&&!(/\b(?:in|with)\b[\s\S]*\b(?:pot|vase|planter|basket|jug)\b|\b(?:arrangement|potted|artificial|faux|fake|tree|fern|succulent|orchid|flowering)\b/i.test(title)))return{disposition:'exclude',reason:'empty-container-or-accessory',evidence:title};
  if(!foliage.test(title+' '+category))return{disposition:'review',reason:'botanical-object-unconfirmed',evidence:title};
  let department;
  if(/\b(?:garland|wreath|swag)\b/i.test(title))department='spring-wreath-garland';
  else if(/\b(?:tree|topiary)\b/i.test(title)&&!/\b(?:stem|spray|pick|branch)\b/i.test(title))department='spring-tree';
- else if(/\b(?:potted|in\s+(?:a\s+)?(?:\w+\s+){0,3}(?:pot|vase|planter|basket)|vase arrangement|pot arrangement|succulent|cactus|cacti|fern|hanging plant|trailing plant|bonsai)\b/i.test(title))department='spring-potted';
+ else if(/\b(?:potted|in\s+(?:a\s+)?(?:\w+\s+){0,3}(?:pot|vase|planter|basket|jug)|vase arrangement|pot arrangement|succulent|cactus|cacti|fern|hanging plant|trailing plant|bonsai)\b/i.test(title))department='spring-potted';
  else if(/\b(?:bouquet|pick|stem|spray|branch|bunch|bush)\b/i.test(title))department='spring-stems';
  else if(/potted-(?:herbs|flowers|ferns)/i.test(category))department='spring-potted';
  else if(/picks-stems|bouquets-and/i.test(category))department='spring-stems';

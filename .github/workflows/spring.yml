@@ -6,7 +6,7 @@ on:
     inputs:
       phase:
         type: choice
-        options: [all, review]
+        options: [all, review, repair]
         default: all
       resume:
         type: boolean
@@ -57,8 +57,11 @@ jobs:
           git diff --cached --quiet || git commit -m "Reserve spring free-first source collection [skip ci]"
           EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
       - name: Read complete official source and only missing family details
-        if: inputs.phase != 'review'
+        if: inputs.phase != 'review' && inputs.phase != 'repair'
         run: node server/update-spring.mjs
+      - name: Repair only unresolved official source addresses
+        if: inputs.phase == 'repair'
+        run: node server/repair-spring-source.mjs
       - name: Cross-check exact SKU descriptions and native product photos locally
         run: node server/review-spring.mjs
       - name: Preserve official evidence and source receipts
