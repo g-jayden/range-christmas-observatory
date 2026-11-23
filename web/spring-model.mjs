@@ -21,6 +21,9 @@ export function springSourceDecision(p){
  const outside=/\b(?:living\s+wall|vertical\s+garden|(?:wall|foliage|grass|hedge|fence)\s+(?:panels?|tiles?)|(?:plant|boxwood)\s+wall|hedg(?:e|ing)\s+(?:screen|fence|panel)|(?:conifer|privacy)(?:\s+leaf)?\s+screening|privacy\s+(?:screen|fence)|artificial\s+(?:hedging|turf))\b/i,featureHead=description.split(/\n/).filter(l=>/^\s*[-*]\s+/.test(l)).slice(0,3).join(' ');
  if((outside.test(title)||outside.test(featureHead)||/\b(?:interlocking|modular)\b.{0,80}\bpanels?\b/i.test(featureHead))&&!/\b(?:garlands?|wreaths?|stems?|sprays?|trees?|potted)\b/i.test(title))return{disposition:'exclude',reason:'botanical-panel-or-support-outside-four-forms',evidence:title+' '+featureHead};
  if(/\b(?:3d\s*printer|printer\s*filament|plant\s*stand|plantstand|plant\s*trellis|garden\s*trellis|raised\s*garden\s*bed|doorstop|bow\s*cushion\s*garland)\b/i.test(title))return{disposition:'exclude',reason:'unrelated-product-or-empty-garden-support',evidence:title};
+ // "Leaf" is also a supplier name. A Leaf stand with an empty planter
+ // does not include the plant used to style the source photograph.
+ if(/\bstand\s+(?:with|and|&)\b.{0,80}\b(?:planter|pot)\b/i.test(title)&&!/\b(?:artificial|faux|fake|potted|tree|fern|foliage|flowers?|succulent)\b/i.test(title.replace(/^Leaf\s+/i,'')))return{disposition:'exclude',reason:'offered-stand-and-empty-planter',evidence:title};
  if(/\b(?:flower\s+petals?|flower\s+crowns?)\b/i.test(title))return{disposition:'exclude',reason:'detached-petals-or-wearable-accessory-outside-four-forms',evidence:title};
  // A suspended or bare ball is not a tree. A real topiary tree can have a
  // ball-shaped crown; retain those when a trunk/tree or supplied pot is clear.
@@ -32,9 +35,15 @@ export function springSourceDecision(p){
  const foliage=/\b(?:artificial|faux|fake|silk|flower|floral|foliage|leaf|leaves|garland|wreath|stem|spray|bouquet|pick|tree|potted|plant|fern|orchid|rose|hydrangea|eucalyptus|tulip|daisy|peony|gypsophila|lavender|blossom)\b/i;
  if(/\b(?:vases?|planters?|pots?|baskets?|urns?|stands?|frames?|holders?|jugs?|bottles?|mugs?|watering cans?)\b/i.test(title)&&!(/\b(?:in|with)\b[\s\S]*\b(?:pots?|vases?|planters?|baskets?|jugs?)\b|\b(?:arrangement|potted|artificial|faux|fake|tree|fern|succulent|orchid|flowering)\b/i.test(title)))return{disposition:'exclude',reason:'empty-container-or-accessory',evidence:title};
  if(!foliage.test(title+' '+category))return{disposition:'review',reason:'botanical-object-unconfirmed',evidence:title};
+ const opening=(description.split(/## Information\s*/i)[1]||'').split(/(?<=[.!?])\s+/)[0]||'',offered=featureHead+' '+opening;
+ const exact=p.detailEvidence?.exactVariantSource,exactText=exact&&String(exact.selectedSku)===String(p.sku)?[...(exact.features||[]),exact.description||''].join(' '):offered;
+ const bare=/\b(?:bare[ -]stem(?:med)?|unpotted|with\s+no\s+pots?|no\s+(?:pot|planter)(?:\s+or\s+(?:pot|planter))?\s+(?:is\s+)?included|(?:supplied|provided)\s+without\s+(?:a\s+)?(?:pot|planter))\b/i.test(title+' '+exactText);
+ const titledPot=/\bpotted\b|\b(?:in|with)\s+(?:(?!no\b|not\b)\w+\s+){0,5}(?:pot|planter|vase|basket)\b/i.test(title);
+ if(bare&&titledPot)return{disposition:'review',reason:'offered-pot-contents-conflict',evidence:title+' '+offered};
  let department;
  if(/\b(?:garlands?|wreaths?|swags?)\b/i.test(title))department='spring-wreath-garland';
  else if((/\btrees?\b/i.test(title)||/\btopiar(?:y|ies)\b/i.test(title)&&/\b(?:trees?|trunk)\b/i.test(featureHead))&&!/\b(?:stems?|sprays?|picks?|branches|branch)\b/i.test(title))department='spring-tree';
+ else if(bare)department='spring-stems';
  else if(/\b(?:potted|hanging\s+(?:flower\s+)?baskets?|window\s+box|(?:in|with)\s+(?:(?!not\b|no\b)\w+\s+){0,5}(?:pots?|vases?|planters?|baskets?|jugs?)|vase arrangement|pot arrangement)\b/i.test(title))department='spring-potted';
  else if(/\b(?:bouquets?|picks?|stems?|sprays?|branches|branch|bunches|bunch|bushes|bush|bundle)\b/i.test(title))department='spring-stems';
  else if(/\b(?:succulent|cactus|cacti|fern|bonsai)\b/i.test(title))department='spring-potted';
@@ -42,7 +51,6 @@ export function springSourceDecision(p){
  else if(/picks-stems|bouquets-and/i.test(category))department='spring-stems';
  // Read offered contents rather than copying an end-use list such as
  // "make bouquets, wreaths and garlands" into the product's physical form.
- const opening=(description.split(/## Information\s*/i)[1]||'').split(/(?<=[.!?])\s+/)[0]||'',offered=featureHead+' '+opening;
  if(!department&&/\b(?:bouquet only|flower stem only|(?:supplied|pack|set)\b.{0,45}\bstems?\b|single stem|leaf stem|leaf spray|foliage spray)\b/i.test(offered))department='spring-stems';
  if(!department&&/\b(?:supplied\b.{0,50}\b(?:hanging basket|weighted pot|planter)|fully assembled\b.{0,35}\bhanging basket|flowers? in (?:a )?(?:basket|pot|vase))\b/i.test(offered))department='spring-potted';
  return{disposition:department?'candidate':'review',department,reason:department?'offered-botanical-object-needs-photo':'object-needs-source-and-photo-review',evidence:title};

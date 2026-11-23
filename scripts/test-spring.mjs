@@ -78,3 +78,11 @@ assert.equal(springSourceDecision({variantName:'120cm Artificial Cedar Cypress T
 assert.equal(springSourceDecision({variantName:'Annibells Yes H - Yellow',variantPath:'home-furnishings-and-decor/vases-and-artificial-plants/vases/annibells-yes-h',sourceDescription:'## Features\n- Clear Glass Bottle Flower Bud Vases\n- Stunning tulip detailing'}).disposition,'exclude');
 assert.notEqual(springSourceDecision({variantName:'Flower of the Month',variantPath:'vases-and-artificial-plants/artificial-flowers/flower-of-month',sourceDescription:'## Features\n- Includes the vase\n- Artificial waterlily flowers'}).disposition,'exclude');
 assert(springSourceAlternates({sku:'1438495',productCode:'M1438495',sourceUrl:'https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/exact-source/#1438495'}).some(u=>u==='https://www.therange.co.uk/home-furnishings/vases-and-artificial-plants/artificial-plants/exact-source/#1438495'),'Both retailer-published category roots retain the exact SKU anchor');
+
+for(const name of ['Leaf Tall Gold Stand with Gold Metal Planter 62cm','Medium Black Stand with Gold Planter 38.5cm x 18cm'])assert.equal(springSourceDecision({variantName:name}).disposition,'exclude');
+assert.equal(springSourceDecision({variantName:'Artificial Orchid in Pot with Stand'}).department,'spring-potted');
+assert.equal(springSourceDecision({sku:'75',variantName:'Pack of 6 Hanging Boston Fern Plants',detailEvidence:{exactVariantSource:{selectedSku:'75',features:['Green artificial fern','For indoor display','No maintenance','No planter or pot is included.']}}}).department,'spring-stems');
+assert.equal(springSourceDecision({variantName:'Artificial Fern With No Pot',sourceDescription:'## Information\nA bare-stem fern supplied unpotted.'}).department,'spring-stems');
+assert.equal(springSourceDecision({variantName:'Artificial Olive Tree With No Pot'}).department,'spring-tree');
+assert.equal(springSourceDecision({variantName:'Artificial Potted Fern',sourceDescription:'## Features\n- Supplied without a planter'}).disposition,'review');
+console.log('PASS: empty stand-and-planter offers stay out; exact SKU bare stems override generic fern heuristics, whole trees remain trees, contradictory pot contents require review.');
