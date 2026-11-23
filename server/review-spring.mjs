@@ -5,7 +5,7 @@ import{exactNativeGalleryMember}from'./native-gallery-identity.mjs';
 import{readSpring}from'./update-spring.mjs';import{atomicJson}from'./sync.mjs';import{loadPolicy,detailFingerprint}from'./collection-policy.mjs';import{openCreditBudget}from'./credit-budget.mjs';import{createFirecrawlBrowserReader}from'./firecrawl-browser.mjs';
 import{materializeCommittedImage}from'./committed-image-file.mjs';import{optimiseProductPreviews,applyProductPreviews}from'./product-previews.mjs';
 const read=async(file,fallback)=>fs.readFile(file,'utf8').then(JSON.parse).catch(e=>{if(e.code!=='ENOENT')throw e;return fallback;});
-import{SPRING_VISUAL_PROMPTS,springVisualScores}from'./spring-visual-prompts.mjs';
+import{SPRING_VISUAL_PROMPTS,SPRING_VISUAL_PROMPT_VERSION,springVisualScores}from'./spring-visual-prompts.mjs';
 import{localVisualClassifier as classifier}from'./local-visual-classifier.mjs';
 export async function reviewSpring({repair=true}={}){
  const snapshot=await readSpring();if(!snapshot.source?.complete||snapshot.source.expected!==snapshot.products.length)throw Error('Complete official spring root observation required');
@@ -24,9 +24,9 @@ export async function reviewSpring({repair=true}={}){
   }else{snapshot.previewAudit=await optimiseProductPreviews(candidates,{nativeGalleryOnly:true});await applyProductPreviews(candidates);}
   const cache=await read('web/spring/visual-cache.json',{version:SPRING_VERSION,entries:{}}),files=[];
   for(const p of candidates){const hash=p.originalImageEvidence?.sha256||p.imageCacheEvidence?.sha256,file=p.originalCachedImageUrl||p.cachedImageUrl;if(!hash||!file)continue;try{await materializeCommittedImage(file,hash);files.push({p,hash,file:path.resolve('web',file)});}catch(e){p.imageIssue={error:e.message};}}
-  const queue=files.filter(i=>!cache.entries[i.hash]||cache.entries[i.hash].version!==SPRING_VERSION),model=queue.length?await classifier():null;
+  const queue=files.filter(i=>!cache.entries[i.hash]||cache.entries[i.hash].version!==SPRING_VERSION||cache.entries[i.hash].promptVersion!==SPRING_VISUAL_PROMPT_VERSION),model=queue.length?await classifier():null;
   for(let start=0;start<queue.length;start+=12){const batch=queue.slice(start,start+12),results=await model(batch.map(i=>i.file),SPRING_VISUAL_PROMPTS);
-   for(let i=0;i<batch.length;i++)cache.entries[batch[i].hash]={version:SPRING_VERSION,imageHash:batch[i].hash,model:'Xenova/clip-vit-base-patch32-q8',...springVisualScores(results[i]),checkedAt:new Date().toISOString()};
+   for(let i=0;i<batch.length;i++)cache.entries[batch[i].hash]={version:SPRING_VERSION,promptVersion:SPRING_VISUAL_PROMPT_VERSION,imageHash:batch[i].hash,model:'Xenova/clip-vit-base-patch32-q8',...springVisualScores(results[i]),checkedAt:new Date().toISOString()};
    if(start%120===0||start+12>=queue.length){await atomicJson('web/spring/visual-cache.json',cache);console.log(JSON.stringify({phase:'local-spring-source-photo-review',analysed:Math.min(start+12,queue.length),total:queue.length,reused:files.length-queue.length,firecrawlCredits:0}));}
   }
   const included=[],excluded=[],pending=[];
