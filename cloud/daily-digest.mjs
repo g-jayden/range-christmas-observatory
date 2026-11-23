@@ -25,8 +25,7 @@ export async function dailyDigestPlans(db,{now=Date.now(),maxPlans=10}={}){
  await migrateDailyDigestReceipts(db,day);
  const events=await db.list({prefix:'event/'}),pending=await db.list({prefix:'pending/'}),subs=await db.list({prefix:'sub/'}),products=new Map([...events,...pending].map(([,p])=>[retailerStorageSku(p),p]));
  for(const[key,sub]of subs){if(!sub.confirmedAt)continue;
-  if(await db.get(sentFor(day,key.slice(4))))continue;
-  const barrier=await digestSourceBarrier(db,sub.scopes,now);if(!barrier.ready){waiting.push({recipient:key.slice(4),retailers:barrier.waiting});continue;}
+  const barrier=await digestSourceBarrier(db,sub.scopes,now);if(!barrier.ready)waiting.push({recipient:key.slice(4),retailers:barrier.waiting});if(await db.get(sentFor(day,key.slice(4)))||!barrier.ready)continue;
   const rows=[];for(const[k,p]of products)if(eligible(sub,p)&&!await db.get('delivered/'+k+'/'+key.slice(4)))rows.push({...p,digestProductKey:k});
   if(!rows.length)continue;
   rows.sort((a,b)=>a.digestProductKey.localeCompare(b.digestProductKey));
@@ -58,8 +57,8 @@ export async function dailyDigestReadySubset(db,{planId,readyKeys,now=Date.now()
 export async function dailyDigestOwnerCorrection(db,{ownerId,day,parentIds,requestId,now=Date.now()}={}){
  if(!/^[a-f0-9]{64}$/.test(ownerId||'')||!/^\d{4}-\d{2}-\d{2}$/.test(day||'')||day!==dayAt(now)||!Array.isArray(parentIds)||!parentIds.length||new Set(parentIds).size!==parentIds.length||parentIds.some(id=>!/^[a-f0-9]{64}$/.test(id))||!/^[a-zA-Z0-9_-]{8,100}$/.test(requestId||''))throw Error('Invalid explicit owner consolidated correction');
  const sub=await db.get('sub/'+ownerId);if(!sub?.confirmedAt)throw Error('Confirmed owner subscription required');
- const rows=new Map();for(const id of parentIds){const p=await db.get('digest-plan/'+id),receipt=await db.get('digest-batch-sent/'+id)||await db.get(sentFor(day,ownerId));if(!p||p.test||p.correction||p.day!==day||p.recipient!==ownerId||!receipt||receipt.planId!==id)throw Error('Correction must refer to actual delivered reports for this owner and day');for(const product of p.products)rows.set(product.digestProductKey,product);}
- const id=await digest('owner-consolidated-correction-v1/'+day+'/'+ownerId),plan={id,contract:DAILY_DIGEST_CONTRACT,correction:true,day,recipient:ownerId,parents:[...parentIds].sort(),createdAt:new Date(now).toISOString(),products:[...rows.values()].sort((a,b)=>a.digestProductKey.localeCompare(b.digestProductKey))};
+ const rows=new Map(),parentReports=[];for(const id of parentIds){const p=await db.get('digest-plan/'+id),receipt=await db.get('digest-batch-sent/'+id)||await db.get(sentFor(day,ownerId));if(!p||p.test||p.correction||p.day!==day||p.recipient!==ownerId||!receipt||receipt.planId!==id)throw Error('Correction must refer to actual delivered reports for this owner and day');parentReports.push({id,revision:receipt.revision,pdfSha256:receipt.pdfSha256});for(const product of p.products)rows.set(product.digestProductKey,product);}
+ const id=await digest('owner-consolidated-correction-v1/'+day+'/'+ownerId),plan={id,contract:DAILY_DIGEST_CONTRACT,correction:true,day,recipient:ownerId,parents:[...parentIds].sort(),parentReports,createdAt:new Date(now).toISOString(),products:[...rows.values()].sort((a,b)=>a.digestProductKey.localeCompare(b.digestProductKey))};
  const existing=await db.get('digest-plan/'+id);if(existing&&JSON.stringify(existing.parents)!==JSON.stringify(plan.parents))throw Error('The same daily correction cannot change its original delivered reports');await db.put('digest-plan/'+id,existing||plan);return{day,plans:[existing||plan],waiting:[]};
 }
 export function validateDigestManifest(plan,m){

@@ -1,0 +1,11 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {execFile,execFileSync} from 'node:child_process';
+import {promisify} from 'node:util';
+import {control} from '../server/cloud-client.mjs';
+import {prepareConsolidatedCorrection} from '../server/consolidated-correction.mjs';
+const run=promisify(execFile),request=JSON.parse(await fs.readFile('ops/digest-correction-request.json','utf8')),response=await control('/internal/digest-owner-correction',request),plan=response.plans?.[0];
+if(!plan?.correction||plan.day!==request.day)throw Error('Owner correction was not accepted');
+const tracked=execFileSync('git',['ls-files','-z','web/images'],{encoding:'utf8',maxBuffer:67108864}).split('\0'),directory='web/reports/'+plan.id;
+const result=await prepareConsolidatedCorrection(plan,{output:directory+'/NEW.pdf',readManifest:async parent=>{const url='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/'+parent.revision+'/web/reports/'+parent.id+'/manifest.json',r=await fetch(url,{signal:AbortSignal.timeout(30000)});if(!r.ok)throw Error('Pinned original report HTTP '+r.status);return r.json();},readNative:async item=>{const matches=tracked.filter(f=>new RegExp('^'+item.imageSha256+'(?:-native)?\\.(?:jpe?g|png|webp|gif|avif)$','i').test(path.basename(f)));if(!matches.length)throw Error('Verified original is not present in the saved repository: '+item.key);for(const file of matches)try{return await fs.readFile(file);}catch(e){if(e.code!=='ENOENT')throw e;try{return(await run('git',['show','HEAD:'+file],{encoding:'buffer',maxBuffer:25000001})).stdout;}catch{}}throw Error('Saved original bytes unavailable: '+item.key);}});
+await fs.writeFile(directory+'/manifest.json',JSON.stringify(result.manifest));await fs.mkdir('runtime/owner-correction',{recursive:true});await fs.copyFile(directory+'/NEW.pdf','runtime/owner-correction/NEW.pdf');await fs.writeFile('runtime/owner-correction/manifest.json',JSON.stringify(result.manifest));console.log(JSON.stringify({planId:plan.id,day:plan.day,products:result.manifest.items.length,pdf:result.manifest.pdf,sourceRequests:0,firecrawlCredits:0,mailSent:false}));

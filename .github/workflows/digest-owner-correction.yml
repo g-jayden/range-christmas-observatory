@@ -1,0 +1,56 @@
+name: One reviewed owner consolidated PDF correction
+on:
+  workflow_dispatch:
+    inputs:
+      phase:
+        type: choice
+        options: [prepare, deliver]
+        default: prepare
+permissions:
+  contents: write
+concurrency:
+  group: owner-consolidated-pdf-correction
+  cancel-in-progress: false
+jobs:
+  correction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/images/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - if: inputs.phase == 'prepare'
+        run: npm ci --no-audit --no-fund
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+          ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+      - if: inputs.phase == 'prepare'
+        run: node scripts/prepare-owner-consolidated-correction.mjs
+      - if: inputs.phase == 'prepare'
+        name: Save the immutable correction before visual review; do not send
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add --sparse -- web/reports
+          git diff --cached --quiet || git commit -m "Publish owner consolidated correction for visual review [skip ci]"
+          node scripts/push-evidence.mjs
+      - if: inputs.phase == 'prepare'
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: owner-consolidated-correction
+          path: runtime/owner-correction
+          if-no-files-found: error
+          retention-days: 7
+      - if: inputs.phase == 'deliver'
+        name: Send only the pinned and visually reviewed single correction
+        run: node scripts/deliver-owner-consolidated-correction.mjs
