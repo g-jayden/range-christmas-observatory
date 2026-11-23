@@ -97,7 +97,7 @@ jobs:
       - name: Preserve official evidence and source receipts
         if: always()
         run: |
-          git add --sparse -- web
+          git add --sparse --ignore-removal -- web
           git diff --cached --quiet || git commit -m "Save official spring botanical source evidence [skip ci]"
           EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
       - name: Enable reviewed baseline and the existing single daily PDF queue
