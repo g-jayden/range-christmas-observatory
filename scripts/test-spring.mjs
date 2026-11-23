@@ -73,3 +73,7 @@ assert.equal(springSourceDecision({variantName:'Artificial Boxwood Ball Topiary 
 const unknownForm={variantName:'Artificial Green Foliage Decoration',detailsReady:true,springNativePhotoVerified:true};
 assert.equal(springImageDecision(unknownForm,{imageHash:'a'.repeat(64),season:{greenFoliage:.95},objects:[{id:'spring-wreath-garland',score:.99}]}).disposition,'review','Image similarity cannot create a wreath category without offered-form source evidence');
 console.log('PASS: offered loose stems, complete hanging baskets and real trees remain distinct from suspended balls, empty greenery screens, detached petals and winter garlands.');
+assert.equal(springSourceDecision({variantName:'Annibells Artificial Faux Olive Plant in a Vintage Retro Metal Pot'}).department,'spring-potted');
+assert.equal(springSourceDecision({variantName:'120cm Artificial Cedar Cypress Topiary Pair',sourceDescription:'## Features\n- A green topiary pair\n- Each tree measures 120cm\n- Includes two trees'}).department,'spring-tree');
+assert.equal(springSourceDecision({variantName:'Annibells Yes H - Yellow',variantPath:'home-furnishings-and-decor/vases-and-artificial-plants/vases/annibells-yes-h',sourceDescription:'## Features\n- Clear Glass Bottle Flower Bud Vases\n- Stunning tulip detailing'}).disposition,'exclude');
+assert.notEqual(springSourceDecision({variantName:'Flower of the Month',variantPath:'vases-and-artificial-plants/artificial-flowers/flower-of-month',sourceDescription:'## Features\n- Includes the vase\n- Artificial waterlily flowers'}).disposition,'exclude');

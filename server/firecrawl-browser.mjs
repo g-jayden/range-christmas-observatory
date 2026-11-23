@@ -305,7 +305,14 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    const metadata=await sharp(bytes).metadata(),{data,info}=await sharp(bytes).rotate().resize({width:maxSide,height:maxSide,fit:'inside',withoutEnlargement:true}).webp({quality:86}).toBuffer({resolveWithObject:true});rows.set(url,{url,ok:true,sourceWidth:metadata.width,sourceHeight:metadata.height,width:info.width,height:info.height,sourceHash:e.hash,dataBase64:data.toString('base64')});metrics.localNativePreviewRenders=(metrics.localNativePreviewRenders||0)+1;
   }
   metrics.freeImageAttempts=freeImages.attempts.slice(-100);
-  if(pending.length){const paid=await scriptAction('('+readPreviewAssets.toString()+')('+JSON.stringify({urls:pending,maxSide})+')',{needsImages:true});if(paid.length!==pending.length||new Set(paid.map(r=>r.url)).size!==pending.length||paid.some(r=>!pending.includes(r.url)))throw Error('Preview fallback did not reconcile exact unresolved image URLs');for(const r of paid)rows.set(r.url,r);}
+  if(pending.length&&policy.preferNativePreviewAssets){
+   // Use the already-verified binary transport and render locally. A failed
+   // remote canvas must not force another catalogue run or discard originals.
+   const audit=await reader.auditImages(pending.map(url=>({variantImageUrl:url})),{entries:Object.fromEntries(currentNativeImages)},{bodyBatchSize:80});
+   for(const url of pending){const e=audit.entries[url];if(!e){const failed=audit.failures.find(r=>r.url===url);rows.set(url,{url,ok:false,status:failed?.status,error:failed?.error||'Native gallery image unavailable'});continue;}
+    const bytes=await fs.readFile('web/'+e.cachedImageUrl),metadata=await sharp(bytes).metadata(),{data,info}=await sharp(bytes).rotate().resize({width:maxSide,height:maxSide,fit:'inside',withoutEnlargement:true}).webp({quality:86}).toBuffer({resolveWithObject:true});rows.set(url,{url,ok:true,sourceWidth:metadata.width,sourceHeight:metadata.height,width:info.width,height:info.height,sourceHash:e.hash,dataBase64:data.toString('base64')});metrics.localNativePreviewRenders=(metrics.localNativePreviewRenders||0)+1;
+   }
+  }else if(pending.length){const paid=await scriptAction('('+readPreviewAssets.toString()+')('+JSON.stringify({urls:pending,maxSide})+')',{needsImages:true});if(paid.length!==pending.length||new Set(paid.map(r=>r.url)).size!==pending.length||paid.some(r=>!pending.includes(r.url)))throw Error('Preview fallback did not reconcile exact unresolved image URLs');for(const r of paid)rows.set(r.url,r);}
   return urls.map(url=>rows.get(url));
  };
  reader.prepareNativeCapture=async()=>{if(policy.nativeCaptureEnabled!==false&&!sessionClosed)await start();};
