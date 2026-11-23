@@ -746,6 +746,30 @@
       "sourceUrl": "https://search-lon.therange.co.uk/api/productlist?categoryId=375964&offset=0&limit=120&sort=price_lth&filters=%7B%22in_stock_f%22%3A%5B%22true%22%5D%7D&facets=false&includePriceFacet=true",
       "sourceStatus": 200,
       "observedAt": "2026-11-23T17:53:26.830Z"
+    },
+    {
+      "id": "mcp-01a209b2-f4c6-73f9-891b-eec47af53ae8",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-all-collection-unrestricted-20261123",
+      "retailerId": "the-range",
+      "purpose": "Verify source-published Christow normalized path; official 404, no source facts promoted.",
+      "sourceUrl": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/christow-artificial-olive-tree-4ft-6ft/#1459028",
+      "sourceStatus": 404,
+      "observedAt": "2026-11-23T18:53:57.348Z"
+    },
+    {
+      "id": "mcp-01a209b4-6b60-7275-a9ee-f5ead8a1ff8f",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-all-collection-unrestricted-20261123",
+      "retailerId": "the-range",
+      "purpose": "Read official public product-page script after free HTTP and HTTP2 denials to verify the exact SKU JSON source.",
+      "sourceUrl": "https://www.therange.co.uk/js/product.js",
+      "sourceStatus": 200,
+      "observedAt": "2026-11-23T18:53:57.348Z"
     }
   ],
   "unreceipted": [
@@ -803,6 +827,15 @@
       "error": "MCP transport closed without a response",
       "credits": null,
       "reason": "No charge or refund receipt was returned; the independent server diagnostic will retain its own confirmed billing."
+    },
+    {
+      "id": "spring-christow-indexed-separator-diagnostic-20261124",
+      "at": "2026-11-23T18:53:57.348Z",
+      "sourceUrl": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/christow-artificial-olive-tree-4ft%C2%BF6ft/#1459028",
+      "operation": "One publicly indexed source-address normalization diagnostic",
+      "error": "ERR_TOO_MANY_REDIRECTS",
+      "credits": null,
+      "reason": "No provider billing receipt returned; no zero-cost claim and no repeated request."
     }
   ],
   "reservationScopes": [
