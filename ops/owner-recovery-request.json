@@ -1,8 +1,11 @@
 {
-  "requestId": "owner-recovery-20261124-spring-complete-native-preview",
+  "requestId": "owner-recovery-20261124-spring-safe-checkpoint-write",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-23T19:30:17.943455+00:00",
+  "requestedAt": "2026-11-23T19:35:08.654908+00:00",
   "targets": [
     "spring-review"
+  ],
+  "supersedeSpringBeforePaid": [
+    45249683776
   ]
 }
