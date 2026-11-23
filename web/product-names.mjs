@@ -56,5 +56,5 @@ function springChineseName(p,en){
  const subject=species.find(([re])=>re.test(en))?.[1]||(/flower|floral/i.test(en)?'花卉':'绿植');
  const noun=p.department==='spring-tree'?'仿真树':p.department==='spring-wreath-garland'?(/wreath/i.test(en)?'仿真花环':'仿真长藤'):p.department==='spring-potted'?(/vase/i.test(en)?'瓶插花艺':'仿真盆栽'):/bouquet|bunch/i.test(en)?'仿真花束':'仿真单枝';
  const colours={pink:'粉色',white:'白色',purple:'紫色',yellow:'黄色',blue:'蓝色',green:'绿色',cream:'奶油色',red:'红色',orange:'橙色'},colour=en.match(/(?:^|\W)(pink|white|purple|yellow|blue|green|cream|red|orange)(?:$|\W)/i),size=en.match(/\b(\d+(?:\.\d+)?)\s*(cm|mm|m|ft)\b/i),pack=en.match(/(?:pack|set) of (\d+)|(\d+) pack/i);
- return [colour?colours[colour[1].toLowerCase()]:'',subject,noun,size?'（'+size[1]+({cm:'厘米',mm:'毫米',m:'米',ft:'英尺'}[size[2].toLowerCase()])+'）':'',pack?'（'+(pack[1]||pack[2])+'件套）':''].join('');
+ return [colour?colours[colour[1].toLowerCase()]:'',subject,noun,pack?'（'+(pack[1]||pack[2])+'件套）':''].join('');
 }

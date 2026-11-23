@@ -49,6 +49,10 @@ jobs:
         with:
           path: runtime/models
           key: local-clip-vit-base-patch32-q8-v1
+      - name: Configure evidence publisher
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
       - name: Reserve existing owner-authorised source budget
         if: inputs.phase != 'classify'
         run: |
