@@ -1,4 +1,5 @@
 import fs from'node:fs/promises';
+import{publishCollectionCheckpoint}from'./collection-checkpoints.mjs';
 import{createHash}from'node:crypto';
 import{fileURLToPath}from'node:url';
 import{atomicJson}from'./sync.mjs';
@@ -26,11 +27,11 @@ export async function updateSpring(){
  const previous=await readSpring(),policy={...await loadPolicy(),familyBatchSize:100,familyBatchConcurrency:8,familyFetchTimeoutMs:20000,adaptiveFamilies:true,maxRunSeconds:18000,repairImagesOnly:true,imageBodyBatchSize:80,imageBatchProbe:false,imageCheckpoint:'web/spring/image-checkpoint.json'};let reader,budget,snapshot;
  try{budget=await openCreditBudget(policy);reader=await createFirecrawlBrowserReader({policy,budget});
   if(process.env.SPRING_RESUME==='1'&&previous.source?.complete)snapshot=previous;else snapshot=mergeSpring(previous,await collectPartitionedCategory(SPRING_SOURCE.id,reader));
-  await atomicJson('web/spring/source.json',snapshot);console.log(JSON.stringify({phase:'spring-complete-source',total:snapshot.products.length,sourceComplete:snapshot.source.complete,candidates:snapshot.products.filter(p=>p.springCandidate.disposition!=='exclude').length}));await reader.closeBrowser();
+  await atomicJson('web/spring/source.json',snapshot);console.log(JSON.stringify({phase:'spring-complete-source',total:snapshot.products.length,sourceComplete:snapshot.source.complete,candidates:snapshot.products.filter(p=>p.springCandidate.disposition!=='exclude').length}));await publishCollectionCheckpoint({stage:'spring-directory'});await reader.closeBrowser();
   const candidates=snapshot.products.filter(p=>springSourceDecision(p).disposition!=='exclude'),missing=candidates.filter(p=>!p.detailsReady),groups=new Map();for(const p of missing){let u=p.sourceUrl.split('#')[0];if(!groups.has(u))groups.set(u,[]);groups.get(u).push(p);}
   const urls=[...groups.keys()];for(let start=0;start<urls.length;start+=100){const batch=urls.slice(start,start+100).flatMap(u=>groups.get(u));try{await reader.prepareFamilies(batch);}catch(e){console.error(JSON.stringify({phase:'spring-detail-batch',error:e.message}));}
    for(const p of batch)try{const d=parseDetails(await reader.raw(p.sourceUrl,{formats:['rawHtml','markdown']}),p.sku,p.sourceUrl);applyDetails(p,d);p.sourceDescription=d.featuresText;p.dimensions=productDimensions(d.specs,d.featuresText);p.material=materialFacts(d.specs,d.featuresText).label;p.colorValues=normaliseColors(d.specs.Colour||d.specs.Color||'');p.treeColor=p.colorValues.join(' / ');p.detailInputFingerprint=detailFingerprint(p);p.springCandidate=springSourceDecision(p);delete p.detailIssue;}catch(e){p.detailIssue={status:e.status||0,error:e.message,checkedAt:new Date().toISOString()};}
-   await atomicJson('web/spring/source.json',snapshot);console.log(JSON.stringify({phase:'spring-details-progress',familiesDone:Math.min(start+100,urls.length),familiesTotal:urls.length,verified:candidates.filter(p=>p.detailsReady).length}));
+   await atomicJson('web/spring/source.json',snapshot);if(start%300===0)await publishCollectionCheckpoint({stage:'spring-details'});console.log(JSON.stringify({phase:'spring-details-progress',familiesDone:Math.min(start+100,urls.length),familiesTotal:urls.length,verified:candidates.filter(p=>p.detailsReady).length}));
   }
   const photoProducts=candidates.filter(p=>springSourceDecision(p).disposition!=='exclude');
   snapshot.imageAudit=await reader.auditImages(photoProducts,snapshot.imageAudit||{},{bodyBatchSize:80});

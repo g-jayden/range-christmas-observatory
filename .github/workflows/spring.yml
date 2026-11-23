@@ -27,6 +27,8 @@ jobs:
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
       ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+      COLLECTION_CHECKPOINTS: '1'
+      EVIDENCE_NATIVE_ONLY: '1'
       SPRING_RESUME: ${{ inputs.resume && '1' || '0' }}
     steps:
       - uses: actions/checkout@v7.0.1
