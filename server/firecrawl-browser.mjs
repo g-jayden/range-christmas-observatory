@@ -376,7 +376,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    if(policy.imageCheckpoint)await atomicJson(policy.imageCheckpoint,{entries:{...checkpoint.entries,...previous.entries,...Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r]))},failures:results.filter(r=>!r.ok),observedAt:new Date(now()).toISOString()});
    console.log(JSON.stringify({phase:'image-verification',checked:results.length,total:allUrls.length,changed}));
   }
-  const byUrl=new Map(results.map(r=>[r.url,r]));for(const p of products){const r=byUrl.get(p.variantImageUrl||p.imageUrl);if(r?.ok){p.cachedImageUrl=r.cachedImageUrl;p.imageCacheEvidence={sourceUrl:r.url,sha256:r.hash,observedAt:r.observedAt};}}
+  const byUrl=new Map(results.map(r=>[r.url,r]));for(const p of products){const r=byUrl.get(p.variantImageUrl||p.imageUrl);if(r?.ok){p.cachedImageUrl=r.cachedImageUrl;p.imageCacheEvidence={sourceUrl:r.url,sha256:r.hash,observedAt:r.observedAt,width:r.width,height:r.height,bytes:r.bytes,mime:r.mime};}}
   metrics.sourceImageChecks+=rechecked;for(const r of results)if(r.ok)currentNativeImages.set(r.url,r);const loaded=results.filter(r=>r.ok).length;
   return {mode:'live-enhanced-batches-and-original-image-cache',checked:results.length,rechecked,retained:results.filter(r=>r.ok&&r.retained).length,changed,loaded,failed:results.length-loaded,failures:results.filter(r=>!r.ok),entries:Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r])),observedAt:new Date(now()).toISOString(),perImageScrapeRequests:0,batchScrapeRequests:metrics.imageBatchRequests||0};
  };
