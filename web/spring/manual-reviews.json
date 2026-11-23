@@ -56,6 +56,21 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "109048": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "7783b8b2df427f6360027862e624873ba9c49ec6b690a5b02d879ae5d281287b",
+      "sourceContentHash": "9f68675e9403fb489630d77e37ec45714c8503c543d45b9476a3939fa162cb57",
+      "listingFingerprint": "658c4af2313f566a6de675aa38ea7ed783f5063d0593d29a4433535287b89a86",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/9/1459254145_329.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.039Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "388900": {
       "disposition": "include",
       "department": "spring-stems",
@@ -290,6 +305,38 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1041933": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "10779f39466ed5cc1051c5872edbcf0378ae222979b6fe87444b3251cf73e7e4",
+      "sourceContentHash": "46214a2d81b3543e1280e78a713b22c773beb6fd437e3f8ee3610160996d93a7",
+      "listingFingerprint": "f987624f0dc849b547560558797be73bffb52eefba0e2f08a6e22c87990bffc4",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/0/1793313544_2237.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.038Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "橙色",
+        "绿色"
+      ]
+    },
+    "1052908": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "ab3642f6c13819369549cb1e35b823622f5f29429c9bba76d79dda5a1ba8ec0c",
+      "sourceContentHash": "953c8ce5c59ddc9f6540bcf589b5b396bb87cbce0519155aedbff262807bf571",
+      "listingFingerprint": "7a61a607b2e1fdca55db8f4eaef4cd9eb8791c492b6f44d715c9ae329eaf8769",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/7/1790268396_5049.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.039Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
     "1193354": {
       "disposition": "exclude",
       "reason": "Listing photo shows empty glass bud bottles decorated with printed tulips; the source description confirms bud vases, with no artificial flowers supplied.",
@@ -301,6 +348,36 @@
       "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
     },
+    "1213682": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "c835d61f8d4d6265f405926a6ea35f770ef9071fa8d7db996dbae5cf8a81b236",
+      "sourceContentHash": "840abbca41b9bcc961b46bd1df5525f994e1968b679b8f714656bc5a7c9b6110",
+      "listingFingerprint": "d5652eb6faa579d6dea966e0b54f0c7e2b534c7237ddb60b794742a8f2ea75f4",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/3/1790202896_4771.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.039Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1235096": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-tree description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "0bf32845c9252cf2575683e3a31129661686f10c924c4d526ddc4934dc49268e",
+      "sourceContentHash": "1a0eece77789020816e3ceb4f2fbf8bb63dfb3da8bb73bae7fe0250436e789b9",
+      "listingFingerprint": "07ad037a4e56b0aadd539a1b41c3980966d930488466aa3372ff60130a4522b5",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/5/1735192432_7222.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.040Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1237721": {
       "disposition": "include",
       "department": "spring-potted",
@@ -310,6 +387,53 @@
       "reviewedAt": "2026-11-23T20:12:28.654Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1240977": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "07dcf6a61be8756237c417ad7c5a04a79ea54f8099cc4583c7f53fe6942896f0",
+      "sourceContentHash": "271c3db6694e12a629c17bc9b395c0344f85c9d95aaa43b18998fba49ba3fc0b",
+      "listingFingerprint": "d0adb13a9c82ea1d9e12fd1539d63d72afb24b38e8727786addb3e885a3f648b",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/6/1787391884_3358.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.040Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1241720": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "0dc97f69c62401beb678510740daf1a5ecc40163047dcb66cb2dcbbccb1d63bf",
+      "sourceContentHash": "13cc921361da6ea7fb1fe4c656d6c67c6e95553aadedf20b79b80e4275a9fb2b",
+      "listingFingerprint": "3cc02f9f10028f282f614bab0d3bc095fae953f2186380b8b3bc3a287c203df6",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/5/1787357771_8385.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.040Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1249391": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "e1513693190ff96483c33057065c46ef06d6ebc87bfc07aeadbb8800df538f26",
+      "sourceContentHash": "300be298cbdf02d42857df8611edeb779dbfc43d7144af2555cdac8e00684e92",
+      "listingFingerprint": "408d01c1b1f3346a275e365b10076c3734e29d880097349da35807d1ab67a793",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/4/1793369837_6480.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.041Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "粉色",
+        "绿色"
+      ]
     },
     "1281025": {
       "disposition": "exclude",
@@ -366,6 +490,22 @@
       "reviewMethod": "full-source-product-photo-and-listing-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
     },
+    "1283174": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "be925c8bd385af3266be6699640a0953653fe7e1234e9354846fbf8984fe7767",
+      "sourceContentHash": "2e93f7bc567f1630a6dc39929e4cc73471482f6f02ff96a752f82bc2cfcfbef3",
+      "listingFingerprint": "46d4a957d426a5fdf7cfaefe36018e9f89f54a1cfaebb6d51927ae57a742bb4e",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/1/1793730845_9380.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.041Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
     "1283580": {
       "disposition": "exclude",
       "reason": "Reviewed source photo and offered title show hanging foliage or flower balls without a trunk or planted container; outside the four requested botanical forms.",
@@ -387,6 +527,52 @@
       "reviewedAt": "2026-11-23T18:22:29.799Z",
       "reviewMethod": "full-source-product-photo-and-listing-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
+    },
+    "1293653": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "2669624231e7a08072dbffe58ec16318706a91461fc22b55a2959f04af123c7b",
+      "sourceContentHash": "e5e7d48d457eef81a59a75c83e64d4544d7f4278bf74bc01c6c42c067e34ccb0",
+      "listingFingerprint": "df8fb5309d88089344858dbeb8870aedbd38f126fac379f661d17088e8733375",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/3/1793313375_2194.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.041Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1302105": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "387266d0be6faf30f219b0bdb79fe21e4ab3ac130bd00cdd04231d68be685928",
+      "sourceContentHash": "69b1d5489e06974017051de03e067ab51939e00a90bef7475627fc996edf531f",
+      "listingFingerprint": "e4df653ab0f732eb35deff39547a8a5a47126deee7d4b05ae6de4fd35bdba6fe",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/2/1793409082_1897.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.041Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1304704": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "27fa7907ae165c6b144116d50768b5ec6215c63c1da8b0113037e22d981e50a8",
+      "sourceContentHash": "aecfad0ada38811208a9029e2397a68a62f7b59eff1ca0afd7b5f26db41ab9eb",
+      "listingFingerprint": "3e722fba0970cc02172a64a5d68da40893fd7e37fce6782550ad40cb3bf86d62",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/5/1778510052_4281.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.041Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
     },
     "1324882": {
       "disposition": "include",
@@ -418,6 +604,69 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1338796": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "e085813634f494e38809072c0fe5886be2b89555e3416df207e252129d12a097",
+      "sourceContentHash": "3d5b757d63bf75c82bb8e2a05bce8407ff2f6545c5dc91ec9a118806bac12231",
+      "listingFingerprint": "5dafdf2a8f5cb8a38c14386714dd14d034f0b38d6ac69ca26eaaffa47884e2f0",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/6/1780589411_9105.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.042Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1339457": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "ccbd95d1b3f2dc7600175faef505b5096da473814f7ec2243fd89e362450351e",
+      "sourceContentHash": "59869b97fc9105aee1952953c688b91167cfa6dd46c85c6c07b43381914e3e0e",
+      "listingFingerprint": "f5e4d86e52e9d748ff84ff0af6516e0e52122f431afe0afb6f61da1ff8c17a70",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/0/1780601768_3576.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.042Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1339738": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "0ffbca90ddaee689377298c0d8472e8996e34074d3311f6515b6104a180cb911",
+      "sourceContentHash": "01bb8559cb690f6e0fdeb5c7752b5be9dec24993456d9df4b4abf4cadc96fb3e",
+      "listingFingerprint": "956878d870eb1685abc50d1af55871028c9032373535539e8ae859265a93292f",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/5/1780527209_7003.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.042Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1352909": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "b52479c2c4f868c1853564d58ba61cd19444a43dde272f65a12583de196bfcf9",
+      "sourceContentHash": "e5f0ff90ce6d62508185a21dc0c30a95552356f99cbaa33089d01d6c87cfea9a",
+      "listingFingerprint": "0799e837bc34c8275d686178f18813774ec7a7738350cf8304077964b92b3e56",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/3/1793406636_5388.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.042Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1354029": {
       "disposition": "include",
       "department": "spring-stems",
@@ -437,6 +686,69 @@
       "reviewedAt": "2026-11-23T20:12:28.769Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1365455": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "e77db8a5526fe8763f028c76c94d3aef4095d2e7811b20772b60355db1ba2854",
+      "sourceContentHash": "8c7537cc64155036c8891a2cfcb5d8983f3094594b06df74ff705ef30ec918bb",
+      "listingFingerprint": "fa3be2fba1f82b3699e010fec1d7b625a62e4784abfda56390d6105b07a56ecc",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/1/1780591418_3163.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.042Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "紫色",
+        "绿色"
+      ]
+    },
+    "1377384": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "19eedaacea8b6399d46f4bb192b0daac5d6bf597c375b44bcc03bf7bf950f2de",
+      "sourceContentHash": "a4306cf02047d146f718804ecabeeb7e23d95ce99955d786e72b61b697b92d79",
+      "listingFingerprint": "3ce4044055c5acc963cd3215167984ff757c109a075fa246b76a61a1bf966f84",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/0/1747236893_11_2232.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.043Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "黄色",
+        "绿色"
+      ]
+    },
+    "1384932": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "8503c9f5f5a03bcf917e0943b679320e3a1027ebd7b8a6806d9447ac34c0f202",
+      "sourceContentHash": "bde32954b3c96bc7d78dab0054d331d89e3f7e75a46de9aa1cfa2f5a46aa5481",
+      "listingFingerprint": "421e0e157e1f21b683e59e3b41912718eaa681aca15e39487269bda37956eeac",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/1/1793313437_8006.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.043Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "粉色",
+        "绿色"
+      ]
+    },
+    "1386848": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "053d9e255ee150525fe9152c4c1803ac44080650158645703f2f4dd7c9ec0d26",
+      "sourceContentHash": "13e332ec8c922de8bc7c2cb0c63697038bcfdbc759c3344612fa3f7d1840bcbd",
+      "listingFingerprint": "5eca4e85682495bc45dda2ac6cc2d00a0ecb45d283eb0a16ab489b97ff7ea8fe",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/0/1793350353_3523.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.043Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
     },
     "1392411": {
       "disposition": "exclude",
@@ -460,6 +772,51 @@
       "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
     },
+    "1394257": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "98566c20538b40a215dd177f954b18b531869fd126a9ff015258862ecef0fc8b",
+      "sourceContentHash": "7e5f75a4b83d59f75b8ba5107cf021d4bd13c0640f4a4f138c3f9d423d0612dd",
+      "listingFingerprint": "5c6185aabb6c10f17e80200bc212d8a1fe617c9163d1eea16b9ce2e622465304",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/2/1783069753_3138.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.043Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1394387": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "51b66c94623ff6fe5f2c76099e2703e62ba76fa7995fa243ed43ab542f31abaa",
+      "sourceContentHash": "e6d80ad0a0ccd50bd05405e3acd1de3c02e6c2c4b8364a27fcb90f7f5407bb92",
+      "listingFingerprint": "058e5ec3ad399e8b73c6058225102df8e22d514e8f18b4820059e5f0a259211a",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/6/1783069014_5287.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.043Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1400865": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "4dc9205b8ace2592820b2fdec5e33a6baee06d03e331766419db8f073637cbfc",
+      "sourceContentHash": "cf03c9fc70e1341b7cc7697968fa6144d250cbd419696615510f62aff79bff3a",
+      "listingFingerprint": "f62175bfd22972c14925b83e9d91f0aba60b052efbe1c781cc619027212b81dc",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/8/1783612082_9653.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.043Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1415336": {
       "disposition": "include",
       "department": "spring-tree",
@@ -469,6 +826,21 @@
       "reviewedAt": "2026-11-23T20:12:28.691Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1428100": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "2fe16cc17e4e7103664bc4fd6d6ab4d33115376a37d5537f954ea19d3e4fd168",
+      "sourceContentHash": "7b50df315525e4dcb3b844a3634d82cce0d86b1e2fd753577a49e7ca6c08b402",
+      "listingFingerprint": "a88f9599f95c8ae1e72f1452a9ba7a1ca269e95079d0cd799620403fc7b60a3f",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/2/1792898702_9078.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.043Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
     },
     "1434449": {
       "disposition": "include",
@@ -520,6 +892,22 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1438704": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "5649832b2b908e3b87cfcbd93134a6b703732d396de511fa8290e0752c3c7c89",
+      "sourceContentHash": "5a9fa90240b1c2c1e515197d41db8496377e381437ba48ffda4eb5bde882947f",
+      "listingFingerprint": "ab40fcfc26e1fe542cb5f14b94a03ab4dfbe65d66ffce159b78a28f8d77a11ba",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/5/1785773430_9896.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.044Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "红色",
+        "绿色"
+      ]
+    },
     "1438705": {
       "disposition": "include",
       "department": "spring-stems",
@@ -530,6 +918,78 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1438708": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "1332cfd86110b4f4c7df0fc72698a1028b1b31798a6721c1f16c10694c637b25",
+      "sourceContentHash": "06c095dceeb644ec15095ce16ddb899cc2cf45062a29a9966cd58eed17f52444",
+      "listingFingerprint": "8e32f4df2f826717351f90e5ab234b334a055557631ed046b49581a9173e07d2",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/0/1785771382_5412.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.044Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "粉色",
+        "绿色"
+      ]
+    },
+    "1438711": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "0c44de92e39d76235d26d16b9683db6fee4b6831d709acdd2381f49717ee55c9",
+      "sourceContentHash": "0e687ad2707670684abbe83a5ff4c2881f185199141f11d40aa657960e7ead9e",
+      "listingFingerprint": "d1bb8167a59581b79962b184d8923318dcfc4f9fc24fb63f23a80c243b425591",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/5/1785771329_2955.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.044Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "红色",
+        "白色",
+        "绿色"
+      ]
+    },
+    "1438713": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The selected native image is a close-up of the bonsai crown and only part of the pot, rather than its complete offered form.",
+      "imageHash": "b910b0efaf014f0f4f62108ed98183b5a00bef88a783870eb191d4a6a907dc57",
+      "sourceContentHash": "50474b7581bcc86f7a2e9e1f8595a36c23e4b669f9d204211b33e8515ad38f22",
+      "listingFingerprint": "9888253c9f062120920c9fef4d71bb045edf9fa6b34b8c8b2163a7457b2884c2",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/2/1785774644_2340.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.044Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": false
+    },
+    "1438718": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "7abd1a1290b5a4c62fc2d6e5bec15d061505b62fcbf56bd3de024901558b2a0d",
+      "sourceContentHash": "311d418279d36cf52479d7cf9a9177af01f049c70b444a5f7966b1ed2605b602",
+      "listingFingerprint": "439202f7e53d508e03add7eef7f4971155d1196322baba8aadba9d4d6b97e5b5",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/7/1785771970_4044.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.045Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1438721": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The current native frame crops the fern; choose a whole plant and supplied pot frame from the same SKU gallery.",
+      "imageHash": "fab4d279d30fa9da4b99e11c037f17cf4ed5ffdd1a54f2804f70000c062b41f3",
+      "sourceContentHash": "965256bb27be72c42d227018f399c4ca5546ebc9f3e7cae84fb1fc3835715ada",
+      "listingFingerprint": "620ae6352570e8aac1a389c863fa1fd66a5b527a9c7387e0845bbdcc138525a3",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/8/1785774942_2159.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.045Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": false
+    },
     "1438722": {
       "disposition": "include",
       "department": "spring-tree",
@@ -539,6 +999,37 @@
       "reviewedAt": "2026-11-23T20:12:28.683Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1438732": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "fdaf459b7d9403bb2fa4db270b382a04fbef31b5a97a3d5f5040f5994ad7c118",
+      "sourceContentHash": "9634cb41eb49f9f3d8a1469a9a6b1026d3e71498d440734f59d426464b268943",
+      "listingFingerprint": "f86e61369002e915ad2418085f65c004e5faaa0cc01deb33488b4697e1472aca",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/5/1785771728_4416.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.045Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1438734": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "5a17a4ab24bbcbe258dfa510912a794921f6beb504616ec4ad5164f952b0c886",
+      "sourceContentHash": "4782270661af0974120aadf073878eae565435f5d72d1967102983aaf0f4a45c",
+      "listingFingerprint": "9841e18db7559a91e1f1d84e325a576fc4af3cd7bc5c732a590590748c8a4557",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/7/1785771348_9185.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.045Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
     },
     "1438738": {
       "disposition": "include",
@@ -560,6 +1051,33 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1438740": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The main floral heads are dark burgundy-brown; spring palette is not clear enough to release without an additional exact-source palette review.",
+      "imageHash": "b8491ffaedf518f5cddba1bd47c836d7a715e4392e67a20d9b36e1eabd884e84",
+      "sourceContentHash": "bf5fc6b31e730c5a61e6e5245470d896a9443dd357e028c629e76292ebc21b69",
+      "listingFingerprint": "95cf80f06d8e4aad2c04162a14ebaff553e7dc4efa7a1051df9bb4b5b8e39ef6",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/7/1785771463_4369.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.045Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": false
+    },
+    "1438747": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "a6375ab301ec25c839dc27a410a01bcb546bfdd68f57ccb9b03789c11005b162",
+      "sourceContentHash": "47b4fefb5bef209aba8f2dbca13991282ac6ba4838ebbdaf6a3e6d780fb8e646",
+      "listingFingerprint": "f74540c751a90649ee1b93674ecc5b59c99d3b901e8618d169592de085c47792",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/1/1785771745_9154.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.046Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1438752": {
       "disposition": "include",
       "department": "spring-tree",
@@ -579,6 +1097,18 @@
       "reviewedAt": "2026-11-23T20:12:28.670Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1438771": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The selected frame shows only the gold planter while the exact offer includes an artificial shrub; it is a wrong preview frame, not an empty-pot product.",
+      "imageHash": "3c2336dddc8405d24cceb4a3c19fd3be0526602a74e8576a91f6dada4c792283",
+      "sourceContentHash": "b78a9fee32b14c0d76759cd005f375c9f5fa64cd06783277e7b8846389eb68f3",
+      "listingFingerprint": "bdc16ff196cf956a09e9dc2a5d02e79b244ba442e58fcb67113699c2d7fb60a5",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/2/1785772547_6989.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.046Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": false
     },
     "1438778": {
       "disposition": "include",
@@ -600,6 +1130,33 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1438785": {
+      "disposition": "exclude",
+      "department": "spring-potted",
+      "reason": "The native photo and exact description show two connectable lavender foliage balls with no supplied pot or trunk; hanging baskets and planters are suggested uses. Outside the four requested offered forms despite the title's Potted Decor wording.",
+      "imageHash": "48c979027fe870afbf98538df38f370993ebcd3c798cb7afb57163818de816c2",
+      "sourceContentHash": "3ded2d269f932e060e7f6e548acb3fa7e6da3087b62260fb331c890118034b5c",
+      "listingFingerprint": "8d1984a95ecb20f355e23593aec89b95f83321bfcacffb33af3724c144d21a62",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/8/1785772560_4366.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.046Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": false
+    },
+    "1438788": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "ef8a3f406407ce7b8cb6209b441ad75eb866686ad57aa31aa755feaf41943e46",
+      "sourceContentHash": "a39d2a171a57e453fa7f8c719fb396468faf1b1cc6da76545321ce58e9ba7a59",
+      "listingFingerprint": "809ff16e078fb356ac65fc75744d56c89bbba88f7a60e673ee9a1bfc315a40f2",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/2/1785772935_4277.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.047Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1438797": {
       "disposition": "include",
       "department": "spring-tree",
@@ -609,6 +1166,21 @@
       "reviewedAt": "2026-11-23T20:12:28.675Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1438806": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-tree description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "be1cd43b86abb5abcaec10c75920233840fe22c0171f7f096c054d5c82c810ec",
+      "sourceContentHash": "5d452196b5b43e15103f0462cf9489334744a04b647889d78b1432afb8d5f814",
+      "listingFingerprint": "3602ac6dfe98b921530d53b8df4914889f7629bed3673e67698d30efa842e6d7",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/1/1785772581_1299.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.047Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
     },
     "1438832": {
       "disposition": "include",
@@ -620,6 +1192,18 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1438842": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The native frame is a partial foliage detail of the hanging fern; obtain a complete native frame of the offered hanging plant.",
+      "imageHash": "8723d19c45d7a22eb865077eceaad0a67f3518159993748aecaa15045e9d6976",
+      "sourceContentHash": "c7d39043a48c65786dc213aea673b6f696e4d34726f3de2eafd75e7521243be0",
+      "listingFingerprint": "8bc93beaf36ac2d0ec41d5b46fc26e753af6134bf6b6face94d0d5750894a63c",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/6/1785771937_1332.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.048Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": false
+    },
     "1438852": {
       "disposition": "include",
       "department": "spring-tree",
@@ -629,6 +1213,62 @@
       "reviewedAt": "2026-11-23T20:12:28.687Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1438856": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The selected frame shows only an empty white pot although the exact source offers a forest fern plant; obtain another same-SKU frame.",
+      "imageHash": "47ca6035bcd670ede1a939d8d748158ceb44240f51c8c693584bcda99ca15b0a",
+      "sourceContentHash": "c92fcc3e868bf625c39a6adf21cb7c71db14971b059ad2dfd722ce769884a14c",
+      "listingFingerprint": "bca3528e9a60984f7d74534b7f48ddd719970b3545c0c37102c97cd540ea6ecc",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/6/1785774931_5964.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.048Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": false
+    },
+    "1438860": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "c41fa5177dc947883166b9a2b37e5323e7ea3b9dd40f23731b9c5b0ce4b8c67d",
+      "sourceContentHash": "d17c1124c5826b1d2c0d4fa00b6cbd1804debfc99bd3aa34efcf9448e7b0e73b",
+      "listingFingerprint": "9e618ea4ed87031e5f429c889d60c373d41c0535a5771e004da4852f4badb3fe",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/4/1785772633_3980.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.048Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "粉色",
+        "绿色"
+      ]
+    },
+    "1438871": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "e0a2f8e5de3903d17f5b42de25ae5483bdb05a93fc52ec4a2a587c90e1768083",
+      "sourceContentHash": "9b02ebcabc471c6b0b3417d0afd79c09975cb645f64556fcc0de95043520738d",
+      "listingFingerprint": "db3487405f67b6b932cddc4f84c3cf0b48ed2ff64f6cd6269555b5b63908cab1",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/5/1785773271_9668.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.048Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "粉色",
+        "绿色"
+      ]
+    },
+    "1438873": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "Dark purple blooms and muted foliage need further spring-palette review; the source colour name alone is insufficient.",
+      "imageHash": "63dbb4640dc8c86c86fcebc177540f87e8d4577f0795a733a12964bcfa5160ca",
+      "sourceContentHash": "af5b321eafde7364075ae46b0a7cff4b3a7da54833ca616dba2e0533e53be9e1",
+      "listingFingerprint": "21b8df43541fdfbf91109818890245fc4c0608490ff77f13a6da6f89cc49e49b",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/3/1785772639_3872.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.049Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": false
     },
     "1438875": {
       "disposition": "include",
@@ -640,6 +1280,48 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1438877": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "Orange-red foliage needs an explicit spring-versus-autumn palette review before inclusion; do not treat a year-round description as spring colour proof.",
+      "imageHash": "0cab1fcf23bebe1dff522b4756c61c74acb4c7ee7d6ddc0bd0aca3375c8b26a0",
+      "sourceContentHash": "35c91fb7980ed6a1453827287e8227e04920af653181d9168fc484f0be5f5b88",
+      "listingFingerprint": "e24720e4d36b088f2fb26cdc599198078c9c9579661d8cbc7a3146162e546d4a",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/7/1785771759_9749.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.049Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": false
+    },
+    "1438894": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "7bd9cf8319deb20b708f5e5b31370d973625cb90dd0472bedc662688d0077169",
+      "sourceContentHash": "edf9e8b720da08fa314d00c04bfdb149d0aeabb7796f1ad5cb67eed0dcad5526",
+      "listingFingerprint": "23b36097caae554fd5fff269411ee11d4bb90b67703ad963f31f7cc1e96b031b",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/2/1785772678_8478.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.049Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1438900": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "cb4c3a263ea50f074f7311ec2304b29cb157b6617d60ff4d7801150ed17cd96d",
+      "sourceContentHash": "e11783cf48da2c846753bb08211c39a8674a9aacc0f64a5aab162a6f10a84a5e",
+      "listingFingerprint": "8b70b4a1145768cfd5fd5e97b76b77fffbe9f42f7de639fdcbb688fe849dc9d5",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/6/1785773716_8032.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.049Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1438902": {
       "disposition": "include",
       "department": "spring-tree",
@@ -649,6 +1331,22 @@
       "reviewedAt": "2026-11-23T20:12:28.685Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1438905": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "d2ee1077750b8fa866f1ad334fe9952ee7534b1df6f98657664ece5bb0c5c437",
+      "sourceContentHash": "b53593736a0cfd26e3d8a5f9e679a3588b9f4cdf20ba71b23793f88ce31d5306",
+      "listingFingerprint": "9de857a926dac5f3ef5c4e0141bbf225bc46d7366ecf997e8d1cce8b7231500e",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/6/1785772038_3765.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.049Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "粉色",
+        "绿色"
+      ]
     },
     "1438907": {
       "disposition": "include",
@@ -670,6 +1368,21 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1438911": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "a1fd0148cc6f5e257d2b7a9a91de46cd34d9d13caa1bde086b1cb657dc05face",
+      "sourceContentHash": "c220ea2a5b0581cf2c4993574700089d3dd61e68e25f00ac25bc517aeed8d220",
+      "listingFingerprint": "46123e54c2b5b5555c73f7d6e51fb704eb3fc454650ab4bf61c64d51ee374f36",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/7/1785772876_3832.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.050Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1438916": {
       "disposition": "include",
       "department": "spring-tree",
@@ -690,6 +1403,21 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1438926": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "5d93a7927b294a46c35efca8c49ec3f0ad316607cb7e57e9e86a2d9006d48827",
+      "sourceContentHash": "24a6343688a4cfaff4cd1ad8f6d34d343541a23fe6ad5e23ed90e33efe0fa079",
+      "listingFingerprint": "8c1c7e3a6473e950ef018ad1d0ff9904313ee389c2dc2b79b096ebdd2231dd18",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/7/1785773509_4989.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.051Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1438928": {
       "disposition": "include",
       "department": "spring-potted",
@@ -699,6 +1427,18 @@
       "reviewedAt": "2026-11-23T20:12:28.668Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1438932": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The selected native photo shows only an empty pot while the exact offer includes a lady fern; use another native whole-product frame.",
+      "imageHash": "a4d304109bc823776a564b45eac293b78399bf220f433cab7c30bf361eb560a0",
+      "sourceContentHash": "18ee12d520eb6baa038a4d6554b9d8c4bac5c274c167bf5bdc2428154c5f2ef9",
+      "listingFingerprint": "1fe2eb8714cef958a745e34164352500d8e5e5f1fe0e5ec263eeaf43a7b8e18b",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/1/1785774064_4805.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.051Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": false
     },
     "1438933": {
       "disposition": "exclude",
@@ -721,6 +1461,18 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1438938": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The selected native image is a close-up of purple leaves; the complete cascading plant and its supplied pot are not visible.",
+      "imageHash": "4d808539f7781bf2d761fafe2e1e9c4127376ba16cf768d218d5b0eee9071616",
+      "sourceContentHash": "e855c27aaf90b0436f204061b2d5e8c633d3a01144b58f92a84f5f77891d89e7",
+      "listingFingerprint": "457252a259600372c9b28481c8730353e99cc5842d8ecc5880b2ee34c4716194",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/0/1785773822_1789.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.051Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": false
+    },
     "1438939": {
       "disposition": "include",
       "department": "spring-potted",
@@ -731,6 +1483,80 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1438945": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "3f353b0d900145eff828a0950dcb690f2c561468702f93f620840bde78a39a8b",
+      "sourceContentHash": "c011322bfafcf2af9530e5a15b9edac2318ae017d97cda8ea3ad0bab2fce0534",
+      "listingFingerprint": "ef07674651db6b67b14641d51aa6ccd461fb7a95720ce382eb7e66b1e841f619",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/2/1785772925_2925.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.051Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1438951": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "fbb2ae8c052232ec15c03cdf10315b9eaef0adeacc68e828a039ecd7bf65a7db",
+      "sourceContentHash": "e23447fc773b9ae4468dd4d2f4f4984494c89cf35eb8b4b721c8b895f5952e20",
+      "listingFingerprint": "53cf9b58ca82d23af0cfb6fefa0fdf18d9bd30119339c681312cd4126739a18a",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/4/1785771701_3828.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.051Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1438952": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "d15ae22f14689388b48246173fc91ec5dff9b96a657aa017f3e9f93e345660c4",
+      "sourceContentHash": "5c791d7d72278b7f3ff232641551b799f64353cfc4bea0c513b3c83a1f25d2a6",
+      "listingFingerprint": "ff2bee91876beaf06bd63472de0c1a939a394e7039fad0dbd7981941c03eb2b4",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/7/1785773518_7396.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.051Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1438955": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-tree description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "71937915b19bc363cd175c1823a90522f57f3fe6827cd192de57e85e651d13ba",
+      "sourceContentHash": "5792314ac3d237fdc2cbed99ba9ff66af74e0f00c147443f7fc6479c949719dd",
+      "listingFingerprint": "c5195c912e08ef6156b339958b9ed4adc10fad258609b9d5308766282212218a",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/5/1785771711_7697.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.052Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "粉色",
+        "绿色"
+      ]
+    },
+    "1438956": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The selected native image is a leaf detail; the complete potted plant is not visible.",
+      "imageHash": "1e350d3164692e2496d0268ba52928e18964c06e22d91bb4dd7ec64730a6dd84",
+      "sourceContentHash": "1f5baa42b48687f5ee51f36f7a243d0dd121c7fbffe829223c5b8bd6f9283c85",
+      "listingFingerprint": "2c76cec2291644e8da120b2d50f6cecb29b994108c77bcc6774b4345db580ba4",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/6/1785774636_6892.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.052Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": false
+    },
     "1438959": {
       "disposition": "include",
       "department": "spring-stems",
@@ -740,6 +1566,36 @@
       "reviewedAt": "2026-11-23T20:12:28.666Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1438964": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "9bc2dedca68f81ed7e6104e37bdfe6156e381cb83fdb9ab125fc3857c9f2086c",
+      "sourceContentHash": "62c1b2ec893200dbaabd3aadfe270938cdbac814cb1440278511ae04d8d8350d",
+      "listingFingerprint": "99665256aa97f9f251af57edd04d8783183df29523e88f475201753ce4b8e1b2",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/9/1785771731_9649.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.052Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1438965": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "fb954aa43f6797d83f5d2bed3e3742e38d55834ac1c13d3cc4bb5ffff3073a90",
+      "sourceContentHash": "8b6dbb2a2a0deb9aac5e5d093cec761a1e842b4b86c90e1b795169dc36ab1ccc",
+      "listingFingerprint": "e94ce84782b46387929615c210e16d85657013e291ce213188ae16ea59f577de",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/0/1785771950_2763.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.052Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
     },
     "1442517": {
       "disposition": "include",
@@ -781,6 +1637,21 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1446605": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "e8a5cb1b57d50c43c78e0ab229c98ade7ba3e704d29487cedb91504c9254d3c8",
+      "sourceContentHash": "59c7c5bafa5b18f075a71bb17bee6dcef6fffb728cf7b70c68a8ada41bc058be",
+      "listingFingerprint": "aaf0339b9c6cacad8f2c0aff0c07b109a691d7738e4a40077a6eb30a53ba9beb",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/6/1689172757_2269.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.052Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1447995": {
       "disposition": "include",
       "department": "spring-tree",
@@ -800,6 +1671,30 @@
       "reviewedAt": "2026-11-23T20:12:28.735Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1448389": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The selected native image shows only the gold bowl while the exact offer includes an orchid display; obtain a matching whole-display frame.",
+      "imageHash": "ed6ed9a1dfdc475387f90624f377a7a4d3f1495109fa41d1c42c50023d1a4f73",
+      "sourceContentHash": "1a180c3f9817cb1ee7616306de6c2ccf23f2ad05994d8b76e3baa2e301e3a814",
+      "listingFingerprint": "20ddc41a1d28cadeb44c7703dbe38b1571f49f05cc39ba3ada0f57572fd526ed",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/9/1786359119_5569.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.053Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": false
+    },
+    "1448391": {
+      "disposition": "exclude",
+      "department": "spring-potted",
+      "reason": "The native photo shows black orchid flowers, corroborated by the exact Black Orchid source identity; this black floral palette is outside the requested spring colours.",
+      "imageHash": "a78175b019e6e262d5fa846926703441e048394768779a35189cc39a50660aec",
+      "sourceContentHash": "02dcd8b4399f0ed9ba0a399208d8d0b27eee428b777a890f313887f6b0071ff0",
+      "listingFingerprint": "7f0a0f6766d378ad7979ac2884e67495ba140495c294d756faa5d7b5b3ec7cbf",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/6/1793630407_9315.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.053Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": false
     },
     "1448394": {
       "disposition": "include",
@@ -821,6 +1716,36 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1448408": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "543c355a432ff30de9110dde568de6edca50e63dcd2052731d1a6e1fe88e30ad",
+      "sourceContentHash": "9741fe49fc68cc89dfc6075d2d1bc3497855cd22ef7c8d754d8450acf036a444",
+      "listingFingerprint": "6afd096c6c6824d1cdf59ac883fd96a23f47fac91aacd2a5fd53c16890e4d557",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/7/1793755997_2603.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.053Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1448421": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "3d3605d375d3f5cbe9cbc16ed9fc7c423abc291308d36fab27fa94f15660dd6e",
+      "sourceContentHash": "6152aa2208db1911516f2c4f56c4b32c04b6902e4279b4947fa51c75135ebb2a",
+      "listingFingerprint": "f55d1a56532d594eb477cda12cb641ef20c943dd16364661fe7369bcf8badda7",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/8/1786366927_6143.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.053Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1448427": {
       "disposition": "include",
       "department": "spring-stems",
@@ -830,6 +1755,21 @@
       "reviewedAt": "2026-11-23T20:12:28.704Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1448432": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "cbc91adc1a2b1cc7dd4e06cd658cc29c824e1a364b42c5a4fbd300c29b1b52d2",
+      "sourceContentHash": "ee3c3764c4dc1b0da284a783f1ade3ac08ecefc3a01a6aa1da572f07208179a1",
+      "listingFingerprint": "87c62d6ce46f8708e5ad12abbed221f16b3f2cb6baddfaf2d7246b5de43a4af9",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/0/1793736376_7266.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.053Z",
+      "reviewArtifact": "native-human-sheet-01",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
     },
     "1448437": {
       "disposition": "include",
@@ -871,6 +1811,21 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1448457": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "786a52bb9afe8336849cb00b9504bd40bc670430a41daead588b51535b0e15d3",
+      "sourceContentHash": "df6325dc7f164831c49d52e184143a588dd95b4671592fe5b018481ea235d5c5",
+      "listingFingerprint": "697bfd5aa985ff83c2db3aa478dfbaaf0474c921d6285dd6b83633bf7af3aab1",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/1/1786375048_5208.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.053Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1448463": {
       "disposition": "include",
       "department": "spring-stems",
@@ -880,6 +1835,21 @@
       "reviewedAt": "2026-11-23T20:12:28.713Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1448465": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "e79ed6ec8329ecb690b07b0229ca1ad23d3f26ceda989837ebc6dfee0d546aef",
+      "sourceContentHash": "d73ce81f8e7c5780d9d87759ef0d16ad3e3a7c1839a5a7cb86893fcc3f5d2b68",
+      "listingFingerprint": "cb798d92320f4dd8f23f1fbc5203bf52cb3da17ef02ddf92b30b38f1eee37ea4",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/5/1786359553_6876.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.053Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
     },
     "1448466": {
       "disposition": "include",
@@ -921,6 +1891,21 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1448505": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "320914f2e4e7a34ee7cdbb59a049f3ab54088719a7c07e15ba2949fae8d52270",
+      "sourceContentHash": "ef6dba1df442d6579ba0b8b8023333c28cbbe15f1ae1bd3ab956fcfc14f34a1e",
+      "listingFingerprint": "dae05d1cb60b8a1167ee28669fec2ab17633ede7756687e1fd19aad0aebe74f1",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/1/1793715965_9768.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.054Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1448509": {
       "disposition": "include",
       "department": "spring-stems",
@@ -930,6 +1915,21 @@
       "reviewedAt": "2026-11-23T20:12:28.709Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1448511": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "63b4f5919161a7079211852d21edbc525c5221db8941940b2abe1be9bf71d737",
+      "sourceContentHash": "d03bdfff7f30d314a8f807702ecb62ea2f063d17911de4238511cc6f135bcc1f",
+      "listingFingerprint": "7dd3eff53ad4e89042aaf790d5bc71c1ea4ad4376ecf4bb859bf66d3ea25de39",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/6/1793700261_1768.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.054Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
     },
     "1448513": {
       "disposition": "include",
@@ -951,6 +1951,18 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1448524": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The selected native image shows only an empty vase although the offer is an orange chrysanthemum arrangement; a different gallery frame is required.",
+      "imageHash": "a264149f26ef66547ad3d57f5d090876816a2f346a4d9f92e1899cc5740186ef",
+      "sourceContentHash": "e3f293da3233bc794fae331ca3cdb3ef22af77801951e81ae65270aec11df6f2",
+      "listingFingerprint": "45770084bff5a9025aaf2d2eaef34bafa30310347f3010e484345315c078afaf",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/5/1786360702_2554.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.054Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": false
+    },
     "1448533": {
       "disposition": "include",
       "department": "spring-stems",
@@ -960,6 +1972,18 @@
       "reviewedAt": "2026-11-23T20:12:28.708Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1448534": {
+      "disposition": "exclude",
+      "department": "spring-potted",
+      "reason": "The native photo shows black orchid flowers, corroborated by the exact Black Orchid source identity; the gold planter does not make the flower body a spring palette.",
+      "imageHash": "613e0370089ddf355a2790462665518d3a824baa698f4e8a85032a1a9b48ea2e",
+      "sourceContentHash": "61ec54c81d0ce4cd7158ae91e4bf2f43b83f98873a3cf11fe3941c97283d322b",
+      "listingFingerprint": "b27ca9acfb3ddbcf23e748593dff6cb2edf5cdc419f83720cb7d8d0199839034",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/8/1793635145_6815.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.054Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": false
     },
     "1448536": {
       "disposition": "include",
@@ -971,6 +1995,36 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1448538": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "75b56003d67bfe602ead4d51e5aa74541d2a014f7f29669df2f8168eff6fdb3c",
+      "sourceContentHash": "ae055141fcf263f86eb8c2a9d9f36c2d74b5f13a0ae1a7f9cfce2935e59a07a7",
+      "listingFingerprint": "de774e718e01436874ed107b6e5e98c1377a62b7304296d098c021f354b8b6bf",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/6/1793711105_4849.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.054Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1448539": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "6e4cd416a97d119afd76951e39e24766f2bc68928e30f056bcd3ad5101efcfd7",
+      "sourceContentHash": "790f9ab6f513d1cba1e558ba0673b8d82cefa50634094ea256fbf5d17708b344",
+      "listingFingerprint": "029fcedffe89efb41dabf7a731ac953d788fe6d7cd07bfc8ea66eec4f54d5868",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/5/1793699259_8001.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.055Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1448542": {
       "disposition": "include",
       "department": "spring-tree",
@@ -980,6 +2034,52 @@
       "reviewedAt": "2026-11-23T20:12:28.740Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1448545": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "22876463e684e465a8d70ba803ac6dd2fb9ee43b5b0aa293ec88f92e97b54b3e",
+      "sourceContentHash": "0edba68fc480faaa5f84edba7a3a3e630cbabea4cbcabf2dc26a394cb4e98c2b",
+      "listingFingerprint": "de32118b06aa2bdefc68c1689b4ce9a6adcb5bfb230c74a275054f2cbc018986",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/9/1793704648_1037.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.055Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1448551": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "f450298ae8e23b2f1b11e234df771bfeda605d45ddfaa5c6cf982bb899d0cf5a",
+      "sourceContentHash": "8fafd04044da07ff2f190b0676c1ed700dbfa0879aad5fc707cfea7e791612ee",
+      "listingFingerprint": "a560df8d8c01a2a63f72b6208a243b58a4eb3d9d732d1834b28ed755d65a3363",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/4/1786355709_3577.png",
+      "reviewedAt": "2026-11-23T20:17:21.056Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1448554": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "98be657640e98fa915f8a9b7dac590bd8b53e66e86e8490eaeba8e1b43a6d64f",
+      "sourceContentHash": "979f580a011ec73ac9d62f63f3e08b29ca8ffac7a28ee575e0e6d6f556382d16",
+      "listingFingerprint": "b8e7d30accca2d8e6f5ba26f6f0a37643f88a0ee821ef306c3af8e7ca3428c53",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/7/1786359788_9421.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.056Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
     },
     "1448558": {
       "disposition": "include",
@@ -1041,6 +2141,18 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1448593": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The chosen image is a close-up of calathea foliage and cuts off the complete potted plant.",
+      "imageHash": "0c79a1f837b320fc46b8c0b242a4065fc2ca66549dc5780eab10f70f8620ea67",
+      "sourceContentHash": "7640f9c625e71dff06c08a972ef8ae307bb9c60ae9e84325128c9076fa5c200f",
+      "listingFingerprint": "6a84567b631ee697a9be72452dfb7d5d1a53133cf22f85d39285a60a7c85a6de",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/8/1786356869_5606.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.057Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": false
+    },
     "1448594": {
       "disposition": "include",
       "department": "spring-stems",
@@ -1060,6 +2172,21 @@
       "reviewedAt": "2026-11-23T20:12:28.705Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1448609": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "d87471af2988401b339c3d615331ad8c4f8a13c422a7ef583a67a6c76f7664f5",
+      "sourceContentHash": "4ad0046642b7ecc0a79e3b54e7fed219d0429ebcb8f8d583fdc0759dbf06127f",
+      "listingFingerprint": "9c61be3b0e5a47cf2548c1e068a2326ad75d41a8b6b7953284d757a5e23c537d",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/7/1793703019_1910.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.057Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
     },
     "1448611": {
       "disposition": "include",
@@ -1081,6 +2208,21 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1448613": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "aab44e2568c7809458da3240d3a7b2237bf7fae69b9060a7a95750be518c1a6d",
+      "sourceContentHash": "5912f98218d0cc79394836b7ff011b5c1e22bacd7296237ceb52aef765411694",
+      "listingFingerprint": "aae01fe617ac252e10dd81a39e8e4728cb8548ec6e6f96bcc1abbaf0a8704faa",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/6/1793726405_1522.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.057Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1448617": {
       "disposition": "include",
       "department": "spring-stems",
@@ -1090,6 +2232,22 @@
       "reviewedAt": "2026-11-23T20:12:28.710Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1448621": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "7bd4dc25dab19fb8f584f9bd5d4ad0d974c456fbfe37122d3684e4028225562d",
+      "sourceContentHash": "79b15cc633f6ff75d7f7d9d6ce67964e77d9002d1b6003925a98ab7cf785c7d9",
+      "listingFingerprint": "26eeae0c422b94f92f38fae35017dbc2c8b42386979976e25d234019d26ab85f",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/2/1793700453_3479.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.057Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "红色",
+        "绿色"
+      ]
     },
     "1448633": {
       "disposition": "include",
@@ -1111,6 +2269,21 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1448645": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "34b90b12399b01de7d637e05d5269cc7d79d41caeb8cd79dd5cf34e8f564b670",
+      "sourceContentHash": "e0e063ca4c281a601ff8b04c50dce681b39b19a4ee5b7083a5dafa5b5d3b8014",
+      "listingFingerprint": "4813bb7c5b118db76893a909388b98105af4eda9405f4672a3ccc1d406e6ea07",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/3/1792898638_6908.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.057Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1448648": {
       "disposition": "include",
       "department": "spring-tree",
@@ -1131,6 +2304,33 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1448654": {
+      "disposition": "exclude",
+      "department": "spring-potted",
+      "reason": "The viewed native photo and source identify a black chrysanthemum bouquet with dark foliage; outside the requested spring floral palette.",
+      "imageHash": "19ff64800a0f189407146368ff99a1a6bea9c0167de0b416a8050d53715d5a37",
+      "sourceContentHash": "9300744c948618501b951c41ce5182eb054fd13db3c17cd5afb3001b4224a117",
+      "listingFingerprint": "8320e2174fe5b42e996fdc862c707d886913291fe1f3e351157fb8719a4feb13",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/2/1786357883_7559.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.057Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": false
+    },
+    "1448657": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "8bdf60d7dbba8084356ed4d63a9504e7ad39339d660b0ab9bf7b56ca91cb0027",
+      "sourceContentHash": "fd5cf63aa5d1ba160e4c42eb3055d470f67c31df8fa5c1fd71af7063dc3302f0",
+      "listingFingerprint": "a9b4f994cfc2318224e126ce1e2fe103f18ab7396cf96dba51e745b4ce87f6e7",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/0/1793703080_4339.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.058Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1448661": {
       "disposition": "include",
       "department": "spring-stems",
@@ -1140,6 +2340,21 @@
       "reviewedAt": "2026-11-23T20:12:28.715Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1448663": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "7f40c8c21e352bff6c8f808b5dce2cdecc5b41f19b6fe2d699e567e1db7d20af",
+      "sourceContentHash": "d1eaa42c911f561e4098d599a2faa71b8b5771b08c82b4e7f9cb27fe6503dbc2",
+      "listingFingerprint": "de6f3c107c4c2588990bd6b5ee747aa45d707ee9d8a58620ae5abb6e3471601d",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/1/1786364113_8243.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.058Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
     },
     "1448673": {
       "disposition": "include",
@@ -1171,6 +2386,49 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1448683": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "d9ff4b49f5a965d2dedeae5ad30c7be47b948e7440decd63be507035e99b8b94",
+      "sourceContentHash": "2d2fca176f7cd890f4f85efed350bb80ce63c26441a5f55569552642702ee280",
+      "listingFingerprint": "55b5b66ade79d5666a7ab178071dc8b69155b796c5cae73909dfc48df12dca41",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/1/1793704627_3544.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.058Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "黄色",
+        "绿色"
+      ]
+    },
+    "1448685": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "0e5e204ee405a5e3c6e05252d23c62469a1a4caa8bac5a6b380934a9fdabbb74",
+      "sourceContentHash": "5a3742900de3ccb8d94ed8a68a68edf131ccd4cb0d55cb499324a815dde918bf",
+      "listingFingerprint": "bd884e4b29f21eb5c5cb932fc80b25967867be746ea3887d0b1b06c902f80b9f",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/7/1793726166_7365.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.058Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1448700": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The native image shows a bare brown twig while the exact offer is a potted chrysanthemum arrangement; photo and offered product do not agree.",
+      "imageHash": "ae75ca689d7659f264bc130819b73e15fea89a460c59c2a93c5af918531e30db",
+      "sourceContentHash": "b45eaa19c457cd2126b39b4198068cbb48349a36fa53050c0dd6facf2515f482",
+      "listingFingerprint": "473eb2b766897d7a3cb61ae5beef3a3f9f70dc7563f9117aec2420280d7e86b1",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/5/1786358817_6625.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.058Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": false
+    },
     "1448704": {
       "disposition": "include",
       "department": "spring-stems",
@@ -1180,6 +2438,52 @@
       "reviewedAt": "2026-11-23T20:12:28.723Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1448708": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "541b7d29d6721ee5bf90bf31f0b061d4eb293eaaa3ea805ca0143370c279620e",
+      "sourceContentHash": "f1be994e104a4dc2506f685602ab739c555a5ffb32b3832f57008958553b8c74",
+      "listingFingerprint": "c5284306ba469ee5155be0f3d30199e3c63c496f3a0e5a1e3af8df7e354b23a3",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/2/1786385235_8265.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.058Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "粉色",
+        "绿色"
+      ]
+    },
+    "1448716": {
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "8e23a151898c667aff5a3e8ef79e2d936d495be4c21ab6c01f9aacdf5f983eda",
+      "sourceContentHash": "fdbfafb7ffeb3dce82891edb1030354b6e4d851c12f51aac1edeecbc574624df",
+      "listingFingerprint": "636fe75c95290b00ec5795cc8b42a8b037bb6c724481a99a7a3bd46f065adfb3",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/3/1786360031_5016.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.059Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1448720": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "e5f37475cbf6783e2c00688687ee2e9c021dfbeb57f5026ee19c9c7cc58e0962",
+      "sourceContentHash": "3d92f5821fecadfc39b53682675eb6026558a0f64bbd929d4643d00045758c2f",
+      "listingFingerprint": "f7e269a8e845a79fafd720e07ec8ab10d515a19f8e04cd462481ed15e56b825f",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/3/1793699259_5755.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.059Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
     },
     "1448722": {
       "disposition": "include",
@@ -1211,6 +2515,22 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1448731": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "d2ab070868606f3baa51ab048c0b6785ff383e32fc764cc33d8dac78bcccfdcf",
+      "sourceContentHash": "e2e854b9bb923fdbeecbbdd49d1e1cb08d654fb27665da67191e301e9299320b",
+      "listingFingerprint": "de6cb97635314bebfb220eebeec8ee44f0b33e88b8619e9ebcdc16f82a1bde2c",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/8/1793700337_4416.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.059Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "粉色",
+        "绿色"
+      ]
+    },
     "1448732": {
       "disposition": "include",
       "department": "spring-tree",
@@ -1220,6 +2540,18 @@
       "reviewedAt": "2026-11-23T20:12:28.738Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1448739": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The native image is a single palm-like leaf while the exact offer is a sunflower vase arrangement; do not use this frame as the product preview.",
+      "imageHash": "ddc0118a96a17def0fba4662cb51fcba98d077e2d79f6e983aac84cd7d7f06bf",
+      "sourceContentHash": "782c807ba337998c70ea6421f53d6cf7f5e2f8839a3e4a4799b02ea3254b5ad9",
+      "listingFingerprint": "dd8d674ef2af256ed43fadbf6033d95de0d05e6a9010faae6af83787561e02ea",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/0/1786360066_7635.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.059Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": false
     },
     "1448749": {
       "disposition": "include",
@@ -1240,6 +2572,69 @@
       "reviewedAt": "2026-11-23T20:12:28.724Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1448761": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "75ef9af7cd9770a263b19142df7831ea7b0bc02d72a8da6e976857f717856aca",
+      "sourceContentHash": "b9814001abff452443a5abe3a7f00a9b8ff2c9e3e75e182e4df880493f0264f1",
+      "listingFingerprint": "9d3649865961be5adcee4fdf4ba23bac1cb6035520cef6ff201ccdf0c4b77164",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/5/1786361597_2747.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.059Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1449735": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The selected frame is a close-up of hydrangea flowers; obtain the complete potted plant frame.",
+      "imageHash": "2f42b6953ba031a5f724164ccbf05de4d78ce5a8f814235487a3c9d9de594cb1",
+      "sourceContentHash": "07651ab962354d9bd098248a6525abc84b06826c6bdbe8c9efa5facaf59afee3",
+      "listingFingerprint": "affe06c3f12409b801946f7ef58cc981f8a761ae124e9166ac12b93274c0d098",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/8/1786369668_1306.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.059Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": false
+    },
+    "1449747": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The selected frame is a flower close-up; obtain the complete white freesia plant and pot frame.",
+      "imageHash": "fec9fa81d4a678ac9f7e6c0c7acd48dff54a61c101601426ff114e2c07665dfb",
+      "sourceContentHash": "da9cf5f54a8da69dfb0de7044454bb615d052268f461704683fc49fff15fdd09",
+      "listingFingerprint": "1b7d6deee20be5f860b6424fb56e159faae88af8d710c688f23f0782ea7a147b",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/3/1786372730_3650.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.059Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": false
+    },
+    "1449757": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The selected frame is a flower close-up; obtain the complete pink freesia plant and pot frame.",
+      "imageHash": "e6b54ef2b493a4fb2761171f5ef52c52c7d21d3f79eb7b01841fcf4618ed548e",
+      "sourceContentHash": "ab9cb96ab8dd6065c75e13fb8523eef7f35db8c5029867791bcbb9ea27e4ad06",
+      "listingFingerprint": "0326de51c56296d76976de59135a48b7c08eda91ee8e9a783389a07596e379ba",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/9/1786372244_8995.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.060Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": false
+    },
+    "1449758": {
+      "disposition": "review",
+      "department": "spring-potted",
+      "reason": "The dense dark purple spiral topiary needs an additional spring-palette check; its colour cannot be assumed to be ordinary green foliage.",
+      "imageHash": "701eaaa614939844a6ef8534b7592bdeec262217135eed500af2895b4cb85743",
+      "sourceContentHash": "90ec7bfdcdb085ca777c20569ca77fd9bc760bbdf421051bece4be3a13329f1d",
+      "listingFingerprint": "7c853a963f10be628e20e66f086f46a6560001036fefb7610816d92d5ef78ce0",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/5/1786371498_1464.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.060Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": false
     },
     "1449785": {
       "disposition": "include",
@@ -1271,6 +2666,21 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1449841": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-tree description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "76d18dde0eafae3e312ba93438c972e39c93ce67fb6674c75558fc16cb11373d",
+      "sourceContentHash": "c9dcef74fac28a49b20454eda61f1d75b8180f5e017d59a2e811c4ee134e587b",
+      "listingFingerprint": "4df4cfe45501560bdaea37272ad8aa6853589b0ce72062e53024d2e87951bb6c",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/2/1786371265_8499.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.060Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1457281": {
       "disposition": "exclude",
       "reason": "Photo shows a Buddha-shaped doorstop, and the conflicting source description concerns a vessel; neither is an artificial botanical product.",
@@ -1281,6 +2691,156 @@
       "reviewedAt": "2026-11-23T18:57:03.695Z",
       "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
+    },
+    "1459746": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "8578dcfa1cbe5dc0db573d053da95d04710b1a46838cc0cc8ea7b3741fdd116d",
+      "sourceContentHash": "29f8089dabb6d6e3ec6fa0de7a40b7c379d0364d429a4edfbf5ac932d8090d8d",
+      "listingFingerprint": "c86ce20af737ef9ae5297a9631240e810eb54f90037dff8d0d2d2db66b5e4f60",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/7/1790863948_6176.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.060Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1468896": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "84041d56dc5fc0c85a06ddfc4fde3e6c3d49b1ec3b0a6338e2815a19c1a80387",
+      "sourceContentHash": "acc37c11123e06945e1f2a2a9d8f5f4d41301ad4b0f2620a6671e7683a72481a",
+      "listingFingerprint": "f1a46e5ace58298b1ac5a80d7da87583532d79609833ee1b19d4af137184e711",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/7/1793313577_7959.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.060Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "黄色",
+        "绿色"
+      ]
+    },
+    "1491832": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "5826b0f2647bd53eaa21a03cfcfb3bbb97c4e65294eeaa2f1845b4cf951cc18c",
+      "sourceContentHash": "b926145fa9600a9ae863dd8e96cc888c2ab5df6ce384d27f61d06eb13dfde9eb",
+      "listingFingerprint": "29e67eb9fa831ce66d904c2bfeacf77c2b7c6f9deb23954a12582df8645cf6d5",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/8/1788034452_7363.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.061Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "红色",
+        "蓝色",
+        "黄色",
+        "绿色"
+      ]
+    },
+    "1491833": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "d7959a275e0ef82ab0347e7296f5111bac3dfdbceb1294cd5d5da1ca908bcc21",
+      "sourceContentHash": "a3a00924d96c96e4e5f8796196ef0f30a30b2c8a3a3cce954c4e3444b23c0099",
+      "listingFingerprint": "a089c750a14288738f6276bd5e4d7b48f3d332f3c540a13ecad995d8884f7804",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/7/1788023635_3562.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.061Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "紫色",
+        "白色",
+        "绿色"
+      ]
+    },
+    "1491835": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "38ca1cba6231bfb509c0d8650f5ae27a27029f5388bebadc1c5c2af929499749",
+      "sourceContentHash": "dc15700df9d5aaa2c4119957ff50547a321bc0c4dfecc990e5cb06884ecd2bbb",
+      "listingFingerprint": "23c8492e4b604379d39bdce47fc38222be0a15de473d6bec9849d0ac2974d6b6",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/1/1788018179_8030.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.061Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "粉色",
+        "红色",
+        "绿色"
+      ]
+    },
+    "1491836": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "596b7cd6a85618967a49b2cb694acf9d66d5803a96ddf749aa40ba6461bd928e",
+      "sourceContentHash": "9de88fcca0ce44a61f7d312d3d5ee0e8491574b7cdc13cb7128d5ba33e45a709",
+      "listingFingerprint": "342d57d02da747a3df76f5609399a97e415447e0d1fa63a7a4ee4f12ad8fa7b8",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/6/1788020290_2049.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.062Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "橙色",
+        "紫色",
+        "绿色"
+      ]
+    },
+    "1491839": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "2766c83f51e560ef3c699a0d227a1f1e5ff7934ebd12a747bd5974e2abd55e4b",
+      "sourceContentHash": "73653c79a929a9c4602a7f71a91b42677656eceb5017dbf2b651c8610fbc47e7",
+      "listingFingerprint": "e8eb298db5f4181aa1840cbc8152e071e06ea2f152d2a27031d9e965d8abae39",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/6/1788026320_5768.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.062Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "红色",
+        "粉色",
+        "绿色"
+      ]
+    },
+    "1516697": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "e1a702a7c3f3369d78e5e46fe5107b6b4baf4a2d3f0af48eb12299c00671a286",
+      "sourceContentHash": "9721fbafacbee020e915e947bdab8c4937d1b42329ae055a1bf0d7ef4cd2acf0",
+      "listingFingerprint": "392ba5f72b042e18f211ee8da49995d0bdc389ffde809ad8f5fb12b5ab2a079b",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/7/1793408138_5418.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.062Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1525324": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "c9f291e22a1700341d8f7e370f33d3349645a9c43d2a064742d64cd456987bdb",
+      "sourceContentHash": "1a931cd0b3c152cc751837b7cf7178bdd1fc97f23346b3d5e34e8cb82c268bdb",
+      "listingFingerprint": "53c43f8b628714cceb9b29072f18f5085bc3bf61238f616cb7c16caa11cb982b",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/2/1790277584_7033.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.062Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "紫色",
+        "绿色"
+      ]
     },
     "1525603": {
       "disposition": "include",
@@ -1352,6 +2912,36 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1549241": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "2feb81536e9195936f8b1bc488d56f1110c5846488227355ed8242e6eb6c96e0",
+      "sourceContentHash": "d43c5e4246f17f78c08e1775285f668107dbe378f40fe370dd1014c36e28220a",
+      "listingFingerprint": "6267b747806b58c84af8c372af23388a540aa6dd7e70c1c966500effea688592",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/9/1793406645_9994.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.062Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1549377": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-tree description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "bdc1fa116a9cb79e0c257f9905c8b8f0447299696382f6781169d2e713b46e31",
+      "sourceContentHash": "251ea846b8814a55f7ef31da94e1d35fdefc0ad2a3423c5818965fe3e0a1c3bd",
+      "listingFingerprint": "9f280f1e0eee6b6abb93a03862393672ea9ddf0945165c1a95c11d2c08be9bad",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/4/1793406602_6317.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.063Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1555664": {
       "disposition": "exclude",
       "reason": "Full source image shows a spool and packaging for 3D-printer filament, confirmed by the exact description.",
@@ -1373,6 +2963,36 @@
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
     },
+    "1556928": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "70f5c74cc25cabbf385d3428f24f4a34036cc7b6f78076cbdcd8f452956cee6c",
+      "sourceContentHash": "a44a1fb91e4810f1bfdd006d5257480afb4604c1d45fe62e673ebd203d1b4b68",
+      "listingFingerprint": "37297c765128d1ffb3ad726073d6c6f1af69320c4ac10e05c7c15eed34b9eb9e",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/6/1778624443_5238.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.063Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1566154": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "277421b864056c0b4cbf0d926a8cdf98e39f736ed225904db25a271e9a524d78",
+      "sourceContentHash": "0580204fdfa3e3e5fec9a030672ff31f67f299bba04dbddf2ac79dc0320fc1d0",
+      "listingFingerprint": "fdfd341499bbaec7e9e90983791bf6a3ebb1b119ff5366191fa9c571437815fc",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/2/1793409100_8753.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.063Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
     "1588069": {
       "disposition": "include",
       "department": "spring-tree",
@@ -1392,6 +3012,288 @@
       "reviewedAt": "2026-11-23T20:12:28.662Z",
       "reviewArtifact": "native-source-contact-sheets-1-to-15",
       "wholeProductFrame": true
+    },
+    "1591135": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "31fc8c4a3ef992b59930b893b51b0acd853eeaf828e250ee4ef74ce8832d4755",
+      "sourceContentHash": "4f9d8889d82500d996bad879f0f9b9344f70e65f0f95742102564c8ee7c6d55f",
+      "listingFingerprint": "59ca269a329265a6f868e8a35a4cc35504dc6ca6864f622898123344282a80c5",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/5/1791797671_9059.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.063Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1591158": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "8405bcd497e1686c954967facd7c4afcb3059735aa173fdb5501b4a32bb9c497",
+      "sourceContentHash": "1196e935da0c3decdcba9c63ec8dc2ff5d58f046807609773593a9cae4ef2fd9",
+      "listingFingerprint": "72ed991a949fad530f1144f939cc93e7a0746c755907623c443dc6966dc861e1",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/1/1791797719_2327.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.063Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1591194": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "d4e19e7388f0598d9f461dce450ad766d249a1949425ed7444cb2db848348125",
+      "sourceContentHash": "1855faa2ab2e657378168021c08dc31c7fbdc8d4545184b184ce9a67bb9c16be",
+      "listingFingerprint": "ad425fd323b7e65f9b06ec45b330a2d7dcc27ab31a3c5be34430c2c525503edb",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/5/1791797757_7551.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.063Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1591201": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "308615fd7a5afd4ce13480f3471b553a6b82ea57ac8775a9f114a6cd94ab3e65",
+      "sourceContentHash": "428a9d5fe7d8ade8fb136143d7321a70ca23edabc8961817a5ca1d2da6284729",
+      "listingFingerprint": "cb8a1cc0d3924ca8ac7ec056edc43e5b69d209c6d7e6e3db5981d1eca461237f",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/9/1791797775_8930.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.063Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1591253": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "6da8f61f386d9ba0c3dab8783f3221e33d5f3875c79931cb7ce354ec83cc559b",
+      "sourceContentHash": "112d4d72c05d979e45ce6524bc879659a563111f68378e93a6c63acb8df04a08",
+      "listingFingerprint": "b9dbc11cfae27b2dfc10f1db4e124a6c7e068c5857f8c27bd5fc15a1fabfeb7d",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/5/1791797901_8892.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.063Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1591271": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "d902d09dd21868367c48ceeeaecf5936833086f359801d79b2470bbc400246dd",
+      "sourceContentHash": "3a289d046a49da4f8ead40e6b2bc52a9e4f0b598c5f6064f06792325b260b1d8",
+      "listingFingerprint": "2427aa94b1bf24ead721ed6d2a6d638c8bbc3d1bba4094d007c5396e0f697133",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/5/1791797937_5925.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.064Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "紫色",
+        "绿色"
+      ]
+    },
+    "1592028": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "e33e6a7cd77796c0ec592d9243eefbc5aa107f6099a097e2b6e06a63d6e1a013",
+      "sourceContentHash": "d9103cc7561e1e92f11f5fbcfef563c7828248d21096195e53c7598f0fe5d123",
+      "listingFingerprint": "5a2daec1956be2e59e1abbb1ecc98d337eeb5e7e165ed4dfec8bae20aca10337",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/0/1791806896_4731.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.064Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1592069": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "b21f1b7dd19e59780437c311da76515cf37e6aa01112381d0e088afcf4751524",
+      "sourceContentHash": "65ea0b72f5874a2e6538f0da858d1b008e147dcf12776d9ecb288fcc590b4edc",
+      "listingFingerprint": "a33d1e044f20c233080d7592437ee9ebdc15009addfccaa3cbffc850b3ee0c74",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/2/1791806951_3194.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.064Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1592084": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "5a12182e25fda4c91f32f0429135007e03edd977453c933e903d086a50f3b37e",
+      "sourceContentHash": "051d16cfe96ecc2020cb6da6e931d394bd1d701afe9dcdc4d9fe8db38bb29737",
+      "listingFingerprint": "fc881d8c0e4bb9e8985e556f18beb6968850cf7ee42b81d80d3f73d5254fd01f",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/6/1791806973_3011.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.064Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
+    },
+    "1592105": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "77dca9d1a18e63b90137b8ba3cb16813e08355ccbafbf37bbcc3654ce67083d8",
+      "sourceContentHash": "e81179e09a4366278ce701e533d78fa86681bfeb7f96c7f1446b6404d3c41421",
+      "listingFingerprint": "dffe677e44a350cf2f6970fa7ade7cee214bb51ff18e4ed7bc7d9dc2afcba64a",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/9/1791807009_5100.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.064Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "蓝色",
+        "绿色"
+      ]
+    },
+    "1592166": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "f453e73fbe4f9d84db4e685d8c0dbe10bd5779cfc3d4b7130d91c2a34a36ce7b",
+      "sourceContentHash": "11083a185420ca5ee52eb8ffdf5b82fc6087c3ecee11a7afb72197cc22aed0fa",
+      "listingFingerprint": "d20ef7641be90babb36b4fec5944f114392f3621f5dca9ae23e984406864a0ee",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/0/1791807076_5117.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.064Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1598593": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "5efa68a4b2d2d2076312c5fb313f2bc82e82d71b3275e31ab6ed1295fdab7262",
+      "sourceContentHash": "b293971af3493a8a7e68ec3d4915cf66bc6eb5b74fab9545bb0660327f4eb4c4",
+      "listingFingerprint": "46fdc2b2e0c26dc960723d1068c847f88d4ad4658c372bd7ea91552442950c16",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/5/1793369522_5083.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.064Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "紫色",
+        "绿色"
+      ]
+    },
+    "1601047": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "f2b111a8b095e2094211740ab703f36a621827f159d01693188e1a443e1f971c",
+      "sourceContentHash": "f6afa94b2ed90bd01e5f6ff7ff8450025e3764feefeb5457c4be9267787de619",
+      "listingFingerprint": "5597e80e8e873cf98917499aeafd81bf362fdce50093249f17af20bab4fc48bb",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/3/1793771899_6872.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.065Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1615216": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "f6a8c977b8af798e3b32629ad2c2f8cba8a1a099728e1a2c91d71daba27ee9b6",
+      "sourceContentHash": "627102b528611692117340449a6dbed683e65c74b0143e5fc405ac4657aff2bc",
+      "listingFingerprint": "710a832fadec777b0cea3ff41d90382e9c7a2443003f7902804276473097d43d",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/0/1792133427_8986.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.065Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1615967": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "5d065517b250777921e507ab4965d9869f5e812f60619905ee9740b51d155510",
+      "sourceContentHash": "a94cb1ef1136eaac0235643a1fae2a2746904b448917ae76a58f19ad4fb35762",
+      "listingFingerprint": "841d121bebe5bd37f2ac8b20070481dc52b3c467a868d4ccfbc58a2227157405",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/2/1792145715_1120.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.065Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1621514": {
+      "disposition": "include",
+      "department": "spring-tree",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-tree description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "b779b07942db73dd5419712780cf24236316109567a60bd73b8ac14fd7dfa831",
+      "sourceContentHash": "b483548e94b9d2efefcd81c6c6506ec58f72c1c470b6ce038ec46e8beed86718",
+      "listingFingerprint": "0ae1711719a29dabe5cfd06ad6c6dd875c30136572bdb93e13f9be42eedc0b81",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/4/1793353911_1467.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.065Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1632652": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "9c54c9fe8c6625fc31016938893cb19398d9799946da67a16135f1261200ef9d",
+      "sourceContentHash": "b67c204ed3df2dd91501136698f0014428188f1dc2e9e23628382c9c7e66ae00",
+      "listingFingerprint": "f09bbc3eb6c6ea41bdb5e8718f1645093fadb42a44f352f4dd3f195800964e5a",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/1/1793740355_8393.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.065Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "绿色"
+      ]
+    },
+    "1641884": {
+      "disposition": "include",
+      "department": "spring-potted",
+      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "imageHash": "aa23c9caf398dec54fbfa463ced2af79fc7887b4f2f7c650d34793a8e0b79d73",
+      "sourceContentHash": "0375504049612ca298b994e647875a9c25b676446397f976162049d14ec70fe6",
+      "listingFingerprint": "b1e0950c8387ce78ec23edcf366e312909cc34a1913f2bf83a103a50cfefa7c4",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/8/1793028050_1941.jpg",
+      "reviewedAt": "2026-11-23T20:17:21.066Z",
+      "reviewArtifact": "native-human-sheet-02",
+      "wholeProductFrame": true,
+      "colours": [
+        "白色",
+        "绿色"
+      ]
     },
     "1673658": {
       "disposition": "include",
