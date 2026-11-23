@@ -1,3 +1,4 @@
+export const SPRING_AVAILABLE=false;
 export const SPRING_VERSION='range-spring-source-and-photo-v1';
 export const SPRING_DEPARTMENTS=[
  {id:'spring-stems',zh:'花束／单枝',en:'Bouquets / Picks / Stems / Sprays'},

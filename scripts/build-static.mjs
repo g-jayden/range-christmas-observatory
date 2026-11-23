@@ -48,6 +48,7 @@ for(const page of ['index.html','image-check.html']){
  html=html.replace('</head>',[...preloads].map(url=>'<link rel="modulepreload" href="'+url+'">').join('')+'</head>');
  await fs.writeFile('public/'+page,html);
 }
+await fs.mkdir('public/spring',{recursive:true});for(const name of ['catalogue.json','status.json','review.json'])try{await fs.copyFile('web/spring/'+name,'public/spring/'+name)}catch(e){if(e.code!=='ENOENT')throw e;}
 for(const name of ['image-collection-authorization.json','paid-native-index.json','native-original-recovery-status.json','asda','product-evidence-health.json','product-evidence-repair.json','browser-image-repair-proof.json','preview-status.json','classified','taxonomy-status.json','taxonomy-audit.json','decorations.json','decorations-status.json','decoration-details','lights.json','lights-status.json','light-details','themes.json','themes-status.json','theme-details'])try{const source='web/'+name;const st=await fs.stat(source);if(st.isDirectory())await fs.cp(source,'public/'+name,{recursive:true});else await fs.copyFile(source,'public/'+name)}catch(e){if(e.code!=='ENOENT')throw e;}
 if(retailerEnabled('bq')){const{publishBqCommittedEvidence}=await import('../server/bq-committed-evidence.mjs');console.log(JSON.stringify({phase:'B&Q derive corrected analysis from saved source without recollection',...await publishBqCommittedEvidence()}));}
 if(retailerEnabled('ar'))await fs.cp('web/ar/details','public/ar/details',{recursive:true});

@@ -1,3 +1,4 @@
+import {SPRING_DEPARTMENTS,isSpringScope} from './spring-model.mjs';
 import {AR_DEPARTMENTS,isArScope} from './ar-model.mjs';
 import {MT_DEPARTMENTS,isMtScope} from './mt-model.mjs';
 import {BQ_DEPARTMENTS,isBqScope} from './bq-model.mjs';
@@ -34,8 +35,8 @@ export const DEPARTMENTS=[...ACTIVE_EXTERNAL_DEPARTMENTS.map(d=>[d.id,d.zh,d.en]
  ['acrylic-lights','亚克力圣诞灯','Acrylic Christmas Lights','lights'],
  ['christmas-tree-lights','圣诞树彩灯','Christmas Tree Lights','lights'],
  ['themes','按主题分类','Christmas Themes'],
- ...THEME_DEFINITIONS.map(t=>[t.id,t.zh,t.en,'themes'])
-].map(([id,zh,en,parentId])=>({id,zh,en,label:zh+' · '+en,...(parentId?{parentId}:{}),...((id==='lights'||id==='asda-lights'||id==='ms-lights'||id==='bm-lights'||id==='hb-lights'||id==='du-lights'||id==='jl-lights'||parentId==='lights'||isThemeScope(id))?{charts:false}:{} )}));
+ ...THEME_DEFINITIONS.map(t=>[t.id,t.zh,t.en,'themes']),...SPRING_DEPARTMENTS.map(d=>[d.id,d.zh,d.en])
+].map(([id,zh,en,parentId])=>({id,zh,en,label:zh+' · '+en,...(parentId?{parentId}:{}),...((isSpringScope(id)||id==='lights'||id==='asda-lights'||id==='ms-lights'||id==='bm-lights'||id==='hb-lights'||id==='du-lights'||id==='jl-lights'||parentId==='lights'||isThemeScope(id))?{charts:false}:{} )}));
 export const DEPARTMENT_MAP=Object.fromEntries(DEPARTMENTS.map(d=>[d.id,d]));
 // Keep products from the official theme collections without counting actual
 // bed linen as ornaments or adding an unrequested navigation category.
@@ -43,7 +44,7 @@ DEPARTMENT_MAP['home-textiles']={id:'home-textiles',zh:'家纺床品',en:'Christ
 export const ROOT_DEPARTMENTS=DEPARTMENTS.filter(d=>!d.parentId);
 export const LIGHT_DEPARTMENTS=DEPARTMENTS.filter(d=>d.parentId==='lights');
 export const isLightingScope=id=>id==='asda-lights'||id==='ms-lights'||id==='bm-lights'||id==='hb-lights'||id==='du-lights'||id==='jl-lights'||id==='lights'||DEPARTMENT_MAP[id]?.parentId==='lights';
-export const decorationDepartments=DEPARTMENTS.filter(d=>!externalDepartmentIds.has(d.id)&&!['tree','skirt'].includes(d.id)&&!isLightingScope(d.id)&&!isThemeScope(d.id));
+export const decorationDepartments=DEPARTMENTS.filter(d=>!isSpringScope(d.id)&&!externalDepartmentIds.has(d.id)&&!['tree','skirt'].includes(d.id)&&!isLightingScope(d.id)&&!isThemeScope(d.id));
 // Prices come from the retailer's integer-pence fields, never historical changes.
 export function sourcePrice(p){
  const current=Number.isFinite(p.priceGBP)?Math.round(p.priceGBP*100):Number.isInteger(p.price)?p.price:null;
@@ -60,7 +61,7 @@ export function heightCategoryLabel(raw){const s=String(raw||'').trim();if(/^(?:
 export function beijingDay(value=Date.now()){return new Date(new Date(value).getTime()+28800000).toISOString().slice(0,10)}
 export function isToday(p,now=Date.now()){return p.arrivalEvidence==='observed-after-baseline'&&Boolean(p.firstNewObservedAt)&&beijingDay(p.firstNewObservedAt)===beijingDay(now)}
 export function isNew(p){return p.newStatus===true||Boolean(p.firstNewObservedAt&&p.arrivalEvidence==='observed-after-baseline')}
-export function inDepartment(p,id){return isPublishedProduct(p)&&(p.taxonomyAudit?.version===TAXONOMY_VERSION?p.taxonomyAudit.memberships.includes(id):p.kind===id||p.department===id||(p.departmentIds||[]).includes(id))}
+export function inDepartment(p,id){if(isSpringScope(id))return p.collectionId==='spring'&&p.springAudit?.disposition==='include'&&p.department===id;return p.collectionId!=='spring'&&isPublishedProduct(p)&&(p.taxonomyAudit?.version===TAXONOMY_VERSION?p.taxonomyAudit.memberships.includes(id):p.kind===id||p.department===id||(p.departmentIds||[]).includes(id))}
 export function scopeProducts(products,id,mode='all',now=Date.now()){return products.filter(p=>inDepartment(p,id)&&(mode==='all'||(mode==='new'?isNew(p):isToday(p,now))))}
 export function availableProducts(source,arrivals={}){
  const rows=new Map((source?.products||[]).map(p=>[p.sku,p]));

@@ -1,6 +1,7 @@
 import {DEPARTMENT_MAP} from './catalogue-model.mjs';
 
 export const PDF_LAYOUT_VERSION='native-eight-bilingual-names-v6';
+import{isSpringScope}from'./spring-model.mjs';
 const clean=value=>String(value||'').replace(/\s+/g,' ').trim();
 const concepts=[
  [/\bdark forest green\b/i,'深森林绿'],[/\bsage green\b/i,'鼠尾草绿'],[/\bmonochrome\b/i,'黑白色'],[/\bspots?\b/i,'波点'],[/\bbiscuits?\b/i,'饼干造型'],[/\bbakery\b/i,'烘焙点心造型'],[/\bpersonalised\b|\bpersonalized\b/i,'定制'],[/\bdog breeds?\b/i,'犬种图案'],[/\bcheck(?:ed)?\b/i,'格纹'],
@@ -14,6 +15,7 @@ const features=[
 function chineseProductName(p,en){
  const reviewed=p.localizedProductName;
  if(reviewed?.sourceName===en&&/[\u3400-\u9fff]/.test(reviewed.zh||''))return clean(reviewed.zh);
+ if(isSpringScope(p.department))return springChineseName(p,en);
  if(!/[a-z]/i.test(en)&&/[\u3400-\u9fff]/.test(en))return en;
  const department=p.taxonomyAudit?.primary||p.department||p.kind,label=DEPARTMENT_MAP[department]?.label||'',category=clean(label.split(/\s*·\s*/)[0]),scope=String(department||'').replace(/^(?:asda|ms|bm|hb|du|nx|jl|mt|bq|ar)-/,'');
  let noun=/[\u3400-\u9fff]/.test(category)?category:'圣诞装饰品';
@@ -47,4 +49,12 @@ function chineseProductName(p,en){
 export function productNames(p){
  const en=clean(p.variantName||p.name||p.title||p.baseName)||'Product '+String(p.sourceSku||p.sku||'');
  return {en,zh:chineseProductName(p,en)};
+}
+
+function springChineseName(p,en){
+ const species=[[/gypsophila/i,'满天星'],[/hydrangea/i,'绣球花'],[/eucalyptus/i,'尤加利'],[/peon(?:y|ies)/i,'牡丹'],[/tulip/i,'郁金香'],[/orchid/i,'兰花'],[/cherry blossom/i,'樱花'],[/blossom/i,'花枝'],[/magnolia/i,'玉兰'],[/rose/i,'玫瑰'],[/lavender/i,'薰衣草'],[/lily|lilies/i,'百合'],[/delphinium/i,'飞燕草'],[/dais(?:y|ies)/i,'雏菊'],[/petunia/i,'矮牵牛'],[/sunflower/i,'向日葵'],[/olive/i,'橄榄'],[/ficus/i,'榕树'],[/palm/i,'棕榈'],[/bamboo/i,'竹'],[/fern/i,'蕨类'],[/succulent/i,'多肉'],[/cactus|cacti/i,'仙人掌'],[/monstera/i,'龟背竹'],[/ivy/i,'常春藤'],[/boxwood/i,'黄杨'],[/bay tree/i,'月桂'],[/wisteria/i,'紫藤'],[/lemon/i,'柠檬'],[/dahlia/i,'大丽花'],[/chrysanthemum/i,'菊花'],[/poppy/i,'罂粟花']];
+ const subject=species.find(([re])=>re.test(en))?.[1]||(/flower|floral/i.test(en)?'花卉':'绿植');
+ const noun=p.department==='spring-tree'?'仿真树':p.department==='spring-wreath-garland'?(/wreath/i.test(en)?'仿真花环':'仿真长藤'):p.department==='spring-potted'?(/vase/i.test(en)?'瓶插花艺':'仿真盆栽'):/bouquet|bunch/i.test(en)?'仿真花束':'仿真单枝';
+ const colours={pink:'粉色',white:'白色',purple:'紫色',yellow:'黄色',blue:'蓝色',green:'绿色',cream:'奶油色',red:'红色',orange:'橙色'},colour=en.match(/(?:^|\W)(pink|white|purple|yellow|blue|green|cream|red|orange)(?:$|\W)/i),size=en.match(/\b(\d+(?:\.\d+)?)\s*(cm|mm|m|ft)\b/i),pack=en.match(/(?:pack|set) of (\d+)|(\d+) pack/i);
+ return [colour?colours[colour[1].toLowerCase()]:'',subject,noun,size?'（'+size[1]+({cm:'厘米',mm:'毫米',m:'米',ft:'英尺'}[size[2].toLowerCase()])+'）':'',pack?'（'+(pack[1]||pack[2])+'件套）':''].join('');
 }

@@ -1,7 +1,13 @@
 name: The Range spring botanical catalogue
 on:
+  schedule:
+    - cron: '0 22 * * *'
   workflow_dispatch:
     inputs:
+      phase:
+        type: choice
+        options: [all, review]
+        default: all
       resume:
         type: boolean
         default: false
@@ -49,10 +55,24 @@ jobs:
           git diff --cached --quiet || git commit -m "Reserve spring free-first source collection [skip ci]"
           EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
       - name: Read complete official source and only missing family details
+        if: inputs.phase != 'review'
         run: node server/update-spring.mjs
+      - name: Cross-check exact SKU descriptions and native product photos locally
+        run: node server/review-spring.mjs
       - name: Preserve official evidence and source receipts
         if: always()
         run: |
-          git add --sparse -- web/spring web/images web/collection-ledger.json
+          git add --sparse -- web/spring web/images web/collection-ledger.json web/preview-quality-cache.json.gz web/preview-source-index.json.gz web/preview-selections.json.gz web/preview-status.json
           git diff --cached --quiet || git commit -m "Save official spring botanical source evidence [skip ci]"
           EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
+      - name: Enable reviewed baseline and the existing single daily PDF queue
+        run: node scripts/sync-spring-service.mjs
+      - name: Save baseline state
+        run: |
+          git add --sparse -- web/spring
+          git diff --cached --quiet || git commit -m "Confirm spring baseline without historical NEW email flood [skip ci]"
+          EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
+      - name: Publish the saved catalogue without recollection
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/request-nx-site-publish.mjs

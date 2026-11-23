@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {DEPARTMENTS,inDepartment,availableProducts,isNew,isToday,isThemeScope,beijingDay} from '../web/catalogue-model.mjs';
+import {isSpringScope} from '../web/spring-model.mjs';
 import {retailerForScope} from '../web/retailers.mjs';
 import {browseIndexProduct} from '../web/catalogue-loader.mjs';
 import {createCardPreviewBuilder,inlineFirstCardPreviews} from './build-card-previews.mjs';
@@ -15,10 +16,10 @@ export async function buildBrowseCatalogues(root='public',{departments=DEPARTMEN
  await fs.mkdir(path.join(root,'browse'),{recursive:true});
  const identities=(await read('product-identities.json'))?.data||{};
  for(const {id}of departments){
-  const retailerId=retailerForScope(id),base=retailerId==='the-range'?(id.startsWith('theme-')?'themes.json':'classified/'+id+'.json'):retailerId+'/catalogue.json';
+  const retailerId=retailerForScope(id),base=retailerId==='the-range'?(isSpringScope(id)?'spring/catalogue.json':id.startsWith('theme-')?'themes.json':'classified/'+id+'.json'):retailerId+'/catalogue.json';
   let source=await read(base);if(!source)continue;
   if(source.data.departmentShards?.[id])source=await read(source.data.departmentShards[id]);if(!source)throw Error('Published department shard missing: '+id);
-  const arrivals=retailerId==='the-range'?await read('new-arrivals.json'):null;
+  const arrivals=retailerId==='the-range'&&!isSpringScope(id)?await read('new-arrivals.json'):null;
   const products=(arrivals?availableProducts(source.data,arrivals.data):source.data.products||[]).filter(p=>inDepartment(p,id));
   if(cards)for(let start=0;start<products.length;start+=32){const prepared=await Promise.all(products.slice(start,start+32).map(p=>cards.build(p)));products.splice(start,prepared.length,...prepared);}
   if(cards){const visible=products.filter(p=>{const key=retailerId+':'+p.sku;return !identities.canonical?.[key]&&(!identities.primary?.[key]||isThemeScope(id)||id==='lights'||identities.primary[key]===id)&&(retailerId==='the-range'||p.inStock&&p.recordType==='sku');});const first=new Set([...visible.slice(0,6),...visible.filter(isNew).slice(0,6),...visible.filter(p=>isToday(p)).slice(0,6)]);for(let i=0;i<products.length;i++)if(first.has(products[i]))products[i]=await cards.warmNative(products[i]);}

@@ -6,7 +6,7 @@ import {mergeThemes,THEME_SOURCES} from '../server/themes.mjs';
 import {notificationSnapshot} from '../server/decorations.mjs';
 import {detailFingerprint} from '../server/collection-policy.mjs';
 import {selectOriginals,applyOriginal} from '../server/original-images.mjs';
-assert.equal(THEME_DEFINITIONS.length,6);assert.equal(DEPARTMENTS.length,63+addedDepartments);assert.equal(ROOT_DEPARTMENTS.length,51+addedDepartments);assert.equal(decorationDepartments.length,13);
+assert.equal(THEME_DEFINITIONS.length,6);assert.equal(DEPARTMENTS.length,67+addedDepartments);assert.equal(ROOT_DEPARTMENTS.length,55+addedDepartments);assert.equal(decorationDepartments.length,13);
 for(const t of THEME_DEFINITIONS){assert(t.zh&&t.en&&t.categoryId&&t.bannerSources.length&&t.roomset);assert(t.bannerSources.every(s=>s.url.startsWith('https://www.therange.co.uk/media/')));}
 const row=sku=>({sku:String(sku),variantId:'v'+sku,name:'Theme ornament',variantName:'Theme ornament '+sku,brand:'A Timeless Christmas',price:199,originalPrice:299,newIn:true,variantImageUrl:'https://www.therange.co.uk/media/thumb'+sku+'.jpg',imageUrl:'https://www.therange.co.uk/media/thumb'+sku+'.jpg',productPath:'p/ornament/p'+sku,variantPath:'p/ornament/p'+sku+'#'+sku});
 const lists=Object.fromEntries(THEME_SOURCES.map(s=>[s.scope,{products:[],audit:{expected:0,observed:0,unique:0,complete:true}}]));

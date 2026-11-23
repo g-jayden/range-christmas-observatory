@@ -1,0 +1,5 @@
+import fs from'node:fs/promises';import{execFileSync}from'node:child_process';import{control}from'../server/cloud-client.mjs';import{atomicJson}from'../server/sync.mjs';
+const catalogue=JSON.parse(await fs.readFile('web/spring/catalogue.json','utf8'));if(!catalogue.ready)throw Error('Unresolved spring classification or source evidence; no incomplete catalogue or email activation');
+const committedRevision=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();if(!/^[a-f0-9]{40}$/.test(committedRevision))throw Error('Committed spring evidence revision required');
+const result=await control('/internal/spring-sync',{...catalogue,committedRevision});
+for(const file of ['web/spring/source.json','web/spring/catalogue.json']){const d=JSON.parse(await fs.readFile(file,'utf8'));d.baselineReady=true;await atomicJson(file,d);}console.log(JSON.stringify({phase:'spring-confirmed-baseline-and-unified-pdf-queue',...result,mailSent:false}));

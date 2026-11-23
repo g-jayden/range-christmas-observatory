@@ -10,7 +10,7 @@ import {detailFingerprint} from '../server/collection-policy.mjs';
 import {notificationSnapshot} from '../server/decorations.mjs';
 import {collectPartitionedCategory} from '../server/catalogue-partitions.mjs';
 
-assert.equal(ROOT_DEPARTMENTS.length,51+addedDepartments);assert.equal(LIGHT_DEPARTMENTS.length,6);assert.equal(DEPARTMENTS.length,63+addedDepartments);
+assert.equal(ROOT_DEPARTMENTS.length,55+addedDepartments);assert.equal(LIGHT_DEPARTMENTS.length,6);assert.equal(DEPARTMENTS.length,67+addedDepartments);
 for(const d of LIGHT_DEPARTMENTS){assert.equal(d.parentId,'lights');assert.equal(d.charts,false);assert(isLightingScope(d.id));}
 assert.equal(sourcePrice({priceGBP:14.64,originalPrice:1627}).reduced,true);
 assert.equal(sourcePrice({priceGBP:14.64,originalPrice:1464}).reduced,false);
