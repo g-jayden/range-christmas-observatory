@@ -62,12 +62,18 @@ jobs:
       - name: Repair only unresolved official source addresses
         if: inputs.phase == 'repair'
         run: node server/repair-spring-source.mjs
+      - name: Persist the next-stage reservation and collection evidence
+        run: |
+          node scripts/reserve-credits.mjs
+          node --input-type=module -e "import {publishCollectionCheckpoint} from './server/collection-checkpoints.mjs'; await publishCollectionCheckpoint({stage:'spring-photo-stage'});"
+      - name: Restore committed source photos before image review
+        run: node scripts/restore-spring-image-archive.mjs
       - name: Cross-check exact SKU descriptions and native product photos locally
         run: node server/review-spring.mjs
       - name: Preserve official evidence and source receipts
         if: always()
         run: |
-          git add --sparse -- web/spring web/images web/collection-ledger.json web/preview-quality-cache.json.gz web/preview-source-index.json.gz web/preview-selections.json.gz web/preview-status.json
+          git add --sparse -- web
           git diff --cached --quiet || git commit -m "Save official spring botanical source evidence [skip ci]"
           EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
       - name: Enable reviewed baseline and the existing single daily PDF queue

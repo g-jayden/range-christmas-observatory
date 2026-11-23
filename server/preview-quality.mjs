@@ -1,5 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {materializeCommittedImage} from './committed-image-file.mjs';
 import {gzipSync,gunzipSync} from 'node:zlib';
 export const PREVIEW_QUALITY_VERSION='whole-product-preview-20261104-v2';
 const PROMPTS=[
@@ -28,8 +30,12 @@ export function previewQualityScore(q){
  return (s.whole||0)+.15*(s.packaging||0)-(logo?1.5:.25)*(s.logo||0)-1.25*(s.diagram||0)-1.5*(s.detail||0)-.25*(s.room||0)-(cropped?.9:0)+(complete?.85:0);
 }
 export function previewProblems(q){const s=q.scores||{},g=q.geometry||{},issues=[];if(s.logo>.85||s.logo>.55&&g.colour<.025)issues.push('logo');if(s.diagram>.45)issues.push('diagram');if(s.detail>.6)issues.push('detail');if(s.room>.6)issues.push('room');if(g.white>.3&&g.edge>.015&&g.touchedSides>=1)issues.push('cropped');return issues;}
-export async function analysePreviewFiles(items,{cacheFile='web/preview-quality-cache.json.gz',batchSize=64}={}){
- const cache=await readPreviewQuality(cacheFile);if(cache.version!==PREVIEW_QUALITY_VERSION){cache.version=PREVIEW_QUALITY_VERSION;cache.entries={};}const unique=[...new Map(items.map(i=>[i.hash,i])).values()],queue=unique.filter(i=>!cache.entries[i.hash]),model=queue.length?await classifier():null;let analysed=0;
+export async function analysePreviewFiles(items,{cacheFile='web/preview-quality-cache.json.gz',batchSize=64,classify=null}={}){
+ const cache=await readPreviewQuality(cacheFile);if(cache.version!==PREVIEW_QUALITY_VERSION){cache.version=PREVIEW_QUALITY_VERSION;cache.entries={};}const unique=[...new Map(items.map(i=>[i.hash,i])).values()],queue=unique.filter(i=>!cache.entries[i.hash]),model=queue.length?(classify||await classifier()):null;let analysed=0;
+ // A sparse-checkout rebase during a paid-source checkpoint can remove the
+ // working copy of an already committed image. Restore exact pixels first;
+ // absolute file paths also prevent the image runtime treating them as URLs.
+ for(const item of queue){const relative=path.relative(path.resolve('web'),path.resolve(item.file)).replaceAll(path.sep,'/');if(/^images\/(?:source|previews)\//.test(relative))await materializeCommittedImage(relative,item.hash);const bytes=await fs.readFile(item.file);if(createHash('sha256').update(bytes).digest('hex')!==item.hash)throw Error('Preview analysis source digest mismatch');item.file=path.resolve(item.file);}
  for(let offset=0;offset<queue.length;offset+=batchSize){const batch=queue.slice(offset,offset+batchSize);const results=await model(batch.map(i=>i.file),PROMPTS.map(x=>x[1]));for(let n=0;n<batch.length;n++){const scores={};for(const s of results[n]){const id=PROMPTS.find(p=>p[1]===s.label)[0];scores[id]=Math.max(scores[id]||0,s.score);}const sum=Object.values(scores).reduce((a,b)=>a+b,0);for(const id of Object.keys(scores))scores[id]=Math.round(scores[id]/sum*10000)/10000;cache.entries[batch[n].hash]={scores,geometry:await previewGeometry(batch[n].file)};}analysed+=batch.length;if(offset%256===0||offset+batchSize>=queue.length){await savePreviewQuality(cache,cacheFile);console.log(JSON.stringify({phase:'local-preview-quality',analysed,total:queue.length,reused:unique.length-queue.length,firecrawlCredits:0}));}}
  return {cache,analysed,reused:unique.length-queue.length};
 }
