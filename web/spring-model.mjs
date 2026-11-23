@@ -38,6 +38,7 @@ export function springImageDecision(p,visual){
  if((scores.other||0)>good&&(scores.other||0)>.33)return{...source,disposition:'review',reason:'non-product-photo-needs-replacement',visual};
  if(bad>good&&bad>.33)return{...source,disposition:/\b(?:spring|fresh|pink|white|green|yellow|blue|purple)\b/i.test(p.variantName||'')?'review':'exclude',reason:'source-photo-non-spring-or-source-conflict',visual};
  if(!source.department&&top?.id!=='other'&&top?.score>=.60&&/\b(?:artificial|faux|fake|floral|flowers?|foliage|plant|ferns?|orchid|succulent|tree|ivy|moss|leaves)\b/i.test((p.variantName||'')+' '+(p.sourceDescription||'')))source.department=top.id;
- if(!source.department||good<.30||bad>=good*.85||top?.id!==source.department&&top?.score>.60)return{...source,disposition:'review',reason:'source-photo-or-object-conflict',visual};
+ const objectScore=visual.objects?.find(o=>o.id===source.department)?.score||0;
+ if(!source.department||good<.30||bad>=good*.85||objectScore<.25||top?.id!==source.department&&objectScore<top.score-.12)return{...source,disposition:'review',reason:'source-photo-or-object-conflict',visual};
  return{...source,disposition:'include',reason:'exact-SKU-description-and-source-photo-agree',visual};
 }
