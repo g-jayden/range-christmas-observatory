@@ -1,6 +1,39 @@
 {
   "version": 1,
   "products": {
+    "518998": {
+      "disposition": "exclude",
+      "reason": "Whole photo and exact description show a string of textile pink bows; no botanical flowers or foliage are the offered product.",
+      "imageHash": "1d08336266c2e37a5bba7c936f6c613547791d5369bef5c9a03057de3a033705",
+      "sourceContentHash": "a0a95abf2eab9f452dd25823bde177460c993e5f7c018ae1b55c801696bbabed",
+      "listingFingerprint": "9de937a889cbfa9c421c13f621cfbe96725ef86384e489f783f1ddcb1e470557",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/5/1790255478_1477.jpg",
+      "reviewedAt": "2026-11-23T18:57:03.694Z",
+      "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
+      "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
+    },
+    "1023197": {
+      "disposition": "exclude",
+      "reason": "Photo and exact description show a rectangular modular artificial living-wall panel; outside the four requested botanical forms.",
+      "imageHash": "7ccf939a9f318833c101f2ff86a60d15ea03a3f4da7a8b9d4f29cbda72d09bcc",
+      "sourceContentHash": "ab2db2d6720a78fc3fb6362aac6af7b621731043583751c77ea995e463e044b3",
+      "listingFingerprint": "75e8b566723556acc6fd3276929577bf9d47560c32e5ed9b7ec6885a7e87422d",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/5/1789578190_8601.jpg",
+      "reviewedAt": "2026-11-23T18:57:03.695Z",
+      "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
+      "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
+    },
+    "1193354": {
+      "disposition": "exclude",
+      "reason": "Listing photo shows empty glass bud bottles decorated with printed tulips; the source description confirms bud vases, with no artificial flowers supplied.",
+      "imageHash": "ec5e3416439d4f7fe92aa14b96720678b3fe6f0db295be6b974d0f1dcc8be161",
+      "sourceContentHash": "83ba059b0e89f71bfabba0bab3355098b4b8632686971fe767490791b3acf678",
+      "listingFingerprint": "e6eace296d160e8839f83ee7868365c496921912acd1ec46392ad9a751edcb16",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/1/1790202866_2183.jpg",
+      "reviewedAt": "2026-11-23T18:57:03.695Z",
+      "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
+      "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
+    },
     "1281025": {
       "disposition": "exclude",
       "reason": "Reviewed source photo and offered title show hanging foliage or flower balls without a trunk or planted container; outside the four requested botanical forms.",
@@ -78,6 +111,28 @@
       "reviewMethod": "full-source-product-photo-and-listing-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
     },
+    "1392411": {
+      "disposition": "exclude",
+      "reason": "Photo and description show an empty raised garden bed with trellis; foliage is display context, not an artificial arrangement.",
+      "imageHash": "14dcb11359aff1b9e6ffaa70702be81fe367361efc565fc5959c90c2fce7e511",
+      "sourceContentHash": "44be50fb04b79d9324a6721c57147db068c4950dcecdab179a3c277c7427ac85",
+      "listingFingerprint": "6a2f46a52e983749641c624872f1e4f7e99377ea36c241aeed1566d83e3adab5",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/8/1783007462_7151.jpg",
+      "reviewedAt": "2026-11-23T18:57:03.695Z",
+      "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
+      "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
+    },
+    "1393048": {
+      "disposition": "exclude",
+      "reason": "Photo and exact description show a netted plant support trellis; planted foliage is display context, not the offered product.",
+      "imageHash": "892388b7ceb887f957eaf57944ab626a9559c162aa6743e5178f4c8d721efe9a",
+      "sourceContentHash": "04f6678f14730da2244d8851fbceda84e0ee068bfbcfd2ae54a4a5d0930bf38d",
+      "listingFingerprint": "cf0f0c87c922b3ed24dd80a4fbf455d68d60c00a18cedfb2917c4691ece33d54",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/1/1783069732_1975.jpg",
+      "reviewedAt": "2026-11-23T18:57:03.695Z",
+      "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
+      "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
+    },
     "1438933": {
       "disposition": "exclude",
       "reason": "Reviewed source photo and offered title show hanging foliage or flower balls without a trunk or planted container; outside the four requested botanical forms.",
@@ -87,6 +142,39 @@
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/2/1785772564_2763.jpg",
       "reviewedAt": "2026-11-23T18:22:29.797Z",
       "reviewMethod": "full-source-product-photo-and-listing-visual-review",
+      "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
+    },
+    "1457281": {
+      "disposition": "exclude",
+      "reason": "Photo shows a Buddha-shaped doorstop, and the conflicting source description concerns a vessel; neither is an artificial botanical product.",
+      "imageHash": "e55610619b739d0515c49822056f7fa507621da321cc801dd919a07645633136",
+      "sourceContentHash": "345a372f6870a7577132f0aae0797a8fe9cba24f13f2f6d8a707fdf17e78e3c1",
+      "listingFingerprint": "c595e97a7bd33a03c4006d85cc90908814bc8413f427d3b9f35241e34411f094",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/2/1786783750_5723.jpg",
+      "reviewedAt": "2026-11-23T18:57:03.695Z",
+      "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
+      "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
+    },
+    "1555664": {
+      "disposition": "exclude",
+      "reason": "Full source image shows a spool and packaging for 3D-printer filament, confirmed by the exact description.",
+      "imageHash": "e24ecf3610b418eb4f016fc8754974ba74de906f2e0e8024043966d6c8c90f23",
+      "sourceContentHash": "0c1b8aa1590ccc2d6fdd750aaacb27f43a56d04ded379bab9d32572e34861037",
+      "listingFingerprint": "a6e75303a381bef1062010a7462fe05a9ad4a008248cd6d941ca9d67260e75c1",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/5/1790862908_8662.jpg",
+      "reviewedAt": "2026-11-23T18:57:03.695Z",
+      "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
+      "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
+    },
+    "3315438": {
+      "disposition": "exclude",
+      "reason": "Photo and description show a multi-level plant display stand; scene plants are not the offered product.",
+      "imageHash": "57586c081eb170068b17eff52b643ff4388d78277f0410298be838cff102d499",
+      "sourceContentHash": "6e107837ad2f9916fb92e4bf30a617c7a701f13df1aa9f05791ec6ec2521e340",
+      "listingFingerprint": "6f9b3d2c7faeab4a3076a62c84110243b9de97d54ebcbb051e6a7677b70c6973",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/8/1790589844_7862.jpg",
+      "reviewedAt": "2026-11-23T18:57:03.695Z",
+      "reviewMethod": "full-source-product-photo-and-exact-description-visual-review",
       "reviewedSourceSnapshot": "c9e6ac90ca0e5c04494c044506e1886f8078700f"
     }
   }
