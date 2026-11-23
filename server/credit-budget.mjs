@@ -5,7 +5,7 @@ import {atomicJson,SourceError} from './sync.mjs';
 import {loadUncappedCreditGrants,indexUncappedCreditReceipts,ordinaryCreditUsage,indexScopedNativeReservations,ordinaryReservationTotal} from './credit-scope.mjs';
 const file='web/collection-ledger.json';
 export const periodKey=(now=Date.now())=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit'}).format(new Date(now));
-export const runKey=()=>String(process.env.GITHUB_RUN_ID||'local')+'-'+String(process.env.GITHUB_RUN_ATTEMPT||'1');
+export const runKey=()=>{const phase=process.env.COLLECTION_BUDGET_PHASE;if(phase&&!/^[a-z][a-z0-9-]{0,40}$/.test(phase))throw Error('Invalid collection budget phase');return String(process.env.GITHUB_RUN_ID||'local')+'-'+String(process.env.GITHUB_RUN_ATTEMPT||'1')+(phase?'-'+phase:'');};
 export function budgetError(message){const e=new SourceError(message,402);e.budgetLimited=true;return e;}
 export async function readLedger(){
  let data;try{data=JSON.parse(await fs.readFile(file,'utf8'))}catch{data={}};data.version=2;data.periods||={};

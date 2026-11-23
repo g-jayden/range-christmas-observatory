@@ -29,6 +29,7 @@ jobs:
       ONNXRUNTIME_NODE_INSTALL_CUDA: skip
       COLLECTION_CHECKPOINTS: '1'
       EVIDENCE_NATIVE_ONLY: '1'
+      COLLECTION_BUDGET_PHASE: spring-source
       SPRING_RESUME: ${{ inputs.resume && '1' || '0' }}
       SPRING_LOCAL_ONLY: ${{ inputs.phase == 'classify' && '1' || '0' }}
     steps:
@@ -54,7 +55,7 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
       - name: Reserve existing owner-authorised source budget
-        if: inputs.phase != 'classify'
+        if: inputs.phase != 'classify' && inputs.phase != 'review'
         run: |
           node scripts/reserve-credits.mjs
           git config user.name github-actions[bot]
@@ -70,12 +71,16 @@ jobs:
         run: node server/repair-spring-source.mjs
       - name: Persist the next-stage reservation and collection evidence
         if: inputs.phase != 'classify'
+        env:
+          COLLECTION_BUDGET_PHASE: spring-photos
         run: |
           node scripts/reserve-credits.mjs
           node --input-type=module -e "import {publishCollectionCheckpoint} from './server/collection-checkpoints.mjs'; await publishCollectionCheckpoint({stage:'spring-photo-stage'});"
       - name: Restore committed source photos before image review
         run: node scripts/restore-spring-image-archive.mjs
       - name: Cross-check exact SKU descriptions and native product photos locally
+        env:
+          COLLECTION_BUDGET_PHASE: spring-photos
         run: node server/review-spring.mjs
       - name: Preserve official evidence and source receipts
         if: always()
