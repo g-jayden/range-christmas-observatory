@@ -53,7 +53,7 @@ assert.equal(await publishCollectionCheckpoint({}, {env:{},run:()=>{throw Error(
 await assert.rejects(publishCollectionCheckpoint({}, {env:{COLLECTION_CHECKPOINTS:'1'},run:fakeRun}));
 assert.equal((await publishCollectionCheckpoint({stage:'discovery'}, {env:{COLLECTION_CHECKPOINTS:'1',GITHUB_ACTIONS:'true',GITHUB_REPOSITORY:'g-jayden/range-christmas-observatory',GITHUB_RUN_ID:'123'},run:fakeRun})).revision,rev);
 assert(commands.some(([,args])=>args.includes('scripts/push-evidence.mjs')));
-assert(commands.some(([bin,args])=>bin==='git'&&args.join(' ')==='add --sparse -- web'),'New exact source-image files outside the sparse checkout must be durably staged before publication');
+assert(commands.some(([bin,args])=>bin==='git'&&args.join(' ')==='add --sparse --ignore-removal -- web'),'New exact source-image files must be staged outside the sparse checkout while absent archived files are preserved');
 
 const fixtureBytes=Buffer.from('verified-local-image-fixture'),fixtureHash=createHash('sha256').update(fixtureBytes).digest('hex');
 const root=await fs.mkdtemp(path.join(os.tmpdir(),'range-resilience-')),cwd=process.cwd(),priorFetch=globalThis.fetch,priorNow=Date.now,envBefore=Object.fromEntries(['GITHUB_ACTIONS','NOTIFICATION_PHASE','COLLECTION_MODE'].map(k=>[k,process.env[k]]));
