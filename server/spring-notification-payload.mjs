@@ -1,0 +1,8 @@
+const fields=['sku','aliasSkus','retailerId','collectionId','kind','department','departmentIds','variantName','name','sourceUrl','priceGBP','price','originalPrice','originalPriceKind','promoText','sourcePriceBadge','inStock','newIn','newStatus','newEvidence','arrivalEvidence','firstObservedAt','firstNewObservedAt','everNew','observedAt','dimensions','originalImageUrl','originalCachedImageUrl','originalImageEvidence','springNativePhotoVerified','detailsReady','classificationEvidence'];
+// The full descriptions, galleries and image scores remain in the immutable
+// catalogue. The notification service receives exact identities and evidence,
+// then the common PDF builder resolves full records from that catalogue.
+export function springNotificationPayload(catalogue,committedRevision){
+ if(!catalogue.ready||!catalogue.collectionComplete||!/^[a-f0-9]{40}$/.test(committedRevision||''))throw Error('Reviewed committed spring catalogue required');
+ return{version:catalogue.version,ready:true,collectionComplete:true,collectionId:'spring',observedAt:catalogue.observedAt,committedRevision,source:Object.fromEntries(['id','url','expected','observed','unique','complete'].filter(k=>catalogue.source[k]!==undefined).map(k=>[k,catalogue.source[k]])),products:catalogue.products.map(p=>({...Object.fromEntries(fields.filter(k=>p[k]!==undefined).map(k=>[k,p[k]])),springAudit:{version:p.springAudit?.version,disposition:p.springAudit?.disposition,imageHash:p.springAudit?.imageHash,sourceContentHash:p.springAudit?.sourceContentHash},detailEvidence:{selectedSku:p.detailEvidence?.selectedSku,verifiedProductSection:p.detailEvidence?.verifiedProductSection,sourceContentHash:p.detailEvidence?.sourceContentHash,observedAt:p.detailEvidence?.observedAt}}))};
+}
