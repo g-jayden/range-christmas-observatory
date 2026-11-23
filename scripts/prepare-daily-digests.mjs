@@ -44,7 +44,7 @@ if(process.env.DIGEST_REPAIR_COMBINED==='true'){
  if(selected.length<2)throw Error('Real verified owner test products unavailable');
  plan=await control('/internal/digest-owner-test',{products:selected,requestId:'owner-pdf-'+(process.env.GITHUB_RUN_ID||'local')+'-'+(process.env.GITHUB_RUN_ATTEMPT||'1')});
 }else plan=await control('/internal/digest-plan',{});
-if(plan.waiting.length)console.log('::warning::Pending current source verification: '+[...new Set(plan.waiting.flatMap(w=>w.retailers.map(r=>r.retailerId)))].join(', ')+'; verified retailers are processed independently.');
+if(plan.waiting.length)console.log('::warning::The complete daily PDF is waiting for all subscribed sources: '+[...new Set(plan.waiting.flatMap(w=>w.retailers.map(r=>r.retailerId)))].join(', ')+'; no retailer subset will be sent.');
 for(const originalGroup of plan.plans){
  try{
   const products=[],items=[],native=new Map(),verifiedKeys=[];
@@ -59,7 +59,8 @@ for(const originalGroup of plan.plans){
   }
   if(!products.length)continue;
   if(originalGroup.correction&&products.length!==originalGroup.products.length)throw Error('Combined correction must verify every originally delivered product before publication');
-  const group=products.length===originalGroup.products.length?originalGroup:await control('/internal/digest-subset',{planId:originalGroup.id,readyKeys:verifiedKeys});
+  if(products.length!==originalGroup.products.length){failures.push({plan:originalGroup.id,error:'Complete daily PDF is waiting for every planned product; no partial report was prepared',ready:products.length,expected:originalGroup.products.length});continue;}
+  const group=originalGroup;
   const identity=catalogueIdentityIndex(products);for(const p of products){const canonical=identity.canonical[productRetailer(p)+':'+p.sku];if(canonical)p.canonicalSku=canonical;}
   const dir='web/reports/'+group.id;await fs.mkdir(dir,{recursive:true});
   const bytes=await createCatalogueReport(products,{output:dir+'/NEW.pdf',readImage:p=>native.get(p)}),manifest={...(group.correction?{correction:true,originalReports:group.parents}:{}),version:'daily-native-pdf-v1',layoutVersion:PDF_LAYOUT_VERSION,planId:group.id,day:group.day,items,pdf:{sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length}};
@@ -68,5 +69,5 @@ for(const originalGroup of plan.plans){
 }
 await nativeRecovery.close();
 await fs.mkdir('runtime',{recursive:true});await fs.writeFile('runtime/daily-digest-outbox.private.json',JSON.stringify({prepared,failures}));
-if(failures.length)console.log('::warning::Some product evidence is still queued; verified products can be delivered without marking failed products sent.');
+if(failures.length)console.log('::warning::The complete affected report remains queued until every planned product is verified; no partial PDF is sent.');
 console.log(JSON.stringify({phase:'Prepare consolidated native PDF',prepared:prepared.map(({products,bytes,deferred})=>({products,bytes,deferred})),sourceWaits:plan.waiting.length,failures,firecrawlCredits:0}));

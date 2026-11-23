@@ -1,7 +1,7 @@
 import{dispatchApprovedNativeRecovery}from'./approved-native-recovery.mjs';
 import {dispatchDigestDue} from './digest-clock.mjs';
 import {AR_DEPARTMENTS} from '../web/ar-model.mjs';
-import {dailyDigestPlans,deliverDailyDigest,dailyDigestOwnerTest,dailyDigestReadySubset} from './daily-digest.mjs';
+import {dailyDigestPlans,deliverDailyDigest,dailyDigestOwnerTest,dailyDigestOwnerCorrection,dailyDigestReadySubset} from './daily-digest.mjs';
 import{publicImage}from'./public-image.mjs';
 import{markRetailerPublished}from'./retailer-published.mjs';
 import{pagesLease}from'./pages-lease.mjs';
@@ -203,6 +203,7 @@ export class Control{
    if(route==='/internal/digest-plan'&&req.method==='POST')return response(await dailyDigestPlans(this.db));
    if(route==='/internal/digest-subset'&&req.method==='POST')return response(await dailyDigestReadySubset(this.db,await req.json()));
    if(route==='/internal/digest-owner-test'&&req.method==='POST'){const b=await req.json();return response(await dailyDigestOwnerTest(this.db,{ownerId:this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID,products:b.products,requestId:b.requestId}));}
+   if(route==='/internal/digest-owner-correction'&&req.method==='POST'){const b=await req.json();return response(await dailyDigestOwnerCorrection(this.db,{...b,ownerId:this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID}));}
    if(route==='/internal/digest-ready'&&req.method==='POST')return response(await deliverDailyDigest(this.db,{body:await req.json(),send:this.send.bind(this),origin:url.origin}));
    if(route==='/internal/retailer-published'&&req.method==='POST')return response(await markRetailerPublished({storage:this.db,body:await req.json()}));
    if(route==='/internal/pages-publication-lease'&&req.method==='POST')return response(await pagesLease({storage:this.db,body:await req.json()}));
