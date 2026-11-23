@@ -1,8 +1,8 @@
 {
-  "requestId": "owner-recovery-20261124-spring-native-gallery-v2",
+  "requestId": "owner-recovery-20261124-spring-category-root-proof",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-23T19:57:57.991Z",
+  "requestedAt": "2026-11-23T20:05:56.613Z",
   "targets": [
-    "spring-review"
+    "spring-address-proof"
   ]
 }
