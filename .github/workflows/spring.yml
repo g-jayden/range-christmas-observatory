@@ -1,0 +1,58 @@
+name: The Range spring botanical catalogue
+on:
+  workflow_dispatch:
+    inputs:
+      resume:
+        type: boolean
+        default: false
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: range-spring-source
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+      SPRING_RESUME: ${{ inputs.resume && '1' || '0' }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/images/
+            !/web/reports/
+            !/web/mail-assets/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci --no-audit --no-fund
+      - uses: actions/cache@v6.1.0
+        with:
+          path: runtime/models
+          key: local-clip-vit-base-patch32-q8-v1
+      - name: Reserve existing owner-authorised source budget
+        run: |
+          node scripts/reserve-credits.mjs
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add --sparse -- web/collection-ledger.json
+          git diff --cached --quiet || git commit -m "Reserve spring free-first source collection [skip ci]"
+          EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
+      - name: Read complete official source and only missing family details
+        run: node server/update-spring.mjs
+      - name: Preserve official evidence and source receipts
+        if: always()
+        run: |
+          git add --sparse -- web/spring web/images web/collection-ledger.json
+          git diff --cached --quiet || git commit -m "Save official spring botanical source evidence [skip ci]"
+          EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
