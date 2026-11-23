@@ -24,6 +24,7 @@ assert.match(productNames({department:'nx-baubles',variantName:'Decoris Assorted
 assert.match(productNames({department:'jl-topper',variantName:'Georg Jensen Lyra Star Christmas Tree Top Decoration, Gold'}).zh,/圣诞树顶装饰$/);
 assert.match(productNames({department:'garland',variantName:'9ft Christmas Garland Decorations Fireplace Artificial Wreath Bushy Pine 220Tips - Green'}).zh,/绿色松枝圣诞长藤/);
 const light=productNames({department:'lights',variantName:'300 Warm White LED Lights'}).zh;assert(light.includes('暖白光'));assert(!light.includes('白色'),'Warm white describes the emitted light, not a claimed body colour');
+const pineConeLight=productNames({department:'lights',variantName:'LED Multi action Pine Cone Christmas Lights - Warm White'}).zh;assert(pineConeLight.includes('松果'));assert(pineConeLight.includes('多模式'));assert(pineConeLight.includes('暖白光'));assert(!pineConeLight.includes('松枝'));assert(!pineConeLight.includes('多彩'),'Multi action describes lighting modes, not multiple colours');
 const reviewed={...tree,localizedProductName:{sourceName:tree.variantName,zh:'华丽冷杉圣诞树'}};assert.equal(productNames(reviewed).zh,'华丽冷杉圣诞树');assert.notEqual(productNames({...reviewed,variantName:'Pink Tinsel Tree'}).zh,'华丽冷杉圣诞树','A translation cannot outlive its exact official source title');
 for(const retailerId of ['the-range','asda','ms','bm','hb','du','nx','jl','mt','bq','ar']){const names=productNames({...tree,retailerId});assert.equal(names.en,tree.variantName);assert(names.zh.includes('圣诞树'));}
 

@@ -9,7 +9,7 @@ import {reserveCredits,openCreditBudget,readLedger,periodKey,runKey} from '../se
 import {publishCollectionCheckpoint} from '../server/collection-checkpoints.mjs';
 import {atomicJson} from '../server/sync.mjs';
 const DIR='web/ms',read=(name,fallback)=>fs.readFile(DIR+'/'+name,'utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return fallback;throw e;});await fs.mkdir(DIR,{recursive:true});
-const previous=await read('catalogue.json',{products:[]}),checkpoint=await read('checkpoint.json',{families:{}}),status=await read('status.json',{}),day=new Date(Date.now()+28800000).toISOString().slice(0,10),due=Date.parse(day+'T07:00:00+08:00');
+const previous=await read('catalogue.json',{products:[]}),checkpoint=await read('checkpoint.json',{families:{}}),status=await read('status.json',{}),day=new Date(Date.now()+28800000).toISOString().slice(0,10),due=Date.parse(day+'T06:00:00+08:00');
 if(previous.baselineReady&&['active','collected','needs-image-evidence'].includes(status.state)&&Date.parse(previous.observedAt)>=due&&process.env.MS_FORCE!=='true'){console.log('M&S daily observation already complete; no duplicate source requests');process.exit(0);}
 const initial=!previous.notificationBaselineReady,policy=await loadPolicy(),key=process.env.FIRECRAWL_API_KEY,freeOnly=process.env.MS_FREE_ONLY==='true';
 let credits=0,requests=0,budget,uncertain=0;const receipts=[];

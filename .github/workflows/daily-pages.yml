@@ -4,8 +4,8 @@ on:
     branches: [main]
     paths: ['web/evidence-repair-request.json', 'web/asda/request.json']
   schedule:
-    - cron: '0 23 * * *'
-    - cron: '1 23 * * *'
+    - cron: '0 22 * * *'
+    - cron: '1 22 * * *'
     - cron: '0 16 * * *'
   workflow_dispatch:
     inputs:

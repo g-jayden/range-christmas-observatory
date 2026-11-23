@@ -1,7 +1,7 @@
 name: Matalan free exact SKU collection and native photos
 on:
   schedule:
-    - cron: '0 23 * * *'
+    - cron: '0 22 * * *'
   workflow_dispatch:
     inputs:
       rebuildOnly:

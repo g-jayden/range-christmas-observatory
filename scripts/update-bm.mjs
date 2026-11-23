@@ -7,7 +7,7 @@ import {publishCollectionCheckpoint} from '../server/collection-checkpoints.mjs'
 import {atomicJson} from '../server/sync.mjs';
 await fs.mkdir('web/bm',{recursive:true});const previous=await fs.readFile('web/bm/catalogue.json','utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return {products:[]};throw e;});
 const saveSnapshot=async value=>{const snapshot=buildBmSnapshot(value,{previous});await atomicJson('web/bm/catalogue.json',snapshot);await atomicJson('web/bm/status.json',{state:'collected',observedAt:snapshot.observedAt,sourceCounts:snapshot.sourceCounts,products:snapshot.products.filter(p=>p.inStock).length,uniqueSourceSkus:snapshot.products.length,uniqueParentCodes:snapshot.uniqueParentCodes,details:snapshot.products.filter(p=>p.detailsReady).length,firecrawlCredits:credits});};
-const day=new Date(Date.now()+28800000).toISOString().slice(0,10),due=Date.parse(day+'T07:00:00+08:00');
+const day=new Date(Date.now()+28800000).toISOString().slice(0,10),due=Date.parse(day+'T06:00:00+08:00');
 let credits=0;if(process.env.BM_REBUILD_ONLY==='true'){const value=JSON.parse(await fs.readFile('web/bm/source-directory.json','utf8'));if(Date.now()-Date.parse(value.observedAt)>86400000)throw Error('B&M directory checkpoint is stale');await saveSnapshot(value);console.log('Rebuilt B&M from the verified source checkpoint; zero source requests');process.exit(0);}
 if(previous.notificationBaselineReady&&Date.parse(previous.observedAt)>=due&&process.env.BM_FORCE!=='true'){console.log('B&M daily directory already verified; zero duplicate requests');process.exit(0);}
 const policy=await loadPolicy(),key=process.env.FIRECRAWL_API_KEY;if(!key)throw Error('Existing Firecrawl server credential is required for B&M official-origin search');

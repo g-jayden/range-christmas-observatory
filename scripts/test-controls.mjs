@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';import {firstRun,advanceRun,validateSchedule,nextNewCheck,advanceNewCheck} from '../server/schedule.mjs';import handler,{Control} from '../cloud/worker.mjs';import {retryingReader} from '../server/retry-reader.mjs';import {DEPARTMENTS} from '../web/catalogue-model.mjs';
 const start=new Date('2026-10-30T08:20:00Z');
-assert.equal(nextNewCheck(new Date('2026-10-30T09:00:00Z')),'2026-10-30T23:00:00.000Z');
-assert.equal(nextNewCheck(new Date('2026-11-03T22:59:00Z')),'2026-11-03T23:00:00.000Z');
-assert.equal(nextNewCheck(new Date('2026-11-03T23:00:00Z')),'2026-11-04T23:00:00.000Z');
+assert.equal(nextNewCheck(new Date('2026-10-30T09:00:00Z')),'2026-10-30T22:00:00.000Z');
+assert.equal(nextNewCheck(new Date('2026-11-03T21:59:00Z')),'2026-11-03T22:00:00.000Z');
+assert.equal(nextNewCheck(new Date('2026-11-03T22:00:00Z')),'2026-11-04T22:00:00.000Z');
 assert.equal(advanceNewCheck('2026-11-03T23:00:00Z',new Date('2026-11-03T23:07:00Z')),'2026-11-04T23:00:00.000Z');
 assert.equal(firstRun({},start).nextRunAt,'2026-11-05T16:00:00.000Z');
 assert.equal(validateSchedule({intervalDays:'',time:'19:25'}).time,'00:00');

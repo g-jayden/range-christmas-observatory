@@ -12,7 +12,7 @@ export function reportProductEvidence(product,candidate,source,{retailerId,now=D
  // A PDF contains only current name, price, size and a verified exact-SKU
  // original. An unavailable, unused long-description section must not block
  // these independently established fields or promote a PDP to verified.
- const explicitSize=titleSizeFacts(product),native=nativeSourceUrl(product),photo=product.originalImages?.some(g=>g.url===native&&exactNativeGalleryMember(product,g)),epoch=Date.parse(product.observedAt),day=new Date(now+28800000).toISOString().slice(0,10),cutoff=Date.parse(day+(['nx','jl'].includes(retailerId)?'T06:00:00+08:00':'T07:00:00+08:00'));
+ const explicitSize=titleSizeFacts(product),native=nativeSourceUrl(product),photo=product.originalImages?.some(g=>g.url===native&&exactNativeGalleryMember(product,g)),epoch=Date.parse(product.observedAt),day=new Date(now+28800000).toISOString().slice(0,10),cutoff=Date.parse(day+'T06:00:00+08:00');
  const currentClosedDirectory=source?.collectionComplete===true&&source?.baselineReady===true&&source.observedAt===product.observedAt&&source.products?.some(p=>String(p.sku)===sku&&p.sourceUrl===product.sourceUrl&&p.variantName===product.variantName&&p.priceGBP===product.priceGBP&&p.inStock===true);
  const directoryReport=!fullDetail&&currentClosedDirectory&&epoch>=cutoff&&epoch<=now&&explicitSize&&photo&&!product.imageIssue&&!product.previewReviewRequired&&!product.previewImage?.issues?.length;
  if(!fullDetail&&!directoryReport)reasons.push('exact-SKU-detail-proof-missing');
