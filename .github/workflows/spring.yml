@@ -6,7 +6,7 @@ on:
     inputs:
       phase:
         type: choice
-        options: [all, review, repair]
+        options: [all, review, repair, classify]
         default: all
       resume:
         type: boolean
@@ -30,6 +30,7 @@ jobs:
       COLLECTION_CHECKPOINTS: '1'
       EVIDENCE_NATIVE_ONLY: '1'
       SPRING_RESUME: ${{ inputs.resume && '1' || '0' }}
+      SPRING_LOCAL_ONLY: ${{ inputs.phase == 'classify' && '1' || '0' }}
     steps:
       - uses: actions/checkout@v7.0.1
         with:
@@ -49,6 +50,7 @@ jobs:
           path: runtime/models
           key: local-clip-vit-base-patch32-q8-v1
       - name: Reserve existing owner-authorised source budget
+        if: inputs.phase != 'classify'
         run: |
           node scripts/reserve-credits.mjs
           git config user.name github-actions[bot]
@@ -57,12 +59,13 @@ jobs:
           git diff --cached --quiet || git commit -m "Reserve spring free-first source collection [skip ci]"
           EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
       - name: Read complete official source and only missing family details
-        if: inputs.phase != 'review' && inputs.phase != 'repair'
+        if: inputs.phase != 'review' && inputs.phase != 'repair' && inputs.phase != 'classify'
         run: node server/update-spring.mjs
       - name: Repair only unresolved official source addresses
         if: inputs.phase == 'repair'
         run: node server/repair-spring-source.mjs
       - name: Persist the next-stage reservation and collection evidence
+        if: inputs.phase != 'classify'
         run: |
           node scripts/reserve-credits.mjs
           node --input-type=module -e "import {publishCollectionCheckpoint} from './server/collection-checkpoints.mjs'; await publishCollectionCheckpoint({stage:'spring-photo-stage'});"
