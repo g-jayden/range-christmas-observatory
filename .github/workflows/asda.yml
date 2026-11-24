@@ -8,8 +8,9 @@ on:
         default: false
 permissions:
   contents: write
+  actions: write
 concurrency:
-  group: range-source-and-pages-production
+  group: range-asda-source
   cancel-in-progress: false
   queue: max
 jobs:
@@ -19,6 +20,8 @@ jobs:
     env:
       FIRECRAWL_API_KEY: ${{ inputs.rebuildOnly != true && secrets.FIRECRAWL_API_KEY || '' }}
       ASDA_REBUILD_ONLY: ${{ inputs.rebuildOnly == true && 'true' || 'false' }}
+      EVIDENCE_ISOLATE_WORKTREE: '1'
+      COLLECTION_CHECKPOINTS: '1'
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
@@ -32,10 +35,15 @@ jobs:
             /*
             !/web/images/*
             /web/images/asda/
+            !/web/reports/
+            !/web/mail-assets/
+            /web/mail-assets/asda-*/
+            !/web/bq/paid-source-checkpoints/
+            !/web/bq/source-billing-history/
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
-      - run: npm install --no-audit --no-fund
+      - run: npm ci
       - run: node scripts/test-asda.mjs
       - uses: actions/cache@v6.1.0
         with:
@@ -49,14 +57,33 @@ jobs:
         run: node scripts/enrich-asda.mjs
       - name: Prepare only newly observed ASDA notifications
         run: node scripts/prepare-asda-notifications.mjs
+      - name: Archive exact source and native evidence before publication
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: asda-source-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            web/asda/
+            web/images/asda/
+            web/collection-ledger.json
+            web/preview-quality-cache.json.gz
+          retention-days: 3
+          compression-level: 9
+          if-no-files-found: warn
       - name: Preserve paid source checkpoints even after a partial failure
+        id: evidence
         if: always()
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           mkdir -p web/images/asda web/mail-assets
-          git add web/asda web/images/asda web/mail-assets web/collection-ledger.json
+          git add --sparse -- web/asda web/images/asda web/mail-assets web/collection-ledger.json
           git diff --cached --quiet || git commit -m "Save verified ASDA catalogue and exact SKU checkpoints"
           node scripts/push-evidence.mjs
       - name: Deliver from the durable published attachment version
         run: node scripts/deliver-asda-notifications.mjs
+      - name: Publish the saved ASDA catalogue without source requests
+        if: always() && steps.evidence.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/request-retailer-site-publish.mjs asda
