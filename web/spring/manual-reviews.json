@@ -38217,17 +38217,21 @@
       "sourceFactsFingerprint": "930061032d5a3a8441f7b1fb4d2118f3d846350309917bc9e34a7e7401de2909"
     },
     "6172923": {
-      "disposition": "review",
-      "reason": "The selected native frame is a leaf/flower/pot close-up, obscures supplied stem ends, or is a logo instead of the whole offered product. Keep the real SKU pending a complete exact-gallery frame; do not exclude its spring colour merely because the picture is unsuitable.",
+      "disposition": "include",
+      "reason": "Viewed the full 1500px native file and checked the exact pack-of-six description and 9cm x 8.5cm x 8.8cm specifications. This is a short carnation craft pick: the complete flower and entire short plastic insertion clip are inside the image, not a cropped long carnation stem. The gallery illustrates one supplied pick; the exact title retains Pack of 6.",
       "department": "spring-stems",
-      "imageHash": "6e26571f5fa3e5cda134fe007a9b5fa3201da75039c7f3dbb0a6f3cd07dcfba8",
+      "imageHash": "2c70a28c05774d557a42b93248184bb12f955b018cda6066c736d425810577b3",
       "sourceContentHash": "5bd1dc2c6820d782f30e50ec05680d94b3be87a23b9ef983fc0163f0b1ed5ac5",
       "listingFingerprint": "90ffc175ce83081d75c5d2196113762c61e839ab62731fc5da8c5eb862fda1a7",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/3/1778858893_2645.png",
-      "reviewedAt": "2026-11-24T01:40:47.383Z",
-      "reviewArtifact": "current-native-sheet-03",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "a739f2e10e5046ef61692dc90f86d45f19f56bc9487e4093601293ecc03b93d8"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/7/1778858894_4298.png",
+      "reviewedAt": "2026-11-24T08:37:48.720Z",
+      "reviewArtifact": "whole-short-carnation-pick-native-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "a739f2e10e5046ef61692dc90f86d45f19f56bc9487e4093601293ecc03b93d8",
+      "colours": [
+        "粉色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/7/1778858894_4298.png"
     },
     "6181930": {
       "disposition": "include",
