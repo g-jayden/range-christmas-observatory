@@ -1,0 +1,14 @@
+import assert from'node:assert/strict';
+import{collectDailyRangeScopes}from'../server/daily-range-scopes.mjs';
+import{createCatalogueTransport}from'../server/catalogue-transport.mjs';
+async function observation(parallel){
+ let batches=0;const read=createCatalogueTransport(async(fn,urls)=>{batches++;return urls.map(url=>({url,status:200,body:{url,price:999,observedAt:'2026-11-24T22:00:00Z'}}));});
+ const scope=async name=>{const root='https://search-lon.therange.co.uk/api/productlist?scope='+name,first=await read(root),pages=await read.many(Array.from({length:25},(_,i)=>root+'&page='+i)),last=await read.fresh(root);assert.deepEqual(first,last);return{name,rows:pages,sourceObservedAt:first.observedAt};};
+ const collectTrees=async()=>({snapshot:await scope('trees')}),collectDecorations=()=>scope('decorations');
+ const collectLights=async shared=>{const s=await scope('lights');s.shared=await shared();return s;},collectThemes=async shared=>{const s=await scope('themes');s.shared=await shared();return s;};
+ let value;if(parallel)value=await collectDailyRangeScopes({collectTrees,collectDecorations,collectLights,collectThemes});else{const gathered=await collectTrees(),decorations=await collectDecorations(),lights=await collectLights(async()=>[gathered.snapshot,decorations]),themes=await collectThemes(async()=>[gathered.snapshot,decorations,lights]);value={gathered,decorations,lights,themes};}return{value,batches};
+}
+const sequential=await observation(false),pooled=await observation(true);assert.deepEqual(pooled.value,sequential.value,'Pooling cannot change a source row, timestamp, offer or shared-SKU merge hierarchy');assert(pooled.batches<=sequential.batches-3,'Independent scopes must share paid batches instead of buying each scope separately');
+let calls=0;const prior={products:[{sku:'unchanged'}]},ready={baselineReady:true,products:[]};const saved=await collectDailyRangeScopes({recoveryOnly:true,previous:prior,previousDecorations:ready,previousLights:ready,previousThemes:ready,collectTrees:()=>calls++,collectDecorations:()=>calls++,collectLights:()=>calls++,collectThemes:()=>calls++});assert.equal(calls,0);assert.deepEqual(saved.gathered.snapshot,prior);
+let lateSaved=false;await assert.rejects(collectDailyRangeScopes({collectTrees:async()=>{throw Error('Actual source count conflict');},collectDecorations:async()=>{await new Promise(setImmediate);lateSaved=true;return{};},collectLights:async shared=>{await shared();return{};},collectThemes:async shared=>{await shared();return{};}}),/Actual source count conflict/);assert(lateSaved,'Every in-flight source action settles before reader shutdown; paid successes cannot be abandoned');
+console.log(JSON.stringify({test:'pooled Range directory scopes',sequentialBatches:sequential.batches,pooledBatches:pooled.batches,sourceRowsAndTimestampsUnchanged:true,mergeHierarchyPreserved:true,providerCallsInRecovery:0}));
