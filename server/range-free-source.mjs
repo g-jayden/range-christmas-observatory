@@ -49,5 +49,6 @@ export function createFreeFirstRangeSource({fetcher=fetch,http2=ordinaryHttp2,br
   const parse=new Function('DOMParser','fetch','payload','return ('+lookup.toString()+')(payload)'),rows=await parse(ProductDOMParser,ordinaryFetch,{products,concurrency:2});
   metrics.freeProductPageLookups=(metrics.freeProductPageLookups||0)+products.length;metrics.freeProductPagesResolved=(metrics.freeProductPagesResolved||0)+rows.filter(r=>r.sourceUrl).length;return rows;
  }
- return{catalogues,families,resolveProductPages,metrics:()=>structuredClone(metrics),close:async()=>{await browser?.close();}};
+ async function galleryDocuments(products){const docs=[];for(const p of products){const url=target(p.sourceUrl).href,r=await read(url,{validate:s=>typeof s==='string'&&/product_id|gtm_product_data/.test(s)&&/class=["'][^"']*\brsImg\b/i.test(s)});if(r.status===200)docs.push({sku:String(p.sku),rawHtml:r.value,source:'ordinary-free-'+r.method});}return docs;}
+ return{catalogues,families,resolveProductPages,galleryDocuments,metrics:()=>structuredClone(metrics),close:async()=>{await browser?.close();}};
 }

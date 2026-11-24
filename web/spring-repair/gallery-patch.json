@@ -1,0 +1,81 @@
+{
+  "baseObservedAt": "2026-11-23T17:43:16.069Z",
+  "galleries": [
+    {
+      "sku": "1449843",
+      "inputSourceUrl": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/180cm-artificial-fire-retardant-black-olive-tree-and-trunk/#1449843",
+      "sourceUrl": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/180cm-artificial-fire-retardant-black-olive-tree-and-trunk",
+      "listingImageUrl": "https://www.therange.co.uk/media/5/5/1786371279_5217.jpg",
+      "variantId": "10285804",
+      "productId": "3631849",
+      "images": [
+        {
+          "url": "https://www.therange.co.uk/media/1/4/1786371280_8527.jpg",
+          "thumbnail": "https://www.therange.co.uk/media/5/5/1786371279_5217.jpg",
+          "selectedSku": "1449843",
+          "variantId": "10285804",
+          "source": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/180cm-artificial-fire-retardant-black-olive-tree-and-trunk"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/0/1/1786383432_5652.jpg",
+          "thumbnail": "https://www.therange.co.uk/media/5/6/1786383432_7724.jpg",
+          "selectedSku": "1449843",
+          "variantId": "10285804",
+          "source": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/180cm-artificial-fire-retardant-black-olive-tree-and-trunk"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/4/2/1786375939_5622.jpg",
+          "thumbnail": "https://www.therange.co.uk/media/9/7/1786375939_5863.jpg",
+          "selectedSku": "1449843",
+          "variantId": "10285804",
+          "source": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/180cm-artificial-fire-retardant-black-olive-tree-and-trunk"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/9/8/1786373033_9590.jpg",
+          "thumbnail": "https://www.therange.co.uk/media/3/1/1786373032_6220.jpg",
+          "selectedSku": "1449843",
+          "variantId": "10285804",
+          "source": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/180cm-artificial-fire-retardant-black-olive-tree-and-trunk"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/2/9/1786374215_8069.jpg",
+          "thumbnail": "https://www.therange.co.uk/media/6/4/1786374215_6290.jpg",
+          "selectedSku": "1449843",
+          "variantId": "10285804",
+          "source": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/180cm-artificial-fire-retardant-black-olive-tree-and-trunk"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/0/1/1786375323_8914.jpg",
+          "thumbnail": "https://www.therange.co.uk/media/6/3/1786375322_4873.jpg",
+          "selectedSku": "1449843",
+          "variantId": "10285804",
+          "source": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/180cm-artificial-fire-retardant-black-olive-tree-and-trunk"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/8/3/1786377712_9469.jpg",
+          "thumbnail": "https://www.therange.co.uk/media/5/1/1786377712_5810.jpg",
+          "selectedSku": "1449843",
+          "variantId": "10285804",
+          "source": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/180cm-artificial-fire-retardant-black-olive-tree-and-trunk"
+        }
+      ],
+      "observedAt": "2026-11-24T03:01:32.000Z",
+      "method": "official-exact-SKU-image-gallery-only",
+      "inputFingerprint": "234e509be1205ab71790e4eed2f5d96dca1b729f4618f41b9a0f53bef96b7e64",
+      "collectionId": "spring",
+      "transport": "live-official-product-gallery-native-anchor-and-thumbnail-pairs",
+      "scrapeId": "01a20b80-8750-73c2-b2a5-025b4152194a"
+    }
+  ],
+  "audit": {
+    "sourceDirectoriesRequested": 0,
+    "productFactsUpdated": 0,
+    "sourceScrapeReceipts": [
+      {
+        "id": "01a20b80-8750-73c2-b2a5-025b4152194a",
+        "credits": 1,
+        "status": 200
+      }
+    ]
+  }
+}

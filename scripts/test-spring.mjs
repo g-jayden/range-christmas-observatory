@@ -97,6 +97,7 @@ await import('./test-spring-listing-native.mjs');
 await import('./test-spring-source-patches.mjs');
 await import('./test-spring-human-previews.mjs');
 await import('./test-spring-material-context.mjs');
+await import('./test-spring-gallery-patches.mjs');
 const seasonalUse={sku:'usage',variantId:'1',variantName:'Green Artificial Orchid in Ceramic Pot',sourceDescription:'## Features\n- Ideal for autumn arrangements seasonal centrepieces and warm-toned decorative displays\n## Information\nPale green orchid blooms and green foliage supplied in a ceramic pot.',detailsReady:true,springNativePhotoVerified:true};assert.notEqual(springSourceDecision(seasonalUse).disposition,'exclude','A suggested decorating occasion is not proof that green botanical leaves are autumn coloured');assert.equal(springImageDecision(seasonalUse,visual).disposition,'review','Seasonal end-use conflicts require actual native-photo inspection before release');assert.equal(springSourceDecision({...seasonalUse,sourceDescription:'Features naturalistic autumn coloured foliage and rust leaves.'}).disposition,'exclude');
 assert.equal(productNames({department:'spring-potted',variantName:'White Artificial Orchid in Pink Ceramic Pot',paletteEvidence:{colours:['白色','绿色']}}).zh,'白色／绿色兰花仿真盆栽');
 assert.equal(productNames({department:'spring-potted',variantName:'Artificial Agapanthus Plant with White Pot'}).zh,'百子莲仿真盆栽');

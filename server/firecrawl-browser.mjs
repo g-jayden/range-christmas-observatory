@@ -156,12 +156,12 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  function claimFallbackBudget(){
   const claim=fallbackClaims.then(async()=>{guard();while(fallbackReserved>=availableFallback())await requireFallbackBudget();guard();fallbackReserved++;metrics.scrapeRequests++;});fallbackClaims=claim.catch(()=>{});return claim;
  }
- async function scrapeRaw(url,{fresh=false}={}){
+ async function scrapeRaw(url,{fresh=false,proxy='enhanced'}={}){
   guard();if(fresh)fallbackCache.delete(url);if(fallbackCache.has(url))return fallbackCache.get(url);
   await claimFallbackBudget();
   const promise=(async()=>{
    let charged=false;try{
-    const result=await api('scrape','POST',{url,formats:['rawHtml'],onlyMainContent:false,maxAge:0,proxy:'enhanced',location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,parsers:[],timeout:45000});
+    const result=await api('scrape','POST',{url,formats:['rawHtml'],onlyMainContent:false,maxAge:0,proxy,location:{country:'GB',languages:['en-GB']},skipTlsVerification:false,parsers:[],timeout:45000});
     const cost=result.data?.metadata?.creditsUsed;
     scrapeCredits+=Number.isFinite(cost)?cost:1;charged=true;if(!Number.isFinite(cost))scrapeBillingVerified=false;
     if(!result.data?.rawHtml||result.data.metadata?.statusCode!==200)throw new SourceError('Firecrawl源站抓取失败 HTTP '+result.data?.metadata?.statusCode,result.data?.metadata?.statusCode||0);
@@ -299,7 +299,9 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  }
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;if(policy.catalogueTransport==='enhanced-batch'){reader.many=urls=>Promise.all(urls.map(reader));reader.fresh=url=>catalogueBatch.fresh(sourceUrl(url));}
  reader.batchDocuments=async(fn,payload)=>scriptAction('('+fn.toString()+')('+JSON.stringify(payload)+')');
- reader.discoverImageGalleries=products=>scriptAction('(async()=>{const lookup='+findExactSkuPages.toString()+';return ('+readRangeImageGalleries.toString()+')({...'+JSON.stringify({products:products.map(p=>({sku:p.sku,variantId:p.variantId,variantName:p.variantName,sourceUrl:p.sourceUrl,variantImageUrl:p.variantImageUrl||p.imageUrl})),concurrency:6,timeoutMs:5000})+',lookup})})()');
+ reader.freeGalleryDocuments=products=>freeSource?.galleryDocuments?freeSource.galleryDocuments(products):[];
+ reader.renderedGalleryDocument=async p=>({rawHtml:await scrapeRaw(p.sourceUrl,{proxy:'auto'}),source:'firecrawl-auto-rendered-PDP'});
+ reader.discoverImageGalleries=(products,{maxAttempts=4}={})=>scriptAction('(async()=>{const lookup='+findExactSkuPages.toString()+';return ('+readRangeImageGalleries.toString()+')({...'+JSON.stringify({products:products.map(p=>({sku:p.sku,variantId:p.variantId,variantName:p.variantName,sourceUrl:p.sourceUrl,variantImageUrl:p.variantImageUrl||p.imageUrl})),concurrency:6,timeoutMs:5000,maxAttempts})+',lookup})})()');
  reader.resolveProductPages=async products=>{const offered=products.map(p=>({sku:p.sku,variantName:p.variantName,sourceUrl:p.sourceUrl})),freeRows=freeSource?.resolveProductPages?await freeSource.resolveProductPages(offered,findExactSkuPages):[],found=freeRows.filter(r=>r.sourceUrl||r.lookupComplete===true),known=new Set(found.map(r=>String(r.sku))),missing=offered.filter(p=>!known.has(String(p.sku)));return[...found,...(missing.length?await scriptAction('('+findExactSkuPages.toString()+')('+JSON.stringify({products:missing})+')'):[])];};
  reader.readSelectedDetails=async p=>{
   const script='(async()=>{const sku='+JSON.stringify(String(p.sku))+';let variants=typeof g_variantArr!=="undefined"?g_variantArr:[];const selected=variants.find(v=>String(v.sku)===sku);if(selected&&typeof selectAttrFilterByVariant==="function")selectAttrFilterByVariant(selected);const end=Date.now()+7000;while(Date.now()<end&&(document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"").replace(/^0+(?=\\d)/,"")!==sku)await new Promise(r=>setTimeout(r,200));const visible=(document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"").replace(/^0+(?=\\d)/,"");if(visible!==sku)throw Error("Rendered page selected another SKU");const text=selector=>Array.from(document.querySelectorAll(selector)).map(e=>e.textContent.trim().replace(/\\s+/g," "));const features=text("#product-dyn-features-ul li"),specs=text("#product-dyn-specification-ul li");if(!features.length&&!specs.length)throw Error("Rendered product has no source specification section");const markdown="## Features\\n"+features.map(x=>"- "+x).join("\\n")+"\\n## Information\\n"+(document.querySelector("#product-description")?.textContent||"")+"\\n## Specification\\n"+specs.map(x=>"- "+x).join("\\n")+"\\nAdditional Information";return [{success:true,data:{rawHtml:document.documentElement.outerHTML,markdown,metadata:{statusCode:200,renderedProductSection:true,sourceURL:location.href}}}]})()';

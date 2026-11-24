@@ -1,0 +1,54 @@
+name: Repair only missing Spring native galleries
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: range-spring-gallery-proof
+  cancel-in-progress: false
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+      COLLECTION_BUDGET_PHASE: spring-gallery
+      EVIDENCE_NATIVE_ONLY: '1'
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /package.json
+            /package-lock.json
+            /server/
+            /scripts/
+            /cloud/
+            /web/*.mjs
+            /web/*.json
+            /web/*.gz
+            /web/spring/
+            /web/spring-repair/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci --no-audit --no-fund
+      - name: Reserve existing owner-authorised image budget
+        run: |
+          node scripts/reserve-credits.mjs
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add --sparse -- web/collection-ledger.json
+          git diff --cached --quiet || git commit -m "Reserve targeted Spring native-gallery proof [skip ci]"
+          node scripts/push-evidence.mjs
+      - name: Recover observed native gallery URLs without re-reading directories
+        run: node server/repair-spring-galleries.mjs
+      - name: Preserve image-only proof and actual receipts
+        if: always()
+        run: |
+          git add --sparse -- web/spring-repair/gallery-patch.json web/collection-ledger.json
+          git diff --cached --quiet || git commit -m "Save exact Spring native-gallery links and receipts [skip ci]"
+          node scripts/push-evidence.mjs

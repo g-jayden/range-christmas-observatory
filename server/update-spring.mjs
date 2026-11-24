@@ -1,5 +1,6 @@
 import fs from'node:fs/promises';import{springReviewExcludes}from'./spring-review-evidence.mjs';
 import{applySavedSpringSourcePatches}from'./spring-source-patches.mjs';
+import{applySpringGalleryPatches}from'./spring-gallery-patches.mjs';
 import{publishCollectionCheckpoint}from'./collection-checkpoints.mjs';
 import{createHash}from'node:crypto';
 import{fileURLToPath}from'node:url';
@@ -13,7 +14,7 @@ import{productDimensions}from'../web/catalogue-model.mjs';
 import{materialFacts,normaliseColors}from'./appearance.mjs';
 import{springSourceDecision,SPRING_VERSION}from'../web/spring-model.mjs';
 export const SPRING_SOURCE={id:'375964',url:'https://www.therange.co.uk/home-furnishings/vases-and-artificial-plants/?sort=relevance&in_stock_f=true&page=1'};
-export const readSpring=async()=>{const snapshot=await fs.readFile('web/spring/source.json','utf8').then(JSON.parse).catch(e=>{if(e.code!=='ENOENT')throw e;return{products:[],history:{},baselineReady:false};});let patch;try{patch=JSON.parse(await fs.readFile('web/spring-repair/source-patch.json','utf8'));}catch(e){if(e.code!=='ENOENT')throw e;}snapshot.savedSourcePatchAudit=applySavedSpringSourcePatches(snapshot,patch);return snapshot;};
+export const readSpring=async()=>{const snapshot=await fs.readFile('web/spring/source.json','utf8').then(JSON.parse).catch(e=>{if(e.code!=='ENOENT')throw e;return{products:[],history:{},baselineReady:false};});let patch,gallery;try{patch=JSON.parse(await fs.readFile('web/spring-repair/source-patch.json','utf8'));}catch(e){if(e.code!=='ENOENT')throw e;}try{gallery=JSON.parse(await fs.readFile('web/spring-repair/gallery-patch.json','utf8'));}catch(e){if(e.code!=='ENOENT')throw e;}snapshot.savedSourcePatchAudit=applySavedSpringSourcePatches(snapshot,patch);snapshot.savedGalleryPatchAudit=applySpringGalleryPatches(snapshot,gallery);return snapshot;};
 export function springDetailRefreshNeeded(p,observedAt,{detailMaxAgeDays=0,now=Date.now()}={}){
  if(!p.detailsReady||!p.detailEvidence?.verifiedProductSection||String(p.detailEvidence.selectedSku)!==String(p.sku))return true;
  const checked=Date.parse(p.attributeObservedAt),source=Date.parse(observedAt);if(!Number.isFinite(checked)||!Number.isFinite(source)||checked>now+60000)return true;

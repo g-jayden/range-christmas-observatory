@@ -1,12 +1,12 @@
 // Image-only page reads. Do not return or promote descriptions, prices, sizes,
 // materials or PDP verification: these remain subject to their source policy.
-export async function readRangeImageGalleries({products,lookup,concurrency=4,timeoutMs=7000}){
+export async function readRangeImageGalleries({products,lookup,concurrency=4,timeoutMs=7000,maxAttempts=4}){
  const normal=raw=>{try{const u=new URL(raw);if(u.origin!=='https://www.therange.co.uk'||u.username||u.password||u.port||/[\u0000-\u001f]|%(?:0[0-9a-f]|1[0-9a-f]|7f)/i.test(raw))return null;u.hash='';u.search='';u.pathname=u.pathname.replace(/\/+$/,'');return u.href;}catch{return null;}};
  const media=(raw,base)=>{try{const u=new URL(String(raw||'').replaceAll('&amp;','&'),base);return u.protocol==='https:'&&['www.therange.co.uk','kube-media-unpublished.rstore.com'].includes(u.hostname)&&!u.username&&!u.password&&!u.port&&/^\/media\/.+\.(?:jpe?g|png|webp|avif|gif)$/i.test(u.pathname)?u.href:null;}catch{return null;}};
  const read=async(url,json)=>{try{const r=await fetch(url,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(r.status!==200||new URL(r.url||url).origin!=='https://www.therange.co.uk')return{status:r.status};return{status:200,url:r.url||url,body:json?await r.json():await r.text()};}catch(e){return{status:0,error:String(e.message).slice(0,100)};}};
  const results=[],deadline=Date.now()+44000;let cursor=0;
  await Promise.all(Array.from({length:Math.min(concurrency,products.length)},async()=>{while(cursor<products.length&&Date.now()<deadline){const p=products[cursor++],sku=String(p.sku),attempts=[],seen=new Set(),queue=[];let token;try{token=new URL(p.sourceUrl).pathname.match(/\/([mp]\d+)\/?$/)?.[1];}catch{}const add=raw=>{const u=normal(raw);if(u&&!seen.has(u)){seen.add(u);queue.push(u);}};add(p.sourceUrl);if(token)add('https://www.therange.co.uk/p/product/'+token);else if(/^\d+$/.test(sku)){add('https://www.therange.co.uk/p/product/m'+sku);add('https://www.therange.co.uk/p/product/p'+sku);}let pageUrl,found=null,lookedUp=false;
-  for(let attempt=0;attempt<4&&Date.now()<deadline;attempt++){
+  for(let attempt=0;attempt<Math.min(4,maxAttempts)&&Date.now()<deadline;attempt++){
    if(!queue.length&&!lookedUp&&lookup){lookedUp=true;try{const links=await lookup({products:[p],concurrency:1});add(links[0]?.sourceUrl);}catch{}}pageUrl=queue.shift();if(!pageUrl)break;
    if(pageUrl){const [json,html]=await Promise.all([read(pageUrl+'?json',true),read(pageUrl,false)]);attempts.push({pageUrl,jsonStatus:json.status,htmlStatus:html.status});
     const candidateVariants=Array.isArray(json.body?.variant_arr)?json.body.variant_arr:[];if(json.status===200)for(const v of candidateVariants)if(String(v.sku)===sku&&v.page_url)try{add(new URL(v.page_url,'https://www.therange.co.uk/').href);}catch{}
