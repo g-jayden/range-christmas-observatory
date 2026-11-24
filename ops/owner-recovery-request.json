@@ -1,14 +1,8 @@
 {
-  "requestId": "owner-recovery-20261124-replace-obsolete-pages-build",
+  "requestId": "owner-recovery-20261124-bq-batched-page-resume",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T11:29:35.706109+00:00",
+  "requestedAt": "2026-11-24T11:32:18.634246+00:00",
   "targets": [
-    "static-pages-current"
-  ],
-  "supersedeReadOnlyPagesBeforeDeployment": [
-    {
-      "runId": 45381543951,
-      "expectedCommit": "327fe82169326b6cba421f26b9849ff436d4e79e"
-    }
+    "bq-current"
   ]
 }
