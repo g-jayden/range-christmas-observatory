@@ -5,6 +5,7 @@ import{exactNativeGalleryMember}from'./native-gallery-identity.mjs';
 import{readSpring}from'./update-spring.mjs';import{atomicJson}from'./sync.mjs';import{loadPolicy,detailFingerprint}from'./collection-policy.mjs';import{openCreditBudget}from'./credit-budget.mjs';import{createFirecrawlBrowserReader}from'./firecrawl-browser.mjs';
 import{materializeCommittedImage}from'./committed-image-file.mjs';import{optimiseProductPreviews,applyProductPreviews}from'./product-previews.mjs';
 import{applySavedSpringPreviewOriginals}from'./spring-native-preview.mjs';
+import{springHumanFrameAudit}from'./spring-human-frame.mjs';
 const read=async(file,fallback)=>fs.readFile(file,'utf8').then(JSON.parse).catch(e=>{if(e.code!=='ENOENT')throw e;return fallback;});
 import{SPRING_VISUAL_PROMPTS,SPRING_VISUAL_PROMPT_VERSION,springVisualScores}from'./spring-visual-prompts.mjs';
 import{localVisualClassifier as classifier}from'./local-visual-classifier.mjs';
@@ -34,6 +35,7 @@ export async function reviewSpring({repair=true}={}){
   const included=[],excluded=[],pending=[];
   for(const p of snapshot.products){const hash=p.originalImageEvidence?.sha256||p.imageCacheEvidence?.sha256,visual=cache.entries[hash],photoUrl=p.originalImageEvidence?.sourceUrl||p.imageCacheEvidence?.sourceUrl;p.springNativePhotoVerified=Boolean(p.originalImages?.some(g=>g.url===photoUrl&&exactNativeGalleryMember(p,g)));let decision=springImageDecision(p,visual);const manual=reviews.products[p.sku];
    const listingBound=springReviewExcludes(p,manual);const manualBound=manual?.disposition==='exclude'?listingBound:(p.detailsReady&&p.springNativePhotoVerified&&manual?.imageHash===hash&&manual.sourceContentHash===p.detailEvidence?.sourceContentHash);if(manual&&manualBound&&['include','exclude','review'].includes(manual.disposition)&&manual.reason){decision={...decision,...manual,method:'human-source-description-and-native-photo-review'};}
+   const humanFrame=manualBound&&springHumanFrameAudit(p,manual);if(humanFrame)p.previewAudit=humanFrame;
    if(decision.disposition==='include'&&p.previewImage?.sourceUrl&&p.previewImage.sourceUrl!==p.originalImageEvidence?.sourceUrl)decision={...decision,disposition:'review',reason:'selected-preview-native-original-not-verified'};
    if(decision.disposition==='include'&&(!['kept','selected'].includes(p.previewAudit?.status)||(p.previewAudit?.issues||[]).some(i=>['logo','diagram','detail','cropped'].includes(i))))decision={...decision,disposition:'review',reason:'native-photo-preview-needs-full-product-frame'};
    if(decision.disposition==='include'){const facts=springDimensionFacts(p,decision.department,{products:snapshot.products});p.springDimensionAudit={status:facts.status,...facts.audit};p.dimensions=facts.dimensions;if(facts.status==='unresolved')decision={...decision,disposition:'review',reason:'exact-SKU-tree-height-source-conflict'};}

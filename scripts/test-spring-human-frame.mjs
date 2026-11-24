@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {springHumanFrameAudit} from '../server/spring-human-frame.mjs';
+const url='https://www.therange.co.uk/media/native.jpg',hash='a'.repeat(64),source='b'.repeat(64);
+const p={sku:'123',variantId:'456',detailsReady:true,detailEvidence:{verifiedProductSection:true,selectedSku:'123',sourceContentHash:source},originalImageEvidence:{sourceUrl:url,sha256:hash},originalImages:[{url,selectedSku:'123',variantId:'456'}],previewImage:{sourceUrl:url},previewAudit:{status:'review',issues:['detail']}};
+const review={disposition:'include',wholeProductFrame:true,reviewArtifact:'native-human-sheet-24',reason:'Inspected complete native product and exact offered contents',imageHash:hash,sourceContentHash:source,reviewedAt:'2026-11-24T00:00:00Z'};
+const audit=springHumanFrameAudit(p,review);assert.equal(audit.status,'kept');assert.deepEqual(audit.issues,[]);assert.deepEqual(audit.automatedAudit,{status:'review',issues:['detail']});assert.equal(p.previewAudit.status,'review');
+for(const changed of[{...p,sku:'124'},{...p,variantId:'457'},{...p,detailsReady:false},{...p,detailEvidence:{...p.detailEvidence,sourceContentHash:'changed'}},{...p,originalImageEvidence:{...p.originalImageEvidence,sha256:'changed'}},{...p,previewImage:{sourceUrl:url+'?other'}},{...p,originalImages:[]}])assert.equal(springHumanFrameAudit(changed,review),null);
+for(const changed of[{...review,disposition:'review'},{...review,wholeProductFrame:false},{...review,reviewArtifact:undefined}])assert.equal(springHumanFrameAudit(p,changed),null);
+assert.deepEqual(springHumanFrameAudit({...p,previewAudit:audit},review).automatedAudit,audit.automatedAudit);
+console.log('PASS: exact-SKU human whole-frame review corrects an automated false negative, preserves its audit, and expires on SKU, variant, description, original or displayed-frame change.');

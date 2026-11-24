@@ -86,3 +86,4 @@ assert.equal(springSourceDecision({variantName:'Artificial Fern With No Pot',sou
 assert.equal(springSourceDecision({variantName:'Artificial Olive Tree With No Pot'}).department,'spring-tree');
 assert.equal(springSourceDecision({variantName:'Artificial Potted Fern',sourceDescription:'## Features\n- Supplied without a planter'}).disposition,'review');
 console.log('PASS: empty stand-and-planter offers stay out; exact SKU bare stems override generic fern heuristics, whole trees remain trees, contradictory pot contents require review.');
+await import('./test-spring-human-frame.mjs');
