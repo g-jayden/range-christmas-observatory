@@ -4,6 +4,31 @@ import sharp from 'sharp';
 import {springHumanFrameAudit} from './spring-human-frame.mjs';
 import {materializeCommittedImage} from './committed-image-file.mjs';
 import {saveHumanWholeProductPreviews} from './product-previews.mjs';
+import {exactNativeGalleryMember} from './native-gallery-identity.mjs';
+
+export function springRejectedNativeFrames(products,reviews){
+ const rejected={};for(const p of products){const r=reviews.products?.[p.sku],e=p.originalImageEvidence;
+  if(r?.disposition!=='review'||!r.reviewArtifact||!r.reason||!p.detailsReady||!e?.sourceUrl||r.imageHash!==e.sha256||r.sourceContentHash!==p.detailEvidence?.sourceContentHash)continue;
+  if(r.wholeProductFrame!==false&&!/close-up|closeup|logo|cropp|cuts? off|cut-off|marketing|diagram|obscur|not (?:the |a )?(?:whole|full|complete)|complete.*(?:frame|visible)|full.*frame/i.test(r.reason))continue;
+  rejected[p.sku]={sourceUrl:e.sourceUrl,imageHash:e.sha256,sourceContentHash:r.sourceContentHash,reason:r.reason,reviewArtifact:r.reviewArtifact};
+ }return rejected;
+}
+
+// Explicit frame choices are tied to the inspected SKU, description and native
+// digest. Reuse an already saved original; a review never authorises a similar
+// product's image, a guessed URL, or another source download.
+export async function applyHumanSelectedSpringOriginals(products,reviews,entries){
+ let applied=0;
+ for(const p of products){const r=reviews.products?.[p.sku],url=r?.selectedNativeSourceUrl;
+  if(r?.disposition!=='include'||r.wholeProductFrame!==true||!r.reviewArtifact||!r.reason||!url||!p.detailsReady||!p.detailEvidence?.verifiedProductSection||String(p.detailEvidence.selectedSku)!==String(p.sku)||r.sourceContentHash!==p.detailEvidence.sourceContentHash)continue;
+  if(!p.originalImages?.some(g=>g.url===url&&exactNativeGalleryMember(p,g)&&(g.variantId==null||String(g.variantId)===String(p.variantId))))continue;
+  const e=entries?.[url];if(e?.ok!==true||e.hash!==r.imageHash||e.width<64||e.height<64||!/^images\/source\/[a-f0-9]{64}\.[a-z0-9]+$/.test(e.cachedImageUrl||''))continue;
+  try{await materializeCommittedImage(e.cachedImageUrl,e.hash);const bytes=await fs.readFile('web/'+e.cachedImageUrl);if(createHash('sha256').update(bytes).digest('hex')!==e.hash)continue;
+   p.originalImageUrl=url;p.originalCachedImageUrl=e.cachedImageUrl;p.originalImageEvidence={sourceUrl:url,sha256:e.hash,width:e.width,height:e.height,bytes:e.bytes,mime:e.mime,observedAt:e.observedAt};applied++;
+  }catch{}
+ }
+ return{applied,sourceRequests:0,firecrawlCredits:0};
+}
 
 // A bound, human-inspected complete original does not need another paid
 // gallery comparison or another vision-model pass to decide its framing.

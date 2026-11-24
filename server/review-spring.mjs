@@ -7,27 +7,28 @@ import{materializeCommittedImage}from'./committed-image-file.mjs';import{optimis
 import{applySavedSpringPreviewOriginals}from'./spring-native-preview.mjs';
 import{springHumanFrameAudit}from'./spring-human-frame.mjs';
 import{bindSpringListingNativeImages}from'./spring-listing-native.mjs';
-import{prepareSpringHumanPreviews}from'./spring-human-previews.mjs';
+import{prepareSpringHumanPreviews,applyHumanSelectedSpringOriginals,springRejectedNativeFrames}from'./spring-human-previews.mjs';
 const read=async(file,fallback)=>fs.readFile(file,'utf8').then(JSON.parse).catch(e=>{if(e.code!=='ENOENT')throw e;return fallback;});
 import{SPRING_VISUAL_PROMPTS,SPRING_VISUAL_PROMPT_VERSION,springVisualScores}from'./spring-visual-prompts.mjs';
 import{localVisualClassifier as classifier}from'./local-visual-classifier.mjs';
 export async function reviewSpring({repair=true}={}){
  const snapshot=await readSpring();if(!snapshot.source?.complete||snapshot.source.expected!==snapshot.products.length)throw Error('Complete official spring root observation required');
  snapshot.listingNativeBindingAudit=bindSpringListingNativeImages(snapshot);
- const reviews=await read('web/spring/manual-reviews.json',{products:{}}),candidates=snapshot.products.filter(p=>springSourceDecision(p).disposition!=='exclude'&&!springReviewExcludes(p,reviews.products[p.sku]));let reader,budget;
+ const reviews=await read('web/spring/manual-reviews.json',{products:{}}),candidates=snapshot.products.filter(p=>springSourceDecision(p).disposition!=='exclude'&&!springReviewExcludes(p,reviews.products[p.sku]));
+ const selectHumanOriginals=async()=>{const saved=await read('web/spring/image-checkpoint.json',{});return applyHumanSelectedSpringOriginals(candidates,reviews,{...snapshot.imageAudit?.entries,...saved.entries});};let reader,budget;
  try{if(repair){const policy={...await loadPolicy(),maxRunSeconds:18000,repairImagesOnly:true,preferNativePreviewAssets:true,imageCheckpoint:'web/spring/image-checkpoint.json',imageBatchProbe:false};budget=await openCreditBudget(policy);reader=await createFirecrawlBrowserReader({policy,budget});
    // Only URLs proven by this exact SKU gallery are eligible. No resize URL
    // guessing, generative enhancement or enlargement of low-resolution files.
-   for(const p of candidates){const g=p.originalImages?.find(g=>g.url===p.originalImageUrl&&String(g.selectedSku)===p.sku&&String(g.variantId)===String(p.variantId));if(g)p.variantImageUrl=g.url;}
+   for(const p of candidates){const review=reviews.products[p.sku],selected=review?.disposition==='include'&&review.wholeProductFrame===true&&review.sourceContentHash===p.detailEvidence?.sourceContentHash&&review.imageHash&&review.reviewArtifact?review.selectedNativeSourceUrl:null;const g=p.originalImages?.find(g=>g.url===(selected||p.originalImageUrl)&&exactNativeGalleryMember(p,g)&&(g.variantId==null||String(g.variantId)===String(p.variantId)));if(g)p.variantImageUrl=g.url;}
    snapshot.imageAudit=await reader.auditImages(candidates,snapshot.imageAudit||{},{bodyBatchSize:80});
    for(const p of candidates){const e=p.imageCacheEvidence;if(e&&p.originalImages?.some(g=>g.url===e.sourceUrl&&exactNativeGalleryMember(p,g))){p.originalImageUrl=e.sourceUrl;p.originalCachedImageUrl=p.cachedImageUrl;p.originalImageEvidence={...e};}}
-   const human=await prepareSpringHumanPreviews(candidates,reviews),needsPreview=candidates.filter(p=>!human.prepared.has(p.sku));snapshot.humanPreviewAudit={prepared:human.prepared.size,sourceRequests:0,firecrawlCredits:0};
-   snapshot.previewAudit=await optimiseProductPreviews(needsPreview,{reader,maxCandidates:Infinity,nativeGalleryOnly:true,batchSize:160});await applyProductPreviews(needsPreview);
+   snapshot.humanSelectedOriginalAudit=await selectHumanOriginals();const human=await prepareSpringHumanPreviews(candidates,reviews),needsPreview=candidates.filter(p=>!human.prepared.has(p.sku));snapshot.humanPreviewAudit={prepared:human.prepared.size,sourceRequests:0,firecrawlCredits:0};
+   snapshot.previewAudit=await optimiseProductPreviews(needsPreview,{reader,maxCandidates:Infinity,nativeGalleryOnly:true,batchSize:160,rejectedFrames:springRejectedNativeFrames(needsPreview,reviews)});await applyProductPreviews(needsPreview);
    // Preserve the native bytes of the chosen whole-product preview for PDFs
    // and the annotated long-press image, independently of the small card WebP.
    const selected=needsPreview.filter(p=>p.previewImage?.sourceUrl&&p.originalImages?.some(g=>g.url===p.previewImage.sourceUrl&&exactNativeGalleryMember(p,g))).map(p=>({...p,variantImageUrl:p.previewImage.sourceUrl}));if(selected.length){const a=await reader.auditImages(selected,snapshot.imageAudit,{bodyBatchSize:80});const by=new Map(selected.map(p=>[p.sku,p]));for(const p of candidates){const s=by.get(p.sku);if(s?.imageCacheEvidence){p.originalCachedImageUrl=s.cachedImageUrl;p.originalImageUrl=s.variantImageUrl;p.originalImageEvidence={...s.imageCacheEvidence};}}snapshot.imageAudit.entries={...snapshot.imageAudit.entries,...a.entries};}
    await reader.close();const native=reader.metrics();await budget.settle({credits:native.firecrawlCredits,receipt:native.receipt,report:{mode:'range-spring-native-photos',native}});snapshot.photoCollectionAudit={native};
-  }else{const human=await prepareSpringHumanPreviews(candidates,reviews),needsPreview=candidates.filter(p=>!human.prepared.has(p.sku));snapshot.humanPreviewAudit={prepared:human.prepared.size,sourceRequests:0,firecrawlCredits:0};snapshot.previewAudit=await optimiseProductPreviews(needsPreview,{maxCandidates:Infinity,nativeGalleryOnly:true});await applyProductPreviews(needsPreview);}
+  }else{snapshot.humanSelectedOriginalAudit=await selectHumanOriginals();const human=await prepareSpringHumanPreviews(candidates,reviews),needsPreview=candidates.filter(p=>!human.prepared.has(p.sku));snapshot.humanPreviewAudit={prepared:human.prepared.size,sourceRequests:0,firecrawlCredits:0};snapshot.previewAudit=await optimiseProductPreviews(needsPreview,{maxCandidates:Infinity,nativeGalleryOnly:true,rejectedFrames:springRejectedNativeFrames(needsPreview,reviews)});await applyProductPreviews(needsPreview);}
   const savedImages=await read('web/spring/image-checkpoint.json',{});snapshot.savedPreviewOriginalAudit=await applySavedSpringPreviewOriginals(candidates,{...snapshot.imageAudit?.entries,...savedImages.entries});
   const cache=await read('web/spring/visual-cache.json',{version:SPRING_VERSION,entries:{}}),files=[];
   for(const p of candidates){const hash=p.originalImageEvidence?.sha256||p.imageCacheEvidence?.sha256,file=p.originalCachedImageUrl||p.cachedImageUrl;if(!hash||!file)continue;try{await materializeCommittedImage(file,hash);files.push({p,hash,file:path.resolve('web',file)});}catch(e){p.imageIssue={error:e.message};}}
