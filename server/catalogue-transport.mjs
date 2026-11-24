@@ -44,7 +44,7 @@ export function createCatalogueTransport(execute,{batchSize=24,validate=x=>x,rec
   if(running)return;running=true;
   try{while(queue.length){const batch=queue.splice(0,batchSize);if(failed){for(const p of batch)p.reject(failed);continue;}
    try{
-    const urls=batch.map(p=>p.url),rows=await execute(fetchCataloguePages,urls);
+    const urls=batch.map(p=>p.url),rows=await execute(fetchCataloguePages,urls,{freshUrls:batch.filter(p=>p.fresh).map(p=>p.url)});
     if(!Array.isArray(rows)||rows.length!==urls.length||new Set(rows.map(r=>r.url)).size!==urls.length||rows.some(r=>!urls.includes(r.url)))throw Error('Catalogue batch URL membership mismatch');
     const map=new Map(rows.map(r=>[r.url,r]));
     // A provider-wide failure stops at one batch. A single exceptional URL may
@@ -55,10 +55,10 @@ export function createCatalogueTransport(execute,{batchSize=24,validate=x=>x,rec
    }catch(e){failed=e;for(const p of batch)p.reject(e);}
   }}finally{running=false;}
  }
- const read=url=>{if(cache.has(url))return cache.get(url);if(failed)return Promise.reject(failed);const promise=new Promise((resolve,reject)=>{queue.push({url,resolve,reject});if(!running){clearTimeout(timer);timer=setTimeout(drain,5);}});cache.set(url,promise);return promise;};
- read.many=urls=>Promise.all(urls.map(read));read.fresh=url=>{
+ const read=(url,fresh=false)=>{if(cache.has(url))return cache.get(url);if(failed)return Promise.reject(failed);const promise=new Promise((resolve,reject)=>{queue.push({url,fresh,resolve,reject});if(!running){clearTimeout(timer);timer=setTimeout(drain,5);}});cache.set(url,promise);return promise;};
+ read.many=urls=>Promise.all(urls.map(url=>read(url)));read.fresh=url=>{
   cache.delete(url);if(failed)return Promise.reject(failed);
-  if(!direct.has(url))return read(url);
+  if(!direct.has(url))return read(url,true);
   const promise=repair({url,status:0,error:'Previously verified direct route requires a fresh response'}).catch(e=>{failed=e;throw e;});cache.set(url,promise);return promise;
  };return read;
 }
