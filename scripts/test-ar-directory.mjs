@@ -63,3 +63,5 @@ try{
  let calls=0;const pageReader=createArDefaultPageReader({key:'fixture',root:runtime+'/pages',now:()=>preparationAt,fetcher:async(url,opt)=>{if(url.endsWith('/credit-usage'))return Response.json({data:{remainingCredits:10000}});calls++;return Response.json({success:true,data:{rawHtml:priceHtml,metadata:{statusCode:200,sourceURL:JSON.parse(opt.body).url,creditsUsed:1}}});}});await pageReader.read(entries[6][1]);await pageReader.read(entries[6][1]);assert.equal(calls,1,'A successful pre-07:00 exact page is not repurchased on retry');
  console.log('PASS: Beijing 06:00 preparation evidence is reused before and after 07:00 with no lost source dates or repeated paid page requests; preceding-day pages remain excluded.');
 }finally{await fs.rm(preparationRoot,{recursive:true,force:true});}
+
+await import('./test-ar-duplicate-slots.mjs');
