@@ -1335,6 +1335,18 @@
       "sourceUrl": "https://img.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/christow-artificial-olive-tree-4ft-6ft",
       "refunded": 1,
       "refundFeedbackId": "01a20ba8-da19-73c6-9fe5-667555cf63c7"
+    },
+    {
+      "id": "mcp-01a20baf-7bcc-75fe-ae31-4955d346c666",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-all-collection-unrestricted-20261123",
+      "retailerId": "the-range",
+      "purpose": "Targeted diagnostic of the one unresolved exact-variant original gallery after free and shared-gallery paths failed. Live family markup contains SKU thumbnail but no matching variant native anchors; no other variant image was borrowed.",
+      "sourceUrl": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/botanik-artificial-170cm-xl-triple-yukka-tree-plant/#6728716",
+      "sourceStatus": 200,
+      "observedAt": "2026-11-24T04:02:31.667Z"
     }
   ],
   "unreceipted": [
