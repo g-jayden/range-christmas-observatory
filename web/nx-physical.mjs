@@ -1,7 +1,7 @@
 export function nxPhysicalObject({name='',description='',groups=[],maxCm=null}){
  const t=name.toLowerCase(),text=(name+' '+description).toLowerCase(),head=t.split(/\bwith\b/)[0];
  if(/\b(?:halloween|easter|spring|pumpkin|duvet|bedding|pillowcase|pyjamas|pajamas|storage bag|wreath hanger|wreath hook|gift wrap|wrapping paper)\b/.test(t))return [];
- if(/\b(?:autumn|harvest)\b/.test(t)&&!/\bchristmas\b/.test(t))return [];
+ if(/\b(?:autumn(?:al)?|harvest)\b/.test(t)&&!/\bchristmas\b/.test(t))return [];
  if(/\bbundle\b/.test(t)&&/wreath/.test(description)&&/garland/.test(description)&&/potted Christmas trees/i.test(description))return ['nx-wreath','nx-garland','nx-tree'];
  if(/\bwreath\b.*\bbaubles?\b/.test(t)&&!/\bset\b.*wreath/.test(t))return ['nx-baubles'];
  if(/\bgarlands?\b/.test(t)||/\btinsel\b/.test(t)&&!/\btrees?\b/.test(head))return /\bwreaths?\b/.test(t)&&/\bset\b/.test(t)?['nx-garland','nx-wreath']:['nx-garland'];
