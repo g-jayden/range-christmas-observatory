@@ -12,8 +12,8 @@ const git=(cwd,...args)=>execFileSync('git',args,{cwd,encoding:'utf8',stdio:['ig
 const write=async(dir,file,text)=>{await fs.mkdir(path.dirname(path.join(dir,file)),{recursive:true});await fs.writeFile(path.join(dir,file),text);};
 const configure=dir=>{git(dir,'config','user.name','Evidence Test');git(dir,'config','user.email','test@example.invalid');git(dir,'config','commit.gpgsign','false');};
 const ledger=(n,runs=[])=>JSON.stringify({periods:{'2026-11':{used:n,runs,reservations:{}}}});
-const env={...process.env,CONTROL_API_URL:'',CONTROL_TOKEN:'',EVIDENCE_ISOLATE_WORKTREE:'1',GITHUB_RUN_ID:'isolated-local-fixture',GITHUB_RUN_ATTEMPT:'1',GITHUB_JOB:'evidence'};
-const publish=async(directory,childEnv)=>{const output=execFileSync(process.execPath,[script],{cwd:directory,env:childEnv,encoding:'utf8',stdio:['ignore','pipe','pipe']});assert(output.includes('"evidenceSaved":true'));};
+const env={...process.env,CONTROL_API_URL:'',CONTROL_TOKEN:'',EVIDENCE_ISOLATE_WORKTREE:'1',EVIDENCE_NATIVE_ONLY:'1',GITHUB_RUN_ID:'isolated-local-fixture',GITHUB_RUN_ATTEMPT:'1',GITHUB_JOB:'evidence'};
+const publish=async(directory,childEnv)=>{await assert.rejects(fs.access(path.join(directory,'web/images/source/new.jpg')),{code:'ENOENT'});await assert.rejects(fs.access(path.join(directory,'code.txt')),{code:'ENOENT'});const output=execFileSync(process.execPath,[script],{cwd:directory,env:childEnv,encoding:'utf8',stdio:['ignore','pipe','pipe']});assert(output.includes('"evidenceSaved":true'));};
 try{
  git(root,'init','--bare','--initial-branch=main',remote);git(root,'clone',remote,collector);configure(collector);
  await write(collector,'code.txt','collector executable still running');await write(collector,'web/images/source/base.jpg','original-base-bytes');await write(collector,'web/collection-ledger.json',ledger(100));git(collector,'add','.');git(collector,'commit','-m','baseline');git(collector,'push','-u','origin','main');

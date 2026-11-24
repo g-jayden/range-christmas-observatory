@@ -15,7 +15,8 @@ export async function isolateEvidencePublication({root=process.cwd(),env=process
   capture(root,['worktree','add','--no-checkout','--detach',directory,publicationBase]);
   // Git checkout already enables worktree-local configuration for sparse jobs.
   // Sparse settings in this detached publisher cannot alter the live collector.
-  execFileSync('git',['sparse-checkout','set','--no-cone','--stdin'],{cwd:directory,input:'/*\n!/web/images/\n!/web/reports/\n!/web/mail-assets/\n',stdio:['pipe','pipe','pipe']});
+  const sparse=env.EVIDENCE_NATIVE_ONLY==='1'?'/server/\n/scripts/\n/web/collection-ledger.json\n/web/preview-quality-cache.json.gz\n/web/paid-native-index.json\n':'/*\n!/web/images/\n!/web/reports/\n!/web/mail-assets/\n';
+  execFileSync('git',['sparse-checkout','set','--no-cone','--stdin'],{cwd:directory,input:sparse,stdio:['pipe','pipe','pipe']});
   // --no-checkout leaves the new worktree index unpopulated. Initialise only
   // this disposable publisher, with the collector's exact committed evidence.
   capture(directory,['reset','--hard',publicationBase]);
@@ -26,9 +27,12 @@ export async function isolateEvidencePublication({root=process.cwd(),env=process
   if(previous){
    const changed=capture(root,['diff','--name-only','-z',previous.collectorRevision,collectorRevision]).split('\0').filter(Boolean);
    if(changed.some(file=>!file.startsWith('web/')))throw Error('Isolated collector delta contains non-data files');
-   for(let offset=0;offset<changed.length;offset+=200)capture(directory,['restore','--source',collectorRevision,'--staged','--worktree','--ignore-skip-worktree-bits','--',...changed.slice(offset,offset+200)]);
+   for(let offset=0;offset<changed.length;offset+=200)capture(directory,['restore','--source',collectorRevision,'--staged','--ignore-skip-worktree-bits','--',...changed.slice(offset,offset+200)]);
    let staged=false;try{capture(directory,['diff','--cached','--quiet']);}catch(error){if(error.status!==1)throw error;staged=true;}
    if(staged)capture(directory,['commit','-m','Publish new source evidence since the previous checkpoint [skip ci]']);
+   // Only the disposable publisher reapplies sparse files. Source image
+   // blobs remain committed without copying them or other-store catalogues.
+   capture(directory,['sparse-checkout','reapply']);
   }
   const childEnv={...env,EVIDENCE_ISOLATED_PUBLISHER:'1'};
   if(publish)await publish(directory,childEnv);else await new Promise((resolve,reject)=>{const child=spawn(process.execPath,['scripts/push-evidence.mjs'],{cwd:directory,env:childEnv,stdio:'inherit'});child.once('error',reject);child.once('exit',code=>code===0?resolve():reject(Error('Isolated publication exited '+code)));});
