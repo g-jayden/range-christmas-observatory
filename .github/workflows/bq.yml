@@ -90,6 +90,12 @@ jobs:
             runtime/bq-staged-catalogue.json
           key: bq-source-checkpoints-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: bq-source-checkpoints-
+      - name: Reuse verified collector and OCR image pixels
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: runtime/bq-previews
+          key: bq-reviewed-preview-files-v1-source-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: bq-reviewed-preview-files-v1-
       - run: node scripts/test-bq.mjs
       - name: Recover exact saved source without repeating directory requests
         if: inputs.notificationsOnly != true
@@ -131,6 +137,12 @@ jobs:
             runtime/bq-source
             runtime/bq-staged-catalogue.json
           key: bq-source-checkpoints-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Preserve verified collector and OCR pixels even on partial failure
+        if: always() && inputs.notificationsOnly != true
+        uses: actions/cache/save@v6.1.0
+        with:
+          path: runtime/bq-previews
+          key: bq-reviewed-preview-files-v1-source-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Preserve source checkpoints and native evidence even on partial failure
         id: evidence
         if: always()

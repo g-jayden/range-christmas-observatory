@@ -66,6 +66,12 @@ jobs:
             runtime/bq-staged-catalogue.json
           key: bq-source-checkpoints-static-${{ github.run_id }}
           restore-keys: bq-source-checkpoints-
+      - name: Reuse exact collector and OCR image pixels
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: runtime/bq-previews
+          key: bq-reviewed-preview-files-v1-static-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: bq-reviewed-preview-files-v1-
       - name: Verify committed catalogue and publication logic without source requests
         run: npm test
       - name: Verify lossless large-catalogue transport and unchanged native files
@@ -89,6 +95,12 @@ jobs:
             runtime/bq-source
             runtime/bq-staged-catalogue.json
           key: bq-source-checkpoints-preview-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Keep exact collector and OCR image pixels independently
+        if: always()
+        uses: actions/cache/save@v6.1.0
+        with:
+          path: runtime/bq-previews
+          key: bq-reviewed-preview-files-v1-static-${{ github.run_id }}-${{ github.run_attempt }}
       - uses: actions/upload-pages-artifact@v5.0.0
         with:
           name: github-pages-static-${{ github.run_id }}-${{ github.run_attempt }}

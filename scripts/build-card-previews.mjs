@@ -11,15 +11,21 @@ export async function inlineFirstCardPreviews(products,selected,{root,maxBytes=1
   results.push(value);
  }return results;
 }
-export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot='runtime/bq-source/preview-files',fetchVerified=process.env.BROWSE_FETCH_VERIFIED_PREVIEWS==='true',fetcher=globalThis.fetch,encodingCacheRoot='runtime/card-preview-encodings'}={}){
+export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot='runtime/bq-source/preview-files',additionalPreviewCacheRoots=['runtime/bq-previews'],fetchVerified=process.env.BROWSE_FETCH_VERIFIED_PREVIEWS==='true',fetcher=globalThis.fetch,encodingCacheRoot='runtime/card-preview-encodings'}={}){
  const work=new Map(),nativeFiles=new Map(),downloads=new Map();let imageRequests=0,imageFailures=0,repositoryImageRequests=0,remoteDenied=false;let generated=0,reused=0,bytes=0,active=0,invalidImages=0,nativeBytes=0;const nativeRetailerBytes=new Map();const queue=[];
  const limit=fn=>new Promise((resolve,reject)=>{queue.push({fn,resolve,reject});drain();});
  function drain(){while(active<4&&queue.length){const job=queue.shift();active++;Promise.resolve().then(job.fn).then(job.resolve,job.reject).finally(()=>{active--;drain();});}}
  const local=value=>{if(typeof value!=='string')return null;const relative=value.startsWith(OWN)?value.slice(OWN.length):value;return /^images\/[\w./-]+\.(?:jpe?g|png|webp|avif)$/i.test(relative)&&!relative.split('/').includes('..')?relative:null;};
- const input=(value,bound)=>{const relative=local(value);if(relative)return {file:path.join(sourceRoot,relative),bound,repository:OWN+relative};if(/^[a-f0-9]{64}$/.test(bound||''))try{const u=new URL(value);if(u.origin==='https://media.diy.com'&&/^\/is\/image\/(?:Kingfisher|KingfisherDigital)\//.test(u.pathname)){u.search='';u.hash='';return {file:path.join(previewCacheRoot,createHash('sha256').update(u.href).digest('hex')+'.jpg'),bound,remote:value};}}catch{}return null;};
- async function readInput({file,bound,remote}){
-  let buffer;try{buffer=await fs.readFile(file);}catch(e){if(e.code!=='ENOENT')throw e;}
-  if(buffer&&/^[a-f0-9]{64}$/.test(bound||'')&&createHash('sha256').update(buffer).digest('hex')!==bound)buffer=null;
+ const input=(value,bound)=>{const relative=local(value);if(relative)return {file:path.join(sourceRoot,relative),bound,repository:OWN+relative};if(/^[a-f0-9]{64}$/.test(bound||''))try{const u=new URL(value);if(u.origin==='https://media.diy.com'&&/^\/is\/image\/(?:Kingfisher|KingfisherDigital)\//.test(u.pathname)){u.search='';u.hash='';return {file:path.join(previewCacheRoot,createHash('sha256').update(u.href).digest('hex')+'.jpg'),alternateFiles:additionalPreviewCacheRoots.map(root=>path.join(root,createHash('sha256').update(u.href).digest('hex')+'.jpg')),bound,remote:value};}}catch{}return null;};
+ async function readInput({file,alternateFiles=[],bound,remote}){
+  let buffer;
+  // Collector/OCR previews and publishing previews have separate caches. Check
+  // both for the current reviewed bytes before making any network request.
+  for(const candidate of [file,...alternateFiles]){
+   let bytes;try{bytes=await fs.readFile(candidate);}catch(e){if(e.code!=='ENOENT')throw e;continue;}
+   if(/^[a-f0-9]{64}$/.test(bound||'')&&createHash('sha256').update(bytes).digest('hex')!==bound)continue;
+   buffer=bytes;break;
+  }
   const repository=remote?.startsWith(OWN);if(buffer||!remote||!fetchVerified||remoteDenied&&!repository)return buffer;
   const key=file+'|'+bound;if(!downloads.has(key))downloads.set(key,limit(async()=>{try{
    if(remoteDenied&&!repository)return null;if(repository)repositoryImageRequests++;else imageRequests++;const response=await fetcher(remote,{signal:AbortSignal.timeout(15000)});if(!repository&&(response.status===403||response.status===401))remoteDenied=true;
