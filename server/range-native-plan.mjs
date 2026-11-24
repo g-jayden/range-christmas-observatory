@@ -16,3 +16,19 @@ export function prioritiseRangeNativeArrivals(pending,products,newSkus){
  const arrivals=products.filter(p=>newSkus.has(String(p.sku))),main=rangeNativeTargets(arrivals),gallery=rangeNativeTargets(arrivals,{includeGallery:true}),rank=p=>main.has(p.variantImageUrl)?2:gallery.has(p.variantImageUrl)?1:0;
  return [...pending].sort((a,b)=>rank(b)-rank(a));
 }
+
+// A data-only Git publication can merge another collector's successful frames
+// into the working-copy index while this process still holds an older object.
+// Reuse only committed, exact-response proofs before saving the next batch.
+export function mergeCommittedRangeNativeEntries(current,checkpoint,targets,tracked){
+ const merged={...current};
+ for(const[url,e]of Object.entries(checkpoint||{})){
+  if(!committedNativeMirror(e,tracked))continue;
+  try{if(new URL(url).origin!=='https://www.therange.co.uk'||!validProductImage(url))continue;validateRangeNativeEntry(targets.get(url)||{variantImageUrl:url},e);}catch{continue;}
+  const prior=merged[url];if(!prior){merged[url]=e;continue;}
+  try{validateRangeNativeEntry(targets.get(url)||{variantImageUrl:url},prior);}catch{merged[url]=e;continue;}
+  if(prior.hash!==e.hash||prior.width!==e.width||prior.height!==e.height||Number.isFinite(prior.bytes)&&Number.isFinite(e.bytes)&&prior.bytes!==e.bytes)throw Error('Concurrent native image pixels changed; source review required: '+url);
+  const latest=Date.parse(e.observedAt||0)>Date.parse(prior.observedAt||0)?e:prior,bindings=[...new Set([...(prior.bindings||[]),...(e.bindings||[])])].sort(),selectedSkus=[...new Set([...(prior.selectedSkus||[]),...(e.selectedSkus||[])])].sort();
+  merged[url]={...latest,...(Number.isFinite(prior.bytes??e.bytes)?{bytes:prior.bytes??e.bytes}:{}),...(bindings.length?{bindings}:{}),...(selectedSkus.length?{selectedSkus}:{})};
+ }return merged;
+}
