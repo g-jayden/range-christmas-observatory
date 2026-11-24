@@ -45,7 +45,7 @@ export function createFreeFirstRangeSource({fetcher=fetch,http2=ordinaryHttp2,br
   }return rows;
  }
  async function resolveProductPages(products,lookup){
-  const ordinaryFetch=async url=>{const r=await read(url,{validate:text=>typeof text==='string'&&/data-products/.test(text)});return{ok:r.status===200,status:r.status,text:async()=>r.value||''};};
+  const ordinaryFetch=async url=>{const api=new URL(url).pathname==='/api/productlist';const r=await read(url,{validate:text=>{if(typeof text!=='string')return false;if(!api)return /data-products/.test(text);try{const d=JSON.parse(text);return Array.isArray(d.products)&&Number.isInteger(d.totalResults);}catch{return false;}}});return{ok:r.status===200,status:r.status,text:async()=>r.value||''};};
   const parse=new Function('DOMParser','fetch','payload','return ('+lookup.toString()+')(payload)'),rows=await parse(ProductDOMParser,ordinaryFetch,{products,concurrency:2});
   metrics.freeProductPageLookups=(metrics.freeProductPageLookups||0)+products.length;metrics.freeProductPagesResolved=(metrics.freeProductPagesResolved||0)+rows.filter(r=>r.sourceUrl).length;return rows;
  }
