@@ -125,6 +125,12 @@ assert.match(productNames({department:'spring-stems',variantName:'Botanik 12 x 4
 assert.match(productNames({department:'spring-stems',variantName:'12 x 40 cm Artificial Crocodile Fern Plant',specifications:{'Model Number':'12x7636'}}).zh,/（12件套）$/);
 assert.match(productNames({department:'spring-stems',variantName:'6 x 75cm Artificial Banksia Menziesii Pink Flower Stems'}).zh,/（6件套）$/);
 assert.doesNotMatch(productNames({department:'spring-potted',variantName:'20 x 30cm Artificial Plant',specifications:{'Model Number':'single'}}).zh,/20件套/,'An uncorroborated size tuple is not a twenty-piece pack');
+assert.equal(productNames({department:'spring-stems',variantName:'75cm Artificial Rosemary-Style Foliage Bush Stem'}).zh,'迷迭香仿真单枝','Rosemary must not match the substring rose');
+assert.equal(productNames({department:'spring-tree',variantName:'180cm Artificial Banana Tree - Green'}).zh,'绿色香蕉仿真树');
+assert.equal(productNames({department:'spring-tree',variantName:'100cm Artificial Raphis Palm Tree - Green'}).zh,'绿色棕竹仿真树');
+assert.match(productNames({department:'spring-potted',variantName:'100cm Yellow Lily and Black Eucalyptus Glass Vase'}).zh,/百合与尤加利/,'A mixed arrangement must retain both named botanicals');
+assert.match(productNames({sku:'basket-2',department:'spring-potted',variantName:'Artificial Floral Hanging Basket - Yellow / 2',detailsReady:true,detailEvidence:{selectedSku:'basket-2',verifiedProductSection:true},specifications:{'Pack Size':'2'}}).zh,/吊篮盆栽（2件套）$/);
+assert.doesNotMatch(productNames({sku:'basket-2',department:'spring-potted',variantName:'Artificial Floral Hanging Basket - Yellow',detailsReady:true,detailEvidence:{selectedSku:'other',verifiedProductSection:true},specifications:{'Pack Size':'2'}}).zh,/2件套/,'Another variant cannot supply the pack quantity');
 console.log('PASS: Spring Chinese names retain audited botanical body colours, omit container colours, distinguish botanical species and preserve explicit pack quantities.');
 const waitingBaseline=mergeSpring({products:[],history:{},baselineReady:false},{products:[{...row,newIn:false}],audit:{expected:1,complete:true}},'2026-11-23T20:00:00Z');
 const arrivalWhilePhotosPending=mergeSpring(waitingBaseline,{products:[{...row,newIn:true}],audit:{expected:1,complete:true}},'2026-11-23T22:00:00Z');
