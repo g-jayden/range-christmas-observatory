@@ -12,7 +12,7 @@ export async function inlineFirstCardPreviews(products,selected,{root,maxBytes=1
  }return results;
 }
 export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot='runtime/bq-source/preview-files',additionalPreviewCacheRoots=['runtime/bq-previews'],fetchVerified=process.env.BROWSE_FETCH_VERIFIED_PREVIEWS==='true',fetcher=globalThis.fetch,encodingCacheRoot='runtime/card-preview-encodings'}={}){
- const work=new Map(),nativeFiles=new Map(),downloads=new Map();let imageRequests=0,imageFailures=0,repositoryImageRequests=0,remoteDenied=false;let generated=0,reused=0,bytes=0,active=0,invalidImages=0,nativeBytes=0;const nativeRetailerBytes=new Map();const queue=[];
+ const work=new Map(),nativeFiles=new Map(),downloads=new Map();let imageRequests=0,imageFailures=0,repositoryImageRequests=0,remoteDenied=false;let generated=0,reused=0,bytes=0,active=0,invalidImages=0,nativeBytes=0,nativeCacheReused=0;const nativeRetailerBytes=new Map();const queue=[];
  const limit=fn=>new Promise((resolve,reject)=>{queue.push({fn,resolve,reject});drain();});
  function drain(){while(active<4&&queue.length){const job=queue.shift();active++;Promise.resolve().then(job.fn).then(job.resolve,job.reject).finally(()=>{active--;drain();});}}
  const local=value=>{if(typeof value!=='string')return null;const relative=value.startsWith(OWN)?value.slice(OWN.length):value;return /^images\/[\w./-]+\.(?:jpe?g|png|webp|avif)$/i.test(relative)&&!relative.split('/').includes('..')?relative:null;};
@@ -65,15 +65,19 @@ export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot
   if(!proof||p.sourceImageConflict)return p;const hash=proof.sha256;
   if(nativeFiles.has(hash))return {...(p.fastPreview?p:await build(p)),browseNative:{...nativeFiles.get(hash),sourceUrl:source}};
   const retailer=(p.retailerId||'the-range')+'/'+(p.collectionId||'christmas');if(proof.bytes>3000000||nativeBytes>=96*1024*1024||(nativeRetailerBytes.get(retailer)||0)>=8*1024*1024)return p;
-  for(const file of nativeImageCandidates(p).map(local).filter(Boolean)){
-   const buffer=await readInput({file:path.join(sourceRoot,file),bound:hash,remote:OWN+file});if(!buffer)continue;
+  const nativeCacheRoot=path.join(encodingCacheRoot,'native-originals'),extensions=['.jpg','.jpeg','.png','.webp','.avif'];
+  const saved=extensions.map(extension=>({file:path.join(nativeCacheRoot,hash+extension),extension,fromNativeCache:true}));
+  const current=nativeImageCandidates(p).map(local).filter(Boolean).map(file=>({file:path.join(sourceRoot,file),extension:path.extname(file).toLowerCase(),remote:OWN+file}));
+  for(const candidate of [...saved,...current]){
+   const buffer=await readInput({...candidate,bound:hash});if(!buffer)continue;
    if(createHash('sha256').update(buffer).digest('hex')!==hash)continue;
    // Keep first-screen original transfers local without publishing the several
    // gigabytes of historical galleries. The other originals retain their URLs.
    if(buffer.length>3000000||nativeBytes+buffer.length>96*1024*1024||(nativeRetailerBytes.get(retailer)||0)+buffer.length>8*1024*1024)return p;
-   const url='native-first/'+hash+path.extname(file).toLowerCase();await fs.mkdir(path.join(root,'native-first'),{recursive:true});await fs.writeFile(path.join(root,url),buffer);nativeBytes+=buffer.length;nativeRetailerBytes.set(retailer,(nativeRetailerBytes.get(retailer)||0)+buffer.length);const entry={url,sha256:hash};nativeFiles.set(hash,entry);return {...(p.fastPreview?p:await build(p)),browseNative:{...entry,sourceUrl:source}};
+   if(!candidate.fromNativeCache){await fs.mkdir(nativeCacheRoot,{recursive:true});await fs.writeFile(path.join(nativeCacheRoot,hash+candidate.extension),buffer);}else nativeCacheReused++;
+   const url='native-first/'+hash+candidate.extension;await fs.mkdir(path.join(root,'native-first'),{recursive:true});await fs.writeFile(path.join(root,url),buffer);nativeBytes+=buffer.length;nativeRetailerBytes.set(retailer,(nativeRetailerBytes.get(retailer)||0)+buffer.length);const entry={url,sha256:hash};nativeFiles.set(hash,entry);return {...(p.fastPreview?p:await build(p)),browseNative:{...entry,sourceUrl:source}};
   }
   return p;
  }
- return {build,warmNative,stats:()=>({generated,reused,bytes,invalidImages,firstScreenNativeBytesByRetailer:Object.fromEntries(nativeRetailerBytes),firstScreenNativeFiles:nativeFiles.size,firstScreenNativeBytes:nativeBytes,sourceRequests:imageRequests,officialPreviewImageRequests:imageRequests,repositoryImageRequests,officialPreviewImageFailures:imageFailures,officialPreviewAccessDenied:remoteDenied,sourceDirectoriesRequested:0,firecrawlCredits:0,originalFilesChanged:0})};
+ return {build,warmNative,stats:()=>({generated,reused,bytes,invalidImages,firstScreenNativeBytesByRetailer:Object.fromEntries(nativeRetailerBytes),firstScreenNativeFiles:nativeFiles.size,firstScreenNativeBytes:nativeBytes,firstScreenNativeCacheReused:nativeCacheReused,sourceRequests:imageRequests,officialPreviewImageRequests:imageRequests,repositoryImageRequests,officialPreviewImageFailures:imageFailures,officialPreviewAccessDenied:remoteDenied,sourceDirectoriesRequested:0,firecrawlCredits:0,originalFilesChanged:0})};
 }
