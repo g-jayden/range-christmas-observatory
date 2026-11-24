@@ -79,7 +79,7 @@ export async function collectPartitionedCategory(id,reader,{preferRoot=false}={}
  for(const b of brands){if(b.count>100){groups.push([b.name]);continue;}if(count+b.count>100&&small.length){groups.push(small);small=[];count=0;}small.push(b.name);count+=b.count;}if(small.length)groups.push(small);
  const results=new Map();
  async function checkedGroup(index){const values=groups[index];let failure;for(let attempt=0;attempt<3;attempt++)try{if(attempt){fetched.clear();if(reader.fresh){const u=urlFor(0,{in_stock_f:['true'],brand_f:values});fetched.set(u,await reader.fresh(u));}}const part=await collect({in_stock_f:['true'],brand_f:values});results.set(index,part);return;}catch(e){failure=e;if(e.status||!/Partition count changed|SKU changed|partition.*reconcile|coverage mismatch/i.test(e.message))throw e;reconciliations.push({brands:values,attempt:attempt+1,reason:e.message});}throw failure;}
- async function runGroups(indices){let cursor=0;const workers=await Promise.allSettled(Array.from({length:Math.min(4,indices.length)},async()=>{while(cursor<indices.length)await checkedGroup(indices[cursor++]);}));const failed=workers.find(r=>r.status==='rejected');if(failed)throw failed.reason;}
+ async function runGroups(indices){let cursor=0;const workers=await Promise.allSettled(Array.from({length:Math.min(16,indices.length)},async()=>{while(cursor<indices.length)await checkedGroup(indices[cursor++]);}));const failed=workers.find(r=>r.status==='rejected');if(failed)throw failed.reason;}
  await prime(groups.map(values=>urlFor(0,{in_stock_f:['true'],brand_f:values})));
  try{await runGroups(groups.map((_,i)=>i));}catch(error){
   if(!reader.many||error.status||!/partition|SKU changed/i.test(error.message))throw error;
