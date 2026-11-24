@@ -1310,6 +1310,31 @@
       "sourceUrl": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/180cm-artificial-fire-retardant-black-olive-tree-and-trunk",
       "sourceStatus": 200,
       "observedAt": "2026-11-24T03:01:32.000Z"
+    },
+    {
+      "period": "2026-11",
+      "credits": 1,
+      "authorizationId": "owner-all-collection-unrestricted-20261123",
+      "retailerId": "the-range",
+      "purpose": "Targeted current live check of an indexed or normalized official Christow product address after ordinary free channels failed. Actual source returned 404; no product facts were promoted.",
+      "sourceStatus": 404,
+      "observedAt": "2026-11-24T03:48:07.335Z",
+      "id": "mcp-01a20ba7-96a4-7048-8033-a8982510a811",
+      "sourceUrl": "https://www.therange.co.uk/home-furnishings/vases-and-artificial-plants/artificial-plants/christow-artificial-olive-tree-4ft-6ft/#1459028",
+      "refunded": 0
+    },
+    {
+      "period": "2026-11",
+      "credits": 1,
+      "authorizationId": "owner-all-collection-unrestricted-20261123",
+      "retailerId": "the-range",
+      "purpose": "Targeted current live check of an indexed or normalized official Christow product address after ordinary free channels failed. Actual source returned 404; no product facts were promoted.",
+      "sourceStatus": 404,
+      "observedAt": "2026-11-24T03:48:07.335Z",
+      "id": "mcp-01a20ba7-e0c0-7234-9c21-b66f4f21cf9d",
+      "sourceUrl": "https://img.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/christow-artificial-olive-tree-4ft-6ft",
+      "refunded": 1,
+      "refundFeedbackId": "01a20ba8-da19-73c6-9fe5-667555cf63c7"
     }
   ],
   "unreceipted": [
@@ -1413,6 +1438,15 @@
       "operation": "Discover an observed official address for the unresolved Christow olive tree",
       "credits": null,
       "reason": "Connector returned indexed links without an exact product address or billing receipt. Actual charge remains unknown; no zero-cost or refund claim."
+    },
+    {
+      "id": "spring-indexed-current-root-christow-redirect-20261124",
+      "at": "2026-11-24T03:48:07.335Z",
+      "sourceUrl": "https://www.therange.co.uk/home-furnishings/vases-and-artificial-plants/artificial-plants/christow-artificial-olive-tree-4ft%C2%BF6ft/#1459028",
+      "operation": "Targeted live verification of the official search-indexed current root URL",
+      "credits": null,
+      "error": "ERR_TOO_MANY_REDIRECTS",
+      "reason": "Provider returned a redirect-loop failure without a scrape billing receipt. Actual charge is unknown; no zero-credit or refund claim."
     }
   ],
   "reservationScopes": [
