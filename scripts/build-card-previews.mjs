@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';import sharp from 'sharp';
 import {nativeSourceUrl,nativeImageCandidates} from '../web/product-facts.mjs';
 const OWN='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/';
-export async function inlineFirstCardPreviews(products,selected,{root,maxBytes=192*1024}={}){
+export async function inlineFirstCardPreviews(products,selected,{root,maxBytes=512*1024}={}){
  let used=0;const results=[];
  for(const p of products){let value=p;const preview=p.fastPreview;
   if(selected.has(String(p.sku))&&/^card-previews\/[a-f0-9]{64}\.webp$/.test(preview?.url||''))try{

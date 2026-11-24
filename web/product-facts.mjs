@@ -54,7 +54,7 @@ export function nativeSourceUrl(p,item){
 
 export function nativeDownloadUrl(p,source=nativeSourceUrl(p)){
  if(productRetailer(p)!=='bq'||!source)return source;
- const declared=p.originalImageEvidence,exported=p.nativeExportEvidence;
+ const gallery=p.originalImages?.find(g=>g.url===source&&String(g.selectedSku)===String(p.sku)&&(!p.variantId||!g.variantId||String(g.variantId)===String(p.variantId))),declared=p.originalImageEvidence?.sourceUrl===source?p.originalImageEvidence:gallery&&{...gallery,sourceUrl:gallery.url,sha256:gallery.sha256||gallery.nativeSha256},exported=p.nativeExportEvidence;
  if(declared?.sourceUrl!==source||!Number.isInteger(declared.width)||!Number.isInteger(declared.height)||declared.width<64||declared.height<64||declared.sourceVersion==null||!p.originalImages?.some(g=>g.url===source&&String(g.selectedSku)===String(p.sku)))return source;
  const u=new URL(source);if(u.origin!=='https://media.diy.com'||!/^\/is\/image\/(?:Kingfisher|KingfisherDigital)\//.test(u.pathname))return source;
  if(exported?.sourceUrl===source&&String(exported.selectedSku)===String(p.sku)&&exported.sourceVersion===declared.sourceVersion&&exported.width===declared.width&&exported.height===declared.height){const e=new URL(exported.exportUrl);if(e.origin===u.origin&&e.pathname===u.pathname&&Number(e.searchParams.get('wid'))===declared.width&&Number(e.searchParams.get('hei'))===declared.height&&e.searchParams.get('fit')==='fit,0')return e.href;}

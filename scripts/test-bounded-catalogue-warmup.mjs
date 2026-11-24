@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {runInNewContext} from 'node:vm';
+import {createCatalogueLoader} from '../web/catalogue-loader.mjs';
+const base='https://catalogue.invalid/project/',hash=s=>createHash('sha256').update(s).digest('hex');
+for(const id of ['tree','ar-tree','spring-wreath-garland']){
+ const original={browseScope:id,products:[{sku:'1',priceGBP:9.99,originalImageUrl:'https://source.invalid/native.jpg'}]},text=JSON.stringify(original),entry={url:'browse/'+id+'-first.'+hash(text).slice(0,20)+'.json',sha256:hash(text)},manifest={format:'immutable-department-views-v1',scopes:{[id]:{...entry,firstScreen:entry}}};
+ let release,requests=0,discarded=0;const stalled=new Promise(resolve=>{release=resolve;}),first=new Map([[entry.url,stalled]]),bootstrap={base,first,manifest:Promise.resolve(manifest),promote:()=>stalled,discard(e,work){assert.equal(work,stalled);assert.equal(e.url,entry.url);discarded++;if(first.get(e.url)===work)first.delete(e.url);}};
+ const loader=createCatalogueLoader({base,disk:null,bootstrap,firstWarmupTimeoutMs:15,fetcher:async url=>{requests++;assert.equal(url,base+entry.url);return new Response(text);}});
+ const result=await Promise.race([Promise.all([loader.loadFirst(id),loader.loadFirst(id)]),new Promise((_,reject)=>{const timer=setTimeout(()=>reject(Error('A stalled preload blocked the foreground selection')),500);timer.unref();})]);
+ assert.deepEqual(result,[original,original]);assert.equal(requests,1,'Concurrent selections share one bounded same-site fallback');assert.equal(discarded,1);
+ release('late corrupt speculative data');await new Promise(resolve=>setTimeout(resolve,0));assert.deepEqual(await loader.loadFirst(id),original);assert.equal(requests,1,'A late stale preload cannot evict the verified foreground cache');
+ let fallback=0;const ready=Promise.resolve(text),fast=createCatalogueLoader({base,disk:null,bootstrap:{base,first:new Map([[entry.url,ready]]),manifest:Promise.resolve(manifest),promote:()=>ready},fetcher:async()=>{fallback++;throw Error('Unnecessary fallback');}});assert.deepEqual(await fast.loadFirst(id),original);assert.equal(fallback,0);
+ const corrupted=createCatalogueLoader({base,disk:null,firstWarmupTimeoutMs:15,bootstrap:{base,first:new Map([[entry.url,Promise.resolve('corrupt')]]),manifest:Promise.resolve(manifest),promote:()=>Promise.resolve('corrupt')},fetcher:async()=>new Response(text)});assert.deepEqual(await corrupted.loadFirst(id),original,'A corrupt speculative response cannot bypass source digest validation');
+}
+// Exercise the real early bootstrap's identity-safe discard, including release
+// of its otherwise-unbounded fetch and timer, without fetching a retailer page.
+const id='tree',text=JSON.stringify({browseScope:id,products:[]}),entry={url:'browse/tree-first.'+hash(text).slice(0,20)+'.json',sha256:hash(text)},manifest={format:'immutable-department-views-v1',scopes:{tree:{firstScreen:entry}}},aborts=[];
+const context={URL,Response,AbortController,setTimeout,clearTimeout,location:{href:base},navigator:{connection:{saveData:true}},fetch:async(raw,options={})=>{const url=String(raw);if(url.endsWith('browse-index.json'))return Response.json(manifest);if(url.includes('browse/tree-first.'))return new Promise((resolve,reject)=>options.signal.addEventListener('abort',()=>{aborts.push(url);reject(options.signal.reason);},{once:true}));return Response.json({});}};
+runInNewContext(await fs.readFile(new URL('../web/catalogue-bootstrap.js',import.meta.url),'utf8'),context);const boot=context.__observatoryCatalogueBootstrap;await boot.manifest;await new Promise(resolve=>setTimeout(resolve,0));const pending=boot.first.get(entry.url);assert(pending);const newer=Promise.resolve(text);boot.first.set(entry.url,newer);boot.discard(entry,pending);assert.equal(boot.first.get(entry.url),newer,'An old request cannot discard a newer preload');boot.first.set(entry.url,pending);boot.discard(entry,pending);await new Promise(resolve=>setTimeout(resolve,0));assert.equal(aborts.length,1);assert.equal(boot.first.has(entry.url),false);
+console.log('PASS: a stalled early preload cannot block foreground category selection; one digest-verified same-site fallback, shared requests, late-response protection, fast cache reuse and identity-safe preload cancellation work across retailers and Spring.');

@@ -3,12 +3,15 @@ export const cardPreviewSource=p=>p.sourceImageConflict?.galleryQuarantine?SOURC
 export function productPreviewGallery(p,full=p){
  if(p.sourceImageConflict?.galleryQuarantine||full.sourceImageConflict?.galleryQuarantine)return []; 
  if(p.displayImage)return [{url:p.displayImage.sourceUrl,thumbnail:p.fastPreview?.url||p.displayImage.cachePath,fallback:p.displayImage.cachePath}];
- const items=[],seen=new Set,add=(url,thumbnail,fallback)=>{if(!url||seen.has(url))return;seen.add(url);items.push({url,thumbnail:thumbnail||url,fallback});};
- const originals=full.originalImages||p.originalImages||[];
+ const items=[],seen=new Set,add=(url,thumbnail,fallback,evidence={})=>{if(!url||seen.has(url))return;seen.add(url);items.push({...evidence,url,thumbnail:thumbnail||url,fallback});};
+ const rawOriginals=full.originalImages||p.originalImages||[],equivalent=p.identicalPhotoOriginalEvidence||full.identicalPhotoOriginalEvidence;
+ // An audited larger copy of the identical photograph replaces its thumbnail
+ // in the gallery; do not offer that same 300px photo as a second detail frame.
+ const originals=equivalent?.comparison?.equivalent===true&&rawOriginals.some(g=>g.url===equivalent.nativeUrl&&String(g.selectedSku)===String(p.sku))?rawOriginals.filter(g=>g.url!==equivalent.rootUrl):rawOriginals;
  const reviewed=reviewedWholeGalleryPhoto({...full,...p,detailEvidence:full.detailEvidence||p.detailEvidence},originals);
- if(reviewed)add(reviewed.url,reviewed.nativeCachePath||reviewed.thumbnail,reviewed.nativeCachePath||reviewed.thumbnail);
- if(p.previewImage){const pair=originals.find(g=>g.url===p.previewImage.sourceUrl||g.thumbnail===p.previewImage.sourceUrl);add(pair?.url||p.previewImage.sourceUrl,p.fastPreview?.url||p.previewImage.cachePath,p.previewImage.cachePath);}
- for(const g of originals)if((!g.selectedSku||String(g.selectedSku)===String(p.sku))&&(!p.variantId||!g.variantId||String(g.variantId)===String(p.variantId))){const cached=g.thumbnail===p.imageCacheEvidence?.sourceUrl?p.cachedImageUrl:null;add(g.url,cached||g.thumbnail,cached||g.thumbnail);}
+ if(reviewed)add(reviewed.url,reviewed.nativeCachePath||reviewed.thumbnail,reviewed.nativeCachePath||reviewed.thumbnail,reviewed);
+ if(p.previewImage){const pair=originals.find(g=>g.url===p.previewImage.sourceUrl||g.thumbnail===p.previewImage.sourceUrl);add(pair?.url||p.previewImage.sourceUrl,p.fastPreview?.inlineUrl||p.fastPreview?.url||p.previewImage.cachePath,p.previewImage.cachePath,pair);}
+ for(const g of originals)if((!g.selectedSku||String(g.selectedSku)===String(p.sku))&&(!p.variantId||!g.variantId||String(g.variantId)===String(p.variantId))){const cached=g.thumbnail===p.imageCacheEvidence?.sourceUrl?p.cachedImageUrl:null;add(g.url,g.thumbnailCachePath||g.nativeCachePath||cached||g.thumbnail,g.nativeCachePath||cached||g.thumbnail,g);}
  if(!items.length)add(p.originalImageUrl||full.originalImageUrl||p.variantImageUrl||p.imageUrl,p.cachedImageUrl,p.cachedImageUrl);
  if(!originals.length)for(const url of full.images||p.images||[])add(url);
  return items;

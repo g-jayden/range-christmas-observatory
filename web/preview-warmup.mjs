@@ -1,14 +1,23 @@
-import {annotatedImage} from './native-image-browser.mjs';
+import {annotatedImage,nativeImage} from './native-image-browser.mjs';
 import {productPreviewGallery} from './product-preview.mjs';
 import {productKey,productPrice,productSize,nativeSourceUrl} from './product-facts.mjs';
 
-// Warm only likely-to-open exact products. Never start collection or a paid
-// request here, and keep background native decoding from flooding the network.
-export function createPreviewWarmer({prepare=annotatedImage,concurrency=2}={}){
- const queue=[],pending=new Map();let active=0;
- function drain(){while(active<concurrency&&queue.length){const job=queue.shift();active++;Promise.resolve().then(()=>prepare(job.p,job.item)).then(job.resolve,job.reject).finally(()=>{active--;pending.delete(job.key);drain();});}}
- function warm(p,{priority=false}={}){if(p.sourceImageConflict)return Promise.resolve(null);const item=productPreviewGallery(p)[0];if(!item)return Promise.resolve(null);const key=JSON.stringify([productKey(p),nativeSourceUrl(p,item),p.originalImageEvidence,p.observedAt,productPrice(p),productSize(p)]);if(pending.has(key))return pending.get(key);
-  let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});pending.set(key,promise);const job={key,p,item,resolve,reject};priority?queue.unshift(job):queue.push(job);drain();return promise;
+// All visible products and every eligible gallery frame share this queue.
+// User intent has a reserved slot; background downloads cannot block it.
+// No collection or paid endpoint is reachable from this module.
+export function createPreviewWarmer({prepare=annotatedImage,prepareNative=nativeImage,concurrency=2,urgentConcurrency=1}={}){
+ const queue=[],pending=new Map();let background=0,urgent=0;
+ function drain(){for(let i=0;i<queue.length;){const job=queue[i],interactive=job.rank===2;
+  if(interactive?urgent>=urgentConcurrency:background>=concurrency){i++;continue;}
+  queue.splice(i,1);job.started=true;interactive?urgent++:background++;
+  Promise.resolve().then(()=>job.native?prepareNative(job.p,job.item):prepare(job.p,job.item)).then(job.resolve,job.reject).finally(()=>{interactive?urgent--:background--;if(pending.get(job.key)===job)pending.delete(job.key);drain();});
+ }}
+ function warmItem(p,item,{priority=false,native=false}={}){
+  if(p.sourceImageConflict||p.browseDetailsPending||!item)return Promise.resolve(null);
+  const key=JSON.stringify([native?'native':'annotated',productKey(p),nativeSourceUrl(p,item),p.originalImageEvidence,item,p.observedAt,productPrice(p),productSize(p)]),rank=priority?2:native?0:1;
+  const prior=pending.get(key);if(prior){if(!prior.started&&rank>prior.rank){prior.rank=rank;queue.sort((a,b)=>b.rank-a.rank);drain();}return prior.promise;}
+  let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;}),job={key,p,item,resolve,reject,promise,native,rank,started:false};pending.set(key,job);queue.push(job);queue.sort((a,b)=>b.rank-a.rank);drain();return promise;
  }
- return {warm,clearPending(){for(const job of queue.splice(0)){pending.delete(job.key);job.resolve(null);}}};
+ return {warmItem,warm(p,options={}){return warmItem(p,productPreviewGallery(p)[0],options);},warmGallery(p,{priority=false}={}){return Promise.allSettled(productPreviewGallery(p).map((item,i)=>warmItem(p,item,{native:true,priority:priority&&i===0})));},clearPending(){for(const job of queue.splice(0)){if(pending.get(job.key)===job)pending.delete(job.key);job.resolve(null);}}};
 }
+export const previewWarmer=createPreviewWarmer();
