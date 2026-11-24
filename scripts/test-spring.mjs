@@ -96,6 +96,7 @@ await import('./test-spring-human-frame.mjs');
 await import('./test-spring-listing-native.mjs');
 await import('./test-spring-source-patches.mjs');
 await import('./test-spring-human-previews.mjs');
+await import('./test-spring-material-context.mjs');
 assert.equal(productNames({department:'spring-potted',variantName:'White Artificial Orchid in Pink Ceramic Pot',paletteEvidence:{colours:['白色','绿色']}}).zh,'白色／绿色兰花仿真盆栽');
 assert.equal(productNames({department:'spring-potted',variantName:'Artificial Agapanthus Plant with White Pot'}).zh,'百子莲仿真盆栽');
 assert.equal(productNames({department:'spring-tree',variantName:'2pcs Artificial Zamioculcas Tree - Green'}).zh,'绿色金钱树仿真树（2件套）');

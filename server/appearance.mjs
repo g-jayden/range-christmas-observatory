@@ -17,8 +17,10 @@ export function materialFacts(specs={},text=''){
  // A construction clause can continue with a list of depicted shapes. Those
  // shapes are not extra raw materials (for example glass pinecone baubles).
  const relevant=sentences.filter(s=>!/\b(?:decorate your tree|tree branches|branch tips|ornaments you|decorations not|tree not included)\b/i.test(s)).map(s=>s.split(/,\s*(?:this|these|it|they|which|each|our)\b|\b(?:such as|designs? (?:include|including)|shapes? (?:include|including))\b/i)[0]);
- const evidence=direct+'\n'+relevant.join('\n');
+ const materialClauses=relevant.filter(s=>!(/\b(?:vases?|planters?|baskets?|props?|pots?)\b.{0,45}\bnot (?:included|supplied)\b/i.test(s)&&!/^\s*(?:-\s*)?(?:made|crafted|constructed|materials?\s*:)/i.test(s))).map(s=>s.replace(/\bsilk[ -]like\b/ig,'faux silk').replace(/\b(?:realistic |simulated |natural[ -]looking )?wood[ -]grains?(?:[ -]effect|[ -]finish)?\b/ig,'simulated grain texture'));
+ const evidence=direct+'\n'+materialClauses.join('\n');
  let found=materialTerms.filter(([, ,re])=>re.test(evidence)).map(([en,zh])=>({en,zh}));
+ for(const en of['Eucalyptus','Palm Leaf','Willow','Twig','Bamboo']){const term=materialTerms.find(t=>t[0]===en)?.[2];if(term&&!term.test(direct)){const clauses=materialClauses.filter(s=>/\b(?:made|crafted|constructed|woven|formed)\s+(?:from|of|with)|\b(?:real|natural|genuine|dried)\b/i.test(s));if(!clauses.some(s=>term.test(s)))found=found.filter(x=>x.en!==en);}}
  if(!/\bpine[ -]?cones?\b/i.test(direct)&&!/\b(?:made|crafted|constructed|formed)\s+(?:from|of|with)\s+(?:(?:real|natural|dried|genuine|frosted)\s+)*pine[ -]?cones?\b|\b(?:real|natural|dried|genuine)\s+pine[ -]?cones?\b/i.test(relevant.join(' ')))found=found.filter(x=>x.en!=='Pinecone');
  const has=en=>found.some(x=>x.en===en);const fabricSpecific=['Polyester','Cotton','Linen','Jute / Hessian','Faux Fur','Velvet','Felt','Fleece','Plush','Wool','Acrylic','Chenille'].some(has);
  const separateFabric=/(?:^|[,;+/]|\band\b)\s*(?:\d+(?:\.\d+)?\s*%\s*)?fabric(?:\s+\d+(?:\.\d+)?\s*%)?\s*(?=$|[,;+/]|\band\b)/i.test(direct);
