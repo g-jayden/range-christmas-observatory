@@ -9535,13 +9535,13 @@
     "1448389": {
       "disposition": "review",
       "department": "spring-potted",
-      "reason": "The selected native image shows only the gold bowl while the exact offer includes an orchid display; obtain a matching whole-display frame.",
-      "imageHash": "ed6ed9a1dfdc475387f90624f377a7a4d3f1495109fa41d1c42c50023d1a4f73",
+      "reason": "Exact offer says green metal bowl while the viewed native gallery shows a gold bowl and separate black-potted orchid. Resolve the source-to-photo planter finish and supplied contents before export.",
+      "imageHash": "3a0d4ea1a8c92b3e5711e84561a92c0efbec944f596fbadc70fd791314a9e1fa",
       "sourceContentHash": "1a180c3f9817cb1ee7616306de6c2ccf23f2ad05994d8b76e3baa2e301e3a814",
       "listingFingerprint": "20ddc41a1d28cadeb44c7703dbe38b1571f49f05cc39ba3ada0f57572fd526ed",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/9/1786359119_5569.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.147Z",
-      "reviewArtifact": "native-human-sheet-01",
+      "reviewedAt": "2026-11-24T05:38:39.756Z",
+      "reviewArtifact": "model-pair-sheets-05-07-10-28-and-mismatch-gallery-01-20261124",
       "wholeProductFrame": false
     },
     "1448391": {
@@ -9567,14 +9567,14 @@
       "wholeProductFrame": true
     },
     "1448399": {
-      "disposition": "include",
+      "disposition": "review",
       "department": "spring-potted",
-      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "reason": "The exact title/features describe one green potted freesia or an unspecified bundle, but the viewed gallery shows multiple differently coloured potted freesias. Confirm the supplied count and selected colour; do not merge this with a different counted set.",
       "imageHash": "482773c520cccc8a178f3624e6a445dd2d6a5a697427757b5772901273ed8239",
       "sourceContentHash": "ce5b82c90e117336d4c56a01807037c8c5447fedec461aef11d418a1ff4ca362",
-      "reviewedAt": "2026-11-23T20:12:28.725Z",
-      "reviewArtifact": "native-source-contact-sheets-1-to-15",
-      "wholeProductFrame": true
+      "reviewedAt": "2026-11-24T05:38:39.756Z",
+      "reviewArtifact": "model-pair-sheets-05-07-10-28-and-mismatch-gallery-01-20261124",
+      "wholeProductFrame": false
     },
     "1448404": {
       "imageHash": "e119f7220d2e0d65378eca26e398802d31d174c43b8860ad4efeeaaf8987e2e2",
@@ -10120,14 +10120,14 @@
       "wholeProductFrame": true
     },
     "1448480": {
-      "disposition": "include",
+      "disposition": "review",
       "department": "spring-potted",
-      "reason": "The viewed native frame shows a complete green or flowering plant arrangement with its supplied pot, vase or basket, consistent with the exact offered description.",
+      "reason": "The exact title/features describe one green potted freesia or an unspecified bundle, but the viewed gallery shows multiple differently coloured potted freesias. Confirm the supplied count and selected colour; do not merge this with a different counted set.",
       "imageHash": "69103d48b58404f3ab1c5e5c5c9c256e0745a19db19deb60abaee518e3dc4d1d",
       "sourceContentHash": "dd831413547b86f6a1b16cc7a4d391accbc6bfcc3495edca04e8ed9e7b418941",
-      "reviewedAt": "2026-11-23T20:12:28.713Z",
-      "reviewArtifact": "native-source-contact-sheets-1-to-15",
-      "wholeProductFrame": true
+      "reviewedAt": "2026-11-24T05:38:39.756Z",
+      "reviewArtifact": "model-pair-sheets-05-07-10-28-and-mismatch-gallery-01-20261124",
+      "wholeProductFrame": false
     },
     "1448481": {
       "disposition": "include",
@@ -11293,16 +11293,16 @@
       "wholeProductFrame": false
     },
     "1448588": {
-      "disposition": "include",
+      "disposition": "review",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "reason": "The viewed native photo is a mixed sunflower/protea arrangement, while exact selected-variant title/features specify yellow dahlia, pink blossom or yellow bottle-brush stems. The frame does not match the offered botanical; choose another exact-SKU frame and recheck it against the listing photo.",
       "imageHash": "591957b194906f183b01c81e40ec5bebd088b9967c5c13606729cd298e29fab9",
       "sourceContentHash": "9f5b33fa6176d2f05e86445df224de7c2ace7714aab0b984e41fa203778cb416",
       "listingFingerprint": "f67c523a757b7f3e5f2bc84e5021e3bc23465afa9f06113d76e94a306e7f8296",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/3/1786359544_7082.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.258Z",
-      "reviewArtifact": "native-human-sheet-10",
-      "wholeProductFrame": true
+      "reviewedAt": "2026-11-24T05:38:39.756Z",
+      "reviewArtifact": "model-pair-sheets-05-07-10-28-and-mismatch-gallery-01-20261124",
+      "wholeProductFrame": false
     },
     "1448590": {
       "disposition": "include",
@@ -11537,14 +11537,14 @@
       "wholeProductFrame": true
     },
     "1448612": {
-      "disposition": "include",
+      "disposition": "review",
       "department": "spring-stems",
-      "reason": "The viewed native frame shows the offered loose flowers, foliage shoots or stems. The exact offered description and title distinguish these from a supplied planted container; a styling vase does not change the sold form.",
+      "reason": "The viewed native photo is a mixed sunflower/protea arrangement, while exact selected-variant title/features specify yellow dahlia, pink blossom or yellow bottle-brush stems. The frame does not match the offered botanical; choose another exact-SKU frame and recheck it against the listing photo.",
       "imageHash": "6ed93144e8b5012cb7bea40610674afe8873d753dee52e271a3484cc9271fb9a",
       "sourceContentHash": "e0bd01e1e2b310d2c42c0044ed9a3d5a58c1a4b6b76b1886ec4820e6d3cd2527",
-      "reviewedAt": "2026-11-23T20:12:28.708Z",
-      "reviewArtifact": "native-source-contact-sheets-1-to-15",
-      "wholeProductFrame": true
+      "reviewedAt": "2026-11-24T05:38:39.755Z",
+      "reviewArtifact": "model-pair-sheets-05-07-10-28-and-mismatch-gallery-01-20261124",
+      "wholeProductFrame": false
     },
     "1448613": {
       "disposition": "include",
@@ -12137,28 +12137,28 @@
       "wholeProductFrame": true
     },
     "1448680": {
-      "disposition": "include",
+      "disposition": "review",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "reason": "The viewed native photo is a mixed sunflower/protea arrangement, while exact selected-variant title/features specify yellow dahlia, pink blossom or yellow bottle-brush stems. The frame does not match the offered botanical; choose another exact-SKU frame and recheck it against the listing photo.",
       "imageHash": "591957b194906f183b01c81e40ec5bebd088b9967c5c13606729cd298e29fab9",
       "sourceContentHash": "75d74b39f6c2bf5bc06575d954265ee72ec2958e4689a14d1d6fd57a4020af45",
       "listingFingerprint": "096f8fa235c5d2970b0b42570320fb4d0bae5485c7ba2e81d5064dcc38097925",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/4/1786361269_8782.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.260Z",
-      "reviewArtifact": "native-human-sheet-11",
-      "wholeProductFrame": true
+      "reviewedAt": "2026-11-24T05:38:39.756Z",
+      "reviewArtifact": "model-pair-sheets-05-07-10-28-and-mismatch-gallery-01-20261124",
+      "wholeProductFrame": false
     },
     "1448681": {
-      "disposition": "include",
+      "disposition": "review",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "reason": "The viewed native photo is a mixed sunflower/protea arrangement, while exact selected-variant title/features specify yellow dahlia, pink blossom or yellow bottle-brush stems. The frame does not match the offered botanical; choose another exact-SKU frame and recheck it against the listing photo.",
       "imageHash": "7c761153f595f5a117afc621e019b189969ca6455dccf5a104a40a5068116ed5",
       "sourceContentHash": "a90684b87f1cbd71976fcd7b0f81afdb0efded40265a7be4744cfe8a11c75b9d",
       "listingFingerprint": "415bc7eaf59648ad2efac2f893b6269e0a2926c36865f00baa2c6f046be3974b",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/3/1786358392_7131.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.260Z",
-      "reviewArtifact": "native-human-sheet-11",
-      "wholeProductFrame": true
+      "reviewedAt": "2026-11-24T05:38:39.756Z",
+      "reviewArtifact": "model-pair-sheets-05-07-10-28-and-mismatch-gallery-01-20261124",
+      "wholeProductFrame": false
     },
     "1448682": {
       "disposition": "include",
