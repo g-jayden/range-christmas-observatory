@@ -1,18 +1,8 @@
 {
-  "requestId": "owner-recovery-20261124-independent-native-queue-0638",
+  "requestId": "owner-recovery-20261124-argos-exact-size-rebuild-2257",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T22:37:28.231Z",
+  "requestedAt": "2026-11-24T22:56:31.461Z",
   "targets": [
-    "range-native-current"
-  ],
-  "supersedeRangeNativeBeforeCollection": [
-    {
-      "runId": 45501545685,
-      "expectedCommit": "fd1618a5cdbd78816a8de8b370f81b52d719847e"
-    },
-    {
-      "runId": 45500670029,
-      "expectedCommit": "5afd7f70a560d4a81e174a8c7c721b2f6453c828"
-    }
+    "ar-reviewed-current"
   ]
 }
