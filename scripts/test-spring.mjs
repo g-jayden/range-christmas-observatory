@@ -1,4 +1,5 @@
 import{springBodyColourFacts}from'../server/spring-colours.mjs';
+await import('./test-spring-selected-facts.mjs');
 import{springReviewExcludes}from'../server/spring-review-evidence.mjs';import{detailFingerprint}from'../server/collection-policy.mjs';
 import{springSourceAlternates,springKnownAddressFailures}from'../server/repair-spring-source.mjs';
 import assert from'node:assert/strict';
@@ -97,7 +98,7 @@ assert(springSourceAlternates({sku:'1438495',productCode:'M1438495',sourceUrl:'h
 
 for(const name of ['Leaf Tall Gold Stand with Gold Metal Planter 62cm','Medium Black Stand with Gold Planter 38.5cm x 18cm'])assert.equal(springSourceDecision({variantName:name}).disposition,'exclude');
 assert.equal(springSourceDecision({variantName:'Artificial Orchid in Pot with Stand'}).department,'spring-potted');
-assert.equal(springSourceDecision({sku:'75',variantName:'Pack of 6 Hanging Boston Fern Plants',detailEvidence:{exactVariantSource:{selectedSku:'75',features:['Green artificial fern','For indoor display','No maintenance','No planter or pot is included.']}}}).department,'spring-stems');
+assert.equal(springSourceDecision({sku:'75',variantId:'v75',sourceUrl:'https://www.therange.co.uk/p/fern#75',detailsReady:true,variantName:'Pack of 6 Hanging Boston Fern Plants',detailEvidence:{verifiedProductSection:true,selectedSku:'75',exactVariantSource:{selectedSku:'75',variantId:'v75',sourceUrl:'https://www.therange.co.uk/p/fern',sha256:'a'.repeat(64),features:['Green artificial fern','For indoor display','No maintenance','No planter or pot is included.']}}}).department,'spring-stems');
 assert.equal(springSourceDecision({variantName:'Artificial Fern With No Pot',sourceDescription:'## Information\nA bare-stem fern supplied unpotted.'}).department,'spring-stems');
 assert.equal(springSourceDecision({variantName:'Artificial Olive Tree With No Pot'}).department,'spring-tree');
 assert.equal(springSourceDecision({variantName:'Artificial Potted Fern',sourceDescription:'## Features\n- Supplied without a planter'}).disposition,'review');

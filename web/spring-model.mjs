@@ -1,3 +1,4 @@
+import{springSourceText}from'./spring-source-facts.mjs';
 export const SPRING_AVAILABLE=false;
 export const SPRING_VERSION='range-spring-source-and-photo-v1';
 export const SPRING_DEPARTMENTS=[
@@ -13,7 +14,7 @@ const dried=/\b(?:dried|dried[ -]look|pampas|burnt orange|rust[ -]colou?red|copp
 // A botanical subject sold already arranged in a vase is included. An empty
 // vase, planter, flower rack, live plant or craft component is not the object.
 export function springSourceDecision(p){
- const title=String(p.variantName||p.name||''),description=String(p.sourceDescription||''),category=String(p.breadcrumb||p.productPath||p.variantPath||p.sourceUrl||''),text=title+' '+description;
+ const title=String(p.variantName||p.name||''),description=springSourceText(p),category=String(p.breadcrumb||p.productPath||p.variantPath||p.sourceUrl||''),text=title+' '+description;
  // Sea holly is Eryngium, a flowering botanical species, not Christmas holly.
  // Keep explicit occasion/season fields intact when removing that title alias.
  const seasonalIdentity=title.replace(/\bsea[ -]holly\b/gi,'Eryngium')+' '+String(p.specifications?.Season||p.specifications?.Occasion||'');if(seasonWords.test(seasonalIdentity))return{disposition:'exclude',reason:'explicit-non-spring-season',evidence:seasonalIdentity.match(seasonWords)[0]};
@@ -41,7 +42,7 @@ export function springSourceDecision(p){
  if(/\b(?:vases?|planters?|pots?|baskets?|urns?|stands?|frames?|holders?|jugs?|bottles?|mugs?|watering cans?)\b/i.test(title)&&!namedPlantVessel&&!(/\b(?:in|with)\b[\s\S]*\b(?:pots?|vases?|planters?|baskets?|jugs?)\b|\b(?:arrangement|potted|artificial|faux|fake|tree|fern|succulent|orchid|flowering)\b/i.test(title)))return{disposition:'exclude',reason:'empty-container-or-accessory',evidence:title};
  if(!foliage.test(title+' '+category))return{disposition:'review',reason:'botanical-object-unconfirmed',evidence:title};
  const opening=(description.split(/## Information\s*/i)[1]||'').split(/(?<=[.!?])\s+/)[0]||'',offered=featureHead+' '+opening;
- const exact=p.detailEvidence?.exactVariantSource,exactText=exact&&String(exact.selectedSku)===String(p.sku)?[...(exact.features||[]),exact.description||''].join(' '):offered;
+ const exactText=description;
  const bare=/\b(?:bare[ -]stem(?:med)?|unpotted|with\s+no\s+pots?|no\s+(?:pot|planter)(?:\s+or\s+(?:pot|planter))?\s+(?:is\s+)?included|(?:supplied|provided)\s+without\s+(?:a\s+)?(?:pot|planter))\b/i.test(title+' '+exactText);
  const titledPot=/\bpotted\b|\b(?:in|with)\s+(?:(?!no\b|not\b)\w+\s+){0,5}(?:pot|planter|vase|basket)\b/i.test(title);
  if(bare&&titledPot)return{disposition:'review',reason:'offered-pot-contents-conflict',evidence:title+' '+offered};
@@ -51,7 +52,7 @@ export function springSourceDecision(p){
  const treeFormTitle=title.replace(/\bArtificial Flower Stem\b(?=\s*(?:-|$))/i,'');
  let department;
  if(/\b(?:garlands?|wreaths?|swags?)\b/i.test(title))department='spring-wreath-garland';
- else if((/\btrees?\b/i.test(treeFormTitle)||/\btopiar(?:y|ies)\b/i.test(title)&&/\b(?:trees?|trunk)\b/i.test(featureHead))&&!/\b(?:stems?|sprays?|picks?|branches|branch)\b/i.test(treeFormTitle))department='spring-tree';
+ else if((/\btrees?\b/i.test(treeFormTitle)||!bare&&/\b(?:artificial\s+(?:bay\s+)?tree|natural\s+(?:wood\s+)?trunk|authentic\s+trunk)\b/i.test(String(p.specifications?.Type||'')+' '+exactText)||/\btopiar(?:y|ies)\b/i.test(title)&&/\b(?:trees?|trunk)\b/i.test(featureHead))&&!/\b(?:stems?|sprays?|picks?|branches|branch)\b/i.test(treeFormTitle))department='spring-tree';
  else if(bare)department='spring-stems';
  else if(/\b(?:potted|hanging\s+(?:flower\s+)?baskets?|window\s+box|(?:in|with)\s+(?:(?!not\b|no\b)\w+\s+){0,5}(?:pots?|vases?|planters?|baskets?|jugs?)|vase arrangement|pot arrangement)\b/i.test(title))department='spring-potted';
  else if(/\b(?:bouquets?|picks?|stems?|sprays?|branches|branch|bunches|bunch|bushes|bush|bundle)\b/i.test(title))department='spring-stems';
@@ -62,6 +63,7 @@ export function springSourceDecision(p){
  // "make bouquets, wreaths and garlands" into the product's physical form.
  if(!department&&/\b(?:bouquet only|flower stem only|(?:supplied|pack|set)\b.{0,45}\bstems?\b|single stem|leaf stem|leaf spray|foliage spray)\b/i.test(offered))department='spring-stems';
  if(!department&&/\b(?:supplied\b.{0,50}\b(?:hanging basket|weighted pot|planter)|fully assembled\b.{0,35}\bhanging basket|flowers? in (?:a )?(?:basket|pot|vase))\b/i.test(offered))department='spring-potted';
+ if(department==='spring-stems'&&!bare&&!/\b(?:bouquets?|picks?|stems?|sprays?|branches|branch|bunches|bunch|bundle)\b/i.test(title)&&/\b(?:arrives? potted|potted in|comes? in|supplied in|delivered in)\b.{0,55}\bpot\b/i.test(exactText))department='spring-potted';
  return{disposition:department?'candidate':'review',department,reason:department?'offered-botanical-object-needs-photo':'object-needs-source-and-photo-review',evidence:title,...(usageOnly?{seasonalUsageEvidence:{text:context[0],method:'retailer-end-use-suggestion-requires-native-review'}}:{})};
 }
 export function springImageDecision(p,visual){
