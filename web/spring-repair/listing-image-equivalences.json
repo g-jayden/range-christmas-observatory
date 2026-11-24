@@ -1,0 +1,92 @@
+{
+  "version": "spring-root-photo-native-equivalence-v1",
+  "proofs": [
+    {
+      "sku": "3324435",
+      "variantId": "2542497",
+      "rootImageUrl": "https://www.therange.co.uk/media/5/4/1790269869_7894.jpg",
+      "rootImageHash": "85851c59d74993fc618988be0b91fad03e747a1f176d0551b43dd0fc8a1f420b",
+      "rootInputFingerprint": "dedafaf343c39b1717cf006d95078bde67ed3ceaa33026930146868ab59c26a5",
+      "referenceSku": "9505915",
+      "nativeImageUrl": "https://www.therange.co.uk/media/2/0/1750779943_7093.jpg",
+      "nativeImageHash": "4b6a11a4a57e5e02e9d04e6b2c44cf24bb461964d9bb3c3f7c1222575d59f4b1",
+      "nativeCachePath": "images/source/4b6a11a4a57e5e02e9d04e6b2c44cf24bb461964d9bb3c3f7c1222575d59f4b1.jpg",
+      "comparison": {
+        "equivalent": true,
+        "rms": 2.8061161635215823,
+        "meanAbsolute": 1.51739501953125,
+        "outlierRatio": 0.004069010416666667,
+        "foregroundRms": 2.805908143738655,
+        "maxBlockRms": 8.892295354219105,
+        "thumbnailWidth": 300,
+        "thumbnailHeight": 300,
+        "originalWidth": 1500,
+        "originalHeight": 1500,
+        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
+      },
+      "sourceContentHash": "79c5aa996036ac4bce7d0a6b4efb00fe5ec9b96086456c173ef11eb8f4a21530",
+      "referenceSourceContentHash": "cd4540a36c39ad07be03084898062d013282371b92a069d82d43fcce67f437f9",
+      "referenceVariantId": "8046712",
+      "reviewArtifact": "root-native-pair-proof-20261124",
+      "note": "The exact root SKU photograph and the saved 1500px official original were compared at native sampling resolution and visually inspected side by side. This proves an image association only; reference prices, sizes, model names and stock were not copied."
+    },
+    {
+      "sku": "6029658",
+      "variantId": "2542464",
+      "rootImageUrl": "https://www.therange.co.uk/media/2/3/1790269905_9767.jpg",
+      "rootImageHash": "9442aa60ec83964f9ec748c1babef55c3017f649bfe7238a956807aebcce33d1",
+      "rootInputFingerprint": "750301de49614c3b1aa4f20b76facd4502e266b0b28098e342f22abdf69c6027",
+      "referenceSku": "8674414",
+      "nativeImageUrl": "https://www.therange.co.uk/media/0/7/1750779756_3699.jpg",
+      "nativeImageHash": "17b533d88149b9f60334c8dd9439cb85d5aab1a40b25f316da6236be5bc22d45",
+      "nativeCachePath": "images/source/17b533d88149b9f60334c8dd9439cb85d5aab1a40b25f316da6236be5bc22d45.jpg",
+      "comparison": {
+        "equivalent": true,
+        "rms": 2.4432149550144477,
+        "meanAbsolute": 1.3769327799479167,
+        "outlierRatio": 0.0024007161458333335,
+        "foregroundRms": 2.4441456987986143,
+        "maxBlockRms": 7.409875167639465,
+        "thumbnailWidth": 300,
+        "thumbnailHeight": 300,
+        "originalWidth": 1500,
+        "originalHeight": 1500,
+        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
+      },
+      "sourceContentHash": "ef900c7fd065171decfad5c1fbd9995b715aa61ad6dd10cbb5c85fe0f6cf80a7",
+      "referenceSourceContentHash": "64f8b1dbb7b9f67527d1d60f52a7fa4e3c518e9f7a276e3f4924e5450fbcd22b",
+      "referenceVariantId": "8046657",
+      "reviewArtifact": "root-native-pair-proof-20261124",
+      "note": "The exact root SKU photograph and the saved 1500px official original were compared at native sampling resolution and visually inspected side by side. This proves an image association only; reference prices, sizes, model names and stock were not copied."
+    },
+    {
+      "sku": "8260995",
+      "variantId": "2542506",
+      "rootImageUrl": "https://www.therange.co.uk/media/1/7/1790269876_8289.jpg",
+      "rootImageHash": "babffead4eb9084e4b16c3f6dec268d3d8a8b1df0f654106de0382488b74e99b",
+      "rootInputFingerprint": "d5a4b4e7d13bb64d5425ae1c20d901439b1c927c99930c5fa6c7b25429cd76ba",
+      "referenceSku": "2885318",
+      "nativeImageUrl": "https://www.therange.co.uk/media/3/4/1750779566_6328.jpg",
+      "nativeImageHash": "d91fcf9e6cd2fe423e5afab2c4eb44afdc51f07d1ebc0ed6ba0141e772b0a118",
+      "nativeCachePath": "images/source/d91fcf9e6cd2fe423e5afab2c4eb44afdc51f07d1ebc0ed6ba0141e772b0a118.jpg",
+      "comparison": {
+        "equivalent": true,
+        "rms": 3.0514022188662846,
+        "meanAbsolute": 1.5920613606770833,
+        "outlierRatio": 0.005574544270833333,
+        "foregroundRms": 3.05147381242955,
+        "maxBlockRms": 9.733158531535382,
+        "thumbnailWidth": 300,
+        "thumbnailHeight": 300,
+        "originalWidth": 1500,
+        "originalHeight": 1500,
+        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
+      },
+      "sourceContentHash": "0a0a1bdefe85cccc0b326f7ccb6a05892741b581283dbbda54c633cda20d388c",
+      "referenceSourceContentHash": "a2f7bc8294b41b07006ed5aecfa73ecd7d65cd7ab5fa3113df6a918f8884832e",
+      "referenceVariantId": "8046722",
+      "reviewArtifact": "root-native-pair-proof-20261124",
+      "note": "The exact root SKU photograph and the saved 1500px official original were compared at native sampling resolution and visually inspected side by side. This proves an image association only; reference prices, sizes, model names and stock were not copied."
+    }
+  ]
+}

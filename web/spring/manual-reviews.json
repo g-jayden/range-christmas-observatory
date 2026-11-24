@@ -25450,14 +25450,29 @@
       "wholeProductFrame": true
     },
     "3324435": {
-      "imageHash": "db1fe6c1b364f715dc0fbc859d2f72d2337b1256f3ee7834f59c06eb95cc77e5",
+      "disposition": "include",
+      "department": "spring-potted",
+      "colours": [
+        "白色",
+        "粉色",
+        "绿色"
+      ],
+      "reason": "Viewed the exact root/native comparison side by side and confirmed the complete orchid and its included pot. Strict decoded-pixel comparison independently proves that the saved 1500px official original is the same photograph as this exact SKU listing, rather than a lookalike product. Exact selected-SKU features and specifications provide the offered flower count, pot and height; conflicting family information about a 52cm dark-pink silver-pot orchid is preserved as raw family text and does not replace these variant facts. Pot gold or silver is not counted as flower/leaf colour.",
+      "imageHash": "4b6a11a4a57e5e02e9d04e6b2c44cf24bb461964d9bb3c3f7c1222575d59f4b1",
       "sourceContentHash": "79c5aa996036ac4bce7d0a6b4efb00fe5ec9b96086456c173ef11eb8f4a21530",
       "listingFingerprint": "dedafaf343c39b1717cf006d95078bde67ed3ceaa33026930146868ab59c26a5",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/4/1790269869_7894.jpg",
-      "reviewedAt": "2026-11-24T03:41:39.455Z",
-      "reviewArtifact": "new-native-sheet-1-through-4-exact-SKU-20261124",
-      "disposition": "review",
-      "reason": "The selected native frame crops or obscures the complete supplied stem/plant, is a styled multi-product arrangement, or leaves the botanical spring palette unresolved. Select and inspect a complete exact-SKU native gallery frame before release."
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/2/0/1750779943_7093.jpg",
+      "reviewedAt": "2026-11-24T05:20:17.334Z",
+      "reviewArtifact": "root-native-pair-proof-20261124",
+      "wholeProductFrame": true,
+      "sourceDiscrepancies": [
+        {
+          "field": "Shared family information",
+          "sourceValue": "52cm dark-pink orchid, 15 flowers and silver pot",
+          "corroboration": "This exact SKU title, variant features, specifications and root/native-equivalent photograph identify its own height, flower pattern and supplied pot. Shared family information is not promoted as exact SKU data."
+        }
+      ]
     },
     "3328733": {
       "imageHash": "e7d9f2cf72b743cfb6ff5e4be68aadefb5e59bdd5d0a166f942f9473aaeb70bb",
@@ -34403,16 +34418,28 @@
       "wholeProductFrame": true
     },
     "6029658": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-potted",
-      "reason": "The selected frame is a close-up of the orchid pot, pebbles and base, without the complete flower display.",
-      "imageHash": "42f99b1a11c14735ffaf04e9744e77d122d08d12cff84ec0623451f129d09d94",
+      "colours": [
+        "红色",
+        "绿色"
+      ],
+      "reason": "Viewed the exact root/native comparison side by side and confirmed the complete orchid and its included pot. Strict decoded-pixel comparison independently proves that the saved 1500px official original is the same photograph as this exact SKU listing, rather than a lookalike product. Exact selected-SKU features and specifications provide the offered flower count, pot and height; conflicting family information about a 52cm dark-pink silver-pot orchid is preserved as raw family text and does not replace these variant facts. Pot gold or silver is not counted as flower/leaf colour.",
+      "imageHash": "17b533d88149b9f60334c8dd9439cb85d5aab1a40b25f316da6236be5bc22d45",
       "sourceContentHash": "ef900c7fd065171decfad5c1fbd9995b715aa61ad6dd10cbb5c85fe0f6cf80a7",
       "listingFingerprint": "750301de49614c3b1aa4f20b76facd4502e266b0b28098e342f22abdf69c6027",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/3/1790269905_9767.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.206Z",
-      "reviewArtifact": "native-human-sheet-06",
-      "wholeProductFrame": false
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/0/7/1750779756_3699.jpg",
+      "reviewedAt": "2026-11-24T05:20:17.335Z",
+      "reviewArtifact": "root-native-pair-proof-20261124",
+      "wholeProductFrame": true,
+      "sourceDiscrepancies": [
+        {
+          "field": "Shared family information",
+          "sourceValue": "52cm dark-pink orchid, 15 flowers and silver pot",
+          "corroboration": "This exact SKU title, variant features, specifications and root/native-equivalent photograph identify its own height, flower pattern and supplied pot. Shared family information is not promoted as exact SKU data."
+        }
+      ]
     },
     "6032179": {
       "disposition": "include",
@@ -41812,14 +41839,28 @@
       "wholeProductFrame": true
     },
     "8260995": {
-      "imageHash": "533d6cafef6946eecdad61a2cd408da2ee3410d02ed4c54f3cf22c5e979b19f7",
+      "disposition": "include",
+      "department": "spring-potted",
+      "colours": [
+        "红色",
+        "绿色"
+      ],
+      "reason": "Viewed the exact root/native comparison side by side and confirmed the complete orchid and its included pot. Strict decoded-pixel comparison independently proves that the saved 1500px official original is the same photograph as this exact SKU listing, rather than a lookalike product. Exact selected-SKU features and specifications provide the offered flower count, pot and height; conflicting family information about a 52cm dark-pink silver-pot orchid is preserved as raw family text and does not replace these variant facts. Pot gold or silver is not counted as flower/leaf colour.",
+      "imageHash": "d91fcf9e6cd2fe423e5afab2c4eb44afdc51f07d1ebc0ed6ba0141e772b0a118",
       "sourceContentHash": "0a0a1bdefe85cccc0b326f7ccb6a05892741b581283dbbda54c633cda20d388c",
       "listingFingerprint": "d5a4b4e7d13bb64d5425ae1c20d901439b1c927c99930c5fa6c7b25429cd76ba",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/7/1790269876_8289.jpg",
-      "reviewedAt": "2026-11-24T03:41:39.456Z",
-      "reviewArtifact": "new-native-sheet-1-through-4-exact-SKU-20261124",
-      "disposition": "review",
-      "reason": "The selected native frame crops or obscures the complete supplied stem/plant, is a styled multi-product arrangement, or leaves the botanical spring palette unresolved. Select and inspect a complete exact-SKU native gallery frame before release."
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/3/4/1750779566_6328.jpg",
+      "reviewedAt": "2026-11-24T05:20:17.335Z",
+      "reviewArtifact": "root-native-pair-proof-20261124",
+      "wholeProductFrame": true,
+      "sourceDiscrepancies": [
+        {
+          "field": "Shared family information",
+          "sourceValue": "52cm dark-pink orchid, 15 flowers and silver pot",
+          "corroboration": "This exact SKU title, variant features, specifications and root/native-equivalent photograph identify its own height, flower pattern and supplied pot. Shared family information is not promoted as exact SKU data."
+        }
+      ]
     },
     "8261851": {
       "disposition": "include",
