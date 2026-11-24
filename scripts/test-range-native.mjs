@@ -27,3 +27,22 @@ const themeTmp=await fs.mkdtemp(path.join(os.tmpdir(),'theme-exact-native-join-'
  assert.equal(fixed.originalCachedImageUrl,entry.cachedImageUrl);assert.equal(fixed.originalImageEvidence.sha256,entry.hash);assert.equal(fixed.originalImageUrl,full);assert.equal(fixed.priceGBP,1.49);assert.equal(fixed.directoryImageEvidence,undefined,'A verified lazy theme product must inherit its real same-variant gallery, not acquire a thumbnail-only fallback');
 }finally{await fs.rm(themeTmp,{recursive:true,force:true});}
 console.log('PASS: verified compact theme cards receive the exact lazy native gallery and hash while preserving their current listing price; a directory thumbnail never masks a complete source original.');
+
+const splitTmp=await fs.mkdtemp(path.join(os.tmpdir(),'same-sku-current-photo-'));try{
+ const root=splitTmp+'/public',indexRoot=splitTmp+'/index';await fs.mkdir(root+'/decoration-details',{recursive:true});await fs.mkdir(root+'/light-details',{recursive:true});await fs.mkdir(indexRoot);
+ const sourceUrl='https://www.therange.co.uk/lighting/exact-blue-lights/#123456',newThumb='https://www.therange.co.uk/media/new-thumb.jpg',newFull='https://www.therange.co.uk/media/new-original.jpg',newEntry={...entry,hash:'d'.repeat(64),cachedImageUrl:'images/source/'+'d'.repeat(64)+'.jpg'};
+ const common={sku:p.sku,variantId:'same-offered-variant',variantName:'100 LED blue Christmas lights',sourceUrl,listingVariantImageUrl:newThumb,detailsReady:true,attributeObservedAt:'2026-11-24T13:48:03Z',detailEvidence:{selectedSku:p.sku,verifiedProductSection:true},originalImages:[{url:full,thumbnail:thumb,selectedSku:p.sku,variantId:'same-offered-variant'},{url:newFull,thumbnail:newThumb,selectedSku:p.sku,variantId:'same-offered-variant'}]};
+ const older={...common,variantImageUrl:thumb,priceGBP:36,observedAt:'2026-11-24T11:28:17Z'},current={...common,variantImageUrl:newThumb,priceGBP:37,observedAt:'2026-11-24T11:29:01Z'};
+ const compact=(record,detailsUrl)=>{const copy={...record,detailsUrl};delete copy.originalImages;delete copy.detailEvidence;return copy;};
+ await fs.writeFile(root+'/decoration-details/56.json',JSON.stringify({[p.sku]:older}));await fs.writeFile(root+'/light-details/56.json',JSON.stringify({[p.sku]:current}));
+ for(const [file,rows]of [['catalogue',[]],['decorations',[compact(older,'decoration-details/56.json')]],['lights',[compact(current,'light-details/56.json')]],['themes',[]]])await fs.writeFile(root+'/'+file+'.json',JSON.stringify({products:rows}));
+ await fs.writeFile(indexRoot+'/range-native-index.json',JSON.stringify({entries:{[full]:entry,[newFull]:newEntry}}));
+ await applyRangeNativeFiles(root,indexRoot);
+ const oldCard=JSON.parse(await fs.readFile(root+'/decorations.json')).products[0],newCard=JSON.parse(await fs.readFile(root+'/lights.json')).products[0],oldDetail=JSON.parse(await fs.readFile(root+'/decoration-details/56.json'))[p.sku],newDetail=JSON.parse(await fs.readFile(root+'/light-details/56.json'))[p.sku];
+ assert.equal(newDetail.originalImageEvidence.sourceUrl,newFull,'Another scope with this SKU must not overwrite the currently selected native photo in this full detail record');
+ assert.equal(newCard.originalImageEvidence.sha256,newEntry.hash,'A compact card must join the source record with its own selected photo');
+ assert.equal(oldDetail.originalImageEvidence.sourceUrl,full);assert.equal(oldCard.originalImageEvidence.sha256,entry.hash);
+ for(const [actual,original]of [[oldCard,older],[newCard,current],[oldDetail,older],[newDetail,current]])for(const key of ['priceGBP','observedAt','sourceUrl','variantId','variantImageUrl','listingVariantImageUrl'])assert.equal(actual[key],original[key],'Native proof must preserve the current exact directory facts: '+key);
+ const{publishedEvidenceHealth}=await import('../server/published-evidence-health.mjs');assert.equal((await publishedEvidenceHealth(root)).missingPhotosUniqueSkus,0,'Both published scope/detail joins must retain verified originals');
+}finally{await fs.rm(splitTmp,{recursive:true,force:true});}
+console.log('PASS: the same SKU can retain two independently observed exact-gallery selections without cross-scope photo overwrites, extra downloads, or source price/date changes.');
