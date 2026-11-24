@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';import {createHash} from 'node:crypto';import 
 import {gunzipSync} from 'node:zlib';
 import {springSourceDecision} from '../web/spring-model.mjs';
 import {springReviewExcludes} from './spring-review-evidence.mjs';
+import {springHumanFrameAudit} from './spring-human-frame.mjs';
 export async function restoreSpringImageArchive(source,checkpoint,{restore=restoreSourceImageArchive,root='web',previewIndex,reviews,includeGalleryNative=true}={}){
  if(!reviews)try{reviews=JSON.parse(await fs.readFile(root+'/spring/manual-reviews.json','utf8'));}catch(error){if(error.code!=='ENOENT')throw error;reviews={products:{}};}
  const products=(source.products||[]).filter(p=>springSourceDecision(p).disposition!=='exclude'&&!springReviewExcludes(p,reviews.products?.[p.sku]));
@@ -9,9 +10,9 @@ export async function restoreSpringImageArchive(source,checkpoint,{restore=resto
  // Recovery indexes are shared with Christmas and other retailers. Restore
  // only this source's gallery and listing pixels, rather than downloading
  // every unrelated historical original before each Spring update.
- const wantedUrls=new Set,wantedOriginals=new Set;for(const p of products){const reviewed=reviews.products?.[p.sku]?.selectedNativeSourceUrl;for(const u of[p.originalImageUrl,p.variantImageUrl,p.imageUrl,p.listingVariantImageUrl,p.previewImage?.sourceUrl,p.originalImageEvidence?.sourceUrl,p.imageCacheEvidence?.sourceUrl,reviewed])if(u){wantedUrls.add(u);wantedOriginals.add(u);}for(const g of p.originalImages||[])if(exactNativeGalleryMember(p,g)){wantedUrls.add(g.url);if(includeGalleryNative)wantedOriginals.add(g.url);}}
+ const wantedUrls=new Set,wantedOriginals=new Set,comparisonUrls=new Set;for(const p of products){const review=reviews.products?.[p.sku],reviewed=review?.selectedNativeSourceUrl,needsComparison=includeGalleryNative||!springHumanFrameAudit(p,review);for(const u of[p.originalImageUrl,p.variantImageUrl,p.imageUrl,p.listingVariantImageUrl,p.previewImage?.sourceUrl,p.originalImageEvidence?.sourceUrl,p.imageCacheEvidence?.sourceUrl,reviewed])if(u){wantedUrls.add(u);wantedOriginals.add(u);if(needsComparison)comparisonUrls.add(u);}for(const g of p.originalImages||[])if(exactNativeGalleryMember(p,g)){if(needsComparison){wantedUrls.add(g.url);comparisonUrls.add(g.url);}if(includeGalleryNative)wantedOriginals.add(g.url);}}
  if(!previewIndex)try{previewIndex=JSON.parse(gunzipSync(await fs.readFile(root+'/preview-source-index.json.gz')));}catch(error){if(error.code!=='ENOENT')throw error;previewIndex={entries:{}};}
- const comparisonPreviews=[];for(const[url,p]of Object.entries(previewIndex.entries||{}))if(wantedUrls.has(url)&&/^[a-f0-9]{64}$/.test(p.hash||'')&&p.file==='web/images/previews/'+p.hash+'.webp')comparisonPreviews.push({file:p.file.slice(4),sha256:p.hash});
+ const comparisonPreviews=[];for(const[url,p]of Object.entries(previewIndex.entries||{}))if(comparisonUrls.has(url)&&/^[a-f0-9]{64}$/.test(p.hash||'')&&p.file==='web/images/previews/'+p.hash+'.webp')comparisonPreviews.push({file:p.file.slice(4),sha256:p.hash});
  const records=Object.entries(entries).filter(([url,e])=>wantedOriginals.has(url)&&e.cachedImageUrl&&e.hash).map(([,e])=>({file:e.cachedImageUrl,sha256:e.hash}));for(const p of products){if(p.originalCachedImageUrl&&p.originalImageEvidence?.sha256)records.push({file:p.originalCachedImageUrl,sha256:p.originalImageEvidence.sha256});if(p.previewImage?.cachePath&&p.previewImage.sha256)records.push({file:p.previewImage.cachePath,sha256:p.previewImage.sha256});}
  records.push(...comparisonPreviews);const restored=await restore(records,{root}),verified=new Map;let repairedMissingFiles=0,rebound=0;
  for(const p of products){const gallery=p.originalImages?.find(g=>g.url===p.originalImageUrl&&exactNativeGalleryMember(p,g)),url=gallery?.url,e=url&&entries[url];if(!e||!e.cachedImageUrl||!e.hash||e.width<64||e.height<64)continue;if(e.ok!==true&&!/^ENOENT:/.test(e.error||''))continue;
