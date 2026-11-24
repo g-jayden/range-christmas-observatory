@@ -1,4 +1,5 @@
 import fs from'node:fs/promises';import os from'node:os';import path from'node:path';import assert from'node:assert/strict';import{publishedEvidenceHealth}from'../server/published-evidence-health.mjs';
+await import('./test-published-gallery-coverage.mjs');
 const root=await fs.mkdtemp(path.join(os.tmpdir(),'published-health-'));
 try{
  const sourceUrl='https://www.therange.co.uk/p/exact/p123/#123',url='https://www.therange.co.uk/media/native.jpg',hash='a'.repeat(64),card={sku:'123',sourceUrl,variantName:'Tree',priceGBP:20,detailsUrl:'decoration-details/23.json',detailsReady:true},full={...card,priceGBP:10,attributeObservedAt:'2026-11-20T10:00:00Z',detailEvidence:{selectedSku:'123',verifiedProductSection:true},originalImageUrl:url,originalImages:[{url,selectedSku:'123'}],originalCachedImageUrl:'images/source/'+hash+'.jpg',originalImageEvidence:{selectedSku:'123',sourceUrl:url,sha256:hash,width:1500,height:1500}};
