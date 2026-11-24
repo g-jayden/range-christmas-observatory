@@ -1,0 +1,73 @@
+name: Repair published browser modules without rebuilding catalogues
+on:
+  push:
+    branches: [main]
+    paths: ['ops/frontend-repair-request.json']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+concurrency:
+  group: range-frontend-module-repair
+  cancel-in-progress: false
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: github-pages
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/
+            /web/*.js
+            /web/*.mjs
+            /web/*.html
+            /web/*.css
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - name: Validate the exact previously published source artifact
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from'node:fs/promises';
+          const p=JSON.parse(await fs.readFile('ops/frontend-repair-request.json','utf8'));
+          if(p.version!==1||!/^\d+$/.test(String(p.sourceRunId))||!/^\d+$/.test(String(p.sourceAttempt))||!/^[a-f0-9]{40}$/.test(p.sourceCommit)||Date.now()-Date.parse(p.requestedAt)>3600000||Date.parse(p.requestedAt)>Date.now()+60000)throw Error('Invalid frontend repair request');
+          const r=await fetch('https://api.github.com/repos/'+process.env.GITHUB_REPOSITORY+'/actions/runs/'+p.sourceRunId,{headers:{authorization:'Bearer '+process.env.GH_TOKEN,accept:'application/vnd.github+json'},signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error('Source run not available');const run=await r.json();if(run.conclusion!=='success'||run.path!=='.github/workflows/static-pages.yml'||run.head_sha!==p.sourceCommit||run.repository?.full_name!==process.env.GITHUB_REPOSITORY)throw Error('Source artifact workflow identity mismatch');
+          await fs.appendFile(process.env.GITHUB_OUTPUT,'run='+p.sourceRunId+'\nname=github-pages-static-'+p.sourceRunId+'-'+p.sourceAttempt+'\n');
+          JS
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.source.outputs.run }}
+          name: ${{ steps.source.outputs.name }}
+          path: runtime/reuse-published
+      - name: Restore the identical catalogue and image artifact
+        run: |
+          mkdir public
+          tar -xf runtime/reuse-published/artifact.tar -C public
+          node scripts/verify-published-frontend.mjs public --record runtime/frontend-noncode-proof.json
+      - name: Repair and verify every transitive frontend module
+        run: |
+          node scripts/repair-published-frontend.mjs public web
+          node scripts/verify-published-frontend.mjs public --compare runtime/frontend-noncode-proof.json
+      - uses: actions/configure-pages@v6.0.0
+      - uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          name: github-pages-frontend-${{ github.run_id }}-${{ github.run_attempt }}
+          path: public
+      - name: Publish the repaired artifact with the existing shared lease
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+          CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+          PAGES_ARTIFACT_NAME: github-pages-frontend-${{ github.run_id }}-${{ github.run_attempt }}
+        run: node scripts/publish-pages.mjs
+

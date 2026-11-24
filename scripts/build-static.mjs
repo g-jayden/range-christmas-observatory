@@ -64,5 +64,6 @@ try{const p='public/asda/catalogue.json',d=JSON.parse(await fs.readFile(p,'utf8'
 const {buildBrowseCatalogues}=await import('./build-browse-catalogues.mjs');console.log(JSON.stringify({phase:'immutable-department-browsing-views',...await buildBrowseCatalogues('public',{fullViews:false})}));
 await fs.writeFile('public/.nojekyll','');
 const {packStaticJson}=await import('./pack-static-json.mjs');console.log(JSON.stringify({phase:'lossless-static-site-size-budget',...await packStaticJson('public')}));
+const {verifyPublishedFrontend}=await import('./verify-published-frontend.mjs');console.log(JSON.stringify({phase:'verify-complete-published-browser-module-graph',...await verifyPublishedFrontend('public')}));
 console.log('Static cloud website built.');
 
