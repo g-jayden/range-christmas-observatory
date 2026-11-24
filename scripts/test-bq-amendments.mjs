@@ -28,3 +28,40 @@ const longGarland={sku:'5056141029917',baseName:'55cm Pre-Lit Lapland Fir Christ
 assert.equal(bqMemberships(longGarland,currentPhoto).primary,'bq-garland');assert.equal(bqVisualTypeCompatible(longGarland,'bq-wreath',currentPhoto).compatible,false,'A weak secondary wreath image score cannot validate a title contradicted by four official source signals');assert.equal(bqVisualTypeCompatible(longGarland,'bq-garland',currentPhoto).compatible,true);
 for(const changed of [{...longGarland,specifications:{Design:'Christmas wreath'}},{...longGarland,dimensions:{values:{Length:30},maxCm:55}},{...longGarland,bqSource:{groups:['wreath'],primaryCategoryName:'Christmas wreaths'}},{...longGarland,baseName:'Wreath and Garland Set'}])assert.equal(bqMemberships(changed,currentPhoto).primary,'bq-wreath','Legitimate wreaths and complete mixed sets retain their classification');assert.equal(bqMemberships(longGarland,{objectTop:[{id:'bq-wreath',score:.7},{id:'bq-garland',score:.2}]}).primary,'bq-wreath');
 console.log('PASS: the real 2m garland is classified using official Design, length, native category and the current complete-photo result; a conflicting wreath title cannot override that corroboration, while wreaths and mixed sets remain intact.');
+
+const {bqPhotoQuarantine}=await import('../server/bq-photo-quarantine.mjs');
+const {cardPreviewSource,productPreviewGallery,SOURCE_PHOTO_CONFLICT_PLACEHOLDER}=await import('../web/product-preview.mjs');
+const {validateBqRelease}=await import('../server/bq-release.mjs');
+const {bqOriginal,bqPreview}=await import('../server/bq-images.mjs');
+const sourceGallery=[asset,asset+'-second'],secondHash='b'.repeat(64),proofIndex={
+ [bqImageKey(asset)]:{sha256:sha,sourceVersion:'v1',width:1000,height:1000},
+ [bqImageKey(sourceGallery[1])]:{sha256:secondHash},
+};
+const quarantined={...p,retailerId:'bq',inStock:true,detailsReady:true,department:'bq-baubles',departmentIds:['bq-baubles'],parentGroupId:'123',
+ originalImageUrl:bqOriginal(asset),originalImages:sourceGallery.map(url=>({url:bqOriginal(url),selectedSku:'123',sourceParentId:'123',variantId:'123'})),
+ previewImage:{sha256:sha,cachePath:bqPreview(asset)},imageCacheEvidence:{sha256:sha},
+ originalImageEvidence:{sourceVersion:'v1',width:1000,height:1000,nativeBytesVerified:false},
+ previewReviewRequired:true,paletteEvidence:{needsReview:false},classificationEvidence:{requiresReview:false},
+ fastPreview:{url:'https://wrong-photo.invalid/cached.jpg'},sourceImageConflict:{note:'All source bauble photos depict a bicycle computer.',sourceFingerprint:'current-source',imageHash:sha,
+ galleryQuarantine:{state:'all-source-photos-mismatch',galleryFingerprint:createHash('sha256').update(JSON.stringify(sourceGallery)).digest('hex'),reviewedAt:'2026-11-24T15:00:00Z',images:[{asset,imageHash:sha},{asset:sourceGallery[1],imageHash:secondHash}]}}};
+assert(bqPhotoQuarantine(quarantined,proofIndex));
+assert.equal(cardPreviewSource(quarantined),SOURCE_PHOTO_CONFLICT_PLACEHOLDER,'A stale fast preview must not expose a known unrelated source photo');
+assert.deepEqual(productPreviewGallery(quarantined),[]);
+assert.deepEqual(productPreviewGallery({...p},quarantined),[],'Detail hydration also suppresses a quarantined gallery');
+assert.throws(()=>assertProductPhoto(quarantined),/bicycle computer/);
+for(const changed of [
+ {...quarantined,bqSource:{rawFingerprint:'new-source'}},
+ {...quarantined,previewImage:{...quarantined.previewImage,sha256:secondHash}},
+ {...quarantined,originalImages:quarantined.originalImages.slice(0,1)},
+ {...quarantined,sourceImageConflict:{...quarantined.sourceImageConflict,galleryQuarantine:{...quarantined.sourceImageConflict.galleryQuarantine,images:[]}}},
+])assert.equal(bqPhotoQuarantine(changed,proofIndex),null,'Incomplete or stale conflict proof is not a verified quarantine');
+assert.equal(bqPhotoQuarantine(quarantined,{...proofIndex,[bqImageKey(asset)]:{sha256:secondHash}}),null,'Changed source pixels require a new review');
+const closedRelease={baselineReady:true,collectionComplete:true,sourceAudits:Array.from({length:10},()=>({complete:true,closingVerified:true,unique:1,expected:1})),imageAudit:{verified:1},products:[quarantined]},proofVisual={[bqImageKey(asset)]:{imageHash:sha}};
+assert.equal(validateBqRelease(closedRelease,proofIndex,proofVisual).sourcePhotoQuarantines,1,'Explicit source-photo quarantines are reported separately, never counted as resolved photos');
+for(const changed of [
+ {...quarantined,sourceImageConflict:undefined},
+ {...quarantined,paletteEvidence:{needsReview:true}},
+ {...quarantined,classificationEvidence:{requiresReview:true}},
+ {...quarantined,sourceImageConflict:{...quarantined.sourceImageConflict,galleryQuarantine:{state:'all-source-photos-mismatch'}}},
+])assert.throws(()=>validateBqRelease({...closedRelease,products:[changed]},proofIndex,proofVisual),/review pending/,'The release gate must still reject unknown photo, palette and classification issues');
+console.log('PASS: exhaustive source-gallery mismatches have a separate, expiring quarantine; wrong cached photos stay hidden, exports stay blocked, and unknown review failures still stop release.');

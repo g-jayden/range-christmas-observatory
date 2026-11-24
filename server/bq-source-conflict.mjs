@@ -5,8 +5,10 @@ import {bqFingerprint} from './bq-products.mjs';
 // price-labelled image or a supposedly verified new-product report.
 export function applyBqSourceImageConflict(product,review,currentImageHash){
   delete product.sourceImageConflict;
+  delete product.sourcePhotoQuarantined;
   const conflict=review?.sourceImageConflict;
   if(conflict&&review.sourceFingerprint===bqFingerprint(product)&&review.imageHash===currentImageHash){
     product.sourceImageConflict={...conflict,sourceFingerprint:review.sourceFingerprint,imageHash:currentImageHash};
+    if(conflict.galleryQuarantine)product.sourcePhotoQuarantined=true;
   }
 }
