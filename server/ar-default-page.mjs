@@ -2,6 +2,12 @@ import fs from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {gzipSync,gunzipSync} from 'node:zlib';
 
+// Daily preparation starts at 06:00 Beijing time, before the 07:00 digest.
+// Before preparation, manual same-day reads may reuse only today's evidence.
+export function arSourceWindowStart(at){
+ const day=new Date(at+28800000).toISOString().slice(0,10),preparation=Date.parse(day+'T06:00:00+08:00');return at>=preparation?preparation:Date.parse(day+'T00:00:00+08:00');
+}
+
 // Firecrawl support's supported default route can render the requested page
 // even when a cross-page fetch inside that browser is refused by the origin.
 // Cache successful exact pages; never change routing identities or solve gates.
@@ -10,7 +16,7 @@ export function createArDefaultPageReader({key,fetcher=fetch,root='runtime/ar-so
  let requests=0,balancePromise,remaining;
  async function read(url,{fresh=false}={}){
   const target=new URL(url);if(target.origin!=='https://www.argos.co.uk'||!/^\/(?:browse|search|product)\//.test(target.pathname))throw Error('Exact official Argos page required');
-  const file=root+'/'+createHash('sha256').update(target.href).digest('hex')+'.json.gz',at=now(),day=new Date(at+28800000).toISOString().slice(0,10),cutoff=Math.max(Date.parse(day+'T07:00:00+08:00'),at-3600000);
+  const file=root+'/'+createHash('sha256').update(target.href).digest('hex')+'.json.gz',at=now(),cutoff=Math.max(arSourceWindowStart(at),at-3600000);
   if(!fresh)try{const saved=JSON.parse(gunzipSync(await fs.readFile(file)));if(saved.url===target.href&&saved.status===200&&saved.receipt?.sourceStatus===200&&Date.parse(saved.observedAt)>=cutoff&&Date.parse(saved.observedAt)<=at&&typeof saved.html==='string'&&createHash('sha256').update(saved.html).digest('hex')===saved.sha256)return saved;}catch(e){if(e.code!=='ENOENT'&&e.name!=='SyntaxError'&&e.code!=='Z_DATA_ERROR')throw e;}
   balancePromise??=(async()=>{const r=await fetcher('https://api.firecrawl.dev/v2/team/credit-usage',{headers:{authorization:'Bearer '+key},signal:AbortSignal.timeout(20000)}),b=await r.json();if(!r.ok||!Number.isFinite(b.data?.remainingCredits))throw Error('Argos account credit reserve could not be verified');remaining=b.data.remainingCredits;})();await balancePromise;
   if(remaining-5<accountReserve)throw Error('Argos account credit reserve reached');remaining-=5;
