@@ -31,8 +31,8 @@ export async function publishPages({env=process.env,fetcher=fetch,now=Date.now,s
 if(artifact.size_in_bytes>1073741824)throw Error('Pages artifact exceeds the documented 1 GB site limit');
  const identity=await request(oidc.href,{headers:{authorization:'Bearer '+env.ACTIONS_ID_TOKEN_REQUEST_TOKEN}});if(!identity.value)throw Error('GitHub did not return the deployment identity');
  assertLease();const created=await request(root+'/pages/deployments',{method:'POST',headers:{...headers,'content-type':'application/json'},body:JSON.stringify({artifact_id:artifact.id,pages_build_version:sha,oidc_token:identity.value})});
- const id=String(created.id||created.status_url?.split('/').pop()||sha);if(!/^[a-z0-9_-]{1,128}$/i.test(id))throw Error('Invalid Pages deployment identity');
- const url=root+'/pages/deployments/'+encodeURIComponent(id),startedAt=now();let delay=5000,errors=0,lastState;
+ let id=String(created.id||created.status_url?.split('/').pop()||sha);if(!/^[a-z0-9_-]{1,128}$/i.test(id))throw Error('Invalid Pages deployment identity');
+ let url=root+'/pages/deployments/'+encodeURIComponent(id);const startedAt=now();let delay=5000,errors=0,lastState,artifactRetries=0;
  log({phase:'pages-publish-one-artifact',artifactId:artifact.id,artifactBytes:artifact.size_in_bytes,deploymentId:id,maxWaitSeconds:maxWaitMs/1000,sourceRequests:0,firecrawlCredits:0});
  const cancel=async()=>{try{await request(url+'/cancel',{method:'POST',headers});log({phase:'pages-publish-cancelled',deploymentId:id});}catch{log({phase:'pages-publish-cancel-unconfirmed',deploymentId:id});}};
  while(now()-startedAt<maxWaitMs){
@@ -41,7 +41,14 @@ if(artifact.size_in_bytes>1073741824)throw Error('Pages artifact exceeds the doc
   let status;try{status=await request(url,{headers});errors=0;}catch(e){errors++;if(errors>=5){await cancel();throw Error('Pages status could not be verified after five bounded API errors');}log({phase:'pages-status-temporarily-unavailable',errors,status:e.status||0});continue;}
   const state=status.status||'pending';if(state!==lastState){log({phase:'pages-status',deploymentId:id,state,elapsedSeconds:Math.round((now()-startedAt)/1000)});lastState=state;}
   if(state==='succeed')return {deploymentId:id,pageUrl:'https://g-jayden.github.io/range-christmas-observatory/',artifactId:artifact.id,elapsedMs:now()-startedAt,sourceRequests:0,firecrawlCredits:0};
-  if(['deployment_failed','deployment_content_failed','deployment_cancelled','deployment_lost'].includes(state)){log({phase:'pages-terminal-diagnostic',deploymentId:id,state,error:status.error||null,message:status.message||null,progress:status.progress||null});throw Error('Pages reported '+state+'; captured source files remain saved');}
+  if(['deployment_failed','deployment_content_failed','deployment_cancelled','deployment_lost'].includes(state)){
+   log({phase:'pages-terminal-diagnostic',deploymentId:id,state,error:status.error||null,message:status.message||null,progress:status.progress||null});
+   // The provider sometimes rejects a valid immutable artifact before file
+   // sync with no diagnostic. Retry that exact artifact once; content errors,
+   // cancellations, active syncs and repeated failures never restart collection.
+   if(state==='deployment_failed'&&!status.error&&!status.message&&artifactRetries===0&&now()-startedAt<maxWaitMs-15000){artifactRetries++;await sleep(10000);assertLease();const retry=await request(root+'/pages/deployments',{method:'POST',headers:{...headers,'content-type':'application/json'},body:JSON.stringify({artifact_id:artifact.id,pages_build_version:sha,oidc_token:identity.value})});id=String(retry.id||retry.status_url?.split('/').pop()||sha);if(!/^[a-z0-9_-]{1,128}$/i.test(id))throw Error('Invalid Pages deployment identity');url=root+'/pages/deployments/'+encodeURIComponent(id);lastState=undefined;delay=5000;errors=0;log({phase:'pages-retry-same-immutable-artifact',artifactId:artifact.id,deploymentId:id,retry:artifactRetries,sourceRequests:0,firecrawlCredits:0});continue;}
+   throw Error('Pages reported '+state+'; captured source files remain saved');
+  }
   delay=Math.min(30000,Math.round(delay*1.5));
  }
  await cancel();throw Error('Pages file sync exceeded the bounded wait; no source recollection was started');
