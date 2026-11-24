@@ -47,7 +47,7 @@ export function mergeThemes(previous,collected,observedAt=new Date().toISOString
 }
 export async function collectThemeDirectory(reader,previous,shared=[]){
  const collected={};await Promise.all(THEME_SOURCES.map(async source=>{collected[source.scope]=await collectPartitionedCategory(source.id,reader);console.log(JSON.stringify({phase:'theme-directory',scope:source.scope,products:collected[source.scope].products.length}));}));
- return mergeThemes(previous,collected,new Date().toISOString(),shared);
+ return mergeThemes(previous,collected,new Date().toISOString(),typeof shared==='function'?await shared():shared);
 }
 export function inheritThemeArrivals(snapshot,shared=[]){
  const known=new Map(shared.flatMap(s=>s?.products||[]).map(p=>[p.sku,p]));
