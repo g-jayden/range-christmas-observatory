@@ -11293,16 +11293,39 @@
       "wholeProductFrame": false
     },
     "1448588": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "The viewed native photo is a mixed sunflower/protea arrangement, while exact selected-variant title/features specify yellow dahlia, pink blossom or yellow bottle-brush stems. The frame does not match the offered botanical; choose another exact-SKU frame and recheck it against the listing photo.",
-      "imageHash": "591957b194906f183b01c81e40ec5bebd088b9967c5c13606729cd298e29fab9",
+      "colours": [
+        "黄色",
+        "绿色"
+      ],
+      "imageHash": "4a10a54281660c4de3e04b2c91962a1c868746dd6f1030f93095bde83f4ed1ac",
       "sourceContentHash": "9f5b33fa6176d2f05e86445df224de7c2ace7714aab0b984e41fa203778cb416",
       "listingFingerprint": "f67c523a757b7f3e5f2bc84e5021e3bc23465afa9f06113d76e94a306e7f8296",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/3/1786359544_7082.jpg",
-      "reviewedAt": "2026-11-24T05:38:39.756Z",
-      "reviewArtifact": "model-pair-sheets-05-07-10-28-and-mismatch-gallery-01-20261124",
-      "wholeProductFrame": false
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/9/1786359044_4046.jpg",
+      "wholeProductFrame": true,
+      "reviewArtifact": "repaired-mismatch-gallery-sheet-01-and-02-20261124",
+      "reviewedAt": "2026-11-24T06:05:11.388Z",
+      "reason": "Re-viewed every newly recovered exact-SKU gallery frame. The selected full native photograph shows the offered dahlia pompom, yellow ball dahlia, pink blossom or yellow bottle-brush stem bunch with visible stem ends. Exact selected-variant title/features specify six stems; display vases and mixed sunflower/protea bouquets are not supplied contents. Those mixed arrangements are retained separately as family styling references. Botanical body colours exclude vases and white backgrounds.",
+      "sourceFamilyReferences": [
+        {
+          "url": "https://www.therange.co.uk/media/3/4/1786355493_9587.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/6/9/1786368448_7356.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/7/9/1786358827_1276.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/5/3/1786358070_7199.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        }
+      ]
     },
     "1448590": {
       "disposition": "include",
@@ -11537,14 +11560,39 @@
       "wholeProductFrame": true
     },
     "1448612": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "The viewed native photo is a mixed sunflower/protea arrangement, while exact selected-variant title/features specify yellow dahlia, pink blossom or yellow bottle-brush stems. The frame does not match the offered botanical; choose another exact-SKU frame and recheck it against the listing photo.",
-      "imageHash": "6ed93144e8b5012cb7bea40610674afe8873d753dee52e271a3484cc9271fb9a",
+      "colours": [
+        "黄色",
+        "绿色"
+      ],
+      "imageHash": "b3fe7a5dc09bb74942d068ed4679732a7bd9b7846fdaebf3a7474c29fdf37f0e",
       "sourceContentHash": "e0bd01e1e2b310d2c42c0044ed9a3d5a58c1a4b6b76b1886ec4820e6d3cd2527",
-      "reviewedAt": "2026-11-24T05:38:39.755Z",
-      "reviewArtifact": "model-pair-sheets-05-07-10-28-and-mismatch-gallery-01-20261124",
-      "wholeProductFrame": false
+      "listingFingerprint": "a005acd6ba1a724a93fa2a5b4abdcc407dca77b6730f930e9e48acac2d3104a1",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/3/1786368727_7620.jpg",
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/2/1786358151_7317.jpg",
+      "wholeProductFrame": true,
+      "reviewArtifact": "repaired-mismatch-gallery-sheet-01-and-02-20261124",
+      "reviewedAt": "2026-11-24T06:05:11.387Z",
+      "reason": "Re-viewed every newly recovered exact-SKU gallery frame. The selected full native photograph shows the offered dahlia pompom, yellow ball dahlia, pink blossom or yellow bottle-brush stem bunch with visible stem ends. Exact selected-variant title/features specify six stems; display vases and mixed sunflower/protea bouquets are not supplied contents. Those mixed arrangements are retained separately as family styling references. Botanical body colours exclude vases and white backgrounds.",
+      "sourceFamilyReferences": [
+        {
+          "url": "https://www.therange.co.uk/media/0/9/1786356203_8474.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/2/1/1793701111_6292.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/5/8/1793701115_7289.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/7/2/1786357357_7620.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        }
+      ]
     },
     "1448613": {
       "disposition": "include",
@@ -12137,28 +12185,77 @@
       "wholeProductFrame": true
     },
     "1448680": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "The viewed native photo is a mixed sunflower/protea arrangement, while exact selected-variant title/features specify yellow dahlia, pink blossom or yellow bottle-brush stems. The frame does not match the offered botanical; choose another exact-SKU frame and recheck it against the listing photo.",
-      "imageHash": "591957b194906f183b01c81e40ec5bebd088b9967c5c13606729cd298e29fab9",
+      "colours": [
+        "橙色",
+        "绿色"
+      ],
+      "imageHash": "298746f26410761efe1541c03938f2e85ab0b6bf58e8279df48a1209badd2c42",
       "sourceContentHash": "75d74b39f6c2bf5bc06575d954265ee72ec2958e4689a14d1d6fd57a4020af45",
       "listingFingerprint": "096f8fa235c5d2970b0b42570320fb4d0bae5485c7ba2e81d5064dcc38097925",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/4/1786361269_8782.jpg",
-      "reviewedAt": "2026-11-24T05:38:39.756Z",
-      "reviewArtifact": "model-pair-sheets-05-07-10-28-and-mismatch-gallery-01-20261124",
-      "wholeProductFrame": false
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/2/9/1786368544_8092.jpg",
+      "wholeProductFrame": true,
+      "reviewArtifact": "repaired-mismatch-gallery-sheet-01-and-02-20261124",
+      "reviewedAt": "2026-11-24T06:05:11.387Z",
+      "reason": "Re-viewed every newly recovered exact-SKU gallery frame. The selected full native photograph shows the offered dahlia pompom, yellow ball dahlia, pink blossom or yellow bottle-brush stem bunch with visible stem ends. Exact selected-variant title/features specify six stems; display vases and mixed sunflower/protea bouquets are not supplied contents. Those mixed arrangements are retained separately as family styling references. Botanical body colours exclude vases and white backgrounds.",
+      "sourceFamilyReferences": [
+        {
+          "url": "https://www.therange.co.uk/media/3/4/1786355493_9587.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/3/8/1786366723_5589.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/1/1/1786361775_2698.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/7/9/1786358827_1276.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/5/3/1786358070_7199.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        }
+      ],
+      "sourceDiscrepancies": [
+        {
+          "field": "Flower colour",
+          "sourceValue": "Official title Yellow; raw Colour Yellow",
+          "corroboration": "The complete native bunch has orange-gold/yellow-orange ball blooms and fresh green leaves; record the visible dominant orange body colour separately from the retailer title. This is not autumn-coloured foliage."
+        }
+      ]
     },
     "1448681": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "The viewed native photo is a mixed sunflower/protea arrangement, while exact selected-variant title/features specify yellow dahlia, pink blossom or yellow bottle-brush stems. The frame does not match the offered botanical; choose another exact-SKU frame and recheck it against the listing photo.",
-      "imageHash": "7c761153f595f5a117afc621e019b189969ca6455dccf5a104a40a5068116ed5",
+      "colours": [
+        "粉色",
+        "绿色"
+      ],
+      "imageHash": "5985895d19b089cade951f4e62b0963c23ccafef6f96d569a9e3c66e6f8c98fd",
       "sourceContentHash": "a90684b87f1cbd71976fcd7b0f81afdb0efded40265a7be4744cfe8a11c75b9d",
       "listingFingerprint": "415bc7eaf59648ad2efac2f893b6269e0a2926c36865f00baa2c6f046be3974b",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/3/1786358392_7131.jpg",
-      "reviewedAt": "2026-11-24T05:38:39.756Z",
-      "reviewArtifact": "model-pair-sheets-05-07-10-28-and-mismatch-gallery-01-20261124",
-      "wholeProductFrame": false
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/4/1786367176_7864.jpg",
+      "wholeProductFrame": true,
+      "reviewArtifact": "repaired-mismatch-gallery-sheet-01-and-02-20261124",
+      "reviewedAt": "2026-11-24T06:05:11.388Z",
+      "reason": "Re-viewed every newly recovered exact-SKU gallery frame. The selected full native photograph shows the offered dahlia pompom, yellow ball dahlia, pink blossom or yellow bottle-brush stem bunch with visible stem ends. Exact selected-variant title/features specify six stems; display vases and mixed sunflower/protea bouquets are not supplied contents. Those mixed arrangements are retained separately as family styling references. Botanical body colours exclude vases and white backgrounds.",
+      "sourceFamilyReferences": [
+        {
+          "url": "https://www.therange.co.uk/media/9/3/1786356867_1860.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        },
+        {
+          "url": "https://www.therange.co.uk/media/9/3/1786365069_6669.jpg",
+          "reason": "官网搭配参考图，含其它花材，不代表本 SKU 包含图中所有商品 · Source styling reference includes other flowers; this SKU does not include every pictured item"
+        }
+      ]
     },
     "1448682": {
       "disposition": "include",

@@ -1,5 +1,6 @@
 import{springBodyColourFacts}from'../server/spring-colours.mjs';
 await import('./test-spring-selected-facts.mjs');
+await import('./test-spring-gallery-references.mjs');
 import{springReviewExcludes}from'../server/spring-review-evidence.mjs';import{detailFingerprint}from'../server/collection-policy.mjs';
 import{springSourceAlternates,springKnownAddressFailures}from'../server/repair-spring-source.mjs';
 import assert from'node:assert/strict';

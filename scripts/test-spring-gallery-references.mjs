@@ -1,0 +1,9 @@
+import assert from'node:assert/strict';
+import{springReviewedFamilyReferences}from'../server/spring-review-evidence.mjs';
+const p={sku:'75',detailsReady:true,priceGBP:12,detailEvidence:{verifiedProductSection:true,selectedSku:'75',sourceContentHash:'a'.repeat(64)},originalImageEvidence:{sourceUrl:'https://www.therange.co.uk/media/full.jpg',sha256:'b'.repeat(64)},originalImages:[{url:'https://www.therange.co.uk/media/full.jpg',selectedSku:'75'},{url:'https://www.therange.co.uk/media/mixed.jpg',selectedSku:'75'},{url:'https://www.therange.co.uk/media/other-sku.jpg',selectedSku:'76'}]};
+const r={disposition:'include',reviewArtifact:'viewed-gallery',sourceContentHash:p.detailEvidence.sourceContentHash,imageHash:p.originalImageEvidence.sha256,sourceFamilyReferences:[{url:p.originalImageEvidence.sourceUrl,reason:'Must never hide selected product'},{url:'https://www.therange.co.uk/media/mixed.jpg',reason:'含其它花材的搭配参考 · Styling reference containing other flowers'},{url:'https://www.therange.co.uk/media/other-sku.jpg',reason:'Foreign SKU'},{url:'https://foreign.invalid/image.jpg',reason:'Not observed in this gallery'}]},before=JSON.stringify(p);
+assert.deepEqual(springReviewedFamilyReferences(p,r).map(x=>x.url),['https://www.therange.co.uk/media/mixed.jpg']);
+assert.deepEqual(springReviewedFamilyReferences({...p,detailEvidence:{...p.detailEvidence,sourceContentHash:'c'.repeat(64)}},r),[]);
+assert.deepEqual(springReviewedFamilyReferences({...p,originalImageEvidence:{...p.originalImageEvidence,sha256:'d'.repeat(64)}},r),[]);
+assert.equal(JSON.stringify(p),before,'Gallery labelling never changes the offered facts or deletes a source image');
+console.log('PASS: a bound human review labels mixed styling photos separately, retains every original gallery record, and rejects stale, foreign-SKU, unobserved or selected-main-image exclusions.');
