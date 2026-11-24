@@ -16,7 +16,7 @@ export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot
  const limit=fn=>new Promise((resolve,reject)=>{queue.push({fn,resolve,reject});drain();});
  function drain(){while(active<4&&queue.length){const job=queue.shift();active++;Promise.resolve().then(job.fn).then(job.resolve,job.reject).finally(()=>{active--;drain();});}}
  const local=value=>{if(typeof value!=='string')return null;const relative=value.startsWith(OWN)?value.slice(OWN.length):value;return /^images\/[\w./-]+\.(?:jpe?g|png|webp|avif)$/i.test(relative)&&!relative.split('/').includes('..')?relative:null;};
- const input=(value,bound)=>{const relative=local(value);if(relative)return {file:path.join(sourceRoot,relative),bound};if(/^[a-f0-9]{64}$/.test(bound||''))try{const u=new URL(value);if(u.origin==='https://media.diy.com'&&/^\/is\/image\/(?:Kingfisher|KingfisherDigital)\//.test(u.pathname)){u.search='';u.hash='';return {file:path.join(previewCacheRoot,createHash('sha256').update(u.href).digest('hex')+'.jpg'),bound,remote:value};}}catch{}return null;};
+ const input=(value,bound)=>{const relative=local(value);if(relative)return {file:path.join(sourceRoot,relative),bound,repository:OWN+relative};if(/^[a-f0-9]{64}$/.test(bound||''))try{const u=new URL(value);if(u.origin==='https://media.diy.com'&&/^\/is\/image\/(?:Kingfisher|KingfisherDigital)\//.test(u.pathname)){u.search='';u.hash='';return {file:path.join(previewCacheRoot,createHash('sha256').update(u.href).digest('hex')+'.jpg'),bound,remote:value};}}catch{}return null;};
  async function readInput({file,bound,remote}){
   let buffer;try{buffer=await fs.readFile(file);}catch(e){if(e.code!=='ENOENT')throw e;}
   if(buffer&&/^[a-f0-9]{64}$/.test(bound||'')&&createHash('sha256').update(buffer).digest('hex')!==bound)buffer=null;
@@ -33,7 +33,15 @@ export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot
  async function build(p){
   const reviewed=input(p.previewImage?.cachePath,p.previewImage?.sha256);if(reviewed&&p.previewImage?.method==='exact-SKU-reviewed-whole-native')reviewed.remote=OWN+local(p.previewImage.cachePath);
   const candidates=[reviewed,input(p.displayImage?.cachePath,p.displayImage?.sha256),input(p.originalCachedImageUrl,p.nativeExportEvidence?.sha256||p.originalImageEvidence?.sha256),input(p.cachedImageUrl,p.imageCacheEvidence?.sha256)].filter(Boolean);
-  for(const candidate of [...candidates.reduce((map,c)=>{if(!map.has(c.file))map.set(c.file,c);return map;},new Map()).values()]){const {file,bound}=candidate,buffer=await readInput(candidate);if(!buffer)continue;
+  const unique=[...candidates.reduce((map,c)=>{if(!map.has(c.file))map.set(c.file,c);return map;},new Map()).values()];
+  // Sparse publishers may have a verified original in Git but no working-copy
+  // file. Reuse its hash-bound encoding, then existing local inputs; only then
+  // restore the exact saved bytes from our own repository. Never send preview
+  // traffic back to a protected retailer merely because a sparse file is absent.
+  const sources=[...unique.map(c=>({...c,remote:undefined})),...unique.filter(c=>c.remote||/^[a-f0-9]{64}$/.test(c.bound||'')&&c.repository).map(c=>({...c,remote:c.remote||c.repository}))];
+  for(const candidate of sources){const {file,bound}=candidate;
+   if(/^[a-f0-9]{64}$/.test(bound||''))try{const cacheBase=path.join(encodingCacheRoot,bound+'-whole384q72'),record=JSON.parse(await fs.readFile(cacheBase+'.json','utf8')),encoded=await fs.readFile(cacheBase+'.webp');if(record.sourceImageHash===bound&&/^card-previews\/[a-f0-9]{64}\.webp$/.test(record.url)&&createHash('sha256').update(encoded).digest('hex')===path.basename(record.url,'.webp')){await fs.mkdir(path.join(root,'card-previews'),{recursive:true});await fs.writeFile(path.join(root,record.url),encoded);reused++;bytes+=encoded.length;return {...p,fastPreview:record};}}catch{}
+   const buffer=await readInput(candidate);if(!buffer)continue;
    const digest=createHash('sha256').update(buffer).digest('hex');
    if(/^[a-f0-9]{64}$/.test(bound||'')&&bound!==digest)continue;
    const key=digest+'/whole-384-webp-q72';if(!work.has(key))work.set(key,limit(async()=>{
