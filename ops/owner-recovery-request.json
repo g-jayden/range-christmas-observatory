@@ -1,10 +1,14 @@
 {
-  "version": 1,
-  "requestId": "owner-recovery-20261124-exact-gallery-completeness",
+  "requestId": "owner-recovery-20261124-retire-incomplete-browser-artifact",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T19:24:24.449Z",
+  "requestedAt": "2026-11-24T20:14:11Z",
   "targets": [
-    "range-native-current"
+    "static-pages-current"
   ],
-  "reason": "Owner requires all product main and detail originals across all enabled seasons. Correct the old primary-image-only plan, restore every exact accepted Range/Spring gallery frame, reuse saved bytes first, then ordinary free sources, and paid fallback only after free failure under the standing unlimited authorization. No directory recollection, no changed product facts, no unrelated images, no email."
+  "supersedeReadOnlyPagesBeforeDeployment": [
+    {
+      "runId": 45474790030,
+      "expectedCommit": "9a7013be0620e6d3d2cb3f36fd7db3b917738b8b"
+    }
+  ]
 }
