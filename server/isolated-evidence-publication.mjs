@@ -33,6 +33,7 @@ export async function isolateEvidencePublication({root=process.cwd(),env=process
    // Only the disposable publisher reapplies sparse files. Source image
    // blobs remain committed without copying them or other-store catalogues.
    capture(directory,['sparse-checkout','reapply']);
+   capture(directory,['reset','--hard','HEAD']);
   }
   const childEnv={...env,EVIDENCE_ISOLATED_PUBLISHER:'1'};
   if(publish)await publish(directory,childEnv);else await new Promise((resolve,reject)=>{const child=spawn(process.execPath,['scripts/push-evidence.mjs'],{cwd:directory,env:childEnv,stdio:'inherit'});child.once('error',reject);child.once('exit',code=>code===0?resolve():reject(Error('Isolated publication exited '+code)));});
