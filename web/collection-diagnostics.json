@@ -1471,6 +1471,14 @@
       "credits": null,
       "error": "ERR_TOO_MANY_REDIRECTS",
       "reason": "Provider returned a redirect-loop failure without a scrape billing receipt. Actual charge is unknown; no zero-credit or refund claim."
+    },
+    {
+      "id": "spring-official-support-interact-01a20bec-d8cb-7122-b74b-6305c1be5787",
+      "at": "2026-11-24T05:05:04Z",
+      "sourceUrl": "https://help.therange.co.uk/hc/en-gb/requests/new",
+      "operation": "One owner-authorised official product-information support request",
+      "credits": null,
+      "reason": "Hosted form interaction submitted successfully and session stopped. Provider returned no exact billing receipt; charge remains unknown, not asserted as zero."
     }
   ],
   "reservationScopes": [
