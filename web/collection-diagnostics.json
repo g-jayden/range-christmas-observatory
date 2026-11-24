@@ -1347,6 +1347,18 @@
       "sourceUrl": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/botanik-artificial-170cm-xl-triple-yukka-tree-plant/#6728716",
       "sourceStatus": 200,
       "observedAt": "2026-11-24T04:02:31.667Z"
+    },
+    {
+      "id": "mcp-01a20be1-fac2-72de-b0d8-05a8c8c1cac5",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-all-collection-unrestricted-20261123",
+      "retailerId": "the-range",
+      "purpose": "Read the publicly referenced product.js after ordinary free HTTP returned 403, to check whether an official alternate data endpoint could resolve the broken spring product URLs. The observed variantdetails call only returns stock information; no alternate product facts were inferred.",
+      "sourceUrl": "https://www.therange.co.uk/js/product.js",
+      "sourceStatus": 200,
+      "observedAt": "2026-11-24T04:50:49.582Z"
     }
   ],
   "unreceipted": [

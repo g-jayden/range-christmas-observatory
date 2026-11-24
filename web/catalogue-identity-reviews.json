@@ -1,1 +1,1476 @@
-{"version":1,"sourceRequests":0,"firecrawlCredits":0,"pairs":[{"retailerId":"bq","skus":["0086879850700","0086879873778"],"fingerprints":["c6bb5b23ee00dc9518b44ce125c4ce1c72c6bb805e2b817192ce4732c5af9de5","eef033a89c25316afc9994adc21f8c25a3c7b68b34b00f2527e40a0547595ddd"],"imageHashes":["861857bdc4ccc519ffc9511d5ebc73ddda680d9788afd55a92683e60941ee431","861857bdc4ccc519ffc9511d5ebc73ddda680d9788afd55a92683e60941ee431"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.342Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["861857bdc4ccc519ffc9511d5ebc73ddda680d9788afd55a92683e60941ee431","b2bfd89e10396925b45c49b30bde9b97a6848e71e92d26c3b226e12e31c5f094","b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee","d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b","e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247","3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309","d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b","fa7d5e2cd4ec8d44623b752b6e8ad8e3eed933b2cb9f994f5f374d8ead832d24"],["861857bdc4ccc519ffc9511d5ebc73ddda680d9788afd55a92683e60941ee431","b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee","e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247","3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309","d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b"]],"allImagesCompared":true,"sameCompleteGallery":false},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621274111","0070621275002"],"fingerprints":["712ea5088c2ce31f3aa9b2266b57f3c3db9615888adc8abbf464678f4ded3552","57df796db0a50e0423077786e04a784def59f902b983e5e16248d4a8e5a3c11d"],"imageHashes":["3df3504f25d7a433bc489ad7b85f43bf4228b6e20a0cd799c6cae74a877ca30d","3df3504f25d7a433bc489ad7b85f43bf4228b6e20a0cd799c6cae74a877ca30d"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.342Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["3df3504f25d7a433bc489ad7b85f43bf4228b6e20a0cd799c6cae74a877ca30d","ea26aa3fbecd294d6e6e247f272bcfb5e72f29effd8b753c07bdb3c23ec09457","ae7c38008929270a228304bd0ac44ea7d213e6b3d28d4885a77e3ce5772b5998","6a86896c866aade728299d878e4e2cf60e9eaf81eb58946eb25bdac6d78d9fcd","2498932150b6182374d473e3f16f96c44b8a5ced8169b68578a2d562354d2444"],["3df3504f25d7a433bc489ad7b85f43bf4228b6e20a0cd799c6cae74a877ca30d","ea26aa3fbecd294d6e6e247f272bcfb5e72f29effd8b753c07bdb3c23ec09457","ae7c38008929270a228304bd0ac44ea7d213e6b3d28d4885a77e3ce5772b5998","6a86896c866aade728299d878e4e2cf60e9eaf81eb58946eb25bdac6d78d9fcd","2498932150b6182374d473e3f16f96c44b8a5ced8169b68578a2d562354d2444"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0086879850809","0086879873877"],"fingerprints":["e3eb7f44c48898dbf2fc48941c31e6601c692981d0d37d05f87bea650091ec7b","98780c95a260a1cebe0f5aef12b2f95fd62e31f2106a7df7d9d0b282ce3bc69b"],"imageHashes":["37943679144f91c78c5c89eda68d033f68a451a0d4f0ab0d3a12f229c1b87067","37943679144f91c78c5c89eda68d033f68a451a0d4f0ab0d3a12f229c1b87067"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.342Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["37943679144f91c78c5c89eda68d033f68a451a0d4f0ab0d3a12f229c1b87067","b2bfd89e10396925b45c49b30bde9b97a6848e71e92d26c3b226e12e31c5f094","b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee","d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b","e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247","3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309","d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b","fa7d5e2cd4ec8d44623b752b6e8ad8e3eed933b2cb9f994f5f374d8ead832d24"],["37943679144f91c78c5c89eda68d033f68a451a0d4f0ab0d3a12f229c1b87067","b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee","e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247","3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309","d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b"]],"allImagesCompared":true,"sameCompleteGallery":false},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0799994453434","5060687514592"],"fingerprints":["f206042b1d62e4ac35a4669083c3b35d50dae5bb70ddf64ae5aecf51f3f850ec","5d9062a797ac173bd3056ffe2d1ff6393dfa4f483f852ba2ab85c15f32bc33b1"],"imageHashes":["0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3","0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.342Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3"],["0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0799994453434","5060687514608"],"fingerprints":["f206042b1d62e4ac35a4669083c3b35d50dae5bb70ddf64ae5aecf51f3f850ec","bbff9a7e7c7470dbd995d5cc6644a44c19bd035af475bf53ea17c8048ba09585"],"imageHashes":["0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3","0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.342Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3"],["0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["79254929","79254912"],"fingerprints":["9d59e87074a5232d975682f694a1878b36bb89caf7d34544c1a00d015afc2534","a3243f77c87fb66da4aa262fbe608d85c328f25bf4c0f24d7c23211b1f934105"],"imageHashes":["7a70773e86d4d16d0244f11bb81018ff95257ec1a113b72acb3193c911964da7","7a70773e86d4d16d0244f11bb81018ff95257ec1a113b72acb3193c911964da7"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.342Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["7a70773e86d4d16d0244f11bb81018ff95257ec1a113b72acb3193c911964da7","7a70773e86d4d16d0244f11bb81018ff95257ec1a113b72acb3193c911964da7"],["7a70773e86d4d16d0244f11bb81018ff95257ec1a113b72acb3193c911964da7","7a70773e86d4d16d0244f11bb81018ff95257ec1a113b72acb3193c911964da7"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621262736","0070621272612"],"fingerprints":["4a323f7ac7f97d9612615525335bf63a29d6c59180bc182185ae1120b3fd1200","a1d3c056a9499a711502aa65d674ba94f8d52139f0ead03515269cc55c390cc4"],"imageHashes":["f622201dfd55bc5c9207a19b4fe458ce8267941045b783d8e3d2f1cd5aff61c4","f622201dfd55bc5c9207a19b4fe458ce8267941045b783d8e3d2f1cd5aff61c4"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.342Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["f622201dfd55bc5c9207a19b4fe458ce8267941045b783d8e3d2f1cd5aff61c4","8385423e6594cae32a282a8c24dcbcab164a59690dd68046602cbee385a63ea9","a789530e9309c92b1c230e157e18280bbe4cef5e7b3e434290478243c5feb231","5e6fb6e0ca55e618d31d662c932471ce7eb2a809b0b493dfdb9be45d60e7c162","f4fa1d0a42955a69f1339f2a76edc70823ca462e3867c20db2b88b0da14b0237","30f6531f888f8acb5eba720ae5600b7c935730aa88e39c6ed81260fec099fd05","898f7fba0e5ca7dc5e98595c24dbce8347c9251c7bc6c9a50210b1635190a9d3","5cbe1837c66b8f13717a26bfe5348d4aef4dab88b2016469ce0f453cd11c8d9c","540d472bff1a57b659f29af7f554491e50431494a924ada3ab5b159827fb612b"],["f622201dfd55bc5c9207a19b4fe458ce8267941045b783d8e3d2f1cd5aff61c4","8385423e6594cae32a282a8c24dcbcab164a59690dd68046602cbee385a63ea9","a789530e9309c92b1c230e157e18280bbe4cef5e7b3e434290478243c5feb231","5e6fb6e0ca55e618d31d662c932471ce7eb2a809b0b493dfdb9be45d60e7c162","f4fa1d0a42955a69f1339f2a76edc70823ca462e3867c20db2b88b0da14b0237","30f6531f888f8acb5eba720ae5600b7c935730aa88e39c6ed81260fec099fd05","898f7fba0e5ca7dc5e98595c24dbce8347c9251c7bc6c9a50210b1635190a9d3","5cbe1837c66b8f13717a26bfe5348d4aef4dab88b2016469ce0f453cd11c8d9c","540d472bff1a57b659f29af7f554491e50431494a924ada3ab5b159827fb612b"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621262712","0070621272599"],"fingerprints":["5d8ded45ea5a65c66e00035c08be1c1ee4f69cd1c2f42f6d56fc78d8a89cfcf9","4be07290ec145d01774b6d80449716b503edadcd47b130e63a76cf4be86f5bb1"],"imageHashes":["62d3b749f475ed9074b2ceb895de8f5b0db3f9d40a2726c4c59f5011294cdaf3","62d3b749f475ed9074b2ceb895de8f5b0db3f9d40a2726c4c59f5011294cdaf3"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.342Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["62d3b749f475ed9074b2ceb895de8f5b0db3f9d40a2726c4c59f5011294cdaf3","8385423e6594cae32a282a8c24dcbcab164a59690dd68046602cbee385a63ea9","a789530e9309c92b1c230e157e18280bbe4cef5e7b3e434290478243c5feb231","5e6fb6e0ca55e618d31d662c932471ce7eb2a809b0b493dfdb9be45d60e7c162","f4fa1d0a42955a69f1339f2a76edc70823ca462e3867c20db2b88b0da14b0237","30f6531f888f8acb5eba720ae5600b7c935730aa88e39c6ed81260fec099fd05","898f7fba0e5ca7dc5e98595c24dbce8347c9251c7bc6c9a50210b1635190a9d3","5cbe1837c66b8f13717a26bfe5348d4aef4dab88b2016469ce0f453cd11c8d9c","540d472bff1a57b659f29af7f554491e50431494a924ada3ab5b159827fb612b"],["62d3b749f475ed9074b2ceb895de8f5b0db3f9d40a2726c4c59f5011294cdaf3","8385423e6594cae32a282a8c24dcbcab164a59690dd68046602cbee385a63ea9","a789530e9309c92b1c230e157e18280bbe4cef5e7b3e434290478243c5feb231","5e6fb6e0ca55e618d31d662c932471ce7eb2a809b0b493dfdb9be45d60e7c162","f4fa1d0a42955a69f1339f2a76edc70823ca462e3867c20db2b88b0da14b0237","30f6531f888f8acb5eba720ae5600b7c935730aa88e39c6ed81260fec099fd05","898f7fba0e5ca7dc5e98595c24dbce8347c9251c7bc6c9a50210b1635190a9d3","5cbe1837c66b8f13717a26bfe5348d4aef4dab88b2016469ce0f453cd11c8d9c","540d472bff1a57b659f29af7f554491e50431494a924ada3ab5b159827fb612b"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0086879850649","0086879873716"],"fingerprints":["10c2f3f409607e9d2cc9fd1b5313b53195356d64dc8aa50601dbc09847ceaa38","cf5210a4b87d1086712344c306bfef248e2ddbfc3142b98b817a431a438d836b"],"imageHashes":["ff641ebd06839af95b5b4c17f8c2d3cdf4e6c3387513c835cdea9cf5cb16061d","ff641ebd06839af95b5b4c17f8c2d3cdf4e6c3387513c835cdea9cf5cb16061d"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.342Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["ff641ebd06839af95b5b4c17f8c2d3cdf4e6c3387513c835cdea9cf5cb16061d","b2bfd89e10396925b45c49b30bde9b97a6848e71e92d26c3b226e12e31c5f094","b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee","d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b","e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247","3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309","d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b","fa7d5e2cd4ec8d44623b752b6e8ad8e3eed933b2cb9f994f5f374d8ead832d24"],["ff641ebd06839af95b5b4c17f8c2d3cdf4e6c3387513c835cdea9cf5cb16061d","b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee","e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247","3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309","d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b"]],"allImagesCompared":true,"sameCompleteGallery":false},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0086879850816","0086879873884"],"fingerprints":["1fb7461583438c154bcb0aba3bfe718fd0c973baac751ff970bee48d3ede62b3","4e92bf7bb340f08ddbdfe2b23a6ba9ef9501929cd4690f30f366f04d65c4a644"],"imageHashes":["31a509c5fd18903e9bcb26e4d836045a560ba1d839bf8c0848e55cc5c54daacb","31a509c5fd18903e9bcb26e4d836045a560ba1d839bf8c0848e55cc5c54daacb"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.342Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["31a509c5fd18903e9bcb26e4d836045a560ba1d839bf8c0848e55cc5c54daacb","b2bfd89e10396925b45c49b30bde9b97a6848e71e92d26c3b226e12e31c5f094","b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee","d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b","e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247","3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309","d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b","fa7d5e2cd4ec8d44623b752b6e8ad8e3eed933b2cb9f994f5f374d8ead832d24"],["31a509c5fd18903e9bcb26e4d836045a560ba1d839bf8c0848e55cc5c54daacb","b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee","e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247","3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309","d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b"]],"allImagesCompared":true,"sameCompleteGallery":false},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0086879850717","0086879873785"],"fingerprints":["796d2021a2f78fe87c3215b88b35a170b7bcf37cbe889292af97a9022535da14","25e7241341fa9002a976c4d8adbe7494d5cf3c3a12d6aab979b4fafb05ee647a"],"imageHashes":["ba630fb2a9b5b1dee939abf53fbd563bd90746cd6bbbb2f81af9dc5b6e58edad","ba630fb2a9b5b1dee939abf53fbd563bd90746cd6bbbb2f81af9dc5b6e58edad"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.342Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["ba630fb2a9b5b1dee939abf53fbd563bd90746cd6bbbb2f81af9dc5b6e58edad","b2bfd89e10396925b45c49b30bde9b97a6848e71e92d26c3b226e12e31c5f094","b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee","d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b","e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247","3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309","d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b","fa7d5e2cd4ec8d44623b752b6e8ad8e3eed933b2cb9f994f5f374d8ead832d24"],["ba630fb2a9b5b1dee939abf53fbd563bd90746cd6bbbb2f81af9dc5b6e58edad","b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee","e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247","3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309","d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b"]],"allImagesCompared":true,"sameCompleteGallery":false},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621272018","0070621272148"],"fingerprints":["71d506923899df16f0e7c45b1f5ae380380bb85cfa4dd093f6491f61568e75f1","384c698e1a0d102675adeae994bb5530429518f84493c837d298b0911f2df5cc"],"imageHashes":["4b1ba50e8ebc3933eb84cae6ec069b8a83c263c561c65257bfb430eedafe306d","4b1ba50e8ebc3933eb84cae6ec069b8a83c263c561c65257bfb430eedafe306d"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.342Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["7bf674e9bca5efc74c073a0d9e1ff160cfe25ab28d1175ad8a943d222cbb9d11","4b1ba50e8ebc3933eb84cae6ec069b8a83c263c561c65257bfb430eedafe306d","b0ace3628fd50228f5fb2321c9494f1daac47d94112222ab7192ae0c254fcad3","6158c5a960dd480bd20cae7fc63d929cfba8d157dacbc0ada6d6133c5d8460fc","cc512057a88f4e152bfbf89cb26bd7244d103487dd49a6c1799403f13b1ee7c5"],["6158c5a960dd480bd20cae7fc63d929cfba8d157dacbc0ada6d6133c5d8460fc","4b1ba50e8ebc3933eb84cae6ec069b8a83c263c561c65257bfb430eedafe306d","b0ace3628fd50228f5fb2321c9494f1daac47d94112222ab7192ae0c254fcad3","7bf674e9bca5efc74c073a0d9e1ff160cfe25ab28d1175ad8a943d222cbb9d11","cc512057a88f4e152bfbf89cb26bd7244d103487dd49a6c1799403f13b1ee7c5"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["5083754067418","5083754067494"],"fingerprints":["a93ba8c2e3a2af317a600ae0cabdaef92fc952aa59df3ce1e03bee4d4ae4bcf8","69c5423c8ee51ba4608453bf50c3e19b32108959b747bb611667f5bb4eaeec15"],"imageHashes":["e3b5afab72623fb3580717c22ba4b2982b1d82b315901adf5950029ede901306","e3b5afab72623fb3580717c22ba4b2982b1d82b315901adf5950029ede901306"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.342Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["6a3bf729dc32a32062af96b83747df1f46e2b08e9f9f8e603e7db5a185e9b473","594458094ab18eb38180ef55d2ce621626925d25de03a20fc0ae9fbd56f82a39","e3b5afab72623fb3580717c22ba4b2982b1d82b315901adf5950029ede901306","aa71cc54869e2ec3f92d4f0ec5548c6cad23389e705f01388df99d74fc7ba294","12b7f38c8a38ecbbfa579f5d3f15d77eed4cb871a2c19d4c00a45fcff218388f"],["6a3bf729dc32a32062af96b83747df1f46e2b08e9f9f8e603e7db5a185e9b473","594458094ab18eb38180ef55d2ce621626925d25de03a20fc0ae9fbd56f82a39","e3b5afab72623fb3580717c22ba4b2982b1d82b315901adf5950029ede901306","aa71cc54869e2ec3f92d4f0ec5548c6cad23389e705f01388df99d74fc7ba294","12b7f38c8a38ecbbfa579f5d3f15d77eed4cb871a2c19d4c00a45fcff218388f"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621275019","0070621274128"],"fingerprints":["86891091ad854dbac3eb2bd1d9970a4b82861e0204dec9ba07c9a6ba9a39f886","dd2f633c2efd84ebc72b5919c4225b91d34499849c1526224a281f40fe44aa96"],"imageHashes":["1da1d016ddbf6c38969ac14e19f7250a3a80900392858fa4e1a68479f34fb096","1da1d016ddbf6c38969ac14e19f7250a3a80900392858fa4e1a68479f34fb096"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.342Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["1da1d016ddbf6c38969ac14e19f7250a3a80900392858fa4e1a68479f34fb096","2f9f9bed600214b63a2b6cdf83e6fb3bdbf98cb62917317f7d11bc306514a46f","b38dda343c380575390df6b260687dfb5a2e37eca423dd065fb423b5799e58f7","efc00e5d026023c68f1bb4020646afdd92402c66ed50ad964b8bfcd9d547e7db","be31fe23384e627dd7ddc4cf46d1987ed69cb901322aef9e0c35d09f3a8213ad"],["1da1d016ddbf6c38969ac14e19f7250a3a80900392858fa4e1a68479f34fb096","2f9f9bed600214b63a2b6cdf83e6fb3bdbf98cb62917317f7d11bc306514a46f","b38dda343c380575390df6b260687dfb5a2e37eca423dd065fb423b5799e58f7","efc00e5d026023c68f1bb4020646afdd92402c66ed50ad964b8bfcd9d547e7db","be31fe23384e627dd7ddc4cf46d1987ed69cb901322aef9e0c35d09f3a8213ad"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0086879845423","0086879820123"],"fingerprints":["d1cdfbcc0cd72f295bb4eb1a31c3797ef3740a7c6ed51311d6c364df19d7d5a9","62c2b673e53bd442bf4dfdd993cbc1ca4e6cbc506d3b4229d76490f073e7b689"],"imageHashes":["19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542","19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["a45bab49b5bcc46c5c556d998f1802561eefe0ac225643a3d35fe0dcf4d47430","817ed0c32c9f24866513a551ca4e6b67bf80e6b9c09039e291b47f3b47cc4d58","19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542","c33db82915a57a8620d20a17920a6b4c00df8904b6aa289688dd942ab573c7c1","6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359","cc01bcb74e2c76a3046ccc598c28f95756c5dc95ea5711acc25ed4435cda9237","0edc046258e4042258d385f96b26bd4766250e70894b84e88238e647eb86c5e3","6c99923257f70388c9558ff05dca71ac2ecfa5789863db1f52c11c90e32980b1","870c76dff462e373bd15b7b799d4d60fc91938ea428ebc7d71dca217bf94672d"],["a45bab49b5bcc46c5c556d998f1802561eefe0ac225643a3d35fe0dcf4d47430","817ed0c32c9f24866513a551ca4e6b67bf80e6b9c09039e291b47f3b47cc4d58","19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542","c33db82915a57a8620d20a17920a6b4c00df8904b6aa289688dd942ab573c7c1","6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359","cc01bcb74e2c76a3046ccc598c28f95756c5dc95ea5711acc25ed4435cda9237","0edc046258e4042258d385f96b26bd4766250e70894b84e88238e647eb86c5e3","6c99923257f70388c9558ff05dca71ac2ecfa5789863db1f52c11c90e32980b1","870c76dff462e373bd15b7b799d4d60fc91938ea428ebc7d71dca217bf94672d"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621272124","0070621271998"],"fingerprints":["c913e726f6d8b5021e129d1386edbaee12d299ffcd80fd58dd948a14626cebfa","68563d876bdc1aa751d5879bd08ceb66a157164d442c57954e2c8e6ad9caced4"],"imageHashes":["96b04d2ce670462114a08816870c4246e8b7d73b09b2eae059e779f4503ed3fb","96b04d2ce670462114a08816870c4246e8b7d73b09b2eae059e779f4503ed3fb"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["af55e4d24972a91de4b97c61082afaf34e40c7c23cdc85e2eeba9f05b9e3c14a","96b04d2ce670462114a08816870c4246e8b7d73b09b2eae059e779f4503ed3fb","75cb05c560d1e4b5f7602703062d7ad94f6396a5ead2292c3078948dde7e8f02","f632ede0dab22ce44cf2e27327e08f42a5f9672a0a1f2acbb9e8cf4ef36eb02d","e23050b09c6d4de4430422062ff44bf2b5723a9dafc1b167215f0486dcf1acbb"],["f632ede0dab22ce44cf2e27327e08f42a5f9672a0a1f2acbb9e8cf4ef36eb02d","96b04d2ce670462114a08816870c4246e8b7d73b09b2eae059e779f4503ed3fb","75cb05c560d1e4b5f7602703062d7ad94f6396a5ead2292c3078948dde7e8f02","af55e4d24972a91de4b97c61082afaf34e40c7c23cdc85e2eeba9f05b9e3c14a","e23050b09c6d4de4430422062ff44bf2b5723a9dafc1b167215f0486dcf1acbb"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621274135","0070621275026"],"fingerprints":["e26180f85b1d8d72705c1be20f3e54931c6640bfa06ae113d708ddb14a933779","3cbc2f7d3d915d8d3fda2269be816482e27fa86b6b62c340fafa825d0badc863"],"imageHashes":["945d5ebe4b5578f5983358245da487e650e6e91fbf1b91da295e6e9281983432","945d5ebe4b5578f5983358245da487e650e6e91fbf1b91da295e6e9281983432"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["945d5ebe4b5578f5983358245da487e650e6e91fbf1b91da295e6e9281983432","1fba632c78e0147b7308f78d55c2518deab4fdd8b62b3cc65c3d7c790895d142","9e984afa720c8d7c59628d2b6d81d263f373fab0c1d7a63360175371dd7f3a18","1b7115b4f109ed89389a97e197afab465c8e8a55774c9e288ae51ca5f2b60075"],["945d5ebe4b5578f5983358245da487e650e6e91fbf1b91da295e6e9281983432","1fba632c78e0147b7308f78d55c2518deab4fdd8b62b3cc65c3d7c790895d142","9e984afa720c8d7c59628d2b6d81d263f373fab0c1d7a63360175371dd7f3a18","1b7115b4f109ed89389a97e197afab465c8e8a55774c9e288ae51ca5f2b60075"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0086879845430","0086879820130"],"fingerprints":["81e8ec814e2a23279d37c132160ab68980d5441699d2b26612fe16e7ae8a7e60","aa83d692f8327f8f96d76c16e3545cd8bbdd4f92072befb74b2807b5d51337cb"],"imageHashes":["6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359","6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["c504ab8c4d5e09c4da4334b026cafcdde3f0c2099ac67be66f91dcb9111f0846","817ed0c32c9f24866513a551ca4e6b67bf80e6b9c09039e291b47f3b47cc4d58","19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542","c33db82915a57a8620d20a17920a6b4c00df8904b6aa289688dd942ab573c7c1","6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359","cc01bcb74e2c76a3046ccc598c28f95756c5dc95ea5711acc25ed4435cda9237","0edc046258e4042258d385f96b26bd4766250e70894b84e88238e647eb86c5e3","6c99923257f70388c9558ff05dca71ac2ecfa5789863db1f52c11c90e32980b1","870c76dff462e373bd15b7b799d4d60fc91938ea428ebc7d71dca217bf94672d"],["c504ab8c4d5e09c4da4334b026cafcdde3f0c2099ac67be66f91dcb9111f0846","817ed0c32c9f24866513a551ca4e6b67bf80e6b9c09039e291b47f3b47cc4d58","19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542","c33db82915a57a8620d20a17920a6b4c00df8904b6aa289688dd942ab573c7c1","6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359","cc01bcb74e2c76a3046ccc598c28f95756c5dc95ea5711acc25ed4435cda9237","0edc046258e4042258d385f96b26bd4766250e70894b84e88238e647eb86c5e3","6c99923257f70388c9558ff05dca71ac2ecfa5789863db1f52c11c90e32980b1","870c76dff462e373bd15b7b799d4d60fc91938ea428ebc7d71dca217bf94672d"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621274142","0070621275033"],"fingerprints":["e22b7b73ee400fef7838362c027ff6bceaf5d1555108829bbd8d82ef5069b331","82c5b714ddb91e60660ef7fc9bec989b797df6481a60915b9768c9f1365380ac"],"imageHashes":["52eeb9577e8b5c1ffca2beb89821e27ed22af771400c364bdea9c44e1d4f4302","52eeb9577e8b5c1ffca2beb89821e27ed22af771400c364bdea9c44e1d4f4302"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["52eeb9577e8b5c1ffca2beb89821e27ed22af771400c364bdea9c44e1d4f4302","c9e6bb49549530de12e386dd07feebdc321b6dddd66b4ecd38249c63c5a35aaf","eb210590f83c3d772dd6678c4ae3f1179814397ce57213215a54732442633144","f25ed6204c8cc13f52bfd95edb5df179857b826bfc337cca0988ad7a53c962f8","19b9c20ce2b33b0f365037f9817c7135ddd076fa2f651807ba763ce2d1e90e6f"],["52eeb9577e8b5c1ffca2beb89821e27ed22af771400c364bdea9c44e1d4f4302","c9e6bb49549530de12e386dd07feebdc321b6dddd66b4ecd38249c63c5a35aaf","eb210590f83c3d772dd6678c4ae3f1179814397ce57213215a54732442633144","f25ed6204c8cc13f52bfd95edb5df179857b826bfc337cca0988ad7a53c962f8","19b9c20ce2b33b0f365037f9817c7135ddd076fa2f651807ba763ce2d1e90e6f"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621272063","0070621271936"],"fingerprints":["7e7f12c16900f39dfe2aff56aa19261596bb857012314f9aa1684a789c4190d5","eba5e13a48bd69ce51df4e3f2969b1d0b993d927479f3aa8246347096e58a030"],"imageHashes":["f4eb7d9f0e52fe1961a23869e204d24782ef5e07c073b0d3acecaa109d0fa558","f4eb7d9f0e52fe1961a23869e204d24782ef5e07c073b0d3acecaa109d0fa558"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["edeb0922ad71c52de978f03dbbacaed8805cda7a14c992eff1ee4687515c1612","f4eb7d9f0e52fe1961a23869e204d24782ef5e07c073b0d3acecaa109d0fa558","ce633f5839a8e1257130ef733161f2a5213bd7ec9baa27946b90fa550d2b2355","3b0248ff4a099a2474688d011fc181ba80725674ae4fab1702f1d1e05eb6be36","dd8a2ade41f9bc9a1652f2d6fd19cb77f113e10e00dd64eb70c02ac3d9b72401"],["3b0248ff4a099a2474688d011fc181ba80725674ae4fab1702f1d1e05eb6be36","f4eb7d9f0e52fe1961a23869e204d24782ef5e07c073b0d3acecaa109d0fa558","ce633f5839a8e1257130ef733161f2a5213bd7ec9baa27946b90fa550d2b2355","edeb0922ad71c52de978f03dbbacaed8805cda7a14c992eff1ee4687515c1612","dd8a2ade41f9bc9a1652f2d6fd19cb77f113e10e00dd64eb70c02ac3d9b72401"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["5056533575275","5056533575237"],"fingerprints":["25414c67aa3e44814dbb050589bbefe54f42bbc5b9d9d78feb10062ba36cf600","060816b9cc9d5fce52fcc6db77c634d3252890c35eed065331a295482915a3ec"],"imageHashes":["860475e09999300ac7ee4a003caeebde99dc4b8b3d18eeed969a2a8bc6292d05","860475e09999300ac7ee4a003caeebde99dc4b8b3d18eeed969a2a8bc6292d05"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["860475e09999300ac7ee4a003caeebde99dc4b8b3d18eeed969a2a8bc6292d05"],["860475e09999300ac7ee4a003caeebde99dc4b8b3d18eeed969a2a8bc6292d05"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621269858","0070621273039"],"fingerprints":["fa2a3ddd0f51b51c19da2794bfd1a8979a8df040aca0d57804e0e3b93047d6dc","f25b7030b29e77ae008a1a3d5a972fdb4acad3e72148adb317731e971cc38bad"],"imageHashes":["01f165a806a1e854fa31279c630f6f93d6a4cd4c76726dbb4f90ad137a8c986f","01f165a806a1e854fa31279c630f6f93d6a4cd4c76726dbb4f90ad137a8c986f"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["01f165a806a1e854fa31279c630f6f93d6a4cd4c76726dbb4f90ad137a8c986f","1351c699fc233fb77d3f2bb0d9a7af189111b02d0cf553c5a5485ddf0c594a24","90adcbbd9086c07b7acbd72327c091f3015464873fb333599af8027bb5e3f189","89bee6b3a3f605e6b44fe927b73008cd86d15d8a7f74cc0eeac5a23be227cf23","7a789ca3aa66fa711ab0742b584aeeac05748d63ab6c1024aac813fee3fd9b1d","558704883e277b4d7908ad23870b7ca393f0e37af495df89c4cdb1d4a5c18ffa","0b115608b44c46d9bbd880e5d86bc1c3987fac9ed3e0f4ba823346c260a51c7c"],["01f165a806a1e854fa31279c630f6f93d6a4cd4c76726dbb4f90ad137a8c986f","1351c699fc233fb77d3f2bb0d9a7af189111b02d0cf553c5a5485ddf0c594a24","90adcbbd9086c07b7acbd72327c091f3015464873fb333599af8027bb5e3f189","89bee6b3a3f605e6b44fe927b73008cd86d15d8a7f74cc0eeac5a23be227cf23","7a789ca3aa66fa711ab0742b584aeeac05748d63ab6c1024aac813fee3fd9b1d","558704883e277b4d7908ad23870b7ca393f0e37af495df89c4cdb1d4a5c18ffa","0b115608b44c46d9bbd880e5d86bc1c3987fac9ed3e0f4ba823346c260a51c7c"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0086879850762","0086879873839"],"fingerprints":["9cd4e0d6e4869db1d1744bca8e73f7753da72a11ee57a96a5ce14a827f0bc9f1","5962da281db50a015c63d2243b9722e5d5b5a5d933a81c2e5155b01f4eb030a5"],"imageHashes":["f11e09456637fcbd9b191dc93a3d4a023242e915a62bc92879d1419aa8b365fa","f11e09456637fcbd9b191dc93a3d4a023242e915a62bc92879d1419aa8b365fa"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["f11e09456637fcbd9b191dc93a3d4a023242e915a62bc92879d1419aa8b365fa","b2bfd89e10396925b45c49b30bde9b97a6848e71e92d26c3b226e12e31c5f094","b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee","d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b","e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247","3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309","d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b","fa7d5e2cd4ec8d44623b752b6e8ad8e3eed933b2cb9f994f5f374d8ead832d24"],["f11e09456637fcbd9b191dc93a3d4a023242e915a62bc92879d1419aa8b365fa","b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee","e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247","3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309","d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b"]],"allImagesCompared":true,"sameCompleteGallery":false},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621274159","0070621275040"],"fingerprints":["dff44a4aa0a6d11399da034aab6c7a1a0cc1ce53f8f676353bf2c24516fb22e6","dae510714d795709de5b741c3cd7502be7923c474b7472c54500bbfd6705d388"],"imageHashes":["1ab2db969fce50a7c651d9b9b897a3c6b9ee8e44f01dd136c6ec16623d0b9425","1ab2db969fce50a7c651d9b9b897a3c6b9ee8e44f01dd136c6ec16623d0b9425"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["1ab2db969fce50a7c651d9b9b897a3c6b9ee8e44f01dd136c6ec16623d0b9425","c35ac2d5236422c575868cb0d4913a03f40dfa2027f19563af9413bf49361b69","83055cff48fdb74f78149ec7b80ce618c8f09c56abd28ed5a508934089282e4d","f38d5e861a0f450d294ddab5c2c46ec0897ca93b6cf80bd6e0ea55008725aba8"],["1ab2db969fce50a7c651d9b9b897a3c6b9ee8e44f01dd136c6ec16623d0b9425","c35ac2d5236422c575868cb0d4913a03f40dfa2027f19563af9413bf49361b69","83055cff48fdb74f78149ec7b80ce618c8f09c56abd28ed5a508934089282e4d","f38d5e861a0f450d294ddab5c2c46ec0897ca93b6cf80bd6e0ea55008725aba8"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0086879845454","0086879820154"],"fingerprints":["caea90ce59af8c6fdbdb7d923a2eeec25788afbabfb7394ad4c7ece0865e5ff6","912f7a48345b2ebcc23517c59e7d9067180f20ee1cf56de5d7b09289d0133a0b"],"imageHashes":["6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359","6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["fa4352b780df944cdee52701852a95483b0d59df491ee409794ea51583d955fe","817ed0c32c9f24866513a551ca4e6b67bf80e6b9c09039e291b47f3b47cc4d58","19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542","c33db82915a57a8620d20a17920a6b4c00df8904b6aa289688dd942ab573c7c1","6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359","cc01bcb74e2c76a3046ccc598c28f95756c5dc95ea5711acc25ed4435cda9237","0edc046258e4042258d385f96b26bd4766250e70894b84e88238e647eb86c5e3","6c99923257f70388c9558ff05dca71ac2ecfa5789863db1f52c11c90e32980b1","870c76dff462e373bd15b7b799d4d60fc91938ea428ebc7d71dca217bf94672d"],["fa4352b780df944cdee52701852a95483b0d59df491ee409794ea51583d955fe","817ed0c32c9f24866513a551ca4e6b67bf80e6b9c09039e291b47f3b47cc4d58","19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542","c33db82915a57a8620d20a17920a6b4c00df8904b6aa289688dd942ab573c7c1","6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359","cc01bcb74e2c76a3046ccc598c28f95756c5dc95ea5711acc25ed4435cda9237","0edc046258e4042258d385f96b26bd4766250e70894b84e88238e647eb86c5e3","6c99923257f70388c9558ff05dca71ac2ecfa5789863db1f52c11c90e32980b1","870c76dff462e373bd15b7b799d4d60fc91938ea428ebc7d71dca217bf94672d"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621275057","0070621274166"],"fingerprints":["436000b462d6623b0f8be5000fb3cc29c1afd07fc38d8f90fb7ad363a3d767cd","9176c9f59c311b196880a34ea6bba1823b6678881095bdc380e3ba7a6595bf74"],"imageHashes":["bd725cb5259bba7d042f1324c4c3b0ce87cb8f14b17f17dc4ddbae60d8561433","bd725cb5259bba7d042f1324c4c3b0ce87cb8f14b17f17dc4ddbae60d8561433"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["8d682040d88226621bad8e43cfb576a6d676870657ac4cae03ef77119abfda27","bd725cb5259bba7d042f1324c4c3b0ce87cb8f14b17f17dc4ddbae60d8561433","6c5e46f8921f58537b649709815757cacda56b7f823f2b9172f56d51f01b989c","a5e574ac07a9af2b2c926cdf16ca26eecb24b380096a03213f7f475f135bc7b8","2044820c198fb59551ed001066f78f27114df4868f898e05d4c68023957610c6","74a86776751c11a1cfcaf4346537364f123afe6a15536063da267ac1901d2261","16cdcf2e771dac653bcdb46c4dec3e81d4a4d6d8b8fb69d19000408830a7069c"],["8d682040d88226621bad8e43cfb576a6d676870657ac4cae03ef77119abfda27","bd725cb5259bba7d042f1324c4c3b0ce87cb8f14b17f17dc4ddbae60d8561433","6c5e46f8921f58537b649709815757cacda56b7f823f2b9172f56d51f01b989c","a5e574ac07a9af2b2c926cdf16ca26eecb24b380096a03213f7f475f135bc7b8","2044820c198fb59551ed001066f78f27114df4868f898e05d4c68023957610c6","74a86776751c11a1cfcaf4346537364f123afe6a15536063da267ac1901d2261","16cdcf2e771dac653bcdb46c4dec3e81d4a4d6d8b8fb69d19000408830a7069c"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0086879873761","0086879850694"],"fingerprints":["d3216c14c464511c0e543ff0a9b0cd38b8f8c9ab38609c4350524c6f01bbe555","be52f0180fd5e8a54195bb90de478f3d77133b2448d888065f61252fe9010a8c"],"imageHashes":["d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b","d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b","b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee","e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247","3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309","d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b"],["d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b","b2bfd89e10396925b45c49b30bde9b97a6848e71e92d26c3b226e12e31c5f094","b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee","d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b","e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247","3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309","d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b","fa7d5e2cd4ec8d44623b752b6e8ad8e3eed933b2cb9f994f5f374d8ead832d24"]],"allImagesCompared":true,"sameCompleteGallery":false},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621274173","0070621275064"],"fingerprints":["9a9738bdc79c68e86b34afedaef407326ce6197241cc06b6c4f6faf9051e7df7","e0a4fc2e10b2a1fead40818f7df7a2eb5740ad16fde6ab350ab11bf2c24f284f"],"imageHashes":["a5817bcb65b74fe1855bcefec1fe86f72b634466b75babc30b2d1508c8b07c72","a5817bcb65b74fe1855bcefec1fe86f72b634466b75babc30b2d1508c8b07c72"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["06e98cba7a43d3ab3a110a241e674000af0ba5b9e3b7c052ddccd86a555919f9","a5817bcb65b74fe1855bcefec1fe86f72b634466b75babc30b2d1508c8b07c72","5748d4b2ae82ecbadf2da730a2463c5f65ad8c109c075f2e7a3869166ca92434","0275b2ff8fc9b13d0fb400feaaa577ef077e3fe860bb8ac4f5b47be4c776419e","3c8f34c259fdf0ae890aaaf979045610000b6333da5596819f464d0627db13a7","0483558b995a68d1002922e76eae281cd1ad9e483bf8e6997a5eb7fe1ea5a32e","5391588f55578e30cfe03cfa82961654ede4890b6f9017190a838db0e0e3becd"],["06e98cba7a43d3ab3a110a241e674000af0ba5b9e3b7c052ddccd86a555919f9","a5817bcb65b74fe1855bcefec1fe86f72b634466b75babc30b2d1508c8b07c72","5748d4b2ae82ecbadf2da730a2463c5f65ad8c109c075f2e7a3869166ca92434","0275b2ff8fc9b13d0fb400feaaa577ef077e3fe860bb8ac4f5b47be4c776419e","3c8f34c259fdf0ae890aaaf979045610000b6333da5596819f464d0627db13a7","0483558b995a68d1002922e76eae281cd1ad9e483bf8e6997a5eb7fe1ea5a32e","5391588f55578e30cfe03cfa82961654ede4890b6f9017190a838db0e0e3becd"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621275071","0070621274180"],"fingerprints":["605982d3565f48eab8c3e8080dea210be0e935df84bd67ee319a100660c8ed13","53707fec8f80d828a6e7fb49b07b0a6e70b2a153b65937933758bf6fc2a14a14"],"imageHashes":["ebc057dbfeb65158e15deec006154ba924a13029800c897b59f5df73e70e3429","ebc057dbfeb65158e15deec006154ba924a13029800c897b59f5df73e70e3429"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["dcac34528be029be7a30166d564217cdb657e1ebf2bba831e1a9c2a859fc8e99","ebc057dbfeb65158e15deec006154ba924a13029800c897b59f5df73e70e3429","476ea56bd37bc8fb51b28bde3dae9466b0c8aa2a3acfae3dffccdb9287328e6f","6f6942d235bd87b4cad22c962b31812df1a3b4a4522307363aba69b1ea3cf207","7535504e0b007aaef669de6c69bf4b837acbb9864b689d3a58e349a29fd8abfe","4c8380bfd574d06d88f564ded102fed05b6efbd611812e1575e75ce7e41ec939","8ab6bf68ec0e7a1c36fc7de4569b8ea56ead2280cdea0ef45ca83b915ff09648"],["dcac34528be029be7a30166d564217cdb657e1ebf2bba831e1a9c2a859fc8e99","ebc057dbfeb65158e15deec006154ba924a13029800c897b59f5df73e70e3429","476ea56bd37bc8fb51b28bde3dae9466b0c8aa2a3acfae3dffccdb9287328e6f","6f6942d235bd87b4cad22c962b31812df1a3b4a4522307363aba69b1ea3cf207","7535504e0b007aaef669de6c69bf4b837acbb9864b689d3a58e349a29fd8abfe","4c8380bfd574d06d88f564ded102fed05b6efbd611812e1575e75ce7e41ec939","8ab6bf68ec0e7a1c36fc7de4569b8ea56ead2280cdea0ef45ca83b915ff09648"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"bq","skus":["0070621262699","0070621272575"],"fingerprints":["d95798f6be9a7840d419726f3ae2a62eefcf2707758beac592def98948d9bd9c","1c3a48c061892c8a4fd687a7447193fae3368523b5f3b44dac51a4ad99df4ce1"],"imageHashes":["aa2febdcf74b9869287b8935cd6dc7645fd7ea4d303ba04e8cc3e96aebf662eb","aa2febdcf74b9869287b8935cd6dc7645fd7ea4d303ba04e8cc3e96aebf662eb"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications","gallerySha256":[["aa2febdcf74b9869287b8935cd6dc7645fd7ea4d303ba04e8cc3e96aebf662eb","8385423e6594cae32a282a8c24dcbcab164a59690dd68046602cbee385a63ea9","a789530e9309c92b1c230e157e18280bbe4cef5e7b3e434290478243c5feb231","5e6fb6e0ca55e618d31d662c932471ce7eb2a809b0b493dfdb9be45d60e7c162","f4fa1d0a42955a69f1339f2a76edc70823ca462e3867c20db2b88b0da14b0237","30f6531f888f8acb5eba720ae5600b7c935730aa88e39c6ed81260fec099fd05","898f7fba0e5ca7dc5e98595c24dbce8347c9251c7bc6c9a50210b1635190a9d3","5cbe1837c66b8f13717a26bfe5348d4aef4dab88b2016469ce0f453cd11c8d9c","540d472bff1a57b659f29af7f554491e50431494a924ada3ab5b159827fb612b"],["aa2febdcf74b9869287b8935cd6dc7645fd7ea4d303ba04e8cc3e96aebf662eb","8385423e6594cae32a282a8c24dcbcab164a59690dd68046602cbee385a63ea9","a789530e9309c92b1c230e157e18280bbe4cef5e7b3e434290478243c5feb231","5e6fb6e0ca55e618d31d662c932471ce7eb2a809b0b493dfdb9be45d60e7c162","f4fa1d0a42955a69f1339f2a76edc70823ca462e3867c20db2b88b0da14b0237","30f6531f888f8acb5eba720ae5600b7c935730aa88e39c6ed81260fec099fd05","898f7fba0e5ca7dc5e98595c24dbce8347c9251c7bc6c9a50210b1635190a9d3","5cbe1837c66b8f13717a26bfe5348d4aef4dab88b2016469ce0f453cd11c8d9c","540d472bff1a57b659f29af7f554491e50431494a924ada3ab5b159827fb612b"]],"allImagesCompared":true,"sameCompleteGallery":true},"note":"Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."},{"retailerId":"ar","skus":["7752117","8745161"],"fingerprints":["a43765e024ba155ecf6af8eae35f9ca947cbafbfcc0ca0b43370e4e283a64133","92531aceefed235ee45a5653caa1adc34f78c8bfb3b33cb078eb04f51739d295"],"imageHashes":["822b7bc3818179c91456ac352287929e097321ab2520caa88af047d43452991e","822b7bc3818179c91456ac352287929e097321ab2520caa88af047d43452991e"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-19T12:06:15.343Z","evidence":{"method":"same-official-EAN-5053844219140-plus-six-identical-gallery-photos-and-H19-W46","allImagesCompared":true,"nativeOriginalSha256":"822b7bc3818179c91456ac352287929e097321ab2520caa88af047d43452991e","nativeDimensions":[1384,1382]},"note":"Both source pages name EAN 5053844219140 and share all six actual photos, H19 x W46cm, 1kg, 2L, polypropylene and screw supports. Keep their original pages; raw descriptions disagree on 11cm versus 12cm diameter, which is not silently unified."},{"retailerId":"bq","skus":["8941467511949","8941467511963"],"fingerprints":["924262b527b8d6febd194c71c64e60bba0f995b2bff6500ce9c5e20f99659fe9","fa0a7daf12c68a8034ac9d410ec876e7430f1e11b5269d41c3123648513fba8f"],"imageHashes":["bdf823f8138f46a602779e26986ecba052ed966a701a3c8210b695867faeccd0","089c19afc4e89f31eb24bc757f32a49f7c761fcba475e5dfb891fd4be5c751cc"],"decision":"merge-identical-physical-offer","reviewedAt":"2026-11-22T14:54:59.869Z","reason":"Two official EAN offers show the same 2026 24-piece Mini Christmas Brick Ornaments Advent Calendar package and identical 24 designs across all nine gallery frames each. Same brand, plastic material and content; one listing mislabels the set as baubles. Offers/prices and raw listings retained separately; display once using the current in-stock lowest-price offer. / 两个官网商品码均为同款2026年24件积木造型挂饰倒数日历；各九张图库的包装和24款图案相同。同品牌、材质与内容，保留各自来源及价格，前端仅展示当前有货的较低价记录。"}]}
+{
+  "version": 1,
+  "sourceRequests": 0,
+  "firecrawlCredits": 0,
+  "pairs": [
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0086879850700",
+        "0086879873778"
+      ],
+      "fingerprints": [
+        "c6bb5b23ee00dc9518b44ce125c4ce1c72c6bb805e2b817192ce4732c5af9de5",
+        "eef033a89c25316afc9994adc21f8c25a3c7b68b34b00f2527e40a0547595ddd"
+      ],
+      "imageHashes": [
+        "861857bdc4ccc519ffc9511d5ebc73ddda680d9788afd55a92683e60941ee431",
+        "861857bdc4ccc519ffc9511d5ebc73ddda680d9788afd55a92683e60941ee431"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.342Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "861857bdc4ccc519ffc9511d5ebc73ddda680d9788afd55a92683e60941ee431",
+            "b2bfd89e10396925b45c49b30bde9b97a6848e71e92d26c3b226e12e31c5f094",
+            "b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee",
+            "d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b",
+            "e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247",
+            "3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309",
+            "d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b",
+            "fa7d5e2cd4ec8d44623b752b6e8ad8e3eed933b2cb9f994f5f374d8ead832d24"
+          ],
+          [
+            "861857bdc4ccc519ffc9511d5ebc73ddda680d9788afd55a92683e60941ee431",
+            "b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee",
+            "e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247",
+            "3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309",
+            "d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": false
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621274111",
+        "0070621275002"
+      ],
+      "fingerprints": [
+        "712ea5088c2ce31f3aa9b2266b57f3c3db9615888adc8abbf464678f4ded3552",
+        "57df796db0a50e0423077786e04a784def59f902b983e5e16248d4a8e5a3c11d"
+      ],
+      "imageHashes": [
+        "3df3504f25d7a433bc489ad7b85f43bf4228b6e20a0cd799c6cae74a877ca30d",
+        "3df3504f25d7a433bc489ad7b85f43bf4228b6e20a0cd799c6cae74a877ca30d"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.342Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "3df3504f25d7a433bc489ad7b85f43bf4228b6e20a0cd799c6cae74a877ca30d",
+            "ea26aa3fbecd294d6e6e247f272bcfb5e72f29effd8b753c07bdb3c23ec09457",
+            "ae7c38008929270a228304bd0ac44ea7d213e6b3d28d4885a77e3ce5772b5998",
+            "6a86896c866aade728299d878e4e2cf60e9eaf81eb58946eb25bdac6d78d9fcd",
+            "2498932150b6182374d473e3f16f96c44b8a5ced8169b68578a2d562354d2444"
+          ],
+          [
+            "3df3504f25d7a433bc489ad7b85f43bf4228b6e20a0cd799c6cae74a877ca30d",
+            "ea26aa3fbecd294d6e6e247f272bcfb5e72f29effd8b753c07bdb3c23ec09457",
+            "ae7c38008929270a228304bd0ac44ea7d213e6b3d28d4885a77e3ce5772b5998",
+            "6a86896c866aade728299d878e4e2cf60e9eaf81eb58946eb25bdac6d78d9fcd",
+            "2498932150b6182374d473e3f16f96c44b8a5ced8169b68578a2d562354d2444"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0086879850809",
+        "0086879873877"
+      ],
+      "fingerprints": [
+        "e3eb7f44c48898dbf2fc48941c31e6601c692981d0d37d05f87bea650091ec7b",
+        "98780c95a260a1cebe0f5aef12b2f95fd62e31f2106a7df7d9d0b282ce3bc69b"
+      ],
+      "imageHashes": [
+        "37943679144f91c78c5c89eda68d033f68a451a0d4f0ab0d3a12f229c1b87067",
+        "37943679144f91c78c5c89eda68d033f68a451a0d4f0ab0d3a12f229c1b87067"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.342Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "37943679144f91c78c5c89eda68d033f68a451a0d4f0ab0d3a12f229c1b87067",
+            "b2bfd89e10396925b45c49b30bde9b97a6848e71e92d26c3b226e12e31c5f094",
+            "b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee",
+            "d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b",
+            "e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247",
+            "3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309",
+            "d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b",
+            "fa7d5e2cd4ec8d44623b752b6e8ad8e3eed933b2cb9f994f5f374d8ead832d24"
+          ],
+          [
+            "37943679144f91c78c5c89eda68d033f68a451a0d4f0ab0d3a12f229c1b87067",
+            "b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee",
+            "e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247",
+            "3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309",
+            "d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": false
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0799994453434",
+        "5060687514592"
+      ],
+      "fingerprints": [
+        "f206042b1d62e4ac35a4669083c3b35d50dae5bb70ddf64ae5aecf51f3f850ec",
+        "5d9062a797ac173bd3056ffe2d1ff6393dfa4f483f852ba2ab85c15f32bc33b1"
+      ],
+      "imageHashes": [
+        "0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3",
+        "0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.342Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3"
+          ],
+          [
+            "0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0799994453434",
+        "5060687514608"
+      ],
+      "fingerprints": [
+        "f206042b1d62e4ac35a4669083c3b35d50dae5bb70ddf64ae5aecf51f3f850ec",
+        "bbff9a7e7c7470dbd995d5cc6644a44c19bd035af475bf53ea17c8048ba09585"
+      ],
+      "imageHashes": [
+        "0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3",
+        "0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.342Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3"
+          ],
+          [
+            "0c8dd967edb3bf5ac3ce2e8e141fd408d3c25e02318d32b6f00d64bb364c20c3"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "79254929",
+        "79254912"
+      ],
+      "fingerprints": [
+        "9d59e87074a5232d975682f694a1878b36bb89caf7d34544c1a00d015afc2534",
+        "a3243f77c87fb66da4aa262fbe608d85c328f25bf4c0f24d7c23211b1f934105"
+      ],
+      "imageHashes": [
+        "7a70773e86d4d16d0244f11bb81018ff95257ec1a113b72acb3193c911964da7",
+        "7a70773e86d4d16d0244f11bb81018ff95257ec1a113b72acb3193c911964da7"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.342Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "7a70773e86d4d16d0244f11bb81018ff95257ec1a113b72acb3193c911964da7",
+            "7a70773e86d4d16d0244f11bb81018ff95257ec1a113b72acb3193c911964da7"
+          ],
+          [
+            "7a70773e86d4d16d0244f11bb81018ff95257ec1a113b72acb3193c911964da7",
+            "7a70773e86d4d16d0244f11bb81018ff95257ec1a113b72acb3193c911964da7"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621262736",
+        "0070621272612"
+      ],
+      "fingerprints": [
+        "4a323f7ac7f97d9612615525335bf63a29d6c59180bc182185ae1120b3fd1200",
+        "a1d3c056a9499a711502aa65d674ba94f8d52139f0ead03515269cc55c390cc4"
+      ],
+      "imageHashes": [
+        "f622201dfd55bc5c9207a19b4fe458ce8267941045b783d8e3d2f1cd5aff61c4",
+        "f622201dfd55bc5c9207a19b4fe458ce8267941045b783d8e3d2f1cd5aff61c4"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.342Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "f622201dfd55bc5c9207a19b4fe458ce8267941045b783d8e3d2f1cd5aff61c4",
+            "8385423e6594cae32a282a8c24dcbcab164a59690dd68046602cbee385a63ea9",
+            "a789530e9309c92b1c230e157e18280bbe4cef5e7b3e434290478243c5feb231",
+            "5e6fb6e0ca55e618d31d662c932471ce7eb2a809b0b493dfdb9be45d60e7c162",
+            "f4fa1d0a42955a69f1339f2a76edc70823ca462e3867c20db2b88b0da14b0237",
+            "30f6531f888f8acb5eba720ae5600b7c935730aa88e39c6ed81260fec099fd05",
+            "898f7fba0e5ca7dc5e98595c24dbce8347c9251c7bc6c9a50210b1635190a9d3",
+            "5cbe1837c66b8f13717a26bfe5348d4aef4dab88b2016469ce0f453cd11c8d9c",
+            "540d472bff1a57b659f29af7f554491e50431494a924ada3ab5b159827fb612b"
+          ],
+          [
+            "f622201dfd55bc5c9207a19b4fe458ce8267941045b783d8e3d2f1cd5aff61c4",
+            "8385423e6594cae32a282a8c24dcbcab164a59690dd68046602cbee385a63ea9",
+            "a789530e9309c92b1c230e157e18280bbe4cef5e7b3e434290478243c5feb231",
+            "5e6fb6e0ca55e618d31d662c932471ce7eb2a809b0b493dfdb9be45d60e7c162",
+            "f4fa1d0a42955a69f1339f2a76edc70823ca462e3867c20db2b88b0da14b0237",
+            "30f6531f888f8acb5eba720ae5600b7c935730aa88e39c6ed81260fec099fd05",
+            "898f7fba0e5ca7dc5e98595c24dbce8347c9251c7bc6c9a50210b1635190a9d3",
+            "5cbe1837c66b8f13717a26bfe5348d4aef4dab88b2016469ce0f453cd11c8d9c",
+            "540d472bff1a57b659f29af7f554491e50431494a924ada3ab5b159827fb612b"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621262712",
+        "0070621272599"
+      ],
+      "fingerprints": [
+        "5d8ded45ea5a65c66e00035c08be1c1ee4f69cd1c2f42f6d56fc78d8a89cfcf9",
+        "4be07290ec145d01774b6d80449716b503edadcd47b130e63a76cf4be86f5bb1"
+      ],
+      "imageHashes": [
+        "62d3b749f475ed9074b2ceb895de8f5b0db3f9d40a2726c4c59f5011294cdaf3",
+        "62d3b749f475ed9074b2ceb895de8f5b0db3f9d40a2726c4c59f5011294cdaf3"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.342Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "62d3b749f475ed9074b2ceb895de8f5b0db3f9d40a2726c4c59f5011294cdaf3",
+            "8385423e6594cae32a282a8c24dcbcab164a59690dd68046602cbee385a63ea9",
+            "a789530e9309c92b1c230e157e18280bbe4cef5e7b3e434290478243c5feb231",
+            "5e6fb6e0ca55e618d31d662c932471ce7eb2a809b0b493dfdb9be45d60e7c162",
+            "f4fa1d0a42955a69f1339f2a76edc70823ca462e3867c20db2b88b0da14b0237",
+            "30f6531f888f8acb5eba720ae5600b7c935730aa88e39c6ed81260fec099fd05",
+            "898f7fba0e5ca7dc5e98595c24dbce8347c9251c7bc6c9a50210b1635190a9d3",
+            "5cbe1837c66b8f13717a26bfe5348d4aef4dab88b2016469ce0f453cd11c8d9c",
+            "540d472bff1a57b659f29af7f554491e50431494a924ada3ab5b159827fb612b"
+          ],
+          [
+            "62d3b749f475ed9074b2ceb895de8f5b0db3f9d40a2726c4c59f5011294cdaf3",
+            "8385423e6594cae32a282a8c24dcbcab164a59690dd68046602cbee385a63ea9",
+            "a789530e9309c92b1c230e157e18280bbe4cef5e7b3e434290478243c5feb231",
+            "5e6fb6e0ca55e618d31d662c932471ce7eb2a809b0b493dfdb9be45d60e7c162",
+            "f4fa1d0a42955a69f1339f2a76edc70823ca462e3867c20db2b88b0da14b0237",
+            "30f6531f888f8acb5eba720ae5600b7c935730aa88e39c6ed81260fec099fd05",
+            "898f7fba0e5ca7dc5e98595c24dbce8347c9251c7bc6c9a50210b1635190a9d3",
+            "5cbe1837c66b8f13717a26bfe5348d4aef4dab88b2016469ce0f453cd11c8d9c",
+            "540d472bff1a57b659f29af7f554491e50431494a924ada3ab5b159827fb612b"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0086879850649",
+        "0086879873716"
+      ],
+      "fingerprints": [
+        "10c2f3f409607e9d2cc9fd1b5313b53195356d64dc8aa50601dbc09847ceaa38",
+        "cf5210a4b87d1086712344c306bfef248e2ddbfc3142b98b817a431a438d836b"
+      ],
+      "imageHashes": [
+        "ff641ebd06839af95b5b4c17f8c2d3cdf4e6c3387513c835cdea9cf5cb16061d",
+        "ff641ebd06839af95b5b4c17f8c2d3cdf4e6c3387513c835cdea9cf5cb16061d"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.342Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "ff641ebd06839af95b5b4c17f8c2d3cdf4e6c3387513c835cdea9cf5cb16061d",
+            "b2bfd89e10396925b45c49b30bde9b97a6848e71e92d26c3b226e12e31c5f094",
+            "b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee",
+            "d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b",
+            "e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247",
+            "3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309",
+            "d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b",
+            "fa7d5e2cd4ec8d44623b752b6e8ad8e3eed933b2cb9f994f5f374d8ead832d24"
+          ],
+          [
+            "ff641ebd06839af95b5b4c17f8c2d3cdf4e6c3387513c835cdea9cf5cb16061d",
+            "b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee",
+            "e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247",
+            "3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309",
+            "d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": false
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0086879850816",
+        "0086879873884"
+      ],
+      "fingerprints": [
+        "1fb7461583438c154bcb0aba3bfe718fd0c973baac751ff970bee48d3ede62b3",
+        "4e92bf7bb340f08ddbdfe2b23a6ba9ef9501929cd4690f30f366f04d65c4a644"
+      ],
+      "imageHashes": [
+        "31a509c5fd18903e9bcb26e4d836045a560ba1d839bf8c0848e55cc5c54daacb",
+        "31a509c5fd18903e9bcb26e4d836045a560ba1d839bf8c0848e55cc5c54daacb"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.342Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "31a509c5fd18903e9bcb26e4d836045a560ba1d839bf8c0848e55cc5c54daacb",
+            "b2bfd89e10396925b45c49b30bde9b97a6848e71e92d26c3b226e12e31c5f094",
+            "b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee",
+            "d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b",
+            "e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247",
+            "3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309",
+            "d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b",
+            "fa7d5e2cd4ec8d44623b752b6e8ad8e3eed933b2cb9f994f5f374d8ead832d24"
+          ],
+          [
+            "31a509c5fd18903e9bcb26e4d836045a560ba1d839bf8c0848e55cc5c54daacb",
+            "b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee",
+            "e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247",
+            "3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309",
+            "d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": false
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0086879850717",
+        "0086879873785"
+      ],
+      "fingerprints": [
+        "796d2021a2f78fe87c3215b88b35a170b7bcf37cbe889292af97a9022535da14",
+        "25e7241341fa9002a976c4d8adbe7494d5cf3c3a12d6aab979b4fafb05ee647a"
+      ],
+      "imageHashes": [
+        "ba630fb2a9b5b1dee939abf53fbd563bd90746cd6bbbb2f81af9dc5b6e58edad",
+        "ba630fb2a9b5b1dee939abf53fbd563bd90746cd6bbbb2f81af9dc5b6e58edad"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.342Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "ba630fb2a9b5b1dee939abf53fbd563bd90746cd6bbbb2f81af9dc5b6e58edad",
+            "b2bfd89e10396925b45c49b30bde9b97a6848e71e92d26c3b226e12e31c5f094",
+            "b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee",
+            "d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b",
+            "e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247",
+            "3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309",
+            "d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b",
+            "fa7d5e2cd4ec8d44623b752b6e8ad8e3eed933b2cb9f994f5f374d8ead832d24"
+          ],
+          [
+            "ba630fb2a9b5b1dee939abf53fbd563bd90746cd6bbbb2f81af9dc5b6e58edad",
+            "b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee",
+            "e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247",
+            "3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309",
+            "d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": false
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621272018",
+        "0070621272148"
+      ],
+      "fingerprints": [
+        "71d506923899df16f0e7c45b1f5ae380380bb85cfa4dd093f6491f61568e75f1",
+        "384c698e1a0d102675adeae994bb5530429518f84493c837d298b0911f2df5cc"
+      ],
+      "imageHashes": [
+        "4b1ba50e8ebc3933eb84cae6ec069b8a83c263c561c65257bfb430eedafe306d",
+        "4b1ba50e8ebc3933eb84cae6ec069b8a83c263c561c65257bfb430eedafe306d"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.342Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "7bf674e9bca5efc74c073a0d9e1ff160cfe25ab28d1175ad8a943d222cbb9d11",
+            "4b1ba50e8ebc3933eb84cae6ec069b8a83c263c561c65257bfb430eedafe306d",
+            "b0ace3628fd50228f5fb2321c9494f1daac47d94112222ab7192ae0c254fcad3",
+            "6158c5a960dd480bd20cae7fc63d929cfba8d157dacbc0ada6d6133c5d8460fc",
+            "cc512057a88f4e152bfbf89cb26bd7244d103487dd49a6c1799403f13b1ee7c5"
+          ],
+          [
+            "6158c5a960dd480bd20cae7fc63d929cfba8d157dacbc0ada6d6133c5d8460fc",
+            "4b1ba50e8ebc3933eb84cae6ec069b8a83c263c561c65257bfb430eedafe306d",
+            "b0ace3628fd50228f5fb2321c9494f1daac47d94112222ab7192ae0c254fcad3",
+            "7bf674e9bca5efc74c073a0d9e1ff160cfe25ab28d1175ad8a943d222cbb9d11",
+            "cc512057a88f4e152bfbf89cb26bd7244d103487dd49a6c1799403f13b1ee7c5"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "5083754067418",
+        "5083754067494"
+      ],
+      "fingerprints": [
+        "a93ba8c2e3a2af317a600ae0cabdaef92fc952aa59df3ce1e03bee4d4ae4bcf8",
+        "69c5423c8ee51ba4608453bf50c3e19b32108959b747bb611667f5bb4eaeec15"
+      ],
+      "imageHashes": [
+        "e3b5afab72623fb3580717c22ba4b2982b1d82b315901adf5950029ede901306",
+        "e3b5afab72623fb3580717c22ba4b2982b1d82b315901adf5950029ede901306"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.342Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "6a3bf729dc32a32062af96b83747df1f46e2b08e9f9f8e603e7db5a185e9b473",
+            "594458094ab18eb38180ef55d2ce621626925d25de03a20fc0ae9fbd56f82a39",
+            "e3b5afab72623fb3580717c22ba4b2982b1d82b315901adf5950029ede901306",
+            "aa71cc54869e2ec3f92d4f0ec5548c6cad23389e705f01388df99d74fc7ba294",
+            "12b7f38c8a38ecbbfa579f5d3f15d77eed4cb871a2c19d4c00a45fcff218388f"
+          ],
+          [
+            "6a3bf729dc32a32062af96b83747df1f46e2b08e9f9f8e603e7db5a185e9b473",
+            "594458094ab18eb38180ef55d2ce621626925d25de03a20fc0ae9fbd56f82a39",
+            "e3b5afab72623fb3580717c22ba4b2982b1d82b315901adf5950029ede901306",
+            "aa71cc54869e2ec3f92d4f0ec5548c6cad23389e705f01388df99d74fc7ba294",
+            "12b7f38c8a38ecbbfa579f5d3f15d77eed4cb871a2c19d4c00a45fcff218388f"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621275019",
+        "0070621274128"
+      ],
+      "fingerprints": [
+        "86891091ad854dbac3eb2bd1d9970a4b82861e0204dec9ba07c9a6ba9a39f886",
+        "dd2f633c2efd84ebc72b5919c4225b91d34499849c1526224a281f40fe44aa96"
+      ],
+      "imageHashes": [
+        "1da1d016ddbf6c38969ac14e19f7250a3a80900392858fa4e1a68479f34fb096",
+        "1da1d016ddbf6c38969ac14e19f7250a3a80900392858fa4e1a68479f34fb096"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.342Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "1da1d016ddbf6c38969ac14e19f7250a3a80900392858fa4e1a68479f34fb096",
+            "2f9f9bed600214b63a2b6cdf83e6fb3bdbf98cb62917317f7d11bc306514a46f",
+            "b38dda343c380575390df6b260687dfb5a2e37eca423dd065fb423b5799e58f7",
+            "efc00e5d026023c68f1bb4020646afdd92402c66ed50ad964b8bfcd9d547e7db",
+            "be31fe23384e627dd7ddc4cf46d1987ed69cb901322aef9e0c35d09f3a8213ad"
+          ],
+          [
+            "1da1d016ddbf6c38969ac14e19f7250a3a80900392858fa4e1a68479f34fb096",
+            "2f9f9bed600214b63a2b6cdf83e6fb3bdbf98cb62917317f7d11bc306514a46f",
+            "b38dda343c380575390df6b260687dfb5a2e37eca423dd065fb423b5799e58f7",
+            "efc00e5d026023c68f1bb4020646afdd92402c66ed50ad964b8bfcd9d547e7db",
+            "be31fe23384e627dd7ddc4cf46d1987ed69cb901322aef9e0c35d09f3a8213ad"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0086879845423",
+        "0086879820123"
+      ],
+      "fingerprints": [
+        "d1cdfbcc0cd72f295bb4eb1a31c3797ef3740a7c6ed51311d6c364df19d7d5a9",
+        "62c2b673e53bd442bf4dfdd993cbc1ca4e6cbc506d3b4229d76490f073e7b689"
+      ],
+      "imageHashes": [
+        "19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542",
+        "19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "a45bab49b5bcc46c5c556d998f1802561eefe0ac225643a3d35fe0dcf4d47430",
+            "817ed0c32c9f24866513a551ca4e6b67bf80e6b9c09039e291b47f3b47cc4d58",
+            "19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542",
+            "c33db82915a57a8620d20a17920a6b4c00df8904b6aa289688dd942ab573c7c1",
+            "6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359",
+            "cc01bcb74e2c76a3046ccc598c28f95756c5dc95ea5711acc25ed4435cda9237",
+            "0edc046258e4042258d385f96b26bd4766250e70894b84e88238e647eb86c5e3",
+            "6c99923257f70388c9558ff05dca71ac2ecfa5789863db1f52c11c90e32980b1",
+            "870c76dff462e373bd15b7b799d4d60fc91938ea428ebc7d71dca217bf94672d"
+          ],
+          [
+            "a45bab49b5bcc46c5c556d998f1802561eefe0ac225643a3d35fe0dcf4d47430",
+            "817ed0c32c9f24866513a551ca4e6b67bf80e6b9c09039e291b47f3b47cc4d58",
+            "19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542",
+            "c33db82915a57a8620d20a17920a6b4c00df8904b6aa289688dd942ab573c7c1",
+            "6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359",
+            "cc01bcb74e2c76a3046ccc598c28f95756c5dc95ea5711acc25ed4435cda9237",
+            "0edc046258e4042258d385f96b26bd4766250e70894b84e88238e647eb86c5e3",
+            "6c99923257f70388c9558ff05dca71ac2ecfa5789863db1f52c11c90e32980b1",
+            "870c76dff462e373bd15b7b799d4d60fc91938ea428ebc7d71dca217bf94672d"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621272124",
+        "0070621271998"
+      ],
+      "fingerprints": [
+        "c913e726f6d8b5021e129d1386edbaee12d299ffcd80fd58dd948a14626cebfa",
+        "68563d876bdc1aa751d5879bd08ceb66a157164d442c57954e2c8e6ad9caced4"
+      ],
+      "imageHashes": [
+        "96b04d2ce670462114a08816870c4246e8b7d73b09b2eae059e779f4503ed3fb",
+        "96b04d2ce670462114a08816870c4246e8b7d73b09b2eae059e779f4503ed3fb"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "af55e4d24972a91de4b97c61082afaf34e40c7c23cdc85e2eeba9f05b9e3c14a",
+            "96b04d2ce670462114a08816870c4246e8b7d73b09b2eae059e779f4503ed3fb",
+            "75cb05c560d1e4b5f7602703062d7ad94f6396a5ead2292c3078948dde7e8f02",
+            "f632ede0dab22ce44cf2e27327e08f42a5f9672a0a1f2acbb9e8cf4ef36eb02d",
+            "e23050b09c6d4de4430422062ff44bf2b5723a9dafc1b167215f0486dcf1acbb"
+          ],
+          [
+            "f632ede0dab22ce44cf2e27327e08f42a5f9672a0a1f2acbb9e8cf4ef36eb02d",
+            "96b04d2ce670462114a08816870c4246e8b7d73b09b2eae059e779f4503ed3fb",
+            "75cb05c560d1e4b5f7602703062d7ad94f6396a5ead2292c3078948dde7e8f02",
+            "af55e4d24972a91de4b97c61082afaf34e40c7c23cdc85e2eeba9f05b9e3c14a",
+            "e23050b09c6d4de4430422062ff44bf2b5723a9dafc1b167215f0486dcf1acbb"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621274135",
+        "0070621275026"
+      ],
+      "fingerprints": [
+        "e26180f85b1d8d72705c1be20f3e54931c6640bfa06ae113d708ddb14a933779",
+        "3cbc2f7d3d915d8d3fda2269be816482e27fa86b6b62c340fafa825d0badc863"
+      ],
+      "imageHashes": [
+        "945d5ebe4b5578f5983358245da487e650e6e91fbf1b91da295e6e9281983432",
+        "945d5ebe4b5578f5983358245da487e650e6e91fbf1b91da295e6e9281983432"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "945d5ebe4b5578f5983358245da487e650e6e91fbf1b91da295e6e9281983432",
+            "1fba632c78e0147b7308f78d55c2518deab4fdd8b62b3cc65c3d7c790895d142",
+            "9e984afa720c8d7c59628d2b6d81d263f373fab0c1d7a63360175371dd7f3a18",
+            "1b7115b4f109ed89389a97e197afab465c8e8a55774c9e288ae51ca5f2b60075"
+          ],
+          [
+            "945d5ebe4b5578f5983358245da487e650e6e91fbf1b91da295e6e9281983432",
+            "1fba632c78e0147b7308f78d55c2518deab4fdd8b62b3cc65c3d7c790895d142",
+            "9e984afa720c8d7c59628d2b6d81d263f373fab0c1d7a63360175371dd7f3a18",
+            "1b7115b4f109ed89389a97e197afab465c8e8a55774c9e288ae51ca5f2b60075"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0086879845430",
+        "0086879820130"
+      ],
+      "fingerprints": [
+        "81e8ec814e2a23279d37c132160ab68980d5441699d2b26612fe16e7ae8a7e60",
+        "aa83d692f8327f8f96d76c16e3545cd8bbdd4f92072befb74b2807b5d51337cb"
+      ],
+      "imageHashes": [
+        "6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359",
+        "6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "c504ab8c4d5e09c4da4334b026cafcdde3f0c2099ac67be66f91dcb9111f0846",
+            "817ed0c32c9f24866513a551ca4e6b67bf80e6b9c09039e291b47f3b47cc4d58",
+            "19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542",
+            "c33db82915a57a8620d20a17920a6b4c00df8904b6aa289688dd942ab573c7c1",
+            "6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359",
+            "cc01bcb74e2c76a3046ccc598c28f95756c5dc95ea5711acc25ed4435cda9237",
+            "0edc046258e4042258d385f96b26bd4766250e70894b84e88238e647eb86c5e3",
+            "6c99923257f70388c9558ff05dca71ac2ecfa5789863db1f52c11c90e32980b1",
+            "870c76dff462e373bd15b7b799d4d60fc91938ea428ebc7d71dca217bf94672d"
+          ],
+          [
+            "c504ab8c4d5e09c4da4334b026cafcdde3f0c2099ac67be66f91dcb9111f0846",
+            "817ed0c32c9f24866513a551ca4e6b67bf80e6b9c09039e291b47f3b47cc4d58",
+            "19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542",
+            "c33db82915a57a8620d20a17920a6b4c00df8904b6aa289688dd942ab573c7c1",
+            "6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359",
+            "cc01bcb74e2c76a3046ccc598c28f95756c5dc95ea5711acc25ed4435cda9237",
+            "0edc046258e4042258d385f96b26bd4766250e70894b84e88238e647eb86c5e3",
+            "6c99923257f70388c9558ff05dca71ac2ecfa5789863db1f52c11c90e32980b1",
+            "870c76dff462e373bd15b7b799d4d60fc91938ea428ebc7d71dca217bf94672d"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621274142",
+        "0070621275033"
+      ],
+      "fingerprints": [
+        "e22b7b73ee400fef7838362c027ff6bceaf5d1555108829bbd8d82ef5069b331",
+        "82c5b714ddb91e60660ef7fc9bec989b797df6481a60915b9768c9f1365380ac"
+      ],
+      "imageHashes": [
+        "52eeb9577e8b5c1ffca2beb89821e27ed22af771400c364bdea9c44e1d4f4302",
+        "52eeb9577e8b5c1ffca2beb89821e27ed22af771400c364bdea9c44e1d4f4302"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "52eeb9577e8b5c1ffca2beb89821e27ed22af771400c364bdea9c44e1d4f4302",
+            "c9e6bb49549530de12e386dd07feebdc321b6dddd66b4ecd38249c63c5a35aaf",
+            "eb210590f83c3d772dd6678c4ae3f1179814397ce57213215a54732442633144",
+            "f25ed6204c8cc13f52bfd95edb5df179857b826bfc337cca0988ad7a53c962f8",
+            "19b9c20ce2b33b0f365037f9817c7135ddd076fa2f651807ba763ce2d1e90e6f"
+          ],
+          [
+            "52eeb9577e8b5c1ffca2beb89821e27ed22af771400c364bdea9c44e1d4f4302",
+            "c9e6bb49549530de12e386dd07feebdc321b6dddd66b4ecd38249c63c5a35aaf",
+            "eb210590f83c3d772dd6678c4ae3f1179814397ce57213215a54732442633144",
+            "f25ed6204c8cc13f52bfd95edb5df179857b826bfc337cca0988ad7a53c962f8",
+            "19b9c20ce2b33b0f365037f9817c7135ddd076fa2f651807ba763ce2d1e90e6f"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621272063",
+        "0070621271936"
+      ],
+      "fingerprints": [
+        "7e7f12c16900f39dfe2aff56aa19261596bb857012314f9aa1684a789c4190d5",
+        "eba5e13a48bd69ce51df4e3f2969b1d0b993d927479f3aa8246347096e58a030"
+      ],
+      "imageHashes": [
+        "f4eb7d9f0e52fe1961a23869e204d24782ef5e07c073b0d3acecaa109d0fa558",
+        "f4eb7d9f0e52fe1961a23869e204d24782ef5e07c073b0d3acecaa109d0fa558"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "edeb0922ad71c52de978f03dbbacaed8805cda7a14c992eff1ee4687515c1612",
+            "f4eb7d9f0e52fe1961a23869e204d24782ef5e07c073b0d3acecaa109d0fa558",
+            "ce633f5839a8e1257130ef733161f2a5213bd7ec9baa27946b90fa550d2b2355",
+            "3b0248ff4a099a2474688d011fc181ba80725674ae4fab1702f1d1e05eb6be36",
+            "dd8a2ade41f9bc9a1652f2d6fd19cb77f113e10e00dd64eb70c02ac3d9b72401"
+          ],
+          [
+            "3b0248ff4a099a2474688d011fc181ba80725674ae4fab1702f1d1e05eb6be36",
+            "f4eb7d9f0e52fe1961a23869e204d24782ef5e07c073b0d3acecaa109d0fa558",
+            "ce633f5839a8e1257130ef733161f2a5213bd7ec9baa27946b90fa550d2b2355",
+            "edeb0922ad71c52de978f03dbbacaed8805cda7a14c992eff1ee4687515c1612",
+            "dd8a2ade41f9bc9a1652f2d6fd19cb77f113e10e00dd64eb70c02ac3d9b72401"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "5056533575275",
+        "5056533575237"
+      ],
+      "fingerprints": [
+        "25414c67aa3e44814dbb050589bbefe54f42bbc5b9d9d78feb10062ba36cf600",
+        "060816b9cc9d5fce52fcc6db77c634d3252890c35eed065331a295482915a3ec"
+      ],
+      "imageHashes": [
+        "860475e09999300ac7ee4a003caeebde99dc4b8b3d18eeed969a2a8bc6292d05",
+        "860475e09999300ac7ee4a003caeebde99dc4b8b3d18eeed969a2a8bc6292d05"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "860475e09999300ac7ee4a003caeebde99dc4b8b3d18eeed969a2a8bc6292d05"
+          ],
+          [
+            "860475e09999300ac7ee4a003caeebde99dc4b8b3d18eeed969a2a8bc6292d05"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621269858",
+        "0070621273039"
+      ],
+      "fingerprints": [
+        "fa2a3ddd0f51b51c19da2794bfd1a8979a8df040aca0d57804e0e3b93047d6dc",
+        "f25b7030b29e77ae008a1a3d5a972fdb4acad3e72148adb317731e971cc38bad"
+      ],
+      "imageHashes": [
+        "01f165a806a1e854fa31279c630f6f93d6a4cd4c76726dbb4f90ad137a8c986f",
+        "01f165a806a1e854fa31279c630f6f93d6a4cd4c76726dbb4f90ad137a8c986f"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "01f165a806a1e854fa31279c630f6f93d6a4cd4c76726dbb4f90ad137a8c986f",
+            "1351c699fc233fb77d3f2bb0d9a7af189111b02d0cf553c5a5485ddf0c594a24",
+            "90adcbbd9086c07b7acbd72327c091f3015464873fb333599af8027bb5e3f189",
+            "89bee6b3a3f605e6b44fe927b73008cd86d15d8a7f74cc0eeac5a23be227cf23",
+            "7a789ca3aa66fa711ab0742b584aeeac05748d63ab6c1024aac813fee3fd9b1d",
+            "558704883e277b4d7908ad23870b7ca393f0e37af495df89c4cdb1d4a5c18ffa",
+            "0b115608b44c46d9bbd880e5d86bc1c3987fac9ed3e0f4ba823346c260a51c7c"
+          ],
+          [
+            "01f165a806a1e854fa31279c630f6f93d6a4cd4c76726dbb4f90ad137a8c986f",
+            "1351c699fc233fb77d3f2bb0d9a7af189111b02d0cf553c5a5485ddf0c594a24",
+            "90adcbbd9086c07b7acbd72327c091f3015464873fb333599af8027bb5e3f189",
+            "89bee6b3a3f605e6b44fe927b73008cd86d15d8a7f74cc0eeac5a23be227cf23",
+            "7a789ca3aa66fa711ab0742b584aeeac05748d63ab6c1024aac813fee3fd9b1d",
+            "558704883e277b4d7908ad23870b7ca393f0e37af495df89c4cdb1d4a5c18ffa",
+            "0b115608b44c46d9bbd880e5d86bc1c3987fac9ed3e0f4ba823346c260a51c7c"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0086879850762",
+        "0086879873839"
+      ],
+      "fingerprints": [
+        "9cd4e0d6e4869db1d1744bca8e73f7753da72a11ee57a96a5ce14a827f0bc9f1",
+        "5962da281db50a015c63d2243b9722e5d5b5a5d933a81c2e5155b01f4eb030a5"
+      ],
+      "imageHashes": [
+        "f11e09456637fcbd9b191dc93a3d4a023242e915a62bc92879d1419aa8b365fa",
+        "f11e09456637fcbd9b191dc93a3d4a023242e915a62bc92879d1419aa8b365fa"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "f11e09456637fcbd9b191dc93a3d4a023242e915a62bc92879d1419aa8b365fa",
+            "b2bfd89e10396925b45c49b30bde9b97a6848e71e92d26c3b226e12e31c5f094",
+            "b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee",
+            "d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b",
+            "e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247",
+            "3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309",
+            "d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b",
+            "fa7d5e2cd4ec8d44623b752b6e8ad8e3eed933b2cb9f994f5f374d8ead832d24"
+          ],
+          [
+            "f11e09456637fcbd9b191dc93a3d4a023242e915a62bc92879d1419aa8b365fa",
+            "b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee",
+            "e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247",
+            "3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309",
+            "d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": false
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621274159",
+        "0070621275040"
+      ],
+      "fingerprints": [
+        "dff44a4aa0a6d11399da034aab6c7a1a0cc1ce53f8f676353bf2c24516fb22e6",
+        "dae510714d795709de5b741c3cd7502be7923c474b7472c54500bbfd6705d388"
+      ],
+      "imageHashes": [
+        "1ab2db969fce50a7c651d9b9b897a3c6b9ee8e44f01dd136c6ec16623d0b9425",
+        "1ab2db969fce50a7c651d9b9b897a3c6b9ee8e44f01dd136c6ec16623d0b9425"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "1ab2db969fce50a7c651d9b9b897a3c6b9ee8e44f01dd136c6ec16623d0b9425",
+            "c35ac2d5236422c575868cb0d4913a03f40dfa2027f19563af9413bf49361b69",
+            "83055cff48fdb74f78149ec7b80ce618c8f09c56abd28ed5a508934089282e4d",
+            "f38d5e861a0f450d294ddab5c2c46ec0897ca93b6cf80bd6e0ea55008725aba8"
+          ],
+          [
+            "1ab2db969fce50a7c651d9b9b897a3c6b9ee8e44f01dd136c6ec16623d0b9425",
+            "c35ac2d5236422c575868cb0d4913a03f40dfa2027f19563af9413bf49361b69",
+            "83055cff48fdb74f78149ec7b80ce618c8f09c56abd28ed5a508934089282e4d",
+            "f38d5e861a0f450d294ddab5c2c46ec0897ca93b6cf80bd6e0ea55008725aba8"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0086879845454",
+        "0086879820154"
+      ],
+      "fingerprints": [
+        "caea90ce59af8c6fdbdb7d923a2eeec25788afbabfb7394ad4c7ece0865e5ff6",
+        "912f7a48345b2ebcc23517c59e7d9067180f20ee1cf56de5d7b09289d0133a0b"
+      ],
+      "imageHashes": [
+        "6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359",
+        "6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "fa4352b780df944cdee52701852a95483b0d59df491ee409794ea51583d955fe",
+            "817ed0c32c9f24866513a551ca4e6b67bf80e6b9c09039e291b47f3b47cc4d58",
+            "19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542",
+            "c33db82915a57a8620d20a17920a6b4c00df8904b6aa289688dd942ab573c7c1",
+            "6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359",
+            "cc01bcb74e2c76a3046ccc598c28f95756c5dc95ea5711acc25ed4435cda9237",
+            "0edc046258e4042258d385f96b26bd4766250e70894b84e88238e647eb86c5e3",
+            "6c99923257f70388c9558ff05dca71ac2ecfa5789863db1f52c11c90e32980b1",
+            "870c76dff462e373bd15b7b799d4d60fc91938ea428ebc7d71dca217bf94672d"
+          ],
+          [
+            "fa4352b780df944cdee52701852a95483b0d59df491ee409794ea51583d955fe",
+            "817ed0c32c9f24866513a551ca4e6b67bf80e6b9c09039e291b47f3b47cc4d58",
+            "19558cebaf122f4619b29426cdcc2f77b780f3ad30ebc6cf3ee44ca7d12f0542",
+            "c33db82915a57a8620d20a17920a6b4c00df8904b6aa289688dd942ab573c7c1",
+            "6ab76ccbb9330e6641bb5728f32b918596e86ea01be9f7593613723d3bbd2359",
+            "cc01bcb74e2c76a3046ccc598c28f95756c5dc95ea5711acc25ed4435cda9237",
+            "0edc046258e4042258d385f96b26bd4766250e70894b84e88238e647eb86c5e3",
+            "6c99923257f70388c9558ff05dca71ac2ecfa5789863db1f52c11c90e32980b1",
+            "870c76dff462e373bd15b7b799d4d60fc91938ea428ebc7d71dca217bf94672d"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621275057",
+        "0070621274166"
+      ],
+      "fingerprints": [
+        "436000b462d6623b0f8be5000fb3cc29c1afd07fc38d8f90fb7ad363a3d767cd",
+        "9176c9f59c311b196880a34ea6bba1823b6678881095bdc380e3ba7a6595bf74"
+      ],
+      "imageHashes": [
+        "bd725cb5259bba7d042f1324c4c3b0ce87cb8f14b17f17dc4ddbae60d8561433",
+        "bd725cb5259bba7d042f1324c4c3b0ce87cb8f14b17f17dc4ddbae60d8561433"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "8d682040d88226621bad8e43cfb576a6d676870657ac4cae03ef77119abfda27",
+            "bd725cb5259bba7d042f1324c4c3b0ce87cb8f14b17f17dc4ddbae60d8561433",
+            "6c5e46f8921f58537b649709815757cacda56b7f823f2b9172f56d51f01b989c",
+            "a5e574ac07a9af2b2c926cdf16ca26eecb24b380096a03213f7f475f135bc7b8",
+            "2044820c198fb59551ed001066f78f27114df4868f898e05d4c68023957610c6",
+            "74a86776751c11a1cfcaf4346537364f123afe6a15536063da267ac1901d2261",
+            "16cdcf2e771dac653bcdb46c4dec3e81d4a4d6d8b8fb69d19000408830a7069c"
+          ],
+          [
+            "8d682040d88226621bad8e43cfb576a6d676870657ac4cae03ef77119abfda27",
+            "bd725cb5259bba7d042f1324c4c3b0ce87cb8f14b17f17dc4ddbae60d8561433",
+            "6c5e46f8921f58537b649709815757cacda56b7f823f2b9172f56d51f01b989c",
+            "a5e574ac07a9af2b2c926cdf16ca26eecb24b380096a03213f7f475f135bc7b8",
+            "2044820c198fb59551ed001066f78f27114df4868f898e05d4c68023957610c6",
+            "74a86776751c11a1cfcaf4346537364f123afe6a15536063da267ac1901d2261",
+            "16cdcf2e771dac653bcdb46c4dec3e81d4a4d6d8b8fb69d19000408830a7069c"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0086879873761",
+        "0086879850694"
+      ],
+      "fingerprints": [
+        "d3216c14c464511c0e543ff0a9b0cd38b8f8c9ab38609c4350524c6f01bbe555",
+        "be52f0180fd5e8a54195bb90de478f3d77133b2448d888065f61252fe9010a8c"
+      ],
+      "imageHashes": [
+        "d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b",
+        "d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b",
+            "b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee",
+            "e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247",
+            "3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309",
+            "d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b"
+          ],
+          [
+            "d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b",
+            "b2bfd89e10396925b45c49b30bde9b97a6848e71e92d26c3b226e12e31c5f094",
+            "b39f50c6dc0c820aadd2506ff6137ea1d3e5148d063eb33dcf9c63a3f1b57aee",
+            "d1ee5c58dfaa94e1341213454ae0ccace56cdfb52ec10c7cf53685c8750fc45b",
+            "e9de0e9efc75c9e1bb6a90c977d94786bf9f3ae55398c53d2e8cecfdfc8a2247",
+            "3e1a430894d82330306a84e3d73929050bf6b3c5095be88b06938f0db27ea309",
+            "d897baf45a76d199ff2c33dd9bdd253fb6f0d3030aa2176b6686b40f4034ac8b",
+            "fa7d5e2cd4ec8d44623b752b6e8ad8e3eed933b2cb9f994f5f374d8ead832d24"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": false
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621274173",
+        "0070621275064"
+      ],
+      "fingerprints": [
+        "9a9738bdc79c68e86b34afedaef407326ce6197241cc06b6c4f6faf9051e7df7",
+        "e0a4fc2e10b2a1fead40818f7df7a2eb5740ad16fde6ab350ab11bf2c24f284f"
+      ],
+      "imageHashes": [
+        "a5817bcb65b74fe1855bcefec1fe86f72b634466b75babc30b2d1508c8b07c72",
+        "a5817bcb65b74fe1855bcefec1fe86f72b634466b75babc30b2d1508c8b07c72"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "06e98cba7a43d3ab3a110a241e674000af0ba5b9e3b7c052ddccd86a555919f9",
+            "a5817bcb65b74fe1855bcefec1fe86f72b634466b75babc30b2d1508c8b07c72",
+            "5748d4b2ae82ecbadf2da730a2463c5f65ad8c109c075f2e7a3869166ca92434",
+            "0275b2ff8fc9b13d0fb400feaaa577ef077e3fe860bb8ac4f5b47be4c776419e",
+            "3c8f34c259fdf0ae890aaaf979045610000b6333da5596819f464d0627db13a7",
+            "0483558b995a68d1002922e76eae281cd1ad9e483bf8e6997a5eb7fe1ea5a32e",
+            "5391588f55578e30cfe03cfa82961654ede4890b6f9017190a838db0e0e3becd"
+          ],
+          [
+            "06e98cba7a43d3ab3a110a241e674000af0ba5b9e3b7c052ddccd86a555919f9",
+            "a5817bcb65b74fe1855bcefec1fe86f72b634466b75babc30b2d1508c8b07c72",
+            "5748d4b2ae82ecbadf2da730a2463c5f65ad8c109c075f2e7a3869166ca92434",
+            "0275b2ff8fc9b13d0fb400feaaa577ef077e3fe860bb8ac4f5b47be4c776419e",
+            "3c8f34c259fdf0ae890aaaf979045610000b6333da5596819f464d0627db13a7",
+            "0483558b995a68d1002922e76eae281cd1ad9e483bf8e6997a5eb7fe1ea5a32e",
+            "5391588f55578e30cfe03cfa82961654ede4890b6f9017190a838db0e0e3becd"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621275071",
+        "0070621274180"
+      ],
+      "fingerprints": [
+        "605982d3565f48eab8c3e8080dea210be0e935df84bd67ee319a100660c8ed13",
+        "53707fec8f80d828a6e7fb49b07b0a6e70b2a153b65937933758bf6fc2a14a14"
+      ],
+      "imageHashes": [
+        "ebc057dbfeb65158e15deec006154ba924a13029800c897b59f5df73e70e3429",
+        "ebc057dbfeb65158e15deec006154ba924a13029800c897b59f5df73e70e3429"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "dcac34528be029be7a30166d564217cdb657e1ebf2bba831e1a9c2a859fc8e99",
+            "ebc057dbfeb65158e15deec006154ba924a13029800c897b59f5df73e70e3429",
+            "476ea56bd37bc8fb51b28bde3dae9466b0c8aa2a3acfae3dffccdb9287328e6f",
+            "6f6942d235bd87b4cad22c962b31812df1a3b4a4522307363aba69b1ea3cf207",
+            "7535504e0b007aaef669de6c69bf4b837acbb9864b689d3a58e349a29fd8abfe",
+            "4c8380bfd574d06d88f564ded102fed05b6efbd611812e1575e75ce7e41ec939",
+            "8ab6bf68ec0e7a1c36fc7de4569b8ea56ead2280cdea0ef45ca83b915ff09648"
+          ],
+          [
+            "dcac34528be029be7a30166d564217cdb657e1ebf2bba831e1a9c2a859fc8e99",
+            "ebc057dbfeb65158e15deec006154ba924a13029800c897b59f5df73e70e3429",
+            "476ea56bd37bc8fb51b28bde3dae9466b0c8aa2a3acfae3dffccdb9287328e6f",
+            "6f6942d235bd87b4cad22c962b31812df1a3b4a4522307363aba69b1ea3cf207",
+            "7535504e0b007aaef669de6c69bf4b837acbb9864b689d3a58e349a29fd8abfe",
+            "4c8380bfd574d06d88f564ded102fed05b6efbd611812e1575e75ce7e41ec939",
+            "8ab6bf68ec0e7a1c36fc7de4569b8ea56ead2280cdea0ef45ca83b915ff09648"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "0070621262699",
+        "0070621272575"
+      ],
+      "fingerprints": [
+        "d95798f6be9a7840d419726f3ae2a62eefcf2707758beac592def98948d9bd9c",
+        "1c3a48c061892c8a4fd687a7447193fae3368523b5f3b44dac51a4ad99df4ce1"
+      ],
+      "imageHashes": [
+        "aa2febdcf74b9869287b8935cd6dc7645fd7ea4d303ba04e8cc3e96aebf662eb",
+        "aa2febdcf74b9869287b8935cd6dc7645fd7ea4d303ba04e8cc3e96aebf662eb"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "actual-complete-official-galleries-human-reviewed-plus-identical-SKU-descriptions-specifications",
+        "gallerySha256": [
+          [
+            "aa2febdcf74b9869287b8935cd6dc7645fd7ea4d303ba04e8cc3e96aebf662eb",
+            "8385423e6594cae32a282a8c24dcbcab164a59690dd68046602cbee385a63ea9",
+            "a789530e9309c92b1c230e157e18280bbe4cef5e7b3e434290478243c5feb231",
+            "5e6fb6e0ca55e618d31d662c932471ce7eb2a809b0b493dfdb9be45d60e7c162",
+            "f4fa1d0a42955a69f1339f2a76edc70823ca462e3867c20db2b88b0da14b0237",
+            "30f6531f888f8acb5eba720ae5600b7c935730aa88e39c6ed81260fec099fd05",
+            "898f7fba0e5ca7dc5e98595c24dbce8347c9251c7bc6c9a50210b1635190a9d3",
+            "5cbe1837c66b8f13717a26bfe5348d4aef4dab88b2016469ce0f453cd11c8d9c",
+            "540d472bff1a57b659f29af7f554491e50431494a924ada3ab5b159827fb612b"
+          ],
+          [
+            "aa2febdcf74b9869287b8935cd6dc7645fd7ea4d303ba04e8cc3e96aebf662eb",
+            "8385423e6594cae32a282a8c24dcbcab164a59690dd68046602cbee385a63ea9",
+            "a789530e9309c92b1c230e157e18280bbe4cef5e7b3e434290478243c5feb231",
+            "5e6fb6e0ca55e618d31d662c932471ce7eb2a809b0b493dfdb9be45d60e7c162",
+            "f4fa1d0a42955a69f1339f2a76edc70823ca462e3867c20db2b88b0da14b0237",
+            "30f6531f888f8acb5eba720ae5600b7c935730aa88e39c6ed81260fec099fd05",
+            "898f7fba0e5ca7dc5e98595c24dbce8347c9251c7bc6c9a50210b1635190a9d3",
+            "5cbe1837c66b8f13717a26bfe5348d4aef4dab88b2016469ce0f453cd11c8d9c",
+            "540d472bff1a57b659f29af7f554491e50431494a924ada3ab5b159827fb612b"
+          ]
+        ],
+        "allImagesCompared": true,
+        "sameCompleteGallery": true
+      },
+      "note": "Compared every official gallery photo. Same offered shape, colour, pack, dimensions, description and specification; different official seller/listing codes are retained as offers."
+    },
+    {
+      "retailerId": "ar",
+      "skus": [
+        "7752117",
+        "8745161"
+      ],
+      "fingerprints": [
+        "a43765e024ba155ecf6af8eae35f9ca947cbafbfcc0ca0b43370e4e283a64133",
+        "92531aceefed235ee45a5653caa1adc34f78c8bfb3b33cb078eb04f51739d295"
+      ],
+      "imageHashes": [
+        "822b7bc3818179c91456ac352287929e097321ab2520caa88af047d43452991e",
+        "822b7bc3818179c91456ac352287929e097321ab2520caa88af047d43452991e"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-19T12:06:15.343Z",
+      "evidence": {
+        "method": "same-official-EAN-5053844219140-plus-six-identical-gallery-photos-and-H19-W46",
+        "allImagesCompared": true,
+        "nativeOriginalSha256": "822b7bc3818179c91456ac352287929e097321ab2520caa88af047d43452991e",
+        "nativeDimensions": [
+          1384,
+          1382
+        ]
+      },
+      "note": "Both source pages name EAN 5053844219140 and share all six actual photos, H19 x W46cm, 1kg, 2L, polypropylene and screw supports. Keep their original pages; raw descriptions disagree on 11cm versus 12cm diameter, which is not silently unified."
+    },
+    {
+      "retailerId": "bq",
+      "skus": [
+        "8941467511949",
+        "8941467511963"
+      ],
+      "fingerprints": [
+        "924262b527b8d6febd194c71c64e60bba0f995b2bff6500ce9c5e20f99659fe9",
+        "fa0a7daf12c68a8034ac9d410ec876e7430f1e11b5269d41c3123648513fba8f"
+      ],
+      "imageHashes": [
+        "bdf823f8138f46a602779e26986ecba052ed966a701a3c8210b695867faeccd0",
+        "089c19afc4e89f31eb24bc757f32a49f7c761fcba475e5dfb891fd4be5c751cc"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "reviewedAt": "2026-11-22T14:54:59.869Z",
+      "reason": "Two official EAN offers show the same 2026 24-piece Mini Christmas Brick Ornaments Advent Calendar package and identical 24 designs across all nine gallery frames each. Same brand, plastic material and content; one listing mislabels the set as baubles. Offers/prices and raw listings retained separately; display once using the current in-stock lowest-price offer. / 两个官网商品码均为同款2026年24件积木造型挂饰倒数日历；各九张图库的包装和24款图案相同。同品牌、材质与内容，保留各自来源及价格，前端仅展示当前有货的较低价记录。"
+    },
+    {
+      "retailerId": "the-range",
+      "skus": [
+        "1700890",
+        "9553248"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "fingerprints": [
+        "4acf4f4f3fbf49259b214e104e18aa5be675255fc7f1984360fd5b9bdc5b2161",
+        "79d35b928d60228c2481c46ccee2419d573e7dbd0d3c4b271a50a0629a6f5a20"
+      ],
+      "imageHashes": [
+        "ae1ac0588ec64a64a29fe8b445dd264b7815cfc469cd2f988a0c5b224bfdea94",
+        "5c54a8f6bfcdbef221de07a43dbeb326524826c399cb80dd29102bbd17d4ec19"
+      ],
+      "reviewedAt": "2026-11-24T04:50:48.907Z",
+      "reviewArtifact": "duplicate-proof-sheet-20261124",
+      "evidence": {
+        "method": "exact-manufacturer-model-size-colour-material-pack-and-shared-native-whole-frame",
+        "normalizedModel": "7104",
+        "offeredQuantity": 1,
+        "sharedOriginalSha256": "ae1ac0588ec64a64a29fe8b445dd264b7815cfc469cd2f988a0c5b224bfdea94",
+        "nativeSourceUrls": [
+          "https://www.therange.co.uk/media/5/8/1793369042_8627.jpg",
+          "https://www.therange.co.uk/media/5/8/1793369042_8627.jpg"
+        ],
+        "visualReview": "Viewed the same complete native botanical or potted tree, confirmed the offered planter and body colour, and checked both exact SKU descriptions and dimensions. Brand-label spelling alone did not create a second physical offer. Distinct sizes, colours, quantities and metal planter finishes remain separate."
+      }
+    },
+    {
+      "retailerId": "the-range",
+      "skus": [
+        "5365188",
+        "8933889"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "fingerprints": [
+        "04c8c82855a905210cbc461b19cff1cb87998bfdd469c6e3af1ce1dc20c6e9d3",
+        "2c1caae5c191e93a7e894fdebfc4f807a5795f24694f86341870a2f25c9474c4"
+      ],
+      "imageHashes": [
+        "7c458e53e3742e8aed8d691f7c18b7647ac5379a7100cd0fa8d087b252b3b869",
+        "36757dcaa31bdd20acacd370abe22dcd3b20466f86981db0d5c5bc95a4554d52"
+      ],
+      "reviewedAt": "2026-11-24T04:50:48.908Z",
+      "reviewArtifact": "duplicate-proof-sheet-20261124",
+      "evidence": {
+        "method": "exact-manufacturer-model-size-colour-material-pack-and-shared-native-whole-frame",
+        "normalizedModel": "7170",
+        "offeredQuantity": 1,
+        "sharedOriginalSha256": "7c458e53e3742e8aed8d691f7c18b7647ac5379a7100cd0fa8d087b252b3b869",
+        "nativeSourceUrls": [
+          "https://www.therange.co.uk/media/7/5/1793406603_9714.jpg",
+          "https://www.therange.co.uk/media/7/5/1793406603_9714.jpg"
+        ],
+        "visualReview": "Viewed the same complete native botanical or potted tree, confirmed the offered planter and body colour, and checked both exact SKU descriptions and dimensions. Brand-label spelling alone did not create a second physical offer. Distinct sizes, colours, quantities and metal planter finishes remain separate."
+      }
+    },
+    {
+      "retailerId": "the-range",
+      "skus": [
+        "6737728",
+        "2662878"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "fingerprints": [
+        "3ebba3340f577441f0c41aaa426f85bebb7e16e02d222788bd647a5278cea3f7",
+        "80110108b1d6170736a7802b1fbbfc37d0ad724638b1626c0745d6576a093a57"
+      ],
+      "imageHashes": [
+        "6f44c45ffe3995a41994c0fa70a773626d87407f04018495e72b3093ed8b37ea",
+        "25673fb1209c2ea53b0d6cc7dbe2792c5ecaa9ac689a1f349e1c1bd3cc198b05"
+      ],
+      "reviewedAt": "2026-11-24T04:50:48.908Z",
+      "reviewArtifact": "duplicate-proof-sheet-20261124",
+      "evidence": {
+        "method": "exact-manufacturer-model-size-colour-material-pack-and-shared-native-whole-frame",
+        "normalizedModel": "40349",
+        "offeredQuantity": 1,
+        "sharedOriginalSha256": "25673fb1209c2ea53b0d6cc7dbe2792c5ecaa9ac689a1f349e1c1bd3cc198b05",
+        "nativeSourceUrls": [
+          "https://www.therange.co.uk/media/3/8/1792899156_9608.jpg",
+          "https://www.therange.co.uk/media/3/8/1792899156_9608.jpg"
+        ],
+        "visualReview": "Viewed the same complete native botanical or potted tree, confirmed the offered planter and body colour, and checked both exact SKU descriptions and dimensions. Brand-label spelling alone did not create a second physical offer. Distinct sizes, colours, quantities and metal planter finishes remain separate."
+      }
+    },
+    {
+      "retailerId": "the-range",
+      "skus": [
+        "7674482",
+        "6243445"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "fingerprints": [
+        "28fbfd69b3e777ee2144659982db7cd05ff7ba25e14824e89e617cd8a8a8464c",
+        "44d876b5f62b970670df96dde300a702327b6142bd1ec26b3095ac7f66bb9d1f"
+      ],
+      "imageHashes": [
+        "f2b5179bbef6f7580cafeea1332e94f94651095db0969d90935bf670b05fb845",
+        "9bc9aa1bed6c78b4367b018ce5950556b8e8ec7eb8d7d8b681ab613bb1f2bcad"
+      ],
+      "reviewedAt": "2026-11-24T04:50:48.908Z",
+      "reviewArtifact": "duplicate-proof-sheet-20261124",
+      "evidence": {
+        "method": "exact-manufacturer-model-size-colour-material-pack-and-shared-native-whole-frame",
+        "normalizedModel": "7167",
+        "offeredQuantity": 1,
+        "sharedOriginalSha256": "f2b5179bbef6f7580cafeea1332e94f94651095db0969d90935bf670b05fb845",
+        "nativeSourceUrls": [
+          "https://www.therange.co.uk/media/4/8/1786382779_7941.jpg",
+          "https://www.therange.co.uk/media/4/8/1786382779_7941.jpg"
+        ],
+        "visualReview": "Viewed the same complete native botanical or potted tree, confirmed the offered planter and body colour, and checked both exact SKU descriptions and dimensions. Brand-label spelling alone did not create a second physical offer. Distinct sizes, colours, quantities and metal planter finishes remain separate."
+      }
+    },
+    {
+      "retailerId": "the-range",
+      "skus": [
+        "9950374",
+        "3200766"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "fingerprints": [
+        "87b69acdfe01b576212bb7b4e1008944a3b303c008153c683c99a597e78de361",
+        "943a85e2a18fc5608aef5cb345e1d0fd941d4d63d8b1f3dda70dc314fb190176"
+      ],
+      "imageHashes": [
+        "d39cd75af84c3e72952172c2467981fbad09dc905b789334c5cb34396f696201",
+        "b69c3e46ec2d39f85e2ff3aa65b5ba195faa3d5ce40ba46c15e677c62d314a43"
+      ],
+      "reviewedAt": "2026-11-24T04:50:48.908Z",
+      "reviewArtifact": "duplicate-proof-sheet-20261124",
+      "evidence": {
+        "method": "exact-manufacturer-model-size-colour-material-pack-and-shared-native-whole-frame",
+        "normalizedModel": "7171-7201",
+        "offeredQuantity": 1,
+        "sharedOriginalSha256": "d39cd75af84c3e72952172c2467981fbad09dc905b789334c5cb34396f696201",
+        "nativeSourceUrls": [
+          "https://www.therange.co.uk/media/4/5/1790269848_6160.jpg",
+          "https://www.therange.co.uk/media/4/5/1790269848_6160.jpg"
+        ],
+        "visualReview": "Viewed the same complete native botanical or potted tree, confirmed the offered planter and body colour, and checked both exact SKU descriptions and dimensions. Brand-label spelling alone did not create a second physical offer. Distinct sizes, colours, quantities and metal planter finishes remain separate."
+      }
+    },
+    {
+      "retailerId": "the-range",
+      "skus": [
+        "1449879",
+        "3583630"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "fingerprints": [
+        "d4808c5d7e620af3fa50f75712467a6495de6a0d6549cb478b0ad58adb76cff4",
+        "e4ecec410a5a30d99cc16ef62871e8976a41382cc3f8924cb6d89567f133b3b8"
+      ],
+      "imageHashes": [
+        "dc952eafa1f77bdd1b1943546d9ae8969ce98273882c9df7e659978f0b6ebb63",
+        "ebdef31aab4e569ad89541586463fab00bd6ed97c81707526d71e7e133ae922e"
+      ],
+      "reviewedAt": "2026-11-24T04:50:48.908Z",
+      "reviewArtifact": "duplicate-proof-sheet-20261124",
+      "evidence": {
+        "method": "exact-manufacturer-model-size-colour-material-pack-and-shared-native-whole-frame",
+        "normalizedModel": "70583",
+        "offeredQuantity": 1,
+        "sharedOriginalSha256": "dc952eafa1f77bdd1b1943546d9ae8969ce98273882c9df7e659978f0b6ebb63",
+        "nativeSourceUrls": [
+          "https://www.therange.co.uk/media/8/6/1786373239_6770.jpg",
+          "https://www.therange.co.uk/media/8/6/1786373239_6770.jpg"
+        ],
+        "visualReview": "Viewed the same complete native botanical or potted tree, confirmed the offered planter and body colour, and checked both exact SKU descriptions and dimensions. Brand-label spelling alone did not create a second physical offer. Distinct sizes, colours, quantities and metal planter finishes remain separate."
+      }
+    },
+    {
+      "retailerId": "the-range",
+      "skus": [
+        "7651902",
+        "6419901"
+      ],
+      "decision": "merge-identical-physical-offer",
+      "fingerprints": [
+        "6f521dd1c6e759241b11ef33ed723bef96c2b776810ab75d0887513b54f3e758",
+        "4d009c304ca34141dbe642e20cbde243ab31d63d74b4cba5a9d7cb3218963cec"
+      ],
+      "imageHashes": [
+        "2e127217f24fff1b60abd85d10f65bbbe1fdeca1227aaef01a7aa23684067243",
+        "56b3b3991c6153a1d3ec005f9423dcf959bdaaef74d9848799db0f013b13dc0a"
+      ],
+      "reviewedAt": "2026-11-24T04:50:48.909Z",
+      "reviewArtifact": "duplicate-proof-sheet-20261124",
+      "evidence": {
+        "method": "exact-manufacturer-model-size-colour-material-pack-and-shared-native-whole-frame",
+        "normalizedModel": "7284",
+        "offeredQuantity": 1,
+        "sharedOriginalSha256": "2e127217f24fff1b60abd85d10f65bbbe1fdeca1227aaef01a7aa23684067243",
+        "nativeSourceUrls": [
+          "https://www.therange.co.uk/media/4/2/1792584011_4201.jpg",
+          "https://www.therange.co.uk/media/4/2/1792584011_4201.jpg"
+        ],
+        "visualReview": "Viewed the same complete native botanical or potted tree, confirmed the offered planter and body colour, and checked both exact SKU descriptions and dimensions. Brand-label spelling alone did not create a second physical offer. Distinct sizes, colours, quantities and metal planter finishes remain separate."
+      }
+    }
+  ]
+}
