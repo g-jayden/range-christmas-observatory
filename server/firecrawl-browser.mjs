@@ -81,8 +81,8 @@ export async function readExactVariantOriginal({sku,variantId,preferred}){
  return [];
 }
 
-async function readImageBatch(items){
-    let cursor=0;const results=[],deadline=Date.now()+45000;await Promise.all(Array.from({length:8},async()=>{while(cursor<items.length&&Date.now()<deadline){const {url,prior,hashOnly}=items[cursor++];let debug;try{
+async function readImageBatch(items,{concurrency=8}={}){
+    let cursor=0;const results=[],deadline=Date.now()+45000;await Promise.all(Array.from({length:concurrency},async()=>{while(cursor<items.length&&Date.now()<deadline){const {url,prior,hashOnly}=items[cursor++];let debug;try{
      const headers={accept:'image/avif,image/webp,image/apng,image/*,*/*;q=0.8'};if(prior?.etag)headers['if-none-match']=prior.etag;else if(prior?.lastModified)headers['if-modified-since']=prior.lastModified;
      const source=new URL(url),unpublished=source.hostname==='kube-media-unpublished.rstore.com',mirror=unpublished?new URL(source.pathname+source.search,'https://www.therange.co.uk').href:null;let retrievedFrom=prior?.retrievedFrom===mirror?mirror:url,response;
      const download=target=>fetch(target,{credentials:'include',headers,cache:'no-cache',signal:AbortSignal.timeout(20000)});
@@ -360,11 +360,13 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   await fs.mkdir('web/images/source',{recursive:true});let rechecked=0,changed=0;const retryUrls=new Set(),retried=new Set();
   for(let taskIndex=0;taskIndex<tasks.length;taskIndex++){
    guard();const task=tasks[taskIndex],items=task.urls.map(url=>({url,prior:validPrior[url],hashOnly:task.hashOnly}));metrics.imageBatchRequests=(metrics.imageBatchRequests||0)+1;
-   let batch;try{batch=await scriptAction('('+readImageBatch.toString()+')('+JSON.stringify(items)+')',{needsImages:true});}catch(error){
+   let batch;try{batch=await scriptAction('('+readImageBatch.toString()+')('+JSON.stringify(items)+','+JSON.stringify({concurrency:task.channelRecovery?2:8})+')',{needsImages:true});}catch(error){
     if([408,500,502,503,504].includes(error.status)&&(task.attempt||0)<2){const size=Math.max(1,Math.ceil(task.urls.length/2));for(let n=0;n<task.urls.length;n+=size)tasks.push({...task,urls:task.urls.slice(n,n+size),attempt:(task.attempt||0)+1});console.log(JSON.stringify({phase:'image-transport-bounded-retry',status:error.status,urls:task.urls.length,attempt:(task.attempt||0)+1}));continue;}throw error;
    }
    if(batch.length!==items.length||batch.some(r=>!items.some(i=>i.url===r.url)))throw Error('图片批量核验没有返回全部请求地址');
-   if(taskIndex===0&&batch.filter(r=>!r.deferred&&(!r.ok||r.width<64||r.height<64)).length>batch.filter(r=>!r.deferred).length*.8){console.error(JSON.stringify({phase:'image-batch-failure',count:batch.length,failures:batch.filter(r=>!r.ok||r.width<64||r.height<64).slice(0,3).map(({url,status,error,debug})=>({url,status,error,debug}))}));throw Error('图片主通道未通过，停止后续付费批次');}
+   const attempted=batch.filter(r=>!r.deferred),bad=attempted.filter(r=>!r.ok||r.width<64||r.height<64),widespread=attempted.length>0&&bad.length>attempted.length*.8;
+   const transient=row=>!row.ok&&(row.status===0||row.status===429||row.status>=500||!row.debug&&/fetch-or-decode/.test(row.error||''));
+   const recoverChannel=policy.preferNativePreviewAssets===true&&widespread&&bad.every(transient)&&!task.channelRecovery;
    rechecked+=batch.filter(r=>!r.deferred).length;const needsBody=[],deferred=[];
    for(const item of batch){
     if(item.deferred){deferred.push(item.url);continue;}if(!item.ok&&!retried.has(item.url)&&(item.status===0||item.status===429||item.status>=500||!item.debug&&/fetch-or-decode/.test(item.error||''))){retried.add(item.url);retryUrls.add(item.url);continue;}
@@ -377,10 +379,15 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
     }catch(e){delete item.dataBase64;item.ok=false;item.error=e.message;}
     results.push(item);
    }
-   for(let offset=0;offset<deferred.length;offset+=150)tasks.push({urls:deferred.slice(offset,offset+150),hashOnly:task.hashOnly});
+   if(recoverChannel){const failedUrls=bad.map(r=>r.url);for(const url of failedUrls)retryUrls.delete(url);const recovery=[];for(let offset=0;offset<failedUrls.length;offset+=16)recovery.push({urls:failedUrls.slice(offset,offset+16),hashOnly:task.hashOnly,channelRecovery:true});tasks.splice(taskIndex+1,0,...recovery);console.log(JSON.stringify({phase:'native-transient-channel-recovery',attempted:attempted.length,failed:failedUrls.length,deferred:batch.length-attempted.length,onlyFailedUrlsRetried:true,concurrency:2,maximumRetriesPerUrl:1}));}
+   const deferredSize=Math.min(150,options.bodyBatchSize||150);for(let offset=0;offset<deferred.length;offset+=deferredSize)tasks.push({urls:deferred.slice(offset,offset+deferredSize),hashOnly:task.hashOnly,channelRecovery:task.channelRecovery});
    if(taskIndex===tasks.length-1&&retryUrls.size){const retries=[...retryUrls];retryUrls.clear();for(let offset=0;offset<retries.length;offset+=200)tasks.push({urls:retries.slice(offset,offset+200),hashOnly:false});}
    for(let offset=0;offset<needsBody.length;offset+=200)tasks.push({urls:needsBody.slice(offset,offset+200),hashOnly:false});
    if(policy.imageCheckpoint)await atomicJson(policy.imageCheckpoint,{entries:{...checkpoint.entries,...previous.entries,...Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r]))},failures:results.filter(r=>!r.ok),observedAt:new Date(now()).toISOString()});
+   // Save every successfully downloaded original before testing the channel.
+   // A transient first response gets one smaller two-connection probe, rather
+   // than being mistaken for a permanent missing product or an endless retry.
+   if(widespread&&!recoverChannel&&(taskIndex===0||task.channelRecovery||policy.preferNativePreviewAssets===true)){console.error(JSON.stringify({phase:'image-batch-failure',count:batch.length,failures:bad.slice(0,3).map(({url,status,error,debug})=>({url,status,error,debug})),successfulOriginalsPreserved:results.filter(r=>r.ok).length,transientRecoveryExhausted:Boolean(task.channelRecovery)}));throw Error('图片主通道未通过，停止后续付费批次');}
    console.log(JSON.stringify({phase:'image-verification',checked:results.length,total:allUrls.length,changed}));
   }
   const byUrl=new Map(results.map(r=>[r.url,r]));for(const p of products){const r=byUrl.get(p.variantImageUrl||p.imageUrl);if(r?.ok){p.cachedImageUrl=r.cachedImageUrl;p.imageCacheEvidence={sourceUrl:r.url,sha256:r.hash,observedAt:r.observedAt,width:r.width,height:r.height,bytes:r.bytes,mime:r.mime};}}
