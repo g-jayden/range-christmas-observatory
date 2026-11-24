@@ -1,8 +1,9 @@
 {
-  "requestId": "owner-recovery-20261124-bq-saved-18440-photo-prefix",
+  "requestId": "owner-recovery-20261124-durable-ms-hb",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T13:55:48.141Z",
+  "requestedAt": "2026-11-24T14:11:15.161Z",
   "targets": [
-    "bq-photos-current"
+    "ms-current",
+    "hb-current"
   ]
 }
