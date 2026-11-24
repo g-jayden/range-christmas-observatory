@@ -7,6 +7,8 @@ assert.equal(offeredObject(villageModel).id,'scenes');
 assert(productNames(villageModel).zh.includes('微醺酒馆'));
 assert(productNames(villageModel).zh.includes('建筑模型'));
 assert(productNames({variantName:'Deers with Sleigh Decoration - Golden',department:'ornaments'}).zh.includes('鹿与雪橇'));
+assert.equal(offeredObject({variantName:'Deers with Sleigh Decoration - Golden',kind:'decoration',dimensions:{values:{Height:57.8,Width:17.8,Depth:90.5}}}).id,'standing');
+assert.equal(offeredObject({variantName:'Deer Hanging Tree Ornament',kind:'decoration',dimensions:{values:{Height:8}}}).id,'tree-decorations');
 assert.notEqual(offeredObject({variantName:'Tavern Hanging Tree Ornament',kind:'decoration',department:'tree-decorations',dimensions:{values:{Height:8}}}).id,'scenes');
 import {cataloguePdf} from '../web/catalogue-pdf.mjs';
 import {reportPages,reportCells,REPORT_PAGE} from '../web/report-layout.mjs';
