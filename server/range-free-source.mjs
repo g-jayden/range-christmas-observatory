@@ -6,7 +6,7 @@ export class ProductDOMParser extends DOMParser{parseFromString(text,type){retur
 const target=raw=>{const u=new URL(raw);if(!ORIGINS.has(u.origin)||u.username||u.password||u.port)throw Error('Unsupported free source origin');return u;};
 // A catalogue endpoint refusal does not prove that product HTML or exact-SKU
 // JSON is blocked. Transient failures never disable other free source URLs.
-const sourceChannel=raw=>{const u=target(raw);return u.origin+' '+(u.pathname==='/api/productlist'?'catalogue':u.searchParams.has('json')?'product-json':'product-html');};
+const sourceChannel=raw=>{const u=target(raw);return u.origin+' '+(u.pathname==='/api/productlist'?'catalogue':u.pathname==='/search'?'search-html':u.searchParams.has('json')?'product-json':'product-html');};
 export async function ordinaryHttp2(url,{timeoutMs=12000}={}){
  target(url);try{const{stdout}=await exec('curl',['--disable','--http2','--location','--max-time',String(Math.ceil(timeoutMs/1000)),'--silent','--show-error','--write-out','\n%{http_code}\n%{url_effective}',url],{timeout:timeoutMs+1000,maxBuffer:25000000});const end=stdout.lastIndexOf('\n'),before=stdout.lastIndexOf('\n',end-1);return{status:Number(stdout.slice(before+1,end)),url:stdout.slice(end+1),text:stdout.slice(0,before)};}catch(e){return{status:0,error:String(e.message).slice(0,140)};}
 }
@@ -44,5 +44,10 @@ export function createFreeFirstRangeSource({fetcher=fetch,http2=ordinaryHttp2,br
    if(b.status===200&&b.evidence?.productId&&b.variants?.length&&b.variants.every(v=>String(v.prod_id)===String(b.evidence.productId))){b.evidence.sourceTransport='ordinary-free-'+j.method+'-and-'+h.method;b.evidence.observedAt=new Date().toISOString();rows.push({url,bundle:b,free:true});metrics.freeFamilies++;}
   }return rows;
  }
- return{catalogues,families,metrics:()=>structuredClone(metrics),close:async()=>{await browser?.close();}};
+ async function resolveProductPages(products,lookup){
+  const ordinaryFetch=async url=>{const r=await read(url,{validate:text=>typeof text==='string'&&/data-products/.test(text)});return{ok:r.status===200,status:r.status,text:async()=>r.value||''};};
+  const parse=new Function('DOMParser','fetch','payload','return ('+lookup.toString()+')(payload)'),rows=await parse(ProductDOMParser,ordinaryFetch,{products,concurrency:2});
+  metrics.freeProductPageLookups=(metrics.freeProductPageLookups||0)+products.length;metrics.freeProductPagesResolved=(metrics.freeProductPagesResolved||0)+rows.filter(r=>r.sourceUrl).length;return rows;
+ }
+ return{catalogues,families,resolveProductPages,metrics:()=>structuredClone(metrics),close:async()=>{await browser?.close();}};
 }

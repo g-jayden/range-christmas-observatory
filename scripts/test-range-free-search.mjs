@@ -1,0 +1,6 @@
+import assert from'node:assert/strict';import{createFreeFirstRangeSource}from'../server/range-free-source.mjs';import{findExactSkuPages}from'../server/firecrawl-browser.mjs';
+const old='https://www.therange.co.uk/old/#123',fresh='artificial-flowers/new/#123';let searches=0;
+const reader=createFreeFirstRangeSource({fetcher:async url=>{if(new URL(url).pathname==='/search'){searches++;return new Response('<html><body><div data-products=\''+JSON.stringify([{sku:'123',variantPath:fresh},{sku:'999',variantPath:'wrong#999'}])+'\'></div></body></html>');}return new Response('Denied',{status:403});},http2:async()=>({status:403}),browserRead:async()=>({status:403})});
+await reader.families([{sku:'123',sourceUrl:old}],()=>{throw Error('Denied families cannot be parsed');});
+const rows=await reader.resolveProductPages([{sku:'123',variantName:'Artificial flower',sourceUrl:old}],findExactSkuPages);assert.equal(rows[0].sourceUrl,'https://www.therange.co.uk/artificial-flowers/new/#123');assert.equal(searches,1);assert.equal(reader.metrics().freeProductPagesResolved,1);await reader.close();
+console.log('PASS: official free search is tried independently of a denied product page and resolves only the exact requested SKU, without paid collection.');
