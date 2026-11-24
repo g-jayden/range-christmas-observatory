@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';import fs from 'node:fs/promises';
+await import('./test-firecrawl-stream-response.mjs');
 import {buildBmSnapshot,bmGallery} from '../server/bm-products.mjs';import {bmDirectoryScript} from '../server/bm-source.mjs';import {BM_DEPARTMENTS,bmMemberships} from '../web/bm-model.mjs';import {isToday,isNew} from '../web/catalogue-model.mjs';
 const d=JSON.parse(await fs.readFile('test/fixtures/bm-directory.json')),initial=buildBmSnapshot(d),get=(s,id)=>s.products.find(p=>p.sku===id),green=get(initial,'4131861'),snow=get(initial,'4131862');
 assert.equal(BM_DEPARTMENTS.length,6);assert.equal(green.productCode,snow.productCode);assert.notEqual(green.sku,snow.sku);assert.notEqual(green.variantId,snow.variantId);assert.notEqual(green.images[0],snow.images[0]);assert(green.originalImages.every(g=>g.selectedSku===green.sku&&g.sourceRecordId===green.bmSource.recordId));assert.match(green.sourceDescription,/90cm/);assert.equal(green.dimensions.values.Height,90);assert.match(green.availabilityNote,/individual store inventory is not guaranteed/);
