@@ -46,6 +46,10 @@ jobs:
             /web/light-details/
             /web/theme-details/
             /web/original-image-map/
+            /web/spring/candidate-catalogue.json
+            /web/spring/review.json
+            /web/spring/status.json
+            /web/spring/source.json
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
