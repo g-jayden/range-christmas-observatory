@@ -696,6 +696,668 @@
         "originalHeight": 1920,
         "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
       }
+    },
+    {
+      "sku": "1438749",
+      "variantId": "10231789",
+      "rootImageUrl": "https://www.therange.co.uk/media/5/6/1785774549_6803.jpg",
+      "rootImageHash": "1e952a7e46ecf0f7caded5fdbdd0bc40b8339d2644fb1c0058e87840f88a9edc",
+      "rootInputFingerprint": "f88bb758ebbbbe7ef2c0e29c1872a2e04bf464a528047a4b2fb54ef0426d219f",
+      "sourceContentHash": "b4ea88bbac164275e6ea932abaed2ef518922498db0aac86d22d852803923a7a",
+      "nativeImageUrl": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7164_db245a1b-b895-482e-b01d-17e68269d136.jpg?v=1772483965",
+      "nativeImageHash": "3d6a71f88a781a3b6151fe44c481f302c7c009effe50d88f2be8f8014a101413",
+      "nativeCachePath": "images/source/3d6a71f88a781a3b6151fe44c481f302c7c009effe50d88f2be8f8014a101413.jpg",
+      "nativeObservedAt": "2026-11-24T07:13:06.136Z",
+      "mime": "image/jpeg",
+      "reference": {
+        "sourceUrl": "https://www.leafplants.co.uk/products/artificial-boxwood-tower-tree-topiary-spiral-twist-decorative-top",
+        "sourceHash": "c8ee80853a1f9d87079be692c98a7e33008ef3f4af1a5f6b1387968851c0f5e4",
+        "product": {
+          "id": 15585290322252,
+          "handle": "artificial-boxwood-tower-tree-topiary-spiral-twist-decorative-top",
+          "title": "Artificial Boxwood Tower Topiary Tree - Spiral Decorative Top",
+          "updated_at": "2026-11-24T06:18:53+00:00",
+          "images": [
+            {
+              "id": 78704568598860,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7004-L.jpg?v=1792584727",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70268495626572,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7004.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70268495659340,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7004-4.jpg?v=1772551748",
+              "width": 1648,
+              "height": 2048
+            },
+            {
+              "id": 70268495692108,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7004-1.jpg?v=1772551748",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566161187148,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7004-PAIR_c4aae1e4-89ab-48d0-911c-6449cf45964b.jpg?v=1772551748",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70268495724876,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7004-3.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70268495757644,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7004-2.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566161711436,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-5_5a0b2058-fed0-42c6-9068-7bc451ca26af.jpg?v=1772483965",
+              "width": 1648,
+              "height": 2048
+            },
+            {
+              "id": 70566162563404,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-PAIR_c453b320-9d82-4167-ad8b-b95b0a78e4e6.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566163054924,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-1_ecd8fa15-9426-4812-a923-005f41cf03bc.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566163349836,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-2_29f082fd-0fb5-4917-84d4-6bea81688d47.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566163939660,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-3_f1be0d75-c23c-4ae1-b9d3-e641fd851cd7.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566164234572,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-4_d4a50682-571f-45a4-9d68-95e8759f6317.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566164496716,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7164_db245a1b-b895-482e-b01d-17e68269d136.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566165184844,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7164-PAIR_09bc7dc2-a513-4f74-b1a9-110a6c747031.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566165905740,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/leaf-7004-7165-7164_f54aca32-1bdd-4662-ab90-5ba4302591ac.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566166298956,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7164-PAIR_586dca73-0f74-4788-804c-d23d270539c3.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566166856012,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-2_f2652764-d160-434a-b88c-2306aa4e9bdb.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566167380300,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-3_02bbc975-9d51-48d8-86ff-8d7f0a6a55d8.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566167707980,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-4_019d378b-79c3-4622-be6f-7a3343060f10.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566168396108,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/leaf-7004-7165-7164_88df85f1-4002-4a57-b708-d0d0055f2520.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566168854860,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7164_47d4e76a-475b-4ddc-91ff-4fad0bb74b5b.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 78704568631628,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7004-PAIR-L.jpg?v=1792584728",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 78704568664396,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7164-L.jpg?v=1792584727",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 78704568697164,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7164-PAIR-L.jpg?v=1792584727",
+              "width": 2048,
+              "height": 2048
+            }
+          ],
+          "variants": [
+            {
+              "id": 56751342682444,
+              "sku": "LEAF-7004"
+            },
+            {
+              "id": 56883204358476,
+              "sku": "LEAF-7004-PAIR"
+            },
+            {
+              "id": 56883204391244,
+              "sku": "LEAF-7164"
+            },
+            {
+              "id": 56883204424012,
+              "sku": "LEAF-7164-PAIR"
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "equivalent": true,
+        "rms": 1.6683056719630749,
+        "meanAbsolute": 0.4525146484375,
+        "outlierRatio": 0.0011800130208333333,
+        "foregroundRms": 4.370642803812561,
+        "maxBlockRms": 5.185617128172885,
+        "thumbnailWidth": 300,
+        "thumbnailHeight": 300,
+        "originalWidth": 2048,
+        "originalHeight": 2048,
+        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
+      }
+    },
+    {
+      "sku": "1438781",
+      "variantId": "10231924",
+      "rootImageUrl": "https://www.therange.co.uk/media/9/8/1785774970_4912.jpg",
+      "rootImageHash": "210b63bd86b6bd2d64ef4bc18cd786184eafbe75ef569efcd411951982c6253f",
+      "rootInputFingerprint": "04c68074a2ae0efdf6d252f5258c7c5b968e39e11cc2ba62589a3a8beaaa400f",
+      "sourceContentHash": "668b4e97718baa19ad635ac02dd48915afe2634283566aa3e702e38e19f469a4",
+      "nativeImageUrl": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7298_f2aca472-9067-4293-8ad7-8fa7998ecb7d.jpg?v=1773765139",
+      "nativeImageHash": "0f81aa2285b7f74fad5295d7f3f594f8d126a31cdd863596adcaea09baae1509",
+      "nativeCachePath": "images/source/0f81aa2285b7f74fad5295d7f3f594f8d126a31cdd863596adcaea09baae1509.jpg",
+      "nativeObservedAt": "2026-11-24T07:13:06.136Z",
+      "mime": "image/jpeg",
+      "reference": {
+        "sourceUrl": "https://www.leafplants.co.uk/products/100cm-artificial-potted-dracaena-tropical-plant-with-optional-metal-planter",
+        "sourceHash": "e7d98a95b38b95d6eb73179a7f4113bb5a3ca1420153f429471867403efff4af",
+        "product": {
+          "id": 15585429061964,
+          "handle": "100cm-artificial-potted-dracaena-tropical-plant-with-optional-metal-planter",
+          "title": "100cm Artificial Potted Dracaena Tropical Plant",
+          "updated_at": "2026-11-24T06:18:53+00:00",
+          "images": [
+            {
+              "id": 75356119826764,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7298_d5f691b2-3a68-4228-8ef2-b059c5524531.jpg?v=1783453306",
+              "width": 1500,
+              "height": 1500
+            },
+            {
+              "id": 70269509796172,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7298-7201-M.jpg?v=1772631135",
+              "width": 1600,
+              "height": 1600
+            },
+            {
+              "id": 70943684657484,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7298--square.png?v=1773765139",
+              "width": 989,
+              "height": 989
+            },
+            {
+              "id": 70269509861708,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7298-2-1_0e46a244-2cd3-4ddd-905a-aba686a9d2a9.jpg?v=1773765139",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70614771695948,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7298_f2aca472-9067-4293-8ad7-8fa7998ecb7d.jpg?v=1773765139",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70563824009548,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7298-7316-M_8dc6823e-bb4f-46a8-a95e-6d0d23dc81a2.jpg?v=1773765139",
+              "width": 1600,
+              "height": 1600
+            },
+            {
+              "id": 70563824075084,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7298-7315-M_6047a269-7499-4022-8823-b9f1f6b8d48a.jpg?v=1773765139",
+              "width": 1600,
+              "height": 1600
+            },
+            {
+              "id": 70269509828940,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7201_b4d8ca39-a2bb-4152-8459-cffb796a695d.jpg?v=1773765139",
+              "width": 1600,
+              "height": 1600
+            },
+            {
+              "id": 70269509894476,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7298-1_355ce033-2f51-49d8-96d4-7db53befc93c.jpg?v=1773765139",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70563824042316,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7316_40d324e9-82c8-464a-8333-80cd574b558f.jpg?v=1773765139",
+              "width": 1600,
+              "height": 1600
+            },
+            {
+              "id": 70563824107852,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7315_dfe08a26-abba-446e-b484-e0d0d5584d74.jpg?v=1773765139",
+              "width": 1600,
+              "height": 1600
+            },
+            {
+              "id": 75356096168268,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7298-L.jpg?v=1783453237",
+              "width": 1254,
+              "height": 1254
+            },
+            {
+              "id": 75356104491340,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7298-7316.jpg?v=1783453260",
+              "width": 1254,
+              "height": 1254
+            },
+            {
+              "id": 75356161835340,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7298-7201-BK.jpg?v=1783453406",
+              "width": 1254,
+              "height": 1254
+            },
+            {
+              "id": 75356166685004,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7298-7316-BK.jpg?v=1783453432",
+              "width": 1254,
+              "height": 1254
+            },
+            {
+              "id": 75356161868108,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7298-7315-BK.jpg?v=1783453403",
+              "width": 1254,
+              "height": 1254
+            }
+          ],
+          "variants": [
+            {
+              "id": 56896577667404,
+              "sku": "LEAF-7298"
+            },
+            {
+              "id": 56751682421068,
+              "sku": "7298-7201"
+            },
+            {
+              "id": 56879605121356,
+              "sku": "7298-7316"
+            },
+            {
+              "id": 56879605154124,
+              "sku": "7298-7315"
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "equivalent": true,
+        "rms": 2.2749001952695638,
+        "meanAbsolute": 0.7832845052083334,
+        "outlierRatio": 0.0019734700520833335,
+        "foregroundRms": 5.23036864097812,
+        "maxBlockRms": 7.293690195413202,
+        "thumbnailWidth": 300,
+        "thumbnailHeight": 300,
+        "originalWidth": 2048,
+        "originalHeight": 2048,
+        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
+      }
+    },
+    {
+      "sku": "1438841",
+      "variantId": "10232174",
+      "rootImageUrl": "https://www.therange.co.uk/media/8/2/1785774312_7823.jpg",
+      "rootImageHash": "391eeffccf278104b2376bc002b4082d4f1990223c4be523b10ad391cff392dc",
+      "rootInputFingerprint": "53a7650a77a12d888e96c2b22646171ff7b8dc99166bd2de988acf6972d89686",
+      "sourceContentHash": "15520a5385450389b98f005122308fb6bd03583319d8f86376119a655606cffc",
+      "nativeImageUrl": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-1_ecd8fa15-9426-4812-a923-005f41cf03bc.jpg?v=1772483965",
+      "nativeImageHash": "4aabc72fdf114ec3e8d0ac3bc8843966be062f17dabd001bac230acc3d74c92b",
+      "nativeCachePath": "images/source/4aabc72fdf114ec3e8d0ac3bc8843966be062f17dabd001bac230acc3d74c92b.jpg",
+      "nativeObservedAt": "2026-11-24T07:13:06.136Z",
+      "mime": "image/jpeg",
+      "reference": {
+        "sourceUrl": "https://www.leafplants.co.uk/products/artificial-boxwood-tower-tree-topiary-spiral-twist-decorative-top",
+        "sourceHash": "c8ee80853a1f9d87079be692c98a7e33008ef3f4af1a5f6b1387968851c0f5e4",
+        "product": {
+          "id": 15585290322252,
+          "handle": "artificial-boxwood-tower-tree-topiary-spiral-twist-decorative-top",
+          "title": "Artificial Boxwood Tower Topiary Tree - Spiral Decorative Top",
+          "updated_at": "2026-11-24T06:18:53+00:00",
+          "images": [
+            {
+              "id": 78704568598860,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7004-L.jpg?v=1792584727",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70268495626572,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7004.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70268495659340,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7004-4.jpg?v=1772551748",
+              "width": 1648,
+              "height": 2048
+            },
+            {
+              "id": 70268495692108,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7004-1.jpg?v=1772551748",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566161187148,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7004-PAIR_c4aae1e4-89ab-48d0-911c-6449cf45964b.jpg?v=1772551748",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70268495724876,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7004-3.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70268495757644,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7004-2.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566161711436,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-5_5a0b2058-fed0-42c6-9068-7bc451ca26af.jpg?v=1772483965",
+              "width": 1648,
+              "height": 2048
+            },
+            {
+              "id": 70566162563404,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-PAIR_c453b320-9d82-4167-ad8b-b95b0a78e4e6.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566163054924,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-1_ecd8fa15-9426-4812-a923-005f41cf03bc.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566163349836,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-2_29f082fd-0fb5-4917-84d4-6bea81688d47.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566163939660,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-3_f1be0d75-c23c-4ae1-b9d3-e641fd851cd7.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566164234572,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-4_d4a50682-571f-45a4-9d68-95e8759f6317.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566164496716,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7164_db245a1b-b895-482e-b01d-17e68269d136.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566165184844,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7164-PAIR_09bc7dc2-a513-4f74-b1a9-110a6c747031.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566165905740,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/leaf-7004-7165-7164_f54aca32-1bdd-4662-ab90-5ba4302591ac.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566166298956,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7164-PAIR_586dca73-0f74-4788-804c-d23d270539c3.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566166856012,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-2_f2652764-d160-434a-b88c-2306aa4e9bdb.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566167380300,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-3_02bbc975-9d51-48d8-86ff-8d7f0a6a55d8.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566167707980,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/5060532970047-4_019d378b-79c3-4622-be6f-7a3343060f10.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566168396108,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/leaf-7004-7165-7164_88df85f1-4002-4a57-b708-d0d0055f2520.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70566168854860,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7164_47d4e76a-475b-4ddc-91ff-4fad0bb74b5b.jpg?v=1772483965",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 78704568631628,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7004-PAIR-L.jpg?v=1792584728",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 78704568664396,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7164-L.jpg?v=1792584727",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 78704568697164,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7164-PAIR-L.jpg?v=1792584727",
+              "width": 2048,
+              "height": 2048
+            }
+          ],
+          "variants": [
+            {
+              "id": 56751342682444,
+              "sku": "LEAF-7004"
+            },
+            {
+              "id": 56883204358476,
+              "sku": "LEAF-7004-PAIR"
+            },
+            {
+              "id": 56883204391244,
+              "sku": "LEAF-7164"
+            },
+            {
+              "id": 56883204424012,
+              "sku": "LEAF-7164-PAIR"
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "equivalent": true,
+        "rms": 1.6520866993713084,
+        "meanAbsolute": 0.4455769856770833,
+        "outlierRatio": 0.0010782877604166667,
+        "foregroundRms": 4.070771915159282,
+        "maxBlockRms": 5.233107744607087,
+        "thumbnailWidth": 300,
+        "thumbnailHeight": 300,
+        "originalWidth": 2048,
+        "originalHeight": 2048,
+        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
+      }
+    },
+    {
+      "sku": "1438856",
+      "variantId": "10232244",
+      "rootImageUrl": "https://www.therange.co.uk/media/5/6/1785774931_5964.jpg",
+      "rootImageHash": "4a7162d05df072a8b161d25bddb643f2873b455d43ac4b5a36313fa078ff14bc",
+      "rootInputFingerprint": "bca3528e9a60984f7d74534b7f48ddd719970b3545c0c37102c97cd540ea6ecc",
+      "sourceContentHash": "c92fcc3e868bf625c39a6adf21cb7c71db14971b059ad2dfd722ce769884a14c",
+      "nativeImageUrl": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7528.V2_e9fe0702-6559-417c-b4cd-c2e17fb0c521.jpg?v=1771415166",
+      "nativeImageHash": "deac1c09dc73f0a1e149a98b2f8c61855230e979ae3bcebc63fa495320d3b868",
+      "nativeCachePath": "images/source/deac1c09dc73f0a1e149a98b2f8c61855230e979ae3bcebc63fa495320d3b868.jpg",
+      "nativeObservedAt": "2026-11-24T07:13:06.136Z",
+      "mime": "image/jpeg",
+      "reference": {
+        "sourceUrl": "https://www.leafplants.co.uk/products/pack-of-3-x-30cm-artificial-ferns-southern-wood-lady-and-royal-potted",
+        "sourceHash": "5a33bc6059c554ac09eeb8b38bd3562ed830ed8774de6c3f48018730b120524e",
+        "product": {
+          "id": 15585519436108,
+          "handle": "pack-of-3-x-30cm-artificial-ferns-southern-wood-lady-and-royal-potted",
+          "title": "Pack of 3 x 30cm Potted Artificial Ferns - Southern Wood, Lady, Royal",
+          "updated_at": "2026-11-24T06:18:53+00:00",
+          "images": [
+            {
+              "id": 75295589597516,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7528-7527-7529.jpg?v=1783199405",
+              "width": 1254,
+              "height": 1254
+            },
+            {
+              "id": 70270174855500,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7527-7528-7529.jpg?v=1771415167",
+              "width": 1800,
+              "height": 1800
+            },
+            {
+              "id": 70270174888268,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7527-1_d205d482-3297-4dbc-82b8-dc360c7aa368.jpg?v=1771415167",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70270174921036,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7529-7528-7527_8b9a4e78-8324-43f2-87ab-1064d4802455.jpg?v=1771415166",
+              "width": 1223,
+              "height": 1920
+            },
+            {
+              "id": 70270174953804,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7529-7528-7527-1_45793d82-d0d4-4281-8158-33e3562f1e66.jpg?v=1771415167",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70270174986572,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7527_27331e69-91f0-4886-9b9e-d8c786fcb44d.jpg?v=1771415167",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70270175019340,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7529.V2_2d3705a5-d5d5-4867-87e9-05fd158aefcf.jpg?v=1771415166",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70270175052108,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7528.V2_e9fe0702-6559-417c-b4cd-c2e17fb0c521.jpg?v=1771415166",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70270175084876,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7527.V2_d84fe43c-dd78-4df0-849d-801b90918768.jpg?v=1771415167",
+              "width": 1920,
+              "height": 1920
+            }
+          ],
+          "variants": [
+            {
+              "id": 56751889056076,
+              "sku": "7527-7528-7529"
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "equivalent": true,
+        "rms": 0.5800397626905274,
+        "meanAbsolute": 0.24241129557291666,
+        "outlierRatio": 0,
+        "foregroundRms": 1.0034221561767342,
+        "maxBlockRms": 1.3228756555322954,
+        "thumbnailWidth": 300,
+        "thumbnailHeight": 300,
+        "originalWidth": 1920,
+        "originalHeight": 1920,
+        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
+      }
     }
   ]
 }
