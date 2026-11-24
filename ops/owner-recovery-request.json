@@ -1,8 +1,9 @@
 {
-  "requestId": "owner-recovery-20261124-restore-interrupted-native-artifact",
+  "requestId": "owner-recovery-20261124-saved-ms-bm-publication-0612",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T21:54:04.139Z",
+  "requestedAt": "2026-11-24T22:10:50.035Z",
   "targets": [
-    "native-saved-checkpoint"
+    "ms-saved-evidence",
+    "bm-publish-current"
   ]
 }
