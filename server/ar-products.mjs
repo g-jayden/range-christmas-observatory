@@ -22,7 +22,7 @@ export function arGallery(d,sku){
 export function arSpecifications(d){
  const a=d.legacy?.dimensions?.attributes||{},s={},description=arPlainText(d.structuredProduct.description||''),title=arPlainText(d.structuredProduct.name);
  for(const[k,v]of Object.entries(a))if(v!==null&&v!==undefined&&v!=='')s[k[0].toUpperCase()+k.slice(1)]=String(v);
- const boundary='(?:Colour|Color|Material|Tree width|Total height|Tree height|Stand size|Overall dimensions|Dimensions|Size|With \\d+|Assembly required|Power source|Number of|Voltage|Suitable for)';
+ const boundary='(?:Colour|Color|Material|Tree width|Total height|Tree height|Height|Width|Length|Depth|Stand size|Overall dimensions|Dimensions|Size|With \\d+|Assembly required|Power source|Number of|Voltage|Suitable for)';
  const field=label=>description.match(new RegExp('\\b'+label+'\\s*:\\s*(.{1,160}?)(?=\\s+'+boundary+'\\s*:|[\\n•;]|$)','i'))?.[1]?.trim();
  if(field('Colou?r'))s.Colour=field('Colou?r');if(field('Material'))s.Material=field('Material');
  // Argos often lists boxed dimensions in the same Product description. They
@@ -46,6 +46,13 @@ export function arSpecifications(d){
  if(!s.Size&&!s.Height&&!s.Length&&!s.Diameter){const measured=dimensionsText.match(/\bMeasures\s+(\d+(?:\.\d+)?\s*(?:cm|mm|m|ft|inches?))\b/i);if(measured)s.Size=measured[1];}
  const familyBlocks=[...dimensionsText.matchAll(/\b(\d+(?:\.\d+)?)\s*(?:FT|ft)\s*[:：]/g)],titleHeight=title.match(/\b(\d+(?:\.\d+)?)\s*(cm|ft)\b/i);
  if(familyBlocks.length>1&&titleHeight){const selectedCm=toCentimetres(titleHeight[1]+titleHeight[2]),block=familyBlocks.find(m=>Math.abs(Number(m[1])*30.48-selectedCm)<3);if(block){const next=familyBlocks.find(m=>m.index>block.index),text=dimensionsText.slice(block.index,next?.index),height=text.match(/(?:height|size)[^\n]{0,35}?(\d+(?:\.\d+)?)\s*cm/i),diameter=text.match(/[ΦφØø]\s*(\d+(?:\.\d+)?)\s*cm/i);if(height&&Math.abs(Number(height[1])-selectedCm)<5)s.Height=height[1]+'cm';if(diameter)s.Diameter=diameter[1]+'cm';}}
+ // A title's garland length is SKU-specific. Do not promote a tree stand's
+ // supported tree height, a cable length or a chain's maximum combined length.
+ if(/\bgarland\b/i.test(title)&&!/\b(?:cable|cord|wire|lead|chain of|up to)\b/i.test(title)&&!s.Length){const length=title.match(/\b(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)\b/i);if(length)s.Length=length[1]+length[2].toLowerCase();}
+ if(/\b(?:skirt|collar)\b/i.test(title)){
+  const collar=dimensionsText.match(/\bMeasuring\s+(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)\s+across the top,?\s+(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)\s+across the base and\s+(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)\s+high\b/i);
+  if(collar){s['Top Diameter']||=collar[1]+collar[2];s['Base Diameter']||=collar[3]+collar[4];s.Height||=collar[5]+collar[6];}
+ }
  return s;
 }
 export function arDirectoryAudit(source){

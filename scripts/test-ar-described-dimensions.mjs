@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {arSpecifications} from '../server/ar-products.mjs';
+const specs=(name,description='')=>arSpecifications({structuredProduct:{name,description}});
+assert.equal(specs('deAO 9FT Christmas Garland').Length,'9ft');
+assert.equal(specs('Christmas Tree World 270cm Pre-Lit Connectable Majestic Dew Pine Garland','Connect a chain of up to 27m.').Length,'270cm');
+assert.equal(specs('Christmas garland with 5m cable').Length,undefined);
+for(const title of ['Tree Stand for Trees up to 2.6m','Tree Stand for Trees up to 2.8m','Wicker Christmas Tree Skirt'])assert.equal(specs(title,'Suitable for trees up to 7ft (210cm).').Height,undefined);
+assert.deepEqual(specs('Neo Hand-Woven Willow Christmas Tree Skirt Collar - Grey','Measuring 45cm across the top, 65cm across the base and 28cm high, it is suitable for real trees.'),{'Top Diameter':'45cm','Base Diameter':'65cm',Height:'28cm'});
+assert.equal(specs('COSTWAY 2 FT Christmas Tree','Material: New PVC, Cement,linen Height: 60 cm Net weight: 0.75 kg').Material,'New PVC, Cement,linen');
+assert.equal(specs('COSTWAY 6FT Tree','Tree Height: 180cm Tree Width: 76cm').Height,'180cm');
+console.log('PASS: exact garland title length, explicit collar dimensions and material boundaries are retained without turning supported tree height, family chain length or cable length into product size.');
