@@ -21,6 +21,7 @@ jobs:
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
       COLLECTION_CHECKPOINTS: '1'
+      EVIDENCE_ISOLATE_WORKTREE: '1'
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
       ONNXRUNTIME_NODE_INSTALL_CUDA: skip
     steps:
@@ -37,6 +38,7 @@ jobs:
             /test/
             /web/*.mjs
             /web/*.json
+            /web/preview-quality-cache.json.gz
             /web/bm/
             /web/images/bm/
       - uses: actions/setup-node@v7.1.0
@@ -61,6 +63,19 @@ jobs:
       - name: Prepare only first-observed NEW after the initial baseline
         if: inputs.mode == 'activate' || inputs.mode == 'daily'
         run: node scripts/prepare-bm-notifications.mjs
+      - name: Archive exact source and native evidence before publication
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: bm-source-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            web/bm/
+            web/images/bm/
+            web/collection-ledger.json
+            web/preview-quality-cache.json.gz
+          retention-days: 3
+          compression-level: 9
+          if-no-files-found: warn
       - name: Preserve B&M evidence without recollecting other retailers
         id: evidence
         if: always()
@@ -72,7 +87,7 @@ jobs:
           git diff --cached --quiet || git commit -m "Save verified B&M exact SKU catalogue and image evidence [skip ci]"
           node scripts/push-evidence.mjs
       - name: Deliver verified published B&M attachments
-        if: always() && (inputs.mode == 'activate' || inputs.mode == 'daily')
+        if: always() && steps.evidence.outcome == 'success' && (inputs.mode == 'activate' || inputs.mode == 'daily')
         run: node scripts/deliver-bm-notifications.mjs
       - name: Refresh the canonical website from committed B&M data without source requests
         if: always() && steps.evidence.outcome == 'success' && (inputs.mode == 'enrich' || inputs.mode == 'activate' || inputs.mode == 'daily')
