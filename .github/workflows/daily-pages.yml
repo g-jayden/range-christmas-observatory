@@ -315,6 +315,7 @@ jobs:
             web/daily-image-checkpoint.json
             web/monitor-state.json
             web/monitor-proof.json
+            web/range-daily-directory-pages.json.gz
             web/new-arrivals.json
             web/new-image-audit.json
             web/paid-native-index.json
