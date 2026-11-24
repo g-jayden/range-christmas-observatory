@@ -14,9 +14,13 @@ const dried=/\b(?:dried|dried[ -]look|pampas|burnt orange|rust[ -]colou?red|copp
 // vase, planter, flower rack, live plant or craft component is not the object.
 export function springSourceDecision(p){
  const title=String(p.variantName||p.name||''),description=String(p.sourceDescription||''),category=String(p.breadcrumb||p.productPath||p.variantPath||p.sourceUrl||''),text=title+' '+description;
- const seasonalIdentity=title+' '+String(p.specifications?.Season||p.specifications?.Occasion||'');if(seasonWords.test(seasonalIdentity))return{disposition:'exclude',reason:'explicit-non-spring-season',evidence:seasonalIdentity.match(seasonWords)[0]};
+ // Sea holly is Eryngium, a flowering botanical species, not Christmas holly.
+ // Keep explicit occasion/season fields intact when removing that title alias.
+ const seasonalIdentity=title.replace(/\bsea[ -]holly\b/gi,'Eryngium')+' '+String(p.specifications?.Season||p.specifications?.Occasion||'');if(seasonWords.test(seasonalIdentity))return{disposition:'exclude',reason:'explicit-non-spring-season',evidence:seasonalIdentity.match(seasonWords)[0]};
  const context=description.match(/\b(?:autumn(?:al)?|halloween|harvest|christmas)\s+(?:colou?rs?|foliage|leaves|wreath|garland|arrangement|bouquet|decoration)|\b(?:rust|burnt orange)\s+(?:leaves|foliage)\b/i),usageOnly=context&&/\b(?:ideal|perfect|suitable|great|use|used)\s+(?:for|in|as)\s*$/i.test(description.slice(Math.max(0,context.index-45),context.index));if(context&&!usageOnly)return{disposition:'exclude',reason:'description-identifies-non-spring-product',evidence:context[0]};
- if(/\bblack\b.{0,35}\b(?:chrysanthemum|rose|dahlia|flower|foliage|leaf|leaves)\b/i.test(title)&&!/\b(?:pot|planter|vase)\b/i.test(title))return{disposition:'exclude',reason:'explicit-dark-non-spring-floral-palette',evidence:title};
+ // Black olive names a green-leaved tree; it is not a black foliage colour.
+ const paletteTitle=title.replace(/\bblack[ -]olive\b/gi,'olive');
+ if(/\bblack\b.{0,35}\b(?:chrysanthemum|rose|dahlia|flower|foliage|leaf|leaves)\b/i.test(paletteTitle)&&!/\b(?:pot|planter|vase)\b/i.test(title))return{disposition:'exclude',reason:'explicit-dark-non-spring-floral-palette',evidence:title};
  if(dried.test(title))return{disposition:'exclude',reason:'dried-or-autumn-palette',evidence:title.match(dried)[0]};
  const outside=/\b(?:living\s+wall|vertical\s+garden|(?:wall|foliage|grass|hedge|fence)\s+(?:panels?|tiles?)|(?:plant|boxwood)\s+wall|hedg(?:e|ing)\s+(?:screen|fence|panel)|(?:conifer|privacy)(?:\s+leaf)?\s+screening|privacy\s+(?:screen|fence)|artificial\s+(?:hedging|turf))\b/i,featureHead=description.split(/\n/).filter(l=>/^\s*[-*]\s+/.test(l)).slice(0,3).join(' ');
  if((outside.test(title)||outside.test(featureHead)||/\b(?:interlocking|modular)\b.{0,80}\bpanels?\b/i.test(featureHead))&&!/\b(?:garlands?|wreaths?|stems?|sprays?|trees?|potted)\b/i.test(title))return{disposition:'exclude',reason:'botanical-panel-or-support-outside-four-forms',evidence:title+' '+featureHead};
@@ -33,7 +37,8 @@ export function springSourceDecision(p){
  const firstFeature=description.split(/\n/).find(l=>/^\s*[-*]\s+/.test(l))||'';
  if(/(?:^|\/)vases(?:\/|$)/i.test(category)&&/\bvases?\b/i.test(firstFeature)&&!/\b(?:artificial|faux|potted|arrangement|includes?|included)\b/i.test(firstFeature))return{disposition:'exclude',reason:'official-vase-category-and-offered-container-description',evidence:firstFeature};
  const foliage=/\b(?:artificial|faux|fake|silk|flower|floral|foliage|leaf|leaves|garland|wreath|stem|spray|bouquet|pick|tree|potted|plant|fern|orchid|rose|hydrangea|eucalyptus|tulip|daisy|peony|gypsophila|lavender|blossom)\b/i;
- if(/\b(?:vases?|planters?|pots?|baskets?|urns?|stands?|frames?|holders?|jugs?|bottles?|mugs?|watering cans?)\b/i.test(title)&&!(/\b(?:in|with)\b[\s\S]*\b(?:pots?|vases?|planters?|baskets?|jugs?)\b|\b(?:arrangement|potted|artificial|faux|fake|tree|fern|succulent|orchid|flowering)\b/i.test(title)))return{disposition:'exclude',reason:'empty-container-or-accessory',evidence:title};
+ const namedPlantVessel=/artificial-plants(?:\/|$)/i.test(category)&&/\b(?:lily|lilies|eucalyptus|hydrangea|peony|tulip|rose|daisy|lavender)\b/i.test(title);
+ if(/\b(?:vases?|planters?|pots?|baskets?|urns?|stands?|frames?|holders?|jugs?|bottles?|mugs?|watering cans?)\b/i.test(title)&&!namedPlantVessel&&!(/\b(?:in|with)\b[\s\S]*\b(?:pots?|vases?|planters?|baskets?|jugs?)\b|\b(?:arrangement|potted|artificial|faux|fake|tree|fern|succulent|orchid|flowering)\b/i.test(title)))return{disposition:'exclude',reason:'empty-container-or-accessory',evidence:title};
  if(!foliage.test(title+' '+category))return{disposition:'review',reason:'botanical-object-unconfirmed',evidence:title};
  const opening=(description.split(/## Information\s*/i)[1]||'').split(/(?<=[.!?])\s+/)[0]||'',offered=featureHead+' '+opening;
  const exact=p.detailEvidence?.exactVariantSource,exactText=exact&&String(exact.selectedSku)===String(p.sku)?[...(exact.features||[]),exact.description||''].join(' '):offered;
