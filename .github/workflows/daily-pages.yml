@@ -41,7 +41,7 @@ permissions:
   actions: write
   contents: write
 concurrency:
-  group: range-source-and-pages-production
+  group: ${{ inputs.mode == 'asda' && 'range-asda-source' || 'range-source-and-pages-production' }}
   cancel-in-progress: false
   queue: max
 jobs:
