@@ -27,7 +27,7 @@ export function verifiedSpringBrowse(catalogue,review,status){
  }
  for(const [id,n]of Object.entries(review.counts||{}))if((counts[id]||0)!==n)fail('category totals disagree: '+id);
  const reviewPending=review.pending.length,reviewComplete=reviewPending===0;
- return {...catalogue,browseReady:true,reviewComplete,reviewPending,ready:reviewComplete};
+ return {...catalogue,browseReady:true,reviewComplete,reviewPending,ready:reviewComplete,automaticArrivalChecks:catalogue.baselineReady===true&&catalogue.automaticArrivalChecks===true};
 }
 
 export async function publishVerifiedSpringBrowse(sourceRoot='web',targetRoot='public'){

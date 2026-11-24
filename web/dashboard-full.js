@@ -1,6 +1,6 @@
 import {productNames} from './product-names.mjs';
 import {springSourceText} from './spring-source-facts.mjs';
-import {SPRING_AVAILABLE,isSpringScope} from './spring-model.mjs';
+import {SPRING_AVAILABLE,SPRING_ALERTS_AVAILABLE,isSpringScope} from './spring-model.mjs';
 import {createPreviewWarmer} from './preview-warmup.mjs';
 import {createCatalogueLoader,currentCatalogueProduct,waitForFirstPreviews} from './catalogue-loader.mjs';
 import {isArScope} from './ar-model.mjs';
@@ -71,7 +71,7 @@ function renderAudit(rows){const source=sourceFor(),verified=rows.filter(p=>p.de
 function render(){
  if(favoritesMode){renderFavorites();return;}if(!scope||!sourceFor())return;const name=DEPARTMENT_MAP[scope],rows=rowsFor();
  E('favoritesTools').hidden=true;E('favoritesOpen').setAttribute('aria-pressed','false');E('qualityPanel').hidden=isThemeScope(scope)||sourceFor()?.browsePartial===true;E('themeShelf').hidden=!isThemeScope(scope);E('themeOverview').hidden=!isThemeScope(scope);E('qualitySection').hidden=isThemeScope(scope)||sourceFor()?.browsePartial===true;E('snapshotDate').textContent='来源观测 · Source observed '+date(sourceFor().observedAt);
- const baselineOnly=(isNxScope(scope)||isJlScope(scope))&&sourceFor().automaticArrivalChecks!==true;E('arrivalCheckState').hidden=!baselineOnly;E('arrivalCheckState').textContent=baselineOnly?'自动新品检查尚未启用，空列表不能确认没有新品 · Automatic arrivals are not enabled; an empty list does not confirm no new products.':'';
+ const baselineOnly=(isNxScope(scope)||isJlScope(scope))&&sourceFor().automaticArrivalChecks!==true||isSpringScope(scope)&&!SPRING_ALERTS_AVAILABLE;E('arrivalCheckState').hidden=!baselineOnly;E('arrivalCheckState').textContent=isSpringScope(scope)&&!SPRING_ALERTS_AVAILABLE?'春季目录已开放；新品邮件尚未启用，空列表不能确认没有新品 · Spring catalogue is available; arrival email alerts are not enabled yet. An empty list does not confirm no new products.':baselineOnly?'自动新品检查尚未启用，空列表不能确认没有新品 · Automatic arrivals are not enabled; an empty list does not confirm no new products.':'';
  E('report').hidden=false;E('subnav').hidden=false;const allRows=availableProducts(sourceFor(),currentArrivals()).filter(p=>uniquePhysicalView(p,scope)&&inDepartment(p,scope)&&(!externalScope(scope)||p.inStock&&p.recordType==='sku'));const counts=sourceFor().browsePartial?sourceFor().browseFullCounts:{all:allRows.length,new:allRows.filter(isNew).length,today:allRows.filter(p=>isToday(p)).length,day:beijingDay()};E('allCount').textContent=counts.all.toLocaleString();E('newCount').textContent=counts.new.toLocaleString();E('todayCount').textContent=(counts.day===beijingDay()?counts.today:0).toLocaleString();for(const id of ['search','sort','more','download'])E(id).disabled=sourceFor().browsePartial===true;navigation.update(scope,mode);
  E('selectionHint').textContent=name.label+' · '+({all:'全部产品 · All products',new:'新款档案 · NEW products',today:'今天首次观察到的新品 · First NEW observed today'})[mode];if(!sourceFor().browsePartial)renderAudit(rows);visible=36;if(isThemeScope(scope))renderTheme(rows);renderProducts();
 }

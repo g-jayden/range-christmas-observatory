@@ -1,5 +1,6 @@
 await import('./test-spring-browse-publication.mjs');
 await import('./test-spring-identical-native.mjs');
+await import('./test-spring-alert-availability.mjs');
 await import('./test-spring-native-body-plan.mjs');
 await import('./test-spring-review-bindings.mjs');
 import{springBodyColourFacts}from'../server/spring-colours.mjs';

@@ -1,5 +1,7 @@
 import{springSourceText}from'./spring-source-facts.mjs';
 export const SPRING_AVAILABLE=true;
+// Website browsing and confirmed server-side email monitoring are independent.
+export const SPRING_ALERTS_AVAILABLE=false;
 export const SPRING_VERSION='range-spring-source-and-photo-v1';
 export const SPRING_DEPARTMENTS=[
  {id:'spring-stems',zh:'花束／单枝',en:'Bouquets / Picks / Stems / Sprays'},
