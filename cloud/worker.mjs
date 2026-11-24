@@ -4,7 +4,7 @@ import {dispatchDigestDue} from './digest-clock.mjs';
 import {AR_DEPARTMENTS} from '../web/ar-model.mjs';
 import {dailyDigestPlans,deliverDailyDigest,dailyDigestOwnerTest,dailyDigestOwnerCorrection,dailyDigestReadySubset} from './daily-digest.mjs';
 import{publicImage}from'./public-image.mjs';
-import{markRetailerPublished}from'./retailer-published.mjs';
+import{markRetailerPublished,recordRetailerScan}from'./retailer-published.mjs';
 import{pagesLease}from'./pages-lease.mjs';
 import{dataPublicationLease}from'./data-publication-lease.mjs';
 import{recoverAbandonedFull,fullRefreshState}from'./full-refresh-owner.mjs';
@@ -292,7 +292,7 @@ export class Control{
      else if(!await this.db.get('seen/'+k)&&p.inStock&&p.arrivalEvidence==='observed-after-baseline'){const pending=await this.db.get('pending/'+k);if(!pending||pending.unavailableSince)await this.db.put('pending/'+k,{...p,newStatus:true,firstDetectedAt:pending?.firstDetectedAt||p.firstNewObservedAt||now});}
     }
     for(const [key,p]of await this.db.list({prefix:'pending/hb:'})){if(!current.get(storageSku(p))?.inStock&&!p.unavailableSince)await this.db.put(key,{...p,unavailableSince:now});}
-    if(!baseline)await this.db.put('baseline/hb-christmas-v1',{observedAt:b.observedAt,products:b.products.length});await this.db.put('hb-monitor',{observedAt:b.observedAt,scanned:b.products.length,checkedAt:now});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('hb-owner-opt-in')),baselineReady:true,candidates:[...(await this.db.list({prefix:'pending/hb:'})).values()].filter(p=>!p.unavailableSince)});
+    if(!baseline)await this.db.put('baseline/hb-christmas-v1',{observedAt:b.observedAt,products:b.products.length});await recordRetailerScan(this.db,'hb',{observedAt:b.observedAt,scanned:b.products.length,checkedAt:now,collectionComplete:b.complete===true});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('hb-owner-opt-in')),baselineReady:true,candidates:[...(await this.db.list({prefix:'pending/hb:'})).values()].filter(p=>!p.unavailableSince)});
    }
    if(route==='/internal/spring-sync'&&req.method==='POST')return response(await syncSpring({body:await req.json(),storage:this.db,ownerId:this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID,verifyProduct:verifyProductUrl}));
    if(['/internal/ar-sync','/internal/mt-sync','/internal/bq-sync'].includes(route)&&req.method==='POST'){const id=route.includes('/ar-')?'ar':route.includes('/mt-')?'mt':'bq';return response(await syncAdditionalRetailer({id,body:await req.json(),storage:this.db,allowedScopes,ownerId:this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID,verifyProduct:verifyProductUrl}));}
@@ -324,7 +324,7 @@ export class Control{
      else if(!await this.db.get('seen/'+k)&&p.inStock&&p.arrivalEvidence==='observed-after-baseline'){const pending=await this.db.get('pending/'+k);if(!pending||pending.unavailableSince)await this.db.put('pending/'+k,{...p,newStatus:true,firstDetectedAt:pending?.firstDetectedAt||p.firstNewObservedAt||now});}
     }
     for(const [key,p]of await this.db.list({prefix:'pending/du:'})){if(!current.get(storageSku(p))?.inStock&&!p.unavailableSince)await this.db.put(key,{...p,unavailableSince:now});}
-    if(!baseline)await this.db.put('baseline/du-christmas-v1',{observedAt:b.observedAt,products:b.products.length});await this.db.put('du-monitor',{observedAt:b.observedAt,scanned:b.products.length,checkedAt:now});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('du-owner-opt-in')),baselineReady:true,candidates:[...(await this.db.list({prefix:'pending/du:'})).values()].filter(p=>!p.unavailableSince)});
+    if(!baseline)await this.db.put('baseline/du-christmas-v1',{observedAt:b.observedAt,products:b.products.length});await recordRetailerScan(this.db,'du',{observedAt:b.observedAt,scanned:b.products.length,checkedAt:now,collectionComplete:b.complete===true});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('du-owner-opt-in')),baselineReady:true,candidates:[...(await this.db.list({prefix:'pending/du:'})).values()].filter(p=>!p.unavailableSince)});
    }
    if(route==='/internal/bm-sync'&&req.method==='POST'){
     const b=await req.json();if(!Array.isArray(b.products)||!Number.isFinite(Date.parse(b.observedAt))||b.complete!==true)throw Error('Invalid complete B&M scan');const baseline=await this.db.get('baseline/bm-christmas-v1'),now=new Date().toISOString(),ownerId=this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID;
@@ -334,7 +334,7 @@ export class Control{
      else if(!await this.db.get('seen/'+k)&&p.inStock&&p.arrivalEvidence==='observed-after-baseline'){const pending=await this.db.get('pending/'+k);if(!pending||pending.unavailableSince)await this.db.put('pending/'+k,{...p,newStatus:true,firstDetectedAt:pending?.firstDetectedAt||p.firstNewObservedAt||now});}
     }
     for(const [key,p]of await this.db.list({prefix:'pending/bm:'})){if(!current.get(storageSku(p))?.inStock&&!p.unavailableSince)await this.db.put(key,{...p,unavailableSince:now});}
-    if(!baseline)await this.db.put('baseline/bm-christmas-v1',{observedAt:b.observedAt,products:b.products.length});await this.db.put('bm-monitor',{observedAt:b.observedAt,scanned:b.products.length,checkedAt:now});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('bm-owner-opt-in')),baselineReady:true,candidates:[...(await this.db.list({prefix:'pending/bm:'})).values()].filter(p=>!p.unavailableSince)});
+    if(!baseline)await this.db.put('baseline/bm-christmas-v1',{observedAt:b.observedAt,products:b.products.length});await recordRetailerScan(this.db,'bm',{observedAt:b.observedAt,scanned:b.products.length,checkedAt:now,collectionComplete:b.complete===true});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('bm-owner-opt-in')),baselineReady:true,candidates:[...(await this.db.list({prefix:'pending/bm:'})).values()].filter(p=>!p.unavailableSince)});
    }
    if(route==='/internal/ms-sync'&&req.method==='POST'){
     const b=await req.json();if(!Array.isArray(b.products)||!Number.isFinite(Date.parse(b.observedAt))||b.complete!==true)throw Error('Invalid complete M&S scan');const baseline=await this.db.get('baseline/ms-christmas-v1'),now=new Date().toISOString(),ownerId=this.env.OWNER_SUBSCRIPTION_ID||this.env.ASDA_OWNER_SUBSCRIPTION_ID;
@@ -344,7 +344,7 @@ export class Control{
      else if(!await this.db.get('seen/'+k)&&p.inStock&&p.arrivalEvidence==='observed-after-baseline'){const pending=await this.db.get('pending/'+k);if(!pending||pending.unavailableSince)await this.db.put('pending/'+k,{...p,newStatus:true,firstDetectedAt:pending?.firstDetectedAt||p.firstNewObservedAt||now});}
     }
     for(const [key,p]of await this.db.list({prefix:'pending/ms:'})){if(!current.get(storageSku(p))?.inStock&&!p.unavailableSince)await this.db.put(key,{...p,unavailableSince:now});}
-    if(!baseline)await this.db.put('baseline/ms-christmas-v1',{observedAt:b.observedAt,products:b.products.length});await this.db.put('ms-monitor',{observedAt:b.observedAt,scanned:b.products.length,checkedAt:now});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('ms-owner-opt-in')),baselineReady:true,candidates:[...(await this.db.list({prefix:'pending/ms:'})).values()].filter(p=>!p.unavailableSince)});
+    if(!baseline)await this.db.put('baseline/ms-christmas-v1',{observedAt:b.observedAt,products:b.products.length});await recordRetailerScan(this.db,'ms',{observedAt:b.observedAt,scanned:b.products.length,checkedAt:now,collectionComplete:b.complete===true});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('ms-owner-opt-in')),baselineReady:true,candidates:[...(await this.db.list({prefix:'pending/ms:'})).values()].filter(p=>!p.unavailableSince)});
    }
    if(route==='/internal/asda-sync'&&req.method==='POST'){
     const b=await req.json();if(!Array.isArray(b.products))throw Error('Invalid ASDA scan');const baseline=await this.db.get('baseline/asda-christmas-v1'),now=new Date().toISOString();
@@ -354,7 +354,7 @@ export class Control{
      else if(!await this.db.get('seen/'+k)&&p.inStock&&p.arrivalEvidence==='observed-after-baseline'&&!await this.db.get('pending/'+k))await this.db.put('pending/'+k,{...p,newStatus:true,firstDetectedAt:p.firstNewObservedAt||now});
     }
     if(!baseline&&b.complete===true)await this.db.put('baseline/asda-christmas-v1',{observedAt:b.observedAt,products:b.products.length});
-    await this.db.put('asda-monitor',{observedAt:b.observedAt,scanned:b.products.length,checkedAt:now});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('asda-owner-opt-in')),baselineReady:Boolean(baseline)||b.complete===true,candidates:[...(await this.db.list({prefix:'pending/asda:'})).values()]});
+    await recordRetailerScan(this.db,'asda',{observedAt:b.observedAt,scanned:b.products.length,checkedAt:now,collectionComplete:b.complete===true});return response({ownerSubscriptionConfigured:Boolean(await this.db.get('asda-owner-opt-in')),baselineReady:Boolean(baseline)||b.complete===true,candidates:[...(await this.db.list({prefix:'pending/asda:'})).values()]});
    }
    if(route==='/internal/asda-subscription'&&req.method==='POST'){
     const b=await req.json(),id=String(b.subscriptionId||'');if(!/^[a-f0-9]{64}$/.test(id))throw Error('Invalid confirmed subscription identity');const sub=await this.db.get('sub/'+id);if(!sub?.confirmedAt)return response({error:'Existing confirmed subscription required'},409);
