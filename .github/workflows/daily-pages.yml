@@ -105,7 +105,7 @@ jobs:
         # Source work needs its own saved bytes, not every other retailer's
         # original-photo archive. The independent publisher loads its assets.
         run: |
-          git sparse-checkout set --no-cone '/*' '!/web/images/' '!/web/reports/' '!/web/mail-assets/'
+          git sparse-checkout set --no-cone '/*' '!/web/images/' '!/web/reports/' '!/web/mail-assets/' '!/web/bq/paid-source-checkpoints/' '!/web/bq/source-billing-history/'
           node scripts/hydrate-current-previews.mjs --range-only
           if [ "${{ steps.tick.outputs.asda }}" = "true" ]; then node scripts/hydrate-current-previews.mjs --retailer=asda; fi
       - name: Install collection and local image analysis clients
