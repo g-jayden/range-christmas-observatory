@@ -38,7 +38,10 @@ export function parseVariantDetails(response,expectedSku,sourceUrl,observedAt=ne
  const soleSku=f.offers?.length===1&&String(f.offers[0].sku)===String(expectedSku)&&f.variantSkus?.length===1&&String(f.variantSkus[0])===String(expectedSku);
  const originals=(f.originalGallery||[]).filter(g=>g.variants.includes(String(v.id))||g.thumbnail===image||soleSku&&!g.variants.length&&f.structuredOriginalImages?.includes(g.thumbnail));
  const originalImages=originals.map(g=>({url:new URL(decode(g.url),f.url).href,thumbnail:g.thumbnail?new URL(decode(g.thumbnail),f.url).href:null,variantId:String(v.id),selectedSku:String(expectedSku),source:f.url})).filter(g=>validProductImage(g.url));
- if(!originalImages.length&&f.structuredOriginalImages?.length&&f.offers?.length===1&&String(f.offers[0].sku)===String(expectedSku)&&(f.structuredOriginalImages.length===1||f.variantSkus?.length===1&&String(f.variantSkus[0])===String(expectedSku)))for(const raw of f.structuredOriginalImages){const url=new URL(raw,f.url);if(['https://www.therange.co.uk','https://kube-media-unpublished.rstore.com'].includes(url.origin)&&validProductImage(url.href))originalImages.push({url:url.href,variantId:String(v.id),selectedSku:String(expectedSku),source:f.url,method:'single-SKU-structured-image'});}
+ // A visible gallery can contain only a detail shot while the Product data
+ // retains another complete view. Merge the two independently observed sets;
+ // an existing gallery must not suppress additional exact sole-SKU images.
+ if(soleSku)for(const raw of f.structuredOriginalImages||[]){let url;try{url=new URL(raw,f.url);}catch{continue;}if(['https://www.therange.co.uk','https://kube-media-unpublished.rstore.com'].includes(url.origin)&&!url.username&&!url.password&&!url.port&&validProductImage(url.href)&&!originalImages.some(g=>g.url===url.href||g.thumbnail===url.href))originalImages.push({url:url.href,variantId:String(v.id),selectedSku:String(expectedSku),source:f.url,method:'single-SKU-structured-image'});}
 
  const exactVariantSource={version:1,selectedSku:String(expectedSku),variantId:String(v.id),sourceUrl:f.url,jsonSource:f.jsonUrl,description:String(v.descriptionText||''),features:(v.features||[]).map(String),descriptionOverride:v.desc_override===1,observedAt};
  exactVariantSource.sha256=createHash('sha256').update(JSON.stringify(exactVariantSource)).digest('hex');

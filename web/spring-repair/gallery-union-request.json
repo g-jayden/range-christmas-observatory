@@ -1,0 +1,379 @@
+{
+  "version": "sole-SKU-visible-and-structured-union-v1",
+  "baseObservedAt": "2026-11-24T06:01:25.250Z",
+  "sourceCommit": "3be9520548cf5558650ab25ea482ee834829ee6e",
+  "products": [
+    {
+      "sku": "695234",
+      "variantId": "19584",
+      "inputFingerprint": "bcf6f628e32bc45146fd7491ad389888228c39b53c77db7765cf84b9688c2055",
+      "sourceContentHash": "11dce9cc715c61d05ffb519ac49433f06d6167d44aa43ec46136565023612136"
+    },
+    {
+      "sku": "1342254",
+      "variantId": "8570214",
+      "inputFingerprint": "b2caae7a8178e47f8939674194042dd193344ba74acfbb67f5fdbefccdea2022",
+      "sourceContentHash": "92d21a7dfed585fc1d2c64a312180e73420e72249939f14e433183d7684bf9b6"
+    },
+    {
+      "sku": "2844917",
+      "variantId": "7526081",
+      "inputFingerprint": "8eb4a4b00f91e999139a0fdd376c1bc72d0f7a542e5ba2e46c6f531ca02cbb83",
+      "sourceContentHash": "e042b4a52720e5db0fa429ec416e9ac86e237bd2d00caf6cf11640c6c433d67a"
+    },
+    {
+      "sku": "3453897",
+      "variantId": "2948985",
+      "inputFingerprint": "f8137c2b8057de8eb23492cf8f372f9a9b4bcce20506bb5efda06c63123c94c1",
+      "sourceContentHash": "7b7dcbca8c6ef4703a86019c88c242acc1545b3b6a17c242f3fc8ac214fbdea1"
+    },
+    {
+      "sku": "2488366",
+      "variantId": "2948988",
+      "inputFingerprint": "398028c63433fc3b84676359a7178757cf8741a3e24030d4940c8ffcaf207916",
+      "sourceContentHash": "9062dc0f0e25fbd4493a0f42b668d644f2ac15d45bf80ebd4742b2b31a70b7be"
+    },
+    {
+      "sku": "4237507",
+      "variantId": "2541708",
+      "inputFingerprint": "bf6984021a426b88ec0e7b319f46eefcab556c8295eb9d6af4e9999c3e8c2ec2",
+      "sourceContentHash": "fcc9092640c2d71150650faa5307e19053795d825e0c4f89bcef730ec35c5c8e"
+    },
+    {
+      "sku": "1338016",
+      "variantId": "9580624",
+      "inputFingerprint": "af3164a0a83953d4bfd58c2b585a6c69a1b5705b367d2d710b15c7ca7eb01c5b",
+      "sourceContentHash": "f6ed7ca152a673f711ae8538a1b61abab5a1cca5d4e2926d8f0a4222d7abbeb7"
+    },
+    {
+      "sku": "1339243",
+      "variantId": "9586279",
+      "inputFingerprint": "9b9fe20e09eccf60464d6c12ed9e4ea6538cd46d30a21b653fe4d403fdf47ad2",
+      "sourceContentHash": "d456aa18a4c2ff3c53b2f0d598b4f60dc50fddbfecf01c7300656b7f0a5aeb87"
+    },
+    {
+      "sku": "1339257",
+      "variantId": "9586339",
+      "inputFingerprint": "ef1fda8ed34e8680be27fadd17dcf11804d8534d0d2cc322d89b04559a2f3551",
+      "sourceContentHash": "27bfd2fd8f0770fa042e16d15d6d2fa98008d163a6324918646d3adfd68d3ced"
+    },
+    {
+      "sku": "1339282",
+      "variantId": "9586434",
+      "inputFingerprint": "64cbae4e076c69a604316707ea1971c2d9ba87a6daefe2e8d0b494e6325c7f40",
+      "sourceContentHash": "870b878055536abe94bb6318b11392a7a032f289e3fa01327a4fe8e4f83850b1"
+    },
+    {
+      "sku": "1339403",
+      "variantId": "9586979",
+      "inputFingerprint": "606347b753b463aac07682973132e0fa05dc0d94169315193249c097e6bf8015",
+      "sourceContentHash": "bcfeaffb797d795f8b0b574e0cff4111918efe1beef29d403c9b07a9141ba924"
+    },
+    {
+      "sku": "1339483",
+      "variantId": "9587354",
+      "inputFingerprint": "8d123c0d944366059e414d2bd2903170e5d6faab0153e099c702ba75992ca27a",
+      "sourceContentHash": "489587b1ef2e827a77ede2fd10f47b40e349346b9dc15129f62b6467f973e678"
+    },
+    {
+      "sku": "1339504",
+      "variantId": "9587459",
+      "inputFingerprint": "cd991f3c75af407c3030f020466d0d23da951c4708d95655822d15cf46ad81f3",
+      "sourceContentHash": "20aaafb86f99b13cc7073193f5d007b3af208b9b485450cbe8782cd91be994e4"
+    },
+    {
+      "sku": "1340125",
+      "variantId": "9590314",
+      "inputFingerprint": "152687c88aa28a28dca84466613a249cad35c7a226eb99b62c93238e27d85e80",
+      "sourceContentHash": "2f675897b81d385c1a8ede00a8afeed047c2dd59eacd7aba4dd4356b8e12cb9d"
+    },
+    {
+      "sku": "1340152",
+      "variantId": "9590439",
+      "inputFingerprint": "7297bb14df9a0a95787001ceef199931c0e1643d6649c99e831ab4b0ca6fbac1",
+      "sourceContentHash": "b16a2f732afc480e752ce227ed7ec54354d3c63fdce8637ac592a75efd6b73d4"
+    },
+    {
+      "sku": "1362080",
+      "variantId": "9691604",
+      "inputFingerprint": "2c6ab8ec5dc8b81a211652c0af9f97336afbbc2b2cd0b1f7243122e9dd396d37",
+      "sourceContentHash": "5af9c7cbd979ba050773f3d7fa4eeea59adc0ff14e2e6944f05430fa1c7972b2"
+    },
+    {
+      "sku": "1364987",
+      "variantId": "9705179",
+      "inputFingerprint": "554fe4d5b16b8f9133d7674f5d1bbcd535f0d0e8041a999574bfa64b6a90bc0f",
+      "sourceContentHash": "d830b820fa7454c8f1c6cc05860e8fbee11711d0c3ee35b35dd02c1c26e79aaf"
+    },
+    {
+      "sku": "1364996",
+      "variantId": "9705219",
+      "inputFingerprint": "4c6f77b5ed6c5dc5c732a4c7c9363d6c01fd045378065acabba25cafcd241213",
+      "sourceContentHash": "418c9de730850a53b3de1e4796c48b3410d5020e926bfd68cd1fb5be9bdcd1d1"
+    },
+    {
+      "sku": "1241684",
+      "variantId": "8794514",
+      "inputFingerprint": "ee9d4b5f282798843c15799a848003d1cfd80ff51266473784ef7cd12f8b6b88",
+      "sourceContentHash": "d9d8177059c4b9629a5a2be27b31e79896e6b7762250f34877f539637bb2dc0b"
+    },
+    {
+      "sku": "1241613",
+      "variantId": "8794294",
+      "inputFingerprint": "79c723435e90f4d44786303efca2c0f3698370602aadb61508b39b4430cf84c9",
+      "sourceContentHash": "2076aa8bf7913493820d017ba095c21a0e33f195aa18f086cc7e6a78306aaabf"
+    },
+    {
+      "sku": "1334186",
+      "variantId": "9563144",
+      "inputFingerprint": "890095ab40401ba114b0057677297a14e0cb7e456ce78d2ba49c5349202666c0",
+      "sourceContentHash": "946f424dffb13dd2f703c76954364828f5d0bcaae4c2729fc2c92fb6714970a4"
+    },
+    {
+      "sku": "1334380",
+      "variantId": "9564029",
+      "inputFingerprint": "cf9feaf6ef514d9727713e4d59861ea120d0695793423334364f6e46d5b948ef",
+      "sourceContentHash": "160197c47b30e5c2672e3f04c1771530f65739823262411f6096d6f095942123"
+    },
+    {
+      "sku": "1438710",
+      "variantId": "10231614",
+      "inputFingerprint": "e6c3be5c872c96f10958be32b53ce35213442c113e0bf98606c8814358c367ca",
+      "sourceContentHash": "b0e1f118e239ece24f3036382e3fd2eb4b4984ceee0ec06a4ad69ec465100d0d"
+    },
+    {
+      "sku": "1438713",
+      "variantId": "10231629",
+      "inputFingerprint": "9888253c9f062120920c9fef4d71bb045edf9fa6b34b8c8b2163a7457b2884c2",
+      "sourceContentHash": "50474b7581bcc86f7a2e9e1f8595a36c23e4b669f9d204211b33e8515ad38f22"
+    },
+    {
+      "sku": "1438721",
+      "variantId": "10231669",
+      "inputFingerprint": "620ae6352570e8aac1a389c863fa1fd66a5b527a9c7387e0845bbdcc138525a3",
+      "sourceContentHash": "965256bb27be72c42d227018f399c4ca5546ebc9f3e7cae84fb1fc3835715ada"
+    },
+    {
+      "sku": "1438746",
+      "variantId": "10231774",
+      "inputFingerprint": "2cb8bf59adf5e6d23d805839dc54710216328447b2cacbc95a93558f02d70772",
+      "sourceContentHash": "e15172b44f2b9776cde18162c74fb9f5ff0c534f67fa4f47deb1a1bf7f6e5b66"
+    },
+    {
+      "sku": "1438758",
+      "variantId": "10231824",
+      "inputFingerprint": "fb69b1964bd6eb1361fd4b45f99a1375e38224aa110a97437e49028382bfe728",
+      "sourceContentHash": "3ce87ac7a167d442806b26c6eaef958a805ec60d87d9e451765e4e599c521f7f"
+    },
+    {
+      "sku": "1438763",
+      "variantId": "10231849",
+      "inputFingerprint": "9fb3446542318136babff64983895fec6695aac0ccc089e447acd8921f7945ef",
+      "sourceContentHash": "65860b2f566b293121cd06a9cc799c5cac331154b4ec877afe0d3f9ceb7a5126"
+    },
+    {
+      "sku": "1438771",
+      "variantId": "10231884",
+      "inputFingerprint": "bdc16ff196cf956a09e9dc2a5d02e79b244ba442e58fcb67113699c2d7fb60a5",
+      "sourceContentHash": "b78a9fee32b14c0d76759cd005f375c9f5fa64cd06783277e7b8846389eb68f3"
+    },
+    {
+      "sku": "1438774",
+      "variantId": "10231899",
+      "inputFingerprint": "24caa20a648ff45615b7b2c0dd73330d25b2b02860618cbfa3dbe1f25f4cdb02",
+      "sourceContentHash": "cbeb2b70b926aab8a8ee45e139066b89d08eb7d7f377d9b4a8cfefa81977d3ff"
+    },
+    {
+      "sku": "1438780",
+      "variantId": "10231919",
+      "inputFingerprint": "e6edfbd4d3dff4659543af22d9533520c78d43094114bb9474bb77110df46b04",
+      "sourceContentHash": "03f431c2e3a7f57b7b37f8dfb13cdf385f93745bb7163b0f68b3e75675994b5d"
+    },
+    {
+      "sku": "1438789",
+      "variantId": "10231959",
+      "inputFingerprint": "7905968da7137c70cc4f5fda8121bb5cb247a0075a1a45664d7ff86ca4119752",
+      "sourceContentHash": "e25d5075911c895b8177cc68bf772c6bc8c6802464b0c12e842dff71b6c790a7"
+    },
+    {
+      "sku": "1438794",
+      "variantId": "10231974",
+      "inputFingerprint": "9b979561af42df057fae11f67d26d3cc68dd405dd10eaa80ebd6d16d511439fd",
+      "sourceContentHash": "3f0313f1a6fe38eb42a7589ee3fc0affb728092a57d1391070a096432dd2ae30"
+    },
+    {
+      "sku": "1438799",
+      "variantId": "10231999",
+      "inputFingerprint": "2f1147fea9ff118f9bf6a6ca1b35bba56c3cfefbb79e8f964550d93a5871e88e",
+      "sourceContentHash": "dce327d19e7e3030542396d7f3469cb4ce2483594b3aaf481bcb50404bfdd358"
+    },
+    {
+      "sku": "1438815",
+      "variantId": "10232054",
+      "inputFingerprint": "12f683b1c97426e962398dbcb64377447cb1b5af58edf5d580769943b309f886",
+      "sourceContentHash": "c081bde43fede3d154906ebdf0370ce82b70dc83209f6e65606f39a31fde65f0"
+    },
+    {
+      "sku": "1438835",
+      "variantId": "10232144",
+      "inputFingerprint": "e0f6d237db998b65dc923767a5985fdd2014a61e9be1db31a67485e4ec7d4aff",
+      "sourceContentHash": "1c11d1df66097d117eed6196e0a66923f5f73fb5188ae2b703980534b0bef835"
+    },
+    {
+      "sku": "1438837",
+      "variantId": "10232154",
+      "inputFingerprint": "e556b2b23dda40dfac0a5c10ed16ff55609b79072ed554083c1a52e67819d5cb",
+      "sourceContentHash": "4faa5a1028f877075c4d5788eb1732127da59bd9b56cea55012e12cd2565234b"
+    },
+    {
+      "sku": "1438839",
+      "variantId": "10232164",
+      "inputFingerprint": "3e9843ad6a0393f5a6020cde35473edc718a22955a659a0b9175c6e0adca73e6",
+      "sourceContentHash": "c22d34810dff8c1aace2d870906d4ec9ebde71bee90c331eee45df272cf99af0"
+    },
+    {
+      "sku": "1438842",
+      "variantId": "10232179",
+      "inputFingerprint": "8bc93beaf36ac2d0ec41d5b46fc26e753af6134bf6b6face94d0d5750894a63c",
+      "sourceContentHash": "c7d39043a48c65786dc213aea673b6f696e4d34726f3de2eafd75e7521243be0"
+    },
+    {
+      "sku": "1438849",
+      "variantId": "10232214",
+      "inputFingerprint": "05f71d9e7d916a78f602093684d45fe669c0cd6b785229ab2d583cd952a39158",
+      "sourceContentHash": "9f1a4497a7114348f122dadb000e17e10e541a4270e70af8472dee4ddd5b6e27"
+    },
+    {
+      "sku": "1438855",
+      "variantId": "10232239",
+      "inputFingerprint": "0e742f1b0f5af9eeebd3bd57a3aca76c8d550adacbb0408edebfd5d4ac33b3a8",
+      "sourceContentHash": "e538fa7816ab11936053112ff2412f8d8c98710b25f6a486f6f4e18e81b7180b"
+    },
+    {
+      "sku": "1438858",
+      "variantId": "10232254",
+      "inputFingerprint": "836fba0d2a78474612faf1254deb97db013b3959337e7199644fde7ce34e5bb9",
+      "sourceContentHash": "5261f4f3df8fc5c0d79f19309c779ab81fd8402fbdadc7ddaa4373da9c2103ab"
+    },
+    {
+      "sku": "1438862",
+      "variantId": "10232274",
+      "inputFingerprint": "7b2ac6fdbb5f0b28c84b6e243f505c8e935ba8ca2621c969b61affcf2b50ae3b",
+      "sourceContentHash": "41a85b5a29ab42f1f0323d9891474ef18edb43de4f35c2511bae903ef547f505"
+    },
+    {
+      "sku": "1438864",
+      "variantId": "10232284",
+      "inputFingerprint": "0f8522df2c1d553ceddebae5515aa8660948961899cf5b871e68c22615715203",
+      "sourceContentHash": "64c43e4b2b979a3ac337cc393cac54f66fe5c8e688e06aabcfe86769fef1d309"
+    },
+    {
+      "sku": "1438868",
+      "variantId": "10232294",
+      "inputFingerprint": "9651701b17ef0bef5dd35caff91f47e8d75258ac15c2fc94d784604679754f89",
+      "sourceContentHash": "7da860ea74d564131245d5923619954b5360786c7e75969dca82b5ba2916279c"
+    },
+    {
+      "sku": "1438872",
+      "variantId": "10232314",
+      "inputFingerprint": "72c7874f599b635b688db5d89f7bd0d34032ccfb2057c76265da64c85912bae9",
+      "sourceContentHash": "6f005b6ada59147ba7897c26178edcaec4958a689d21d2f31d1d2a0ad75dbc5a"
+    },
+    {
+      "sku": "1438881",
+      "variantId": "10232359",
+      "inputFingerprint": "77e57596b23d03c3548c12ab101f3b37bf55960708952f4eb6b11359cb387225",
+      "sourceContentHash": "d24e800efdceb92fa1dc87d64acbd4e41b09ab5f17afac64332a124075b2aa93"
+    },
+    {
+      "sku": "1438883",
+      "variantId": "10232369",
+      "inputFingerprint": "d1c7a48bf9f9d89d3961f1e4edc74162328f9ff98e99b800659e7f353a54c33a",
+      "sourceContentHash": "35f17b9975f259edb5c199de6a89d5df8580af5d5d462a77de1eb1050d0e16e3"
+    },
+    {
+      "sku": "1438884",
+      "variantId": "10232374",
+      "inputFingerprint": "04dced29f456772b062e10afb1cfe8d123c8b35e6d12bdd75ec8f5c271e6c9e4",
+      "sourceContentHash": "9ef645dca1ea4fab7527db0a588a2214c27bb3ba44d529cc71374f6f6f27fb0d"
+    },
+    {
+      "sku": "1438895",
+      "variantId": "10232424",
+      "inputFingerprint": "f645c40e078a141eb3fc82421c5f6c5c5d333b391b9f4529d270a520c9a32453",
+      "sourceContentHash": "c31d68d666be978c74110fc9a2124f7be5a83b21235aaabb35e1768e4ac1459e"
+    },
+    {
+      "sku": "1438898",
+      "variantId": "10232439",
+      "inputFingerprint": "e72ced9c12232babc11306387b3187f9f1cd6506e4407765b479305463d4c900",
+      "sourceContentHash": "4ef544c96735f8a52d16a7cb78be6c17e7e9580b41cf8d31136427e97a3d5f38"
+    },
+    {
+      "sku": "1438908",
+      "variantId": "10232489",
+      "inputFingerprint": "86af33b47fa82522ab35c24134908ab2b9d9d0483652ebedf0618cc9a4a53d76",
+      "sourceContentHash": "e9ef44664b8c7cde6dceb68f232c3defa8fba0ad1456c34f3f3fac680ef35339"
+    },
+    {
+      "sku": "1438913",
+      "variantId": "10232514",
+      "inputFingerprint": "501dcf7f3c88f9e193693d83b26bda40b2aef77c078cc099eec8f6bb027ebceb",
+      "sourceContentHash": "3cc86bce393fd9e184b4251b8cedad8bedb7f32754ce182c27f2859efa973c0d"
+    },
+    {
+      "sku": "1438914",
+      "variantId": "10232519",
+      "inputFingerprint": "665551f470370ed4383bdc63b091252daa36ae90fdbce7675bd673cbc165dcf2",
+      "sourceContentHash": "5ba95bcbde54c26d668e4962dabb005f90023f6bdf0137c64dffb4ab3b05c9d7"
+    },
+    {
+      "sku": "1438925",
+      "variantId": "10232569",
+      "inputFingerprint": "514083ce50436c6b2de9924cfaddc9d60e0f9aec7cc33ab752d6f0599687bca7",
+      "sourceContentHash": "d63b69bd83b4a829b050312062ed5991da39c42c4ca2ba32ebcb5bc255e6b413"
+    },
+    {
+      "sku": "1438938",
+      "variantId": "10232629",
+      "inputFingerprint": "457252a259600372c9b28481c8730353e99cc5842d8ecc5880b2ee34c4716194",
+      "sourceContentHash": "e855c27aaf90b0436f204061b2d5e8c633d3a01144b58f92a84f5f77891d89e7"
+    },
+    {
+      "sku": "1438944",
+      "variantId": "10232659",
+      "inputFingerprint": "c1e51c2f46ae7ba30aff4427806e627be2aa05b9ce53e217a635c16fdad8602b",
+      "sourceContentHash": "eb45aa1bbcd638951e88bbd1ccc67267fbafadb1f31a300eed85a79ba47399aa"
+    },
+    {
+      "sku": "1438956",
+      "variantId": "10232709",
+      "inputFingerprint": "2c76cec2291644e8da120b2d50f6cecb29b994108c77bcc6774b4345db580ba4",
+      "sourceContentHash": "1f5baa42b48687f5ee51f36f7a243d0dd121c7fbffe829223c5b8bd6f9283c85"
+    },
+    {
+      "sku": "3259823",
+      "variantId": "8570189",
+      "inputFingerprint": "7d02ddeca20820eff8ecf385e23fbee08c3accacb65d1821cc5d2b60a4b79579",
+      "sourceContentHash": "755235981e239ebb0a4c661f1aee1ba46c08f953c5e2b889abca52d6cc7ac124"
+    },
+    {
+      "sku": "1591142",
+      "variantId": "11278309",
+      "inputFingerprint": "44bf5b81a9ee409c6a91ae3efbdc74d62b4fe8768ff570f952e17985ceaca704",
+      "sourceContentHash": "0ae29029ff766fe52090cd132d4bca3d3ef388f2b69014b6ebe480f892404db3"
+    },
+    {
+      "sku": "1592112",
+      "variantId": "11283384",
+      "inputFingerprint": "bc045ee4f8554c9461701646007f39f5981e41d00dc7a9001090f5d1b0d822cf",
+      "sourceContentHash": "3b5d7840f3abc51921d14b98928ddbc9ac2791ad6fc631383152243279a57df3"
+    },
+    {
+      "sku": "205608",
+      "variantId": "199339",
+      "inputFingerprint": "054c4ed0a56f83479674a2cedddb45ed724ec02af3f68cc4d4561d693a782817",
+      "sourceContentHash": "1d1f1de176d1ff39c069d90431a662df56ea2f81c95a5a7f60cef45b857af62f"
+    }
+  ]
+}

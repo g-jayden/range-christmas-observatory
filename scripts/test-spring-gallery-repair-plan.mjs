@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {springGalleryRepairPlan,SPRING_GALLERY_DECODER} from '../server/spring-gallery-repair-plan.mjs';
+import {detailFingerprint} from '../server/collection-policy.mjs';
+const p={sku:'123',variantId:'789',id:'456',variantName:'Green tree',sourceUrl:'https://www.therange.co.uk/p/tree/m123/#123',variantImageUrl:'https://www.therange.co.uk/media/listing.jpg',detailsReady:true,detailEvidence:{sourceContentHash:'facts'}};
+const source={observedAt:'2026-11-24T06:00:00Z',products:[p]},r={sku:p.sku,variantId:p.variantId,inputFingerprint:detailFingerprint(p),sourceContentHash:'facts'},request={version:SPRING_GALLERY_DECODER,baseObservedAt:source.observedAt,products:[r]},proof={sku:p.sku,inputSourceUrl:p.sourceUrl,sourceUrl:p.sourceUrl.split('#')[0],listingImageUrl:p.variantImageUrl,variantId:p.variantId,productId:p.id,method:'official-exact-SKU-image-gallery-only',observedAt:'2026-11-24T10:00:00Z',inputFingerprint:detailFingerprint(p),images:[{url:'https://www.therange.co.uk/media/native.jpg',selectedSku:p.sku,variantId:p.variantId,source:p.sourceUrl.split('#')[0]}]};
+assert.equal(springGalleryRepairPlan(source,{request,patch:{galleries:[proof]}}).targets.length,1,'An old visible-only proof must not suppress the corrected decoder');
+assert.equal(springGalleryRepairPlan(source,{request,patch:{galleries:[{...proof,galleryDecoderVersion:SPRING_GALLERY_DECODER}]}}).targets.length,0,'A completed exact same source scope is reused without paid requests');
+for(const changed of [{...request,baseObservedAt:'stale'},{...request,products:[r,r]},{...request,products:[{...r,variantId:'other'}]},{...request,products:[{...r,sourceContentHash:'new-facts'}]},{...request,products:[{...r,sku:'not-requested'}]}])assert.throws(()=>springGalleryRepairPlan(source,{request:changed}));
+assert.deepEqual(springGalleryRepairPlan(source,{ordinaryTargets:[p]}).targets,[p]);
+console.log('PASS: scoped gallery repair can revisit a 1500px close-up after decoder correction, reuses only completed new-decoder proofs, and rejects stale/duplicate/other-SKU/facts-changed scopes.');
