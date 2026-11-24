@@ -1,3 +1,4 @@
+import {mergeNativeBindings,compactNativeEntries} from './native-bindings.mjs';
 const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
 const clone=x=>x===undefined?undefined:structuredClone(x);
 function mergeValue(base,a,b,label){
@@ -40,11 +41,11 @@ export function mergeCollectorNativeIndexes(base={},a={},b={}){
   if(same(x,prior)){entries[source]=clone(y);continue;}
   if(x.url!==source||y.url!==source||x.ok!==true||y.ok!==true||!x.hash||x.hash!==y.hash||x.cachedImageUrl!==y.cachedImageUrl||x.width!==y.width||x.height!==y.height||x.bytes!==y.bytes)throw Error('Conflicting exact native image evidence: '+source);
   const latest=Date.parse(y.observedAt||0)>Date.parse(x.observedAt||0)?y:x;
-  entries[source]={...clone(latest),bindings:[...new Set([...(x.bindings||[]),...(y.bindings||[])])].sort(),selectedSkus:[...new Set([...(x.selectedSkus||[]),...(y.selectedSkus||[])])].sort()};
+  entries[source]={...clone(latest),bindings:mergeNativeBindings(x.bindings,y.bindings),selectedSkus:[...new Set([...(x.selectedSkus||[]),...(y.selectedSkus||[])])].sort()};
  }
  const strip=x=>Object.fromEntries(Object.entries(x).filter(([k])=>!['entries','lastReceipt','checkedAt'].includes(k))),lastReceipt=newestReceipt(a.lastReceipt,b.lastReceipt),checks=[a.checkedAt,b.checkedAt].filter(v=>v!==undefined);
  if(checks.some(v=>!Number.isFinite(Date.parse(v))))throw Error('Invalid native index observation time');
- return {...mergeValue(strip(base),strip(a),strip(b),'native-index'),entries,...(checks.length?{checkedAt:new Date(Math.max(...checks.map(Date.parse))).toISOString()}:{}),...(lastReceipt?{lastReceipt}: {})};
+ return {...mergeValue(strip(base),strip(a),strip(b),'native-index'),entries:compactNativeEntries(entries),...(checks.length?{checkedAt:new Date(Math.max(...checks.map(Date.parse))).toISOString()}:{}),...(lastReceipt?{lastReceipt}: {})};
 }
 export function mergeCollectorImageCaches(base={},a={},b={}){
  const entries={};for(const key of new Set([...Object.keys(a.entries||{}),...Object.keys(b.entries||{})])){
