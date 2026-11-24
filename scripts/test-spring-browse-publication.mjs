@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
+import {runInNewContext} from 'node:vm';
 import {SPRING_VERSION} from '../web/spring-model.mjs';
 import {verifiedSpringBrowse,publishVerifiedSpringBrowse} from '../server/spring-browse-publication.mjs';
 import {buildBrowseCatalogues} from './build-browse-catalogues.mjs';
@@ -30,4 +31,13 @@ try{
  const list=JSON.parse(await fs.readFile(path.join(target,entry.directoryIndex.url),'utf8'));assert.equal(list.products.length,1);assert.equal(list.reviewPending,1);assert.equal(list.products[0].sku,'1');
  assert.equal(await fs.readFile(path.join(source,'spring/candidate-catalogue.json'),'utf8'),JSON.stringify(catalogue),'Publication cannot rewrite source facts or fake review completion');
 }finally{await fs.rm(dir,{recursive:true,force:true});}
+// Execute the real status poll: Christmas's shared Range status must not
+// overwrite the active Spring observation or its outstanding review count.
+const dashboard=await fs.readFile(new URL('../web/dashboard-full.js',import.meta.url),'utf8'),pollCode=dashboard.slice(dashboard.indexOf('async function poll(){'),dashboard.indexOf('setInterval(()=>{const day=beijingDay();'));
+const elements={},none=()=>false,noop=()=>{};
+const context={scope:'spring-stems',E:id=>elements[id]??={textContent:''},readStatus:async()=>({}),read:async name=>name==='spring/status.json'?{...status,products:2804,reviewPending:161}:name==='collection-ledger.json'?{}:null,isSpringScope:()=>true,externalScope:none,sourceFor:()=>({observedAt}),A:{},D:{},C:null,L:null,T:null,AR:null,MT:null,BQ:null,NX:null,JL:null,DU:null,HB:null,BM:null,MS:null,AS:null,browseLoader:{check:async()=>[]},date:String,beijingDay:()=>observedAt.slice(0,10),Promise,departmentViews:new Map};
+for(const id of ['Ar','Mt','Bq','Nx','Jl','Du','Hb','Bm','Ms','Asda'])context['is'+id+'Scope']=none;
+for(const id of ['Ar','Mt','Bq','Nx','Jl'])context['load'+id]=noop;
+await runInNewContext(pollCode+'\npoll();',context);
+assert.match(elements.freshness.textContent,/Spring/);assert.match(elements.freshness.textContent,/2804/);assert.match(elements.freshness.textContent,/161/);assert.doesNotMatch(elements.freshness.textContent,/Trees \/ Skirts|Status unavailable/);
 console.log('PASS: pending Spring SKUs no longer block individually accepted products; exact-SKU/photo/size gates, review accounting, immutable fast views and unchanged source facts remain enforced.');
