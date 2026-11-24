@@ -5,7 +5,7 @@ import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import sharp from 'sharp';
-import {restoreSourceImageArchive} from '../server/source-image-archive.mjs';
+import {restoreSourceImageArchive,sourceArchiveRevision} from '../server/source-image-archive.mjs';
 import {analysePreviewFiles} from '../server/preview-quality.mjs';
 const cwd=process.cwd(),dir=await fs.mkdtemp(path.join(os.tmpdir(),'bulk-source-archive-'));
 try {
@@ -17,5 +17,19 @@ try {
  const classify=async(files,prompts)=>{analyses+=files.length;for(const f of files){assert(path.isAbsolute(f),'The model receives a real absolute file path');await fs.access(f);}return files.map(()=>prompts.map((label,i)=>({label,score:i===0?.9:.01})));};
  await analysePreviewFiles([{hash:records[0].sha256,file:'web/'+records[0].file}],{classify});assert.equal(analyses,1);assert.deepEqual(await fs.readFile('web/'+records[0].file),originals[0]);
  const b=await restoreSourceImageArchive(records,{fetcher});assert.equal(b.restored,0);assert.equal(b.alreadyPresent,2);await assert.rejects(restoreSourceImageArchive([{file:'../escape.png',sha256:'a'.repeat(64)}]));
+ // Public archive URLs must use the confirmed publication, not the private
+ // collector commit. Missing or stale publication proofs must fail closed.
+ const localRevision='a'.repeat(40),publicRevision='b'.repeat(40),env={EVIDENCE_ISOLATE_WORKTREE:'1',GITHUB_RUN_ID:'archive-test',GITHUB_RUN_ATTEMPT:'2'};
+ const run=(_command,args)=>args.includes('refs/remotes/origin/main')?publicRevision:localRevision;
+ await fs.mkdir('runtime',{recursive:true});
+ await fs.writeFile('runtime/evidence-publication.json',JSON.stringify({revision:publicRevision,collectorRevision:localRevision,runId:env.GITHUB_RUN_ID,runAttempt:'2'}));
+ assert.equal(sourceArchiveRevision({root:dir,env,run}),publicRevision);
+ await fs.writeFile('runtime/evidence-publication.json',JSON.stringify({revision:publicRevision,collectorRevision:localRevision,runId:'previous-run',runAttempt:'2'}));
+ assert.throws(()=>sourceArchiveRevision({root:dir,env,run}),/no confirmed public revision/);
+ await fs.unlink('runtime/evidence-publication.json');
+ assert.throws(()=>sourceArchiveRevision({root:dir,env,run}),/confirmed public image archive revision/);
+ assert.equal(sourceArchiveRevision({root:dir,env,run:()=>publicRevision}),publicRevision,'Cached-only checkout may restore its fetched public main revision before any checkpoint');
+ assert.equal(sourceArchiveRevision({root:dir,env:{...env,EVIDENCE_ISOLATED_PUBLISHER:'1'},run}),localRevision);
  console.log('PASS: bulk restoration recovers exact committed source bytes with zero network or source credits; local visual analysis restores a deleted checkpoint image and receives absolute file paths.');
+ console.log('PASS: isolated collectors use confirmed public image revisions; stale proofs and unpublished commits are rejected, and fresh cached-only public checkouts remain valid.');
 } finally {process.chdir(cwd);await fs.rm(dir,{recursive:true,force:true});}
