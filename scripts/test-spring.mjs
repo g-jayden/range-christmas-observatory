@@ -1,3 +1,4 @@
+await import('./test-spring-native-body-plan.mjs');
 import{springBodyColourFacts}from'../server/spring-colours.mjs';
 await import('./test-spring-selected-facts.mjs');
 await import('./test-spring-gallery-references.mjs');

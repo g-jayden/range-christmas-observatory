@@ -1,0 +1,48 @@
+name: Recover exact missing Spring gallery originals
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: range-spring-source
+  cancel-in-progress: false
+jobs:
+  native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    env:
+      FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+      COLLECTION_BUDGET_PHASE: spring-native-bodies
+      EVIDENCE_NATIVE_ONLY: '1'
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/images/
+            !/web/reports/
+            !/web/mail-assets/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci --no-audit --no-fund
+      - name: Reserve existing owner-authorised free-first image budget
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          node scripts/reserve-credits.mjs
+          git add --sparse -- web/collection-ledger.json
+          git diff --cached --quiet || git commit -m "Reserve exact missing Spring native bodies [skip ci]"
+          node scripts/push-evidence.mjs
+      - name: Recover only requested exact-SKU gallery image bodies
+        run: node server/repair-spring-native-bodies.mjs
+      - name: Preserve untouched originals, the checkpoint and actual receipts
+        if: always()
+        run: |
+          git add --sparse --ignore-removal -- web
+          git diff --cached --quiet || git commit -m "Save targeted Spring original bodies and actual receipts [skip ci]"
+          node scripts/push-evidence.mjs
