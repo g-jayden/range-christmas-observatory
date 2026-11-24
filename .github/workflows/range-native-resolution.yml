@@ -31,7 +31,8 @@ jobs:
         with:
           node-version: '24'
       - run: npm ci --no-audit --no-fund
-      - name: Verify account balance and retain existing reserve
+      - name: Reserve general collection only for legacy source inspection
+        if: ${{ hashFiles('ops/priority-native-request.json') == '' }}
         run: node scripts/reserve-credits.mjs
       - name: Verify exact current priority scope before source access
         run: node scripts/test-priority-native-request.mjs
