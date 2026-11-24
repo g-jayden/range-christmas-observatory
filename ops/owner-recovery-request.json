@@ -1,8 +1,14 @@
 {
-  "requestId": "owner-recovery-20261124-publish-source-and-visual-qa",
+  "requestId": "owner-recovery-20261124-publish-current-validated-source",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T14:26:30.973Z",
+  "requestedAt": "2026-11-24T14:28:26.337Z",
   "targets": [
     "static-pages-current"
+  ],
+  "supersedeReadOnlyPagesBeforeDeployment": [
+    {
+      "runId": 45413834221,
+      "expectedCommit": "e8c358109ee2032d170220ccfc324cb815a8df33"
+    }
   ]
 }
