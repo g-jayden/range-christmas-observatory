@@ -8,7 +8,9 @@ export function bindRangeDirectoryNative(snapshot){
  if(snapshot?.baselineReady!==true||!Number.isFinite(Date.parse(snapshot.observedAt))||!Array.isArray(snapshot.products))return audit;
  const counts=new Map();for(const p of snapshot.products)counts.set(String(p.sku),(counts.get(String(p.sku))||0)+1);
  for(const p of snapshot.products){
-  if(p.detailsReady===true||p.originalImages?.length)continue;
+  const stale=(p.originalImages||[]).filter(g=>g.verification==='exact-official-SKU-directory-row-image-PDP-gallery-unavailable'&&(g.selectedSku!==String(p.sku)||g.variantId!==String(p.variantId)||g.sourceUrl!==p.sourceUrl||g.url!==p.variantImageUrl||p.listingVariantImageUrl&&p.listingVariantImageUrl!==g.url));
+  if(stale.length){const urls=new Set(stale.map(g=>g.url));p.originalImages=p.originalImages.filter(g=>!stale.includes(g));delete p.directoryImageEvidence;if(urls.has(p.originalImageUrl))delete p.originalImageUrl;if(urls.has(p.originalImageEvidence?.sourceUrl)&&p.originalImageEvidence.method==='exact-official-SKU-directory-image-native-response-byte-mirror'){delete p.originalImageEvidence;delete p.originalCachedImageUrl;}}
+  if(p.originalImages?.length)continue;
   const sku=String(p.sku||''),url=p.variantImageUrl;
   let page;try{page=new URL(p.sourceUrl);}catch{continue;}
   if(!/^\d{1,12}$/.test(sku)||counts.get(sku)!==1||p.variantId==null||!p.variantName||page.origin!=='https://www.therange.co.uk'||page.hash.slice(1)!==sku||!url||!validProductImage(url)||p.listingVariantImageUrl&&p.listingVariantImageUrl!==url){audit.rejected++;continue;}
