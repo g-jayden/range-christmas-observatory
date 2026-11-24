@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';import {gzipSync,gunzipSync} from 'node:zlib';
 const hash=b=>createHash('sha256').update(b).digest('hex');
-export async function packStaticJson(root='public',{triggerBytes=900000000,minBytes=32768,maxTarBytes=990000000}={}){
+export async function packStaticJson(root='public',{triggerBytes=900000000,minBytes=4096,maxTarBytes=990000000}={}){
  const files=[];async function walk(dir){for(const e of await fs.readdir(dir,{withFileTypes:true})){const full=path.join(dir,e.name);if(e.isDirectory())await walk(full);else if(e.isFile()){const s=await fs.stat(full);files.push({path:path.relative(root,full).split(path.sep).join('/'),bytes:s.size});}}}await walk(root);
  const beforeBytes=files.reduce((n,f)=>n+f.bytes,0),tarBytes=list=>list.reduce((n,f)=>n+512+Math.ceil(f.bytes/512)*512,10240);
  if(beforeBytes<triggerBytes)return{enabled:false,beforeBytes,afterBytes:beforeBytes,estimatedTarBytes:tarBytes(files),sourceRequests:0,firecrawlCredits:0};
