@@ -1,0 +1,67 @@
+name: Restore captured M&S source without recollection
+on: workflow_dispatch
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: range-ms-source
+  cancel-in-progress: false
+  queue: max
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      EVIDENCE_ISOLATE_WORKTREE: '1'
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /package.json
+            /package-lock.json
+            /server/
+            /scripts/
+            /cloud/
+            /web/*.mjs
+            /web/*.json
+            /web/preview-quality-cache.json.gz
+            /web/ms/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci --no-audit --no-fund
+      - run: node scripts/test-saved-ms-evidence.mjs
+      - name: Verify the identified archived official source
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'JS'
+          const r=await fetch('https://api.github.com/repos/g-jayden/range-christmas-observatory/actions/artifacts/14969815473',{headers:{authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json'},signal:AbortSignal.timeout(30000)});if(!r.ok)throw Error('Saved source verification HTTP '+r.status);const a=await r.json();if(a.name!=='ms-source-evidence-45496725601-1'||a.expired||a.workflow_run.id!==45496725601||a.workflow_run.head_repository_id!==1439271815||a.digest!=='sha256:8a9c95c9e251523f1f9f0bc8df108eb3ba8a466a8a3b362405a1b0c116bb652c')throw Error('Wrong M&S source archive');console.log(JSON.stringify({verified:true,sourceRequests:0,firecrawlCredits:0}));
+          JS
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          name: ms-source-evidence-45496725601-1
+          run-id: 45496725601
+          github-token: ${{ github.token }}
+          path: runtime/ms-saved-evidence
+      - run: node scripts/restore-saved-ms-evidence.mjs
+      - run: node scripts/prepare-ms-notifications.mjs
+      - name: Publish the saved source without reopening any provider session
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          mkdir -p web/mail-assets
+          git add --sparse -- web/ms web/images/ms web/mail-assets
+          git diff --cached --quiet || git commit -m "Restore captured M&S official source and native bytes without recollection [skip ci]"
+          node scripts/push-evidence.mjs
+      - run: node scripts/deliver-ms-notifications.mjs
+      - env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/request-ms-site-publish.mjs
