@@ -1,6 +1,13 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import {productNames,PDF_LAYOUT_VERSION} from '../web/product-names.mjs';
+import {offeredObject} from '../web/taxonomy.mjs';
+const villageModel = {variantName:'The Tipsy Tavern Model',kind:'decoration',department:'ornaments',sourceDescription:'A miniature festive pub building with warm lights.'};
+assert.equal(offeredObject(villageModel).id,'scenes');
+assert(productNames(villageModel).zh.includes('微醺酒馆'));
+assert(productNames(villageModel).zh.includes('建筑模型'));
+assert(productNames({variantName:'Deers with Sleigh Decoration - Golden',department:'ornaments'}).zh.includes('鹿与雪橇'));
+assert.notEqual(offeredObject({variantName:'Tavern Hanging Tree Ornament',kind:'decoration',department:'tree-decorations',dimensions:{values:{Height:8}}}).id,'scenes');
 import {cataloguePdf} from '../web/catalogue-pdf.mjs';
 import {reportPages,reportCells,REPORT_PAGE} from '../web/report-layout.mjs';
 import {productPrice,productSize} from '../web/product-facts.mjs';
