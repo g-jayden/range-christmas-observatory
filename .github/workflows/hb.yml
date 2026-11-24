@@ -10,7 +10,7 @@ permissions:
   contents: write
   actions: write
 concurrency:
-  group: range-source-and-pages-production
+  group: range-hb-source
   cancel-in-progress: false
   queue: max
 jobs:
@@ -21,6 +21,7 @@ jobs:
       CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
       CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
       COLLECTION_CHECKPOINTS: '1'
+      EVIDENCE_ISOLATE_WORKTREE: '1'
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
       ONNXRUNTIME_NODE_INSTALL_CUDA: skip
     steps:
@@ -37,6 +38,8 @@ jobs:
             /test/
             /web/*.mjs
             /web/*.json
+            /web/preview-quality-cache.json.gz
+            /web/mail-assets/hb-*/
             /web/hb/
             /web/images/hb/
       - uses: actions/setup-node@v7.1.0
@@ -69,6 +72,19 @@ jobs:
       - name: Prepare only first-observed NEW after the initial baseline
         if: inputs.mode == 'activate' || inputs.mode == 'daily'
         run: node scripts/prepare-hb-notifications.mjs
+      - name: Archive exact source and native evidence before publication
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: hb-source-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            web/hb/
+            web/images/hb/
+            web/collection-ledger.json
+            web/preview-quality-cache.json.gz
+          retention-days: 3
+          compression-level: 9
+          if-no-files-found: warn
       - name: Preserve Home Bargains evidence without recollecting other retailers
         id: evidence
         if: always()
@@ -80,7 +96,7 @@ jobs:
           git diff --cached --quiet || git commit -m "Save verified Home Bargains exact SKU catalogue and image evidence [skip ci]"
           node scripts/push-evidence.mjs
       - name: Deliver verified published Home Bargains attachments
-        if: always() && (inputs.mode == 'activate' || inputs.mode == 'daily')
+        if: always() && steps.evidence.outcome == 'success' && (inputs.mode == 'activate' || inputs.mode == 'daily')
         run: node scripts/deliver-hb-notifications.mjs
       - name: Refresh the canonical website from committed Home Bargains data without source requests
         if: always() && steps.evidence.outcome == 'success' && (inputs.mode == 'enrich' || inputs.mode == 'activate' || inputs.mode == 'daily')
