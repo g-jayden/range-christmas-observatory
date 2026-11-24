@@ -1,7 +1,7 @@
 // Classify the offered SKU, not motifs printed on it or objects in its roomset.
 // This module has no network or model dependencies and is shared by monitoring
 // and the public catalogue. Image scores are evidence, never fabricated facts.
-export const TAXONOMY_VERSION='2026-11-23-explicit-light-set-v7';
+export const TAXONOMY_VERSION='2026-11-24-village-building-model-v8';
 export const isPublishedProduct=p=>!p.taxonomyAudit||p.taxonomyAudit.disposition==='include';
 export function productDescription(p){return String(p.sourceDescription||p.appearanceSource?.descriptionText||p.productSummary||'');}
 export function productBody(p){
@@ -46,6 +46,7 @@ export function offeredObject(p,{visual=p.taxonomyVisual}={}){
  if(/\bcandle\s+(?:wreath|ring|lantern)|\bvotive|\bwreath\s+candle\s+holder/i.test(nounBody))return r('candle-holder','candle-decoration-ring-not-a-door-wreath');
  if(/\b(?:candle[ -]?(?:holder|stick|stand|bridge)s?|candelabra|tea[ -]?light[ -]?(?:holder|lantern)s?)\b/i.test(body))return r('candle-holder','candle-support-product');
  if(/\b(?:house|church|cottage|chalet|building|shop)\b/i.test(body)&&!hanging&&!/\b(?:house shaped|house)\b.{0,30}\b(?:light string|garland|wreath|cushion|canvas|sign|plaque)\b/i.test(body)&&!/\b(?:wreath|garland)\b.{0,12}\b(?:for|on)\b/i.test(body))return r('scenes','offered-house-or-building-not-its-wreath-motif');
+ if(/\b(?:taverns?|pubs?|inns?|baker(?:y|ies)|post office|town hall|train station)\b/i.test(nounBody)&&/\bmodels?\b/i.test(nounBody)&&!hanging)return r('scenes','offered-village-building-model-not-a-generic-ornament');
  if(freestanding&&!/\b(?:bauble|tree topper|hanging|pendant)\b/i.test(body))return r('standing','explicit-free-standing-SKU-description');
  if(/\b(?:baubles?|tree (?:decorations?|ornaments?|toppers?|pendants?)|shatterproof|flower clips?|floral clips?|poinsettia clips?)\b/i.test(body)&&!/\b(?:bauble wreath|bauble garland|bauble swag|bauble pick|bauble spray|wreath with baubles)\b/i.test(body))return r('tree-decorations','offered-tree-ornament-or-clip');
  if(/\bchristmas lights?\s*$/i.test(nounBody))return r('lights','offered-explicit-Christmas-light-set-before-hanging-use-context');
