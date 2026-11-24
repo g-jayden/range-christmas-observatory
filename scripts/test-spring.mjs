@@ -94,3 +94,9 @@ assert.equal(productNames({department:'spring-potted',variantName:'Artificial Ag
 assert.equal(productNames({department:'spring-tree',variantName:'2pcs Artificial Zamioculcas Tree - Green'}).zh,'绿色金钱树仿真树（2件套）');
 assert.equal(productNames({department:'spring-tree',variantName:'Pair of Artificial Pink and White Rose Trees',paletteEvidence:{colours:['粉色','白色','绿色']}}).zh,'粉色／白色／绿色玫瑰仿真树');
 console.log('PASS: Spring Chinese names retain audited botanical body colours, omit container colours, distinguish botanical species and preserve explicit pack quantities.');
+const waitingBaseline=mergeSpring({products:[],history:{},baselineReady:false},{products:[{...row,newIn:false}],audit:{expected:1,complete:true}},'2026-11-23T20:00:00Z');
+const arrivalWhilePhotosPending=mergeSpring(waitingBaseline,{products:[{...row,newIn:true}],audit:{expected:1,complete:true}},'2026-11-23T22:00:00Z');
+assert.equal(arrivalWhilePhotosPending.baselineReady,false,'Remembering a new arrival cannot enable the unfinished catalogue or send an email');
+assert.equal(arrivalWhilePhotosPending.discoveryBaselineAt,'2026-11-23T20:00:00Z');
+assert.equal(arrivalWhilePhotosPending.products[0].firstNewObservedAt,'2026-11-23T22:00:00Z');assert.equal(arrivalWhilePhotosPending.products[0].arrivalEvidence,'observed-after-baseline');
+console.log('PASS: a complete discovery baseline retains genuine subsequent NEW arrivals while photo verification is unfinished, without activating or emailing an unverified catalogue.');
