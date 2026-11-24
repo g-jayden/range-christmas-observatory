@@ -14,8 +14,16 @@ import {createFreeFirstRangeImages} from './range-free-images.mjs';
 import {materializeCommittedImage} from './committed-image-file.mjs';
 
 export async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000,anchors=[]}){
- const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status};return {status:200,value:json?await response.json():await response.text()}}catch(error){return {status:0,error:String(error.message).slice(0,180)}}};
- const [data,html]=await Promise.all([initial?{status:200,value:initial}:read(jsonUrl,true),providedHtml?{status:200,value:providedHtml}:read(url,false)]);
+ const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status,url:response.url||target};return {status:200,url:response.url||target,value:json?await response.json():await response.text()}}catch(error){return {status:0,error:String(error.message).slice(0,180)}}};
+ let [data,html]=await Promise.all([initial?{status:200,value:initial}:read(jsonUrl,true),providedHtml?{status:200,value:providedHtml}:read(url,false)]),redirectedSource;
+ // Listings can retain a retired slug. HTML follows its redirect, while the
+ // old ?json endpoint returns HTML instead of variant JSON. Only follow a
+ // canonical/redirect actually observed on that official product page, once.
+ if(data.status!==200&&html.status===200&&anchors.length){
+  const doc=new DOMParser().parseFromString(html.value,'text/html'),raw=doc.querySelector('link[rel="canonical"]')?.getAttribute('href')||html.url;
+  let resolved;try{const u=new URL(raw,url),input=new URL(url);if(u.origin==='https://www.therange.co.uk'&&u.origin===input.origin&&!u.username&&!u.password&&u.pathname.replace(/\/$/,'')!==input.pathname.replace(/\/$/,'')&&(doc.querySelector('#product_id')||doc.querySelector('#product-dyn-code'))){u.hash='';u.search='';u.pathname=u.pathname.replace(/\/$/,'');resolved=u.href;}}catch{}
+  if(resolved){const canonicalJson=resolved+'?json',next=await read(canonicalJson,true);if(next.status===200&&next.value?.variant_arr?.some(v=>anchors.some(a=>String(v.sku)===String(a.sku)&&String(v.code).replace(/^0+(?=\d)/,'')===String(a.sku).replace(/^0+(?=\d)/,'')&&(!a.variantId||String(v.id)===String(a.variantId))))){data=next;redirectedSource={method:'observed-official-product-page-canonical',requestedUrl:url,resolvedUrl:resolved,jsonUrl:canonicalJson};}}
+ }
  // Validate separately returned official JSON against requested SKU anchors.
  // An unavailable HTML document supplies no description or gallery evidence.
  if(data.status===200&&html.status!==200&&Array.isArray(data.value?.variant_arr)&&anchors.length){
@@ -39,6 +47,7 @@ export async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeout
  const originalGallery=Array.from(doc.querySelectorAll('#available-imgs a.rsImg, #product-gallery a.rsImg')).map(e=>({url:e.getAttribute('href')||e.getAttribute('data-rsBigImg')||e.getAttribute('src'),thumbnail:e.querySelector('img[data-variant]')?.getAttribute('src')||e.getAttribute('data-rsTmb'),variants:(e.querySelector('img[data-variant]')?.getAttribute('data-variant')||e.getAttribute('data-variant')||'').split(',').filter(Boolean)})).filter(g=>g.url&&/\/media\//.test(g.url));
  const rawGallery=product?.image?.url||product?.image||[];evidence.originalGallery=originalGallery;evidence.structuredOriginalImages=(Array.isArray(rawGallery)?rawGallery:[rawGallery]).map(x=>typeof x==='string'?x:x?.url).filter(Boolean);
  const variants=Array.isArray(body.variant_arr)?body.variant_arr.map(v=>({code:v.code,prod_id:v.prod_id,sku:v.sku,id:v.id,attributes:v.attributes,attributes_supplementary:{'Model Number':v.attributes_supplementary?.['Model Number']},product_specification:v.product_specification||[],features:v.features||[],desc_override:v.desc_override,descriptionText:plain(v.description_html)})):[];
+ if(redirectedSource)evidence.redirectedSource=redirectedSource;
  return {status:200,variants,evidence};
 }
 
