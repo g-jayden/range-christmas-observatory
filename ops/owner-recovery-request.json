@@ -1,8 +1,14 @@
 {
-  "requestId": "owner-recovery-20261124-recover-bq-raw-loader-only",
-  "requestedAt": "2026-11-24T11:21:36.409312Z",
+  "requestId": "owner-recovery-20261124-replace-obsolete-pages-build",
   "authorization": "owner-standing-complete-unfinished-collection",
+  "requestedAt": "2026-11-24T11:29:35.706109+00:00",
   "targets": [
-    "bq-current"
+    "static-pages-current"
+  ],
+  "supersedeReadOnlyPagesBeforeDeployment": [
+    {
+      "runId": 45381543951,
+      "expectedCommit": "327fe82169326b6cba421f26b9849ff436d4e79e"
+    }
   ]
 }
