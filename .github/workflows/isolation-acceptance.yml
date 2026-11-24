@@ -1,0 +1,35 @@
+name: Verify daily checks preserve the official collector workspace
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/isolation-acceptance.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: readonly-workflow-isolation-acceptance
+  cancel-in-progress: true
+jobs:
+  regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/images/
+            !/web/reports/
+            !/web/mail-assets/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci --no-audit --no-fund
+      - name: Prove fixture mutations and credentials stay isolated
+        run: node scripts/test-workflow-test-isolation.mjs
+      - name: Run the full current suite in a disposable checkout without collector credentials
+        run: node scripts/run-isolated-workflow-tests.mjs
