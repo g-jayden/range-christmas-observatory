@@ -1,0 +1,37 @@
+name: Continue productive saved B&Q photo work
+on:
+  workflow_run:
+    workflows: ['B&Q free exact SKU collection and native photos']
+    types: [completed]
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: bq-productive-photo-continuation
+  cancel-in-progress: false
+jobs:
+  continuation:
+    if: github.event.workflow_run.conclusion == 'failure' && github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.gitignore
+            /server/
+            /scripts/continue-bq-photos.mjs
+            /scripts/push-evidence.mjs
+            /web/bq/image-progress.json
+            /web/bq/collection-status.json
+            /web/bq/closed-directory-checkpoint.json
+            /web/bq/photo-continuation.json
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - name: Continue only new saved image progress without paid source access
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/continue-bq-photos.mjs
