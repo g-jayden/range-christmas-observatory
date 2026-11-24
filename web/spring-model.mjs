@@ -15,7 +15,7 @@ const dried=/\b(?:dried|dried[ -]look|pampas|burnt orange|rust[ -]colou?red|copp
 export function springSourceDecision(p){
  const title=String(p.variantName||p.name||''),description=String(p.sourceDescription||''),category=String(p.breadcrumb||p.productPath||p.variantPath||p.sourceUrl||''),text=title+' '+description;
  const seasonalIdentity=title+' '+String(p.specifications?.Season||p.specifications?.Occasion||'');if(seasonWords.test(seasonalIdentity))return{disposition:'exclude',reason:'explicit-non-spring-season',evidence:seasonalIdentity.match(seasonWords)[0]};
- const context=description.match(/\b(?:autumn(?:al)?|halloween|harvest|christmas)\s+(?:colou?rs?|foliage|leaves|wreath|garland|arrangement|bouquet|decoration)|\b(?:rust|burnt orange)\s+(?:leaves|foliage)\b/i);if(context)return{disposition:'exclude',reason:'description-identifies-non-spring-product',evidence:context[0]};
+ const context=description.match(/\b(?:autumn(?:al)?|halloween|harvest|christmas)\s+(?:colou?rs?|foliage|leaves|wreath|garland|arrangement|bouquet|decoration)|\b(?:rust|burnt orange)\s+(?:leaves|foliage)\b/i),usageOnly=context&&/\b(?:ideal|perfect|suitable|great|use|used)\s+(?:for|in|as)\s*$/i.test(description.slice(Math.max(0,context.index-45),context.index));if(context&&!usageOnly)return{disposition:'exclude',reason:'description-identifies-non-spring-product',evidence:context[0]};
  if(/\bblack\b.{0,35}\b(?:chrysanthemum|rose|dahlia|flower|foliage|leaf|leaves)\b/i.test(title)&&!/\b(?:pot|planter|vase)\b/i.test(title))return{disposition:'exclude',reason:'explicit-dark-non-spring-floral-palette',evidence:title};
  if(dried.test(title))return{disposition:'exclude',reason:'dried-or-autumn-palette',evidence:title.match(dried)[0]};
  const outside=/\b(?:living\s+wall|vertical\s+garden|(?:wall|foliage|grass|hedge|fence)\s+(?:panels?|tiles?)|(?:plant|boxwood)\s+wall|hedg(?:e|ing)\s+(?:screen|fence|panel)|(?:conifer|privacy)(?:\s+leaf)?\s+screening|privacy\s+(?:screen|fence)|artificial\s+(?:hedging|turf))\b/i,featureHead=description.split(/\n/).filter(l=>/^\s*[-*]\s+/.test(l)).slice(0,3).join(' ');
@@ -53,11 +53,12 @@ export function springSourceDecision(p){
  // "make bouquets, wreaths and garlands" into the product's physical form.
  if(!department&&/\b(?:bouquet only|flower stem only|(?:supplied|pack|set)\b.{0,45}\bstems?\b|single stem|leaf stem|leaf spray|foliage spray)\b/i.test(offered))department='spring-stems';
  if(!department&&/\b(?:supplied\b.{0,50}\b(?:hanging basket|weighted pot|planter)|fully assembled\b.{0,35}\bhanging basket|flowers? in (?:a )?(?:basket|pot|vase))\b/i.test(offered))department='spring-potted';
- return{disposition:department?'candidate':'review',department,reason:department?'offered-botanical-object-needs-photo':'object-needs-source-and-photo-review',evidence:title};
+ return{disposition:department?'candidate':'review',department,reason:department?'offered-botanical-object-needs-photo':'object-needs-source-and-photo-review',evidence:title,...(usageOnly?{seasonalUsageEvidence:{text:context[0],method:'retailer-end-use-suggestion-requires-native-review'}}:{})};
 }
 export function springImageDecision(p,visual){
  const source=springSourceDecision(p);if(source.disposition==='exclude')return source;
  if(!p.detailsReady||!visual?.imageHash||p.springNativePhotoVerified!==true)return{...source,disposition:'review',reason:'exact-SKU-description-or-photo-missing'};
+ if(source.seasonalUsageEvidence)return{...source,disposition:'review',reason:'seasonal-end-use-text-requires-exact-source-and-native-photo-review',visual};
  const scores=visual.season||{},bad=Math.max(scores.autumn||0,scores.christmas||0,scores.dried||0,scores.other||0),good=Math.max(scores.freshFlowers||0,scores.greenFoliage||0),top=visual.objects?.[0];
  if((scores.other||0)>good&&(scores.other||0)>.33){const complete=['kept','selected'].includes(p.previewAudit?.status)&&!(p.previewAudit.issues||[]).some(i=>['logo','diagram','detail','cropped'].includes(i)),other=top?.id==='other'&&top.score>=.65&&/\b(?:vases?|planters?|bottles?|mugs?|jugs?|ceramic|pottery|ornament|holders?|watering cans?)\b/i.test((p.variantName||'')+' '+(p.sourceDescription||''));return{...source,disposition:complete&&other?'exclude':'review',reason:complete&&other?'whole-source-photo-and-description-confirm-non-botanical-object':'non-product-photo-needs-replacement',visual};}
  if(bad>good&&bad>.33)return{...source,disposition:'review',reason:'source-photo-non-spring-or-source-conflict',visual};
