@@ -1,3 +1,4 @@
+import {mergeNativeBindings,compactNativeEntries} from './native-bindings.mjs';
 const copy=x=>structuredClone(x),id=r=>r.receipt?.id;
 // Restore only receipts owned by the completed archived run. A later checkout
 // may contain unrelated source charges, so never replace its aggregate ledger.
@@ -21,7 +22,7 @@ export function restoreNativeIndexEntries(current,archive){
   if(y.url!==url||y.ok!==true||y.sourceBytesUnchanged!==true||!/^[a-f0-9]{64}$/.test(y.hash||'')||!y.cachedImageUrl?.includes(y.hash+'.')||!(y.width>=64&&y.height>=64)||!Array.isArray(y.bindings)||!y.bindings.length)throw Error('Invalid archived exact native binding');
   const x=out.entries[url];if(!x){out.entries[url]=copy(y);continue;}
   if(x.hash!==y.hash||x.width!==y.width||x.height!==y.height||x.bytes!==y.bytes){out.nativeArchiveConflicts||={};out.nativeArchiveConflicts[url]={retainedHash:x.hash,retainedWidth:x.width,retainedHeight:x.height,archiveHash:y.hash,archiveWidth:y.width,archiveHeight:y.height,archiveObservedAt:y.observedAt,sourceRun:44707707847,reason:'durable-current-original-preserved-pending-source-version-check'};continue;}
-  const newer=Date.parse(y.observedAt||0)>Date.parse(x.observedAt||0)?y:x;out.entries[url]={...copy(newer),bindings:[...new Set([...(x.bindings||[]),...y.bindings])].sort(),selectedSkus:[...new Set([...(x.selectedSkus||[]),...(y.selectedSkus||[])])].sort()};
+  const newer=Date.parse(y.observedAt||0)>Date.parse(x.observedAt||0)?y:x;out.entries[url]={...copy(newer),bindings:mergeNativeBindings(x.bindings,y.bindings),selectedSkus:[...new Set([...(x.selectedSkus||[]),...(y.selectedSkus||[])])].sort()};
  }
- if(Date.parse(archive.lastReceipt?.completedAt||'1970-01-01')>Date.parse(out.lastReceipt?.completedAt||'1970-01-01'))out.lastReceipt=copy(archive.lastReceipt);return out;
+ out.entries=compactNativeEntries(out.entries);if(Date.parse(archive.lastReceipt?.completedAt||'1970-01-01')>Date.parse(out.lastReceipt?.completedAt||'1970-01-01'))out.lastReceipt=copy(archive.lastReceipt);return out;
 }
