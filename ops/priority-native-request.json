@@ -2,7 +2,7 @@
   "version": 1,
   "authorization": "owner-all-collection-unrestricted-20261123",
   "requestId": "priority-native-20261125-spring-510041",
-  "requestedAt": "2026-11-24T21:19:15.113Z",
+  "requestedAt": "2026-11-24T21:32:58.732Z",
   "products": [
     {
       "sku": "510041",
@@ -17,5 +17,6 @@
         "https://www.therange.co.uk/media/8/1/1776076251_2304.jpg"
       ]
     }
-  ]
+  ],
+  "restoreRevision": "18ba8c4f058a3f01d46d46a41e77ac2b9c6e7e51"
 }

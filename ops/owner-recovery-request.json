@@ -1,8 +1,8 @@
 {
-  "requestId": "owner-recovery-20261124-publish-priority-native-510041",
+  "requestId": "owner-recovery-20261124-restore-priority-native-510041",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T21:23:30.013Z",
+  "requestedAt": "2026-11-24T21:32:58.732Z",
   "targets": [
-    "static-pages-current"
+    "range-native-resolution"
   ]
 }
