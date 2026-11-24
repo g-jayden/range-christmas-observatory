@@ -19,9 +19,14 @@ export async function restoreSourceImageArchive(records,{root='web',run=execFile
  const git=(...args)=>run('git',args,{encoding:'utf8',maxBuffer:67108864,stdio:['ignore','pipe','pipe']});
  const commit=sourceArchiveRevision({run});if(!/^[a-f0-9]{40}$/.test(commit))throw Error('Committed archive revision required');
  const tree=new Map(git('ls-tree','-rz',commit,'--',root+'/images').split('\0').filter(Boolean).map(line=>{const m=line.match(/^\d+ blob ([a-f0-9]{40})\t(.+)$/);return m?[m[2],m[1]]:[];}).filter(a=>a.length)),local=new Set(git('cat-file','--batch-all-objects','--batch-check=%(objectname)').trim().split('\n'));
- const needed=[...new Set(missing.map(file=>tree.get(file)).filter(oid=>oid&&!local.has(oid)))];let batches=0;
- for(let start=0;start<needed.length;start+=512){const batch=needed.slice(start,start+512);try{git('fetch','--no-tags','--no-write-fetch-head','--recurse-submodules=no','origin',...batch);for(const oid of batch)local.add(oid);batches++;}catch{/* Exact public archive response remains a free fallback. */}}
+ const needed=[...new Set(missing.map(file=>tree.get(file)).filter(oid=>oid&&!local.has(oid)))];let batches=0,gitObjectBatchAttempts=0;
+ for(let start=0;start<needed.length;start+=512){const batch=needed.slice(start,start+512);gitObjectBatchAttempts++;try{git('fetch','--no-tags','--no-write-fetch-head','--recurse-submodules=no','origin',...batch);for(const oid of batch)local.add(oid);batches++;}catch{
+  // Do not repeat dozens of failed Git transports before the working free
+  // public archive. Every remaining object is still restored and SHA-checked
+  // below; this switches free transports, never source scope or paid scraping.
+  break;
+ }}
  let cursor=0,restored=0,archiveHttpRequests=0;const failures=[];
  await Promise.all(Array.from({length:Math.min(8,missing.length)},async()=>{while(cursor<missing.length){const file=missing[cursor++],oid=tree.get(file);if(!oid){failures.push({file,reason:'not-in-committed-archive'});continue;}try{let b;if(local.has(oid))b=run('git',['cat-file','blob',oid],{encoding:'buffer',maxBuffer:25000001,stdio:['ignore','pipe','pipe']});else{archiveHttpRequests++;const url='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/'+commit+'/'+file,r=await fetcher(url,{signal:AbortSignal.timeout(30000)});if(!r.ok)throw Error('Archive HTTP '+r.status);b=Buffer.from(await r.arrayBuffer());}if(b.length>25000000||hash(b)!==wanted.get(file))throw Error('Archived source digest mismatch');await fs.mkdir(path.dirname(file),{recursive:true});await fs.writeFile(file,b);restored++;}catch(e){failures.push({file,reason:e.message});}}}));
- return{restored,alreadyPresent:wanted.size-missing.length,missing:failures.length,failures,archiveRevision:commit,gitObjectBatches:batches,archiveHttpRequests,retailerRequests:0,sourceRequests:0,firecrawlCredits:0};
+ return{restored,alreadyPresent:wanted.size-missing.length,missing:failures.length,failures,archiveRevision:commit,gitObjectBatchAttempts,gitObjectBatches:batches,archiveHttpRequests,retailerRequests:0,sourceRequests:0,firecrawlCredits:0};
 }

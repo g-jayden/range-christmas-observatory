@@ -30,6 +30,10 @@ try {
  assert.throws(()=>sourceArchiveRevision({root:dir,env,run}),/confirmed public image archive revision/);
  assert.equal(sourceArchiveRevision({root:dir,env,run:()=>publicRevision}),publicRevision,'Cached-only checkout may restore its fetched public main revision before any checkpoint');
  assert.equal(sourceArchiveRevision({root:dir,env:{...env,EVIDENCE_ISOLATED_PUBLISHER:'1'},run}),localRevision);
+ const archive=new Map(),remoteRecords=[],tree=[];for(let i=0;i<513;i++){const bytes=Buffer.concat([originals[0],Buffer.from(String(i))]),sha256=createHash('sha256').update(bytes).digest('hex'),file='images/source/'+sha256+'.png';archive.set('web/'+file,bytes);remoteRecords.push({file,sha256});tree.push('100644 blob '+(i+1).toString(16).padStart(40,'0')+'\tweb/'+file);}
+ let gitFetches=0;const remoteRun=(_cmd,args)=>{if(args[0]==='rev-parse')return publicRevision;if(args[0]==='ls-tree')return tree.join('\0')+'\0';if(args[0]==='cat-file')return '';if(args[0]==='fetch'){gitFetches++;throw Error('Bulk Git archive transport unavailable');}throw Error('Unexpected archive command');};
+ const fallback=await restoreSourceImageArchive(remoteRecords,{run:remoteRun,fetcher:async url=>new Response(archive.get(new URL(url).pathname.split('/'+publicRevision+'/')[1]))});assert.equal(gitFetches,1);assert.equal(fallback.restored,513);assert.equal(fallback.missing,0);assert.equal(fallback.archiveHttpRequests,513);assert.equal(fallback.sourceRequests,0);assert.equal(fallback.firecrawlCredits,0);
  console.log('PASS: bulk restoration recovers exact committed source bytes with zero network or source credits; local visual analysis restores a deleted checkpoint image and receives absolute file paths.');
  console.log('PASS: isolated collectors use confirmed public image revisions; stale proofs and unpublished commits are rejected, and fresh cached-only public checkouts remain valid.');
+ console.log('PASS: a failed bulk Git transport switches once to the free public archive and restores all 513 exact objects without repeating failed Git batches or paid source requests.');
 } finally {process.chdir(cwd);await fs.rm(dir,{recursive:true,force:true});}
