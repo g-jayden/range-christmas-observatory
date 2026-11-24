@@ -1,4 +1,5 @@
 import {monthlyCreditLimit} from './collection-policy.mjs';
+import {fetchFirecrawlFresh} from './firecrawl-fresh-connection.mjs';
 import {unrestrictedCollection,normalizeCollectionLimits,initialCreditReservation} from './collection-limits.mjs';
 import fs from 'node:fs/promises';
 import {atomicJson,SourceError} from './sync.mjs';
@@ -32,13 +33,16 @@ export async function reserveCredits(policy,{now=Date.now(),key=runKey(),account
 }
 export async function openCreditBudget(policy,{fetcher=fetch}={}){
  policy=normalizeCollectionLimits(policy);
+ // Git publication may keep the process busy beyond an idle API socket's
+ // lifetime. A balance check is sent once on a new standard TLS connection.
+ const balanceFetcher=fetcher===fetch?fetchFirecrawlFresh:fetcher;
  const period=periodKey(),key=runKey();let ledger=await readLedger(),reservation=ledger.periods[period]?.reservations?.[key];
  if(!reservation){if(process.env.GITHUB_ACTIONS==='true')throw budgetError('缺少已持久保存的积分预留，拒绝启动付费会话');const created=await reserveCredits(policy);ledger=created.ledger;reservation=ledger.periods[period].reservations[key]}
  let settled=false,limit=reservation.amount,expanding;
  return {get limit(){return limit;},remaining:()=>settled?0:Infinity,summary:()=>({provider:'firecrawl-browser',runLimit:limit,monthLimit:policy.maxCreditsPerCalendarMonth}),async extend({additionalCredits=32,creditsAlreadyBilled=0}={}){
   if(settled||policy.automaticBudgetExpansion!==true||monthlyCreditLimit(policy)!==Infinity||!Number.isInteger(additionalCredits)||additionalCredits<1||additionalCredits>64)throw budgetError('Additional source budget is not authorised');
   if(expanding)return expanding;
-  expanding=(async()=>{const keySecret=process.env.FIRECRAWL_API_KEY;if(!keySecret)throw budgetError('Source budget expansion requires the existing server credential');const response=await fetcher('https://api.firecrawl.dev/v2/team/credit-usage',{headers:{authorization:'Bearer '+keySecret},signal:AbortSignal.timeout(30000)}),body=await response.json();if(!response.ok||!Number.isFinite(body.data?.remainingCredits))throw budgetError('Account balance could not be verified for source budget expansion');
+  expanding=(async()=>{const keySecret=process.env.FIRECRAWL_API_KEY;if(!keySecret)throw budgetError('Source budget expansion requires the existing server credential');const response=await balanceFetcher('https://api.firecrawl.dev/v2/team/credit-usage',{headers:{authorization:'Bearer '+keySecret},signal:AbortSignal.timeout(30000)}),body=await response.json();if(!response.ok||!Number.isFinite(body.data?.remainingCredits))throw budgetError('Account balance could not be verified for source budget expansion');
    const current=await readLedger(),p=current.periods[period],r=p?.reservations?.[key];if(!r)throw Error('Source budget reservation is missing');if(!Number.isFinite(creditsAlreadyBilled)||creditsAlreadyBilled<0||creditsAlreadyBilled>r.amount)throw Error('Invalid confirmed source billing progress');r.creditsBilled=Math.max(r.creditsBilled||0,creditsAlreadyBilled);const other=Object.entries(p.reservations).filter(([k])=>k!==key).reduce((n,[,r])=>n+Math.max(0,(r.amount||0)-(r.creditsBilled||0)),0),available=Math.floor(body.data.remainingCredits-policy.accountReserveCredits-other-Math.max(0,r.amount-r.creditsBilled)),added=Math.min(additionalCredits,available);if(added<1)throw budgetError('Account reserve prevents additional source requests');
    r.amount+=added;r.extensions||=[];r.extensions.push({creditsReserved:added,expandedAt:new Date().toISOString(),authorization:'owner-approved-unlimited-ordinary-source',accountReserveProtected:true});limit=r.amount;await atomicJson(file,current);
    if(process.env.COLLECTION_CHECKPOINTS==='1'){const{publishCollectionCheckpoint}=await import('./collection-checkpoints.mjs');await publishCollectionCheckpoint({stage:'source-budget-expanded-before-request'});}
