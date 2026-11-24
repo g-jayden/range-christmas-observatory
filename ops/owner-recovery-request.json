@@ -1,9 +1,8 @@
 {
-  "requestId": "owner-recovery-20261124-durable-ms-hb",
+  "requestId": "owner-recovery-20261124-publish-durable-sources",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T14:11:15.161Z",
+  "requestedAt": "2026-11-24T14:18:19.230Z",
   "targets": [
-    "ms-current",
-    "hb-current"
+    "static-pages-current"
   ]
 }
