@@ -6,5 +6,6 @@ const review={disposition:'include',wholeProductFrame:true,reviewArtifact:'nativ
 const audit=springHumanFrameAudit(p,review);assert.equal(audit.status,'kept');assert.deepEqual(audit.issues,[]);assert.deepEqual(audit.automatedAudit,{status:'review',issues:['detail']});assert.equal(p.previewAudit.status,'review');
 for(const changed of[{...p,sku:'124'},{...p,variantId:'457'},{...p,detailsReady:false},{...p,detailEvidence:{...p.detailEvidence,sourceContentHash:'changed'}},{...p,originalImageEvidence:{...p.originalImageEvidence,sha256:'changed'}},{...p,previewImage:{sourceUrl:url+'?other'}},{...p,originalImages:[]}])assert.equal(springHumanFrameAudit(changed,review),null);
 for(const changed of[{...review,disposition:'review'},{...review,wholeProductFrame:false},{...review,reviewArtifact:undefined}])assert.equal(springHumanFrameAudit(p,changed),null);
+assert.equal(springHumanFrameAudit({...p,previewImage:{sourceUrl:url,originalSha256:'changed'}},review),null,'The same URL with different native bytes cannot reuse the old frame approval');
 assert.deepEqual(springHumanFrameAudit({...p,previewAudit:audit},review).automatedAudit,audit.automatedAudit);
 console.log('PASS: exact-SKU human whole-frame review corrects an automated false negative, preserves its audit, and expires on SKU, variant, description, original or displayed-frame change.');

@@ -8,5 +8,6 @@ export function springHumanFrameAudit(p,review){
  if(!p.detailsReady||!p.detailEvidence?.verifiedProductSection||String(p.detailEvidence.selectedSku)!==String(p.sku)||review.sourceContentHash!==p.detailEvidence.sourceContentHash)return null;
  if(!native?.sha256||review.imageHash!==native.sha256||!p.originalImages?.some(g=>g.url===native.sourceUrl&&exactNativeGalleryMember(p,g)&&(g.variantId==null||String(g.variantId)===String(p.variantId))))return null;
  if(p.previewImage?.sourceUrl&&p.previewImage.sourceUrl!==native.sourceUrl)return null;
+ if(p.previewImage?.originalSha256&&p.previewImage.originalSha256!==native.sha256)return null;
  return{...p.previewAudit,status:'kept',issues:[],method:'human-exact-native-whole-product-frame',automatedAudit:p.previewAudit?.automatedAudit||{status:p.previewAudit?.status,issues:p.previewAudit?.issues||[]},humanReview:{imageHash:review.imageHash,sourceContentHash:review.sourceContentHash,artifact:review.reviewArtifact,reviewedAt:review.reviewedAt}};
 }

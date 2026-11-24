@@ -23,9 +23,18 @@ export function previewCandidates(p){
  return [...result.values()];
 }
 export const previewInput=p=>digest([String(p.sku),p.variantId||null,p.sourceUrl?.split('#')[0],p.listingVariantImageUrl||p.imageUrl||p.variantImageUrl,p.displayImage?.sha256||null,previewCandidates(p).map(g=>g.url).sort()]);
+const humanSelectionMatches=(p,r)=>!r?.humanReview||Boolean(p.detailsReady&&p.detailEvidence?.sourceContentHash===r.humanReview.sourceContentHash&&p.originalImageEvidence?.sha256===r.humanReview.imageHash&&r.selected?.originalSha256===r.humanReview.imageHash&&r.selected?.sourceUrl===p.originalImageEvidence?.sourceUrl);
+export async function saveHumanWholeProductPreviews(products){
+ const registry=await readGzip(REGISTRY,{version:PREVIEW_QUALITY_VERSION,products:{}});let saved=0;
+ for(const p of products){const proof=p.previewAudit?.humanReview,selected=p.previewImage;
+  if(p.previewAudit?.method!=='human-exact-native-whole-product-frame'||selected?.method!=='human-exact-SKU-whole-frame-preview'||String(selected.selectedSku)!==String(p.sku)||!proof?.artifact||!humanSelectionMatches(p,{humanReview:proof,selected}))continue;
+  registry.products[p.sku]={version:PREVIEW_QUALITY_VERSION,selectionVersion:SELECTION_VERSION,inputFingerprint:previewInput(p),status:'selected',remainingIssues:[],checkedAt:proof.reviewedAt,humanReview:proof,selected};saved++;
+ }
+ if(saved)await writeGzip(REGISTRY,registry);return{saved};
+}
 export async function applyProductPreviews(products,{verifyFiles=true}={}){
  const registry=await readGzip(REGISTRY,{version:PREVIEW_QUALITY_VERSION,products:{}}),verified=new Set;let applied=0;
- for(const p of products){delete p.previewImage;delete p.previewAudit;const r=registry.products[p.sku];if(!r||r.version!==PREVIEW_QUALITY_VERSION||r.inputFingerprint!==previewInput(p))continue;
+ for(const p of products){delete p.previewImage;delete p.previewAudit;const r=registry.products[p.sku];if(!r||r.version!==PREVIEW_QUALITY_VERSION||r.inputFingerprint!==previewInput(p)||!humanSelectionMatches(p,r))continue;
   p.previewAudit={version:r.version,status:r.status,issues:r.remainingIssues||[],checkedAt:r.checkedAt,inputFingerprint:r.inputFingerprint};
   if(!r.selected||p.displayImage)continue;
   if(!previewCandidates(p).some(g=>g.url===r.selected.sourceUrl))continue;
@@ -54,7 +63,7 @@ export async function readPreviewAssets({urls,maxSide=600}){
 export async function optimiseProductPreviews(products,{reader=null,maxBatches=Infinity,maxCandidates=5,batchSize=320,prioritySkus=[],nativeGalleryOnly=false}={}){
  const {cache:quality}=await analysePreviewFiles(products.flatMap(p=>{const hash=p.displayImage?.sha256||p.imageCacheEvidence?.sha256,file=p.displayImage?.cachePath||p.cachedImageUrl;return hash&&file?[{hash,file:'web/'+file}]:[]}));
  const registry=await readGzip(REGISTRY,{version:PREVIEW_QUALITY_VERSION,products:{}}),index=await readGzip(SOURCE_INDEX,{version:1,entries:{}}),work=[];
- for(const p of products){if(p.taxonomyAudit&&p.taxonomyAudit.disposition!=='include')continue;const prior=registry.products[p.sku],inputFingerprint=previewInput(p),unchangedSafe=prior?.status==='kept'&&!prior.compared&&previewProblems(quality.entries[p.displayImage?.sha256||p.imageCacheEvidence?.sha256]||{}).length===0;if((!nativeGalleryOnly||!prior?.selected||(p.originalImages||[]).some(g=>g.url===prior.selected.sourceUrl&&exactNativeGalleryMember(p,g)))&&prior?.version===PREVIEW_QUALITY_VERSION&&prior.inputFingerprint===inputFingerprint&&!['pending','pending-asset'].includes(prior.status)&&(prior.selectionVersion===SELECTION_VERSION||unchangedSafe||prior.status==='unavailable'))continue;
+ for(const p of products){if(p.taxonomyAudit&&p.taxonomyAudit.disposition!=='include')continue;const prior=registry.products[p.sku],inputFingerprint=previewInput(p),unchangedSafe=prior?.status==='kept'&&!prior.compared&&previewProblems(quality.entries[p.displayImage?.sha256||p.imageCacheEvidence?.sha256]||{}).length===0;if(humanSelectionMatches(p,prior)&&(!nativeGalleryOnly||!prior?.selected||(p.originalImages||[]).some(g=>g.url===prior.selected.sourceUrl&&exactNativeGalleryMember(p,g)))&&prior?.version===PREVIEW_QUALITY_VERSION&&prior.inputFingerprint===inputFingerprint&&!['pending','pending-asset'].includes(prior.status)&&(prior.selectionVersion===SELECTION_VERSION||unchangedSafe||prior.status==='unavailable'))continue;
   const baseHash=p.displayImage?.sha256||p.imageCacheEvidence?.sha256,baseQuality=quality.entries[baseHash],issues=baseQuality?previewProblems(baseQuality):['unavailable'],pair=p.originalImages?.find(g=>g.url===p.originalImageUrl),mismatch=Boolean(!p.displayImage&&p.originalImageUrl&&![pair?.url,pair?.thumbnail].includes(p.imageCacheEvidence?.sourceUrl));
   const candidates=previewCandidates(p).filter(c=>!nativeGalleryOnly||(p.originalImages||[]).some(g=>g.url===c.url&&exactNativeGalleryMember(p,g))),lowNativeResolution=nativeGalleryOnly&&candidates.length>1&&Math.max(p.imageCacheEvidence?.width||0,p.imageCacheEvidence?.height||0)<1000,needs=!p.displayImage&&(issues.length>0||mismatch||lowNativeResolution);let chosen=candidates;
   if(candidates.length>maxCandidates&&!prioritySkus.includes(p.sku)){const positions=[0,1,2,candidates.length-1,Math.floor(candidates.length/2)];chosen=[...new Set(positions)].slice(0,maxCandidates).map(n=>candidates[n]);}
