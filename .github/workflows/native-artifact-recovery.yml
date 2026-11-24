@@ -43,15 +43,15 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - uses: actions/download-artifact@v8.0.2
         with:
-          name: range-bulk-native-45491514916-1
-          run-id: 45491514916
+          name: range-bulk-native-45496143412-1
+          run-id: 45496143412
           github-token: ${{ github.token }}
           path: runtime/restore-current-native
       - name: Verify checkpoint promotion and finite transient recovery
         run: |
           node scripts/test-range-native-plan.mjs
           node scripts/test-spring-native-transient-channel.mjs
-      - name: Recover only exact successful response bytes; keep billed receipt unchanged
+      - name: Recover exact saved originals and this run's actual settled receipt once
         run: node scripts/restore-current-native-artifact.mjs
       - name: Resume uncollected originals after saved originals are restored
         run: |
