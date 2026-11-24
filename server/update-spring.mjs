@@ -1,4 +1,5 @@
 import fs from'node:fs/promises';import{springReviewExcludes}from'./spring-review-evidence.mjs';
+import{applySavedSpringSourcePatches}from'./spring-source-patches.mjs';
 import{publishCollectionCheckpoint}from'./collection-checkpoints.mjs';
 import{createHash}from'node:crypto';
 import{fileURLToPath}from'node:url';
@@ -12,7 +13,7 @@ import{productDimensions}from'../web/catalogue-model.mjs';
 import{materialFacts,normaliseColors}from'./appearance.mjs';
 import{springSourceDecision,SPRING_VERSION}from'../web/spring-model.mjs';
 export const SPRING_SOURCE={id:'375964',url:'https://www.therange.co.uk/home-furnishings/vases-and-artificial-plants/?sort=relevance&in_stock_f=true&page=1'};
-export const readSpring=()=>fs.readFile('web/spring/source.json','utf8').then(JSON.parse).catch(e=>{if(e.code!=='ENOENT')throw e;return{products:[],history:{},baselineReady:false};});
+export const readSpring=async()=>{const snapshot=await fs.readFile('web/spring/source.json','utf8').then(JSON.parse).catch(e=>{if(e.code!=='ENOENT')throw e;return{products:[],history:{},baselineReady:false};});let patch;try{patch=JSON.parse(await fs.readFile('web/spring-repair/source-patch.json','utf8'));}catch(e){if(e.code!=='ENOENT')throw e;}snapshot.savedSourcePatchAudit=applySavedSpringSourcePatches(snapshot,patch);return snapshot;};
 export function mergeSpring(previous,listing,at=new Date().toISOString()){
  const prior=new Map(previous.products.map(p=>[String(p.sku),p])),history={...previous.history},discoveryReady=previous.baselineReady||Boolean(previous.source?.complete&&previous.source.expected===previous.products.length);
  const products=listing.products.map(row=>{const sku=String(row.sku),old=prior.get(sku),h={...(history[sku]||{firstObservedAt:at,everNew:false,arrivalEvidence:'initial-baseline'})};

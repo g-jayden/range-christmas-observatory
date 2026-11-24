@@ -94,6 +94,7 @@ assert.equal(springSourceDecision({variantName:'Artificial Potted Fern',sourceDe
 console.log('PASS: empty stand-and-planter offers stay out; exact SKU bare stems override generic fern heuristics, whole trees remain trees, contradictory pot contents require review.');
 await import('./test-spring-human-frame.mjs');
 await import('./test-spring-listing-native.mjs');
+await import('./test-spring-source-patches.mjs');
 await import('./test-spring-human-previews.mjs');
 assert.equal(productNames({department:'spring-potted',variantName:'White Artificial Orchid in Pink Ceramic Pot',paletteEvidence:{colours:['白色','绿色']}}).zh,'白色／绿色兰花仿真盆栽');
 assert.equal(productNames({department:'spring-potted',variantName:'Artificial Agapanthus Plant with White Pot'}).zh,'百子莲仿真盆栽');
