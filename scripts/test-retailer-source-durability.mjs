@@ -35,6 +35,15 @@ for (const [id, clock] of [['ms', dispatchMsDue], ['hb', dispatchHbDue], ['du', 
   assert((await clock(args)).dispatched, id + ' must not suppress recovery after a failed publication');
   await markRetailerPublished({storage: db, body: {id, observedAt: at, commit: 'c'.repeat(40)}});
   assert(!(await clock(args)).due); assert.equal(calls, 1);
+  const busy = new DB(); await busy.put('baseline/' + id + '-christmas-v1', {});
+  const same = {clear: true, independentActive: [{id: 42, path: '.github/workflows/' + id + '.yml', status: 'in_progress'}]};
+  assert((await clock({...args, storage: busy, productionQueue: same})).sameRetailerBusy);
+  assert.equal(await busy.get(id + '-clock'), undefined, 'Waiting on the current retailer must not consume another attempt');
+  const other = {clear: false, active: [{id: 43, path: '.github/workflows/range-native.yml', status: 'in_progress'}]};
+  assert((await clock({...args, storage: busy, productionQueue: other})).dispatched, 'A different retailer source cannot stall ' + id);
+  const failed = new DB(); await failed.put('baseline/' + id + '-christmas-v1', {});
+  assert((await clock({...args, storage: failed, productionQueue: {reason: 'production-queue-unavailable'}})).waiting);
+  assert.equal(await failed.get(id + '-clock'), undefined);
 }
 for (const id of ['ms', 'hb']) {
   const workflow = await fs.readFile('.github/workflows/' + id + '.yml', 'utf8');
@@ -50,4 +59,4 @@ console.log('PASS: all ten retailer scans require a durable matching commit; fai
 const du = await fs.readFile('.github/workflows/du.yml', 'utf8');
 assert(du.includes('group: range-du-source'));
 const range = await fs.readFile('.github/workflows/daily-pages.yml', 'utf8');
-assert(range.includes("inputs.mode == 'asda' && 'range-asda-source'"), 'ASDA cannot wait behind an unrelated full Range collection');
+assert((await fs.readFile('.github/workflows/asda.yml', 'utf8')).includes('group: range-asda-source'), 'ASDA cannot wait behind an unrelated full Range collection');
