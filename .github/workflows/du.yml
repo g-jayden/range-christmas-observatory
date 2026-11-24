@@ -31,12 +31,14 @@ jobs:
           sparse-checkout: |
             /package.json
             /package-lock.json
+            /.github/workflows/du.yml
             /scripts/
             /server/
             /cloud/
             /test/
             /web/*.mjs
             /web/*.json
+            /web/*.gz
             /web/du/
             /web/images/du/
       - uses: actions/setup-node@v7.1.0

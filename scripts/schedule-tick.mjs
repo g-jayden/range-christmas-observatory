@@ -4,7 +4,7 @@ import {hasReadyDeliveries} from '../cloud/delivery-policy.mjs';
 import fs from 'node:fs/promises';
 import {firstRun,scheduleLabel} from '../server/schedule.mjs';
 import {control,apiBase} from '../server/cloud-client.mjs';
-import {readDailyMonitor,saveDailyMonitor,dailyDue,claimDailyMonitor} from '../server/daily-monitor-state.mjs';
+import {readDailyMonitor,saveDailyMonitor,dailySourceDue,claimDailyMonitor} from '../server/daily-monitor-state.mjs';
 import {sourceCircuitOpen} from '../server/source-health.mjs';
 const event=process.env.GITHUB_EVENT_NAME||'workflow_dispatch',mode=process.env.COLLECTION_MODE||'verify-all';
 const repairRequest=await fs.readFile('web/evidence-repair-request.json','utf8').then(JSON.parse).catch(e=>{if(e.code!=='ENOENT')throw e;return null});
@@ -15,12 +15,12 @@ let blocked=event==='schedule'&&sourceCircuitOpen(previousStatus.sourceHealth,pr
 if(!config.nextRunAt)config=firstRun(config);
 let daily=await readDailyMonitor();await saveDailyMonitor(daily);
 const cloudState=apiBase&&(!blocked||process.env.CONTROL_TOKEN)?await control('/public/status'):null,pendingDelivery=cloudState?.dailyPdfDigest?false:hasReadyDeliveries(cloudState?.monitor);
-if(sourceRetryDue(cloudState?.monitor)||evidenceRetryDue(cloudState?.monitor)||dailyDue(daily))blocked=false;
+if(sourceRetryDue(cloudState?.monitor)||evidenceRetryDue(cloudState?.monitor)||dailySourceDue(daily,cloudState?.monitor))blocked=false;
 if(event!=='push'&&!['probe','catalogue-probe','repair','monitor-probe','lights-init','themes-init','previews','asda','publish'].includes(mode)&&!blocked){
  if(apiBase){
   const savedConfig=config;const state=cloudState;config=state.config;
   if(!state.baselineReady){const d=JSON.parse(await fs.readFile('web/catalogue.json','utf8'));await control('/internal/seed',{config:savedConfig,records:d.products.map(p=>({sku:p.sku,everNew:Boolean(p.everNew||p.newStatus)}))});config=(await control('/public/status')).config;}
-  const wantsDaily=dailyDue(daily)||sourceRetryDue(cloudState?.monitor)||evidenceRetryDue(cloudState?.monitor)||process.env.FORCE_MONITOR==='true';
+  const wantsDaily=dailySourceDue(daily,cloudState?.monitor)||sourceRetryDue(cloudState?.monitor)||evidenceRetryDue(cloudState?.monitor)||process.env.FORCE_MONITOR==='true';
   if(wantsDaily||Date.now()>=Date.parse(config.nextRunAt)){
    const claim=await control('/internal/claim',{forceMonitor:wantsDaily,ownerRunId:process.env.GITHUB_RUN_ID||null});({config,full,monitor,lease,evidenceRecovery=false}=claim);fullLease=full?lease:null;
    if(monitor&&!wantsDaily){await control('/internal/monitor-complete',{lease,success:false,error:'新品任务由每日07:00入口统一调度；本次没有执行新品检查',scanned:0,newCount:0});monitor=false;}

@@ -1,0 +1,7 @@
+import assert from 'node:assert/strict';import {dailyDue,dailySourceDue} from '../server/daily-monitor-state.mjs';
+const now=new Date('2026-11-24T06:00:00Z'),due='2026-11-23T22:00:00Z',local={nextRunAt:'2026-11-24T22:00:00Z',lastAttemptAt:'2026-11-23T22:00:30Z'},remote={nextRunAt:due,lastSuccess:'2026-11-22T23:22:16Z',lastDiscoverySuccess:'2026-11-22T23:16:39Z'};
+assert.equal(dailyDue(local,now),false);assert.equal(dailySourceDue(local,remote,now),true,'A claimed-but-uncollected local attempt cannot suppress the unfinished cloud source day');
+assert.equal(dailySourceDue(local,{...remote,lastSuccess:now.toISOString()},now),true,'Later maintenance of an old catalogue cannot replace its explicit older directory observation');
+assert.equal(dailySourceDue(local,{...remote,lastDiscoverySuccess:'2026-11-23T22:05:00Z'},now),false,'Already completed source discovery is retained while photo evidence or the single PDF is pending');
+assert.equal(dailySourceDue(local,{...remote,evidenceSourceAt:'2026-11-23T22:05:00Z'},now),false);assert.equal(dailySourceDue(local,{...remote,nextRunAt:'2026-11-24T22:00:00Z'},now),false);assert.equal(dailySourceDue(local,undefined,now),false);assert.equal(dailySourceDue({nextRunAt:due,lastAttemptAt:null},undefined,now),true);
+console.log('PASS: failed local claims cannot skip the current cloud source day; current directories and photo recovery remain reusable without duplicate collection.');
