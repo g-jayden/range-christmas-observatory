@@ -1,5 +1,5 @@
 import assert from'node:assert/strict';
-import{evidenceRepairScope}from'../server/evidence-repair-scope.mjs';
+import{evidenceRepairScope,assertResolvedEvidenceIdentity}from'../server/evidence-repair-scope.mjs';
 const current={observedAt:'2026-11-24T11:23:23Z',products:[{sku:'101',priceGBP:19.99},{sku:'102',priceGBP:39.99}]},before=JSON.stringify(current);
 const narrowed=evidenceRepairScope({targetSkus:['102'],detailsOnly:true});
 assert.equal(narrowed.includes(current.products[0]),false);assert.equal(narrowed.includes(current.products[1]),true);assert.deepEqual(narrowed.photos([current])[0].products,[]);
@@ -7,4 +7,12 @@ assert.equal(narrowed.photos([current])[0].observedAt,current.observedAt);assert
 assert.deepEqual(evidenceRepairScope({targetSkus:['102']}).photos([current])[0].products,[current.products[1]]);
 assert.deepEqual(evidenceRepairScope().photos([current])[0].products,current.products,'Existing full evidence repairs retain their scope');
 for(const targetSkus of[null,'102',[],['102','102'],['../102'],[102]])assert.throws(()=>evidenceRepairScope({targetSkus}),/exact evidence repair/);
+assert.equal(evidenceRepairScope({detailsOnly:true,sourceSearchOnly:true}).searchOnly,true);
+assert.equal(evidenceRepairScope().searchOnly,false);
+assert.throws(()=>evidenceRepairScope({sourceSearchOnly:true}),/requires detailsOnly/);
+assert.throws(()=>evidenceRepairScope({detailsOnly:true,sourceSearchOnly:'true'}),/Invalid source search-only/);
+const product={sku:'102',variantId:'450'},detail={sku:'102',exactVariantSource:{selectedSku:'102',variantId:'450'}};
+assert.doesNotThrow(()=>assertResolvedEvidenceIdentity(product,detail));
+for(const changed of[{...detail,sku:'103'},{...detail,exactVariantSource:{selectedSku:'103',variantId:'450'}},{...detail,exactVariantSource:{selectedSku:'102',variantId:'451'}},{...detail,exactVariantSource:undefined}])assert.throws(()=>assertResolvedEvidenceIdentity(product,changed),/another SKU or variant/);
+assert.equal(JSON.stringify(current),before,'Search planning and identity validation cannot alter source prices or dates');
 console.log('PASS: exact-SKU detail repair excludes unrelated products and image requests, preserves source facts and rejects malformed target lists.');
