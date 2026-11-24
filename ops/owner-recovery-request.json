@@ -1,8 +1,8 @@
 {
-  "requestId": "owner-recovery-20261124-complete-caladium-native-classify",
+  "requestId": "owner-recovery-20261124-bq-consistent-anonymous-visit",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T11:37:35.729463+00:00",
+  "requestedAt": "2026-11-24T11:55:48.291003+00:00",
   "targets": [
-    "spring-classify"
+    "bq-current"
   ]
 }
