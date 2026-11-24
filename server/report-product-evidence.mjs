@@ -1,3 +1,4 @@
+import{sameEvidenceIdentity}from'./verified-evidence.mjs';
 // Range's compact in-stock catalogue predates the other retailers' explicit
 // inStock boolean. Its complete filtered directory and exact record membership
 // are the stock evidence; a missing boolean is not an out-of-stock response.
@@ -25,7 +26,11 @@ export function reportProductEvidence(product,candidate,source,{retailerId,now=D
 export function reportFieldProduct(product,acceptance){if(acceptance.contract!=='current-directory-explicit-title-size-and-exact-SKU-native-gallery')return product;return{...product,specifications:{},dimensions:acceptance.reportSize,sourceDescription:'',productSummary:'',heightLabel:null,heightCm:null,skirtDiameterCm:null,skirtBaseDiameterCm:null,skirtTopDiameterCm:null,reportFieldEvidence:{contract:acceptance.contract,sourceName:product.variantName,sourceObservedAt:product.observedAt,sizeSource:'exact-SKU official listing title',descriptionVerified:false}};}
 
 export function mergeReportProduct(current,full={}){
+ // A reused detail shard cannot replace facts from a changed selected offer.
+ // A matching SKU alone does not prove that a renamed/relocated variant is unchanged.
+ const range=/^https:\/\/www\.therange\.co\.uk\//.test(current.sourceUrl||'');
+ if(full.sku!==undefined&&String(full.sku)!==String(current.sku)||full.retailerId&&current.retailerId&&full.retailerId!==current.retailerId||full.sourceUrl&&current.sourceUrl&&full.sourceUrl!==current.sourceUrl||range&&full.sku!==undefined&&!sameEvidenceIdentity(current,full))return{...current};
  const merged={...current,...full};
- for(const k of ['priceGBP','price','originalPrice','originalPriceKind','sourcePriceBadge','inStock','newStatus','observedAt','sourceUrl','department','departmentIds','kind','taxonomyAudit','classificationEvidence','previewImage','sourceImageConflict','detailsReady'])if(current[k]!==undefined)merged[k]=current[k];
+ for(const k of ['sku','variantId','variantName','name','baseName','retailerId','collectionId','priceGBP','price','originalPrice','originalPriceKind','sourcePriceBadge','inStock','newStatus','observedAt','sourceUrl','department','departmentIds','kind','taxonomyAudit','classificationEvidence','previewImage','sourceImageConflict','detailsReady'])if(current[k]!==undefined)merged[k]=current[k];
  return merged;
 }
