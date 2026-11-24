@@ -7,6 +7,7 @@ import{materializeCommittedImage}from'./committed-image-file.mjs';import{optimis
 import{applySavedSpringPreviewOriginals}from'./spring-native-preview.mjs';
 import{springHumanFrameAudit}from'./spring-human-frame.mjs';
 import{bindSpringListingNativeImages}from'./spring-listing-native.mjs';
+import{springListingRecoveryCandidates,applySpringListingRecovery}from'./spring-listing-recovery.mjs';
 import{prepareSpringHumanPreviews,applyHumanSelectedSpringOriginals,springRejectedNativeFrames}from'./spring-human-previews.mjs';
 import{materialFacts}from'./appearance.mjs';
 import{pairedSpringPhotoReviews}from'./spring-paired-photo-review.mjs';
@@ -23,6 +24,7 @@ export async function reviewSpring({repair=true}={}){
    // Only URLs proven by this exact SKU gallery are eligible. No resize URL
    // guessing, generative enhancement or enlargement of low-resolution files.
    for(const p of candidates){const review=reviews.products[p.sku],selected=review?.disposition==='include'&&review.wholeProductFrame===true&&review.sourceContentHash===p.detailEvidence?.sourceContentHash&&review.imageHash&&review.reviewArtifact?review.selectedNativeSourceUrl:null;const gallery=p.originalImages?.filter(g=>exactNativeGalleryMember(p,g)&&(g.variantId==null||String(g.variantId)===String(p.variantId)))||[],g=gallery.find(g=>g.url===selected)||gallery.find(g=>g.url===p.originalImageUrl);if(g)p.variantImageUrl=g.url;}
+   const candidateSkus=new Set(candidates.map(p=>p.sku)),listingCandidates=springListingRecoveryCandidates(snapshot).filter(p=>candidateSkus.has(p.sku));if(listingCandidates.length){const audit=await reader.auditImages(listingCandidates,snapshot.imageAudit||{},{bodyBatchSize:80});snapshot.listingImageRecoveryAudit=applySpringListingRecovery(snapshot,listingCandidates,audit);snapshot.imageAudit={...snapshot.imageAudit,entries:{...snapshot.imageAudit?.entries,...audit.entries}};console.log(JSON.stringify({phase:'spring-exact-listing-original-recovery',...snapshot.listingImageRecoveryAudit}));}
    snapshot.imageAudit=await reader.auditImages(candidates,snapshot.imageAudit||{},{bodyBatchSize:80});
    for(const p of candidates){const e=p.imageCacheEvidence;if(e&&p.originalImages?.some(g=>g.url===e.sourceUrl&&exactNativeGalleryMember(p,g))){p.originalImageUrl=e.sourceUrl;p.originalCachedImageUrl=p.cachedImageUrl;p.originalImageEvidence={...e};}}
    await pairReviewedOriginals();snapshot.humanSelectedOriginalAudit=await selectHumanOriginals();const human=await prepareSpringHumanPreviews(candidates,reviews),needsPreview=candidates.filter(p=>!human.prepared.has(p.sku));snapshot.humanPreviewAudit={prepared:human.prepared.size,sourceRequests:0,firecrawlCredits:0};

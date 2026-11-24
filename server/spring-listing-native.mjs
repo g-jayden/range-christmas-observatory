@@ -1,5 +1,6 @@
 import {detailFingerprint} from './collection-policy.mjs';
 import {exactNativeGalleryMember} from './native-gallery-identity.mjs';
+import {validSpringListingRecovery} from './spring-listing-recovery.mjs';
 
 // Some official PDP JSON records omit their gallery. The complete catalogue
 // still supplies an image on the exact SKU row. Preserve that evidence as a
@@ -15,8 +16,9 @@ export function bindSpringListingNativeImages(snapshot){
   const native=(p.originalImages||[]).filter(g=>!g.listingEvidence&&exactNativeGalleryMember(p,g));
   if(native.length){
    const fallback=(p.originalImages||[]).filter(g=>g.listingEvidence);
-   if(fallback.length){p.originalImages=p.originalImages.filter(g=>!g.listingEvidence);retiredListingFallbacks+=fallback.length;}
-   if(!native.some(g=>g.url===p.originalImageUrl)){
+   const retained=fallback.filter(g=>g.url===p.listingVariantImageUrl&&g.listingEvidence?.resolutionVerified===true&&g.listingEvidence.sha256===p.springListingImageRecovery?.sha256&&validSpringListingRecovery(p,snapshot));
+   if(fallback.length){p.originalImages=[...native,...retained];retiredListingFallbacks+=fallback.length-retained.length;}
+   if(![...native,...retained].some(g=>g.url===p.originalImageUrl)){
     p.originalImageUrl=native.find(g=>g.thumbnail===p.listingVariantImageUrl)?.url||native[0].url;
     delete p.originalCachedImageUrl;delete p.originalImageEvidence;delete p.previewImage;delete p.previewAudit;
    }
