@@ -1,9 +1,8 @@
 {
-  "requestId": "owner-recovery-20261124-saved-ms-bm-publication-0612",
+  "requestId": "owner-recovery-20261124-compact-native-saved-0630",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T22:10:50.035Z",
+  "requestedAt": "2026-11-24T22:28:35.282Z",
   "targets": [
-    "ms-saved-evidence",
-    "bm-publish-current"
+    "native-saved-checkpoint"
   ]
 }
