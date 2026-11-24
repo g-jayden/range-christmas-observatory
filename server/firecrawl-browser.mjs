@@ -12,6 +12,7 @@ import {normalizeCollectionLimits,unrestrictedCollection} from './collection-lim
 import {createFreeFirstRangeSource} from './range-free-source.mjs';
 import {createFreeFirstRangeImages} from './range-free-images.mjs';
 import {materializeCommittedImage} from './committed-image-file.mjs';
+import {retainManufacturerOriginal} from './manufacturer-native-cache.mjs';
 
 export async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000,anchors=[]}){
  const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status,url:response.url||target};return {status:200,url:response.url||target,value:json?await response.json():await response.text()}}catch(error){return {status:0,error:String(error.message).slice(0,180)}}};
@@ -362,6 +363,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   previous={...previous,entries:{...checkpoint.entries,...previous.entries,...browserRecovery.entries,...originalRecovery.entries}};
   const allUrls=[...new Set(products.map(p=>p.variantImageUrl||p.imageUrl).filter(Boolean))],results=[],known=[],newUrls=[],validPrior={};
   for(const url of allUrls){
+   const manufacturer=await retainManufacturerOriginal(url,previous.entries?.[url],{freeRead:freeImages?u=>freeImages.read(u):undefined});if(manufacturer){results.push(manufacturer);continue;}
    let u;try{u=new URL(url)}catch{}if(!u||u.protocol!=='https:'||!['www.therange.co.uk','kube-media-unpublished.rstore.com'].includes(u.hostname)||!u.pathname.startsWith('/media/')){results.push({url,ok:false,error:/placeholder/i.test(url)?'source-placeholder-no-product-photo':'source-image-URL-not-verified'});continue;}
    const old=previous.entries?.[url];let valid=false;if(old?.ok&&old.width>=64&&old.height>=64&&/^images\/source\/[a-f0-9]{64}\.(jpg|png|webp|gif|avif)$/.test(old.cachedImageUrl||'')){try{try{await fs.access('web/'+old.cachedImageUrl);}catch(error){if(error.code!=='ENOENT')throw error;await materializeCommittedImage(old.cachedImageUrl,old.hash);}valid=createHash('sha256').update(await fs.readFile('web/'+old.cachedImageUrl)).digest('hex')===old.hash;}catch{}}
    if(valid){validPrior[url]={retrievedFrom:old.retrievedFrom,hash:old.hash,cachedImageUrl:old.cachedImageUrl,etag:old.etag,lastModified:old.lastModified,width:old.width,height:old.height,bytes:old.bytes,mime:old.mime};if(policy.repairImagesOnly||policy.imageRefreshAfter&&Date.parse(old.observedAt)>=Date.parse(policy.imageRefreshAfter))results.push({...old,observedAt:old.observedAt||previous.observedAt,retained:true});else known.push(url);}else newUrls.push(url);
