@@ -40,3 +40,6 @@ const set={...documented,sku:'V52416-01',variantName:'50 Pack Gold Shatterproof 
 
 const threeAxes={Height:'8cm',Width:'4cm',Depth:'4cm'};nextDimensionFacts({title:'Standing glass tree',itemDescription:{toneOfVoice:'Dimensions(mm): Height: 200. Width: 160. Depth: 160.'}},null,threeAxes);assert.deepEqual([threeAxes.Height,threeAxes.Width,threeAxes.Depth],['200mm','160mm','160mm']);assert.equal(threeAxes['Source Width'],'4cm');
 const box={Height:'46cm',Width:'30cm',Depth:'32cm'};nextDimensionFacts({title:'Wooden telephone box',itemDescription:{toneOfVoice:'Dimensions: 28cm (Height) x 13cm (Width) x 10.5cm (Length)'}},null,box);assert.equal(box.Depth,undefined);assert.equal(box['Source Depth'],'32cm');assert.equal(box.Length,'10.5cm');
+
+assert.deepEqual(nxPhysicalObject({name:'Lights4fun Multi Autumnal Wreath With Warm White Leds',description:'Berry harvest autumn foliage',groups:['nx-wreath']}),[]);assert.deepEqual(nxPhysicalObject({name:'Christmas Berry Wreath',description:'Christmas greenery',groups:['nx-wreath']}),['nx-wreath']);
+console.log('Autumnal LED wreaths stay out of Christmas; lighting never turns an autumn product into a Christmas product.');
