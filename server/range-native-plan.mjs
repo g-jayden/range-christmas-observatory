@@ -9,3 +9,10 @@ export function rangeNativeTargets(products,{includeGallery=false}={}){const tar
  }}return targets;}
 export function validateRangeNativeEntry(target,e){if(!e?.ok||e.url!==target.variantImageUrl||!/^[a-f0-9]{64}$/.test(e.hash||'')||!e.cachedImageUrl?.includes(e.hash+'.')||!(e.width>=64&&e.height>=64))throw Error('Exact native response proof missing');const expected=target.expectedNative;if(expected?.width&&e.width!==expected.width||expected?.height&&e.height!==expected.height||expected?.sha256&&e.hash!==expected.sha256)throw Object.assign(Error('Exact original pixels changed; source recheck required'),{code:'NATIVE_SOURCE_VERSION_CHANGED'});return e;}
 export function committedNativeMirror(entry,trackedFiles){return entry?.ok===true&&entry.width>=64&&entry.height>=64&&/^[a-f0-9]{64}$/.test(entry.hash||'')&&new RegExp('^images/source/'+entry.hash+'\\.(?:jpg|png|webp|avif|gif)$').test(entry.cachedImageUrl||'')&&trackedFiles.has('web/'+entry.cachedImageUrl);}
+
+// Recover a new offer's complete exact gallery before old baseline frames.
+// This only reorders existing requests; it never adds a product or image URL.
+export function prioritiseRangeNativeArrivals(pending,products,newSkus){
+ const arrivals=products.filter(p=>newSkus.has(String(p.sku))),main=rangeNativeTargets(arrivals),gallery=rangeNativeTargets(arrivals,{includeGallery:true}),rank=p=>main.has(p.variantImageUrl)?2:gallery.has(p.variantImageUrl)?1:0;
+ return [...pending].sort((a,b)=>rank(b)-rank(a));
+}
