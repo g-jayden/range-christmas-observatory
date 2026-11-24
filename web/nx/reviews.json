@@ -10852,5 +10852,88 @@
     "reviewedAt": "2026-11-20T03:29:57.435Z",
     "method": "actual-native-photo-SHA-bound-title-description-materials-and-physical-form-direct-visual-review",
     "reason": "已核对实际原图、完整构图、所选款标题和描述；仅统计商品本体主要颜色，不统计背景树、灯光、包装或细小挂钩 · Actual native photo, whole view and exact option checked; major product colours exclude staging, illumination, packaging and small hardware"
+  },
+  "AU0956-01": {
+    "exclude": true,
+    "reason": "Official title and description explicitly identify an autumn/harvest wreath; the exact native photograph has orange/brown autumn leaves. Remove from Christmas without changing its saved official source facts.",
+    "imageHash": "08062988e8ba175bbb47584f16bcfb3abb83f0c0471adde8231d667d450f5343",
+    "sourceFingerprint": "f2b0f2016fd7c3f915084ce01eb270f344c64fd7610a2ce4ca02f5ffe722ba97",
+    "reviewedAt": "2026-11-24T12:29:30.236Z",
+    "method": "human-SHA-verified-native-gallery-exact-SKU-description-season-object-body-colour-review",
+    "reviewArtifact": "nx-six-native-contact.jpg"
+  },
+  "245267-01": {
+    "departmentIds": [
+      "nx-garland"
+    ],
+    "colors": [
+      "绿色"
+    ],
+    "reason": "Inspected all six exact native gallery frames: an elongated green conifer garland, not a circular wreath. Description supplies 1.8m. Warm white LEDs and the mantel/mirror do not change its body colour. The source provides lifestyle crops; keep the actual source frame without inventing a complete clean photo.",
+    "imageHash": "233f722a61ce73e115ecdf8092fb258dfd491d3f262cbae6310250fa34596a23",
+    "sourceFingerprint": "0087be967441ccdfda230baa342210fa7c1123aa32ba66a0faa4a41a0683d5c0",
+    "reviewedAt": "2026-11-24T12:29:30.236Z",
+    "method": "human-SHA-verified-native-gallery-exact-SKU-description-season-object-body-colour-review",
+    "reviewArtifact": "nx-six-native-contact.jpg; nx-gallery-sheet-245267-01.jpg"
+  },
+  "244975-01": {
+    "departmentIds": [
+      "nx-garland"
+    ],
+    "colors": [
+      "绿色",
+      "红色",
+      "棕色"
+    ],
+    "reason": "Inspected all eight exact native frames and the 1.5m Christmas Joy Garland description: elongated conifer/eucalyptus garland with burgundy/red leaves and berries and prominent brown pinecones. It is not a wreath; LED glow and background are not body colours.",
+    "imageHash": "6fb3e646aee7b7cbc18d4b00c68d28a56909eb3b8c488406433962953536b000",
+    "sourceFingerprint": "29b8b79b273446c6d1dbb850757248bd5a90dc797281f4c1930f86706d1dd5ca",
+    "reviewedAt": "2026-11-24T12:29:30.236Z",
+    "method": "human-SHA-verified-native-gallery-exact-SKU-description-season-object-body-colour-review",
+    "reviewArtifact": "nx-six-native-contact.jpg; nx-gallery-sheet-244975-01.jpg"
+  },
+  "244973-01": {
+    "departmentIds": [
+      "nx-ornaments"
+    ],
+    "colors": [
+      "绿色"
+    ],
+    "reason": "Inspected all six exact native frames: oversized tapering horizontal conifer swag, fuller in its middle, matching the exact description. Next has no separate requested swag category, so this is Christmas ornaments; no circular wreath and no inference of a different product from the styled background.",
+    "imageHash": "9242e6ccc7bc91b4be0f564212e4b3c02b9cdeca4ddff23c185c2f25c062a8a9",
+    "sourceFingerprint": "e5ff0267ea34906f72bfb53d6390e4eee0986a5d9f952fe620acf8e4b0359f75",
+    "reviewedAt": "2026-11-24T12:29:30.236Z",
+    "method": "human-SHA-verified-native-gallery-exact-SKU-description-season-object-body-colour-review",
+    "reviewArtifact": "nx-six-native-contact.jpg; nx-gallery-sheet-244973-01.jpg"
+  },
+  "L73152-01": {
+    "departmentIds": [
+      "nx-ornaments"
+    ],
+    "colors": [
+      "白色"
+    ],
+    "reason": "Viewed the SHA-verified 1800x2400 source original and exact description: a white-lacquered plywood deer and tree scene. Warm white illumination is a light colour; the physical body remains white. Source dimensions and description are preserved.",
+    "imageHash": "5682688ce41f3c81d9768565c242c4f3b049f5a168ed3c81fb7ec054ea0240b7",
+    "sourceFingerprint": "c002831c4fb8b14ad29ea2c75b88200aab054fbaf98865fd18ea7ff06ebe2a50",
+    "reviewedAt": "2026-11-24T12:29:30.236Z",
+    "method": "human-SHA-verified-native-gallery-exact-SKU-description-season-object-body-colour-review",
+    "reviewArtifact": "nx-six-native-contact.jpg"
+  },
+  "L85614-01": {
+    "departmentIds": [
+      "nx-ornaments"
+    ],
+    "colors": [
+      "绿色",
+      "白色",
+      "粉色"
+    ],
+    "reason": "Viewed the SHA-verified 1800x2400 original and exact description: three small freestanding bottlebrush sparkle trees in pastel green, white and pink, with small natural wood bases. These are tabletop ornaments, not baubles or full-size Christmas trees. All three major colours are counted.",
+    "imageHash": "59d28b2889ceb757cafd4d030153526b440c190ebee7466ca5efc08113fd26ce",
+    "sourceFingerprint": "a2f9f49d89c7930641c269d9ed7ba151f9fe3eb225920d59c641ac6bbf62d63a",
+    "reviewedAt": "2026-11-24T12:29:30.236Z",
+    "method": "human-SHA-verified-native-gallery-exact-SKU-description-season-object-body-colour-review",
+    "reviewArtifact": "nx-six-native-contact.jpg"
   }
 }
