@@ -1,8 +1,8 @@
 {
-  "requestId": "owner-recovery-20261124-argos-parser-bound-acceptance-2300",
+  "requestId": "owner-recovery-20261124-native-stream-complete-response-2312",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T22:59:38.680Z",
+  "requestedAt": "2026-11-24T23:12:27.673Z",
   "targets": [
-    "ar-reviewed-current"
+    "range-native-current"
   ]
 }
