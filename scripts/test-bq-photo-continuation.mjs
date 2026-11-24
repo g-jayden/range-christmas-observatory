@@ -4,5 +4,6 @@ assert(plan());assert.equal(plan().sourceRequests,0);assert.equal(plan().firecra
 for(const prior of[{sourceObservedAt:source,previewCompleted:800},{sourceObservedAt:source,previewCompleted:900},{sourceObservedAt:source,previewCompleted:700,producerRunId:123}])assert.equal(plan(progress,status,closed,prior),null,'The same or regressed prefix never creates another job');
 assert(plan(progress,status,closed,{sourceObservedAt:source,previewCompleted:700,producerRunId:122}));
 for(const p of[{...progress,previewCompleted:0},{...progress,previewCompleted:1000},{...progress,paused:false},{...progress,checkedAt:'2026-11-23T23:59:00Z'},{...progress,sourceObservedAt:'2026-11-22T22:30:00Z'}])assert.equal(plan(p),null);
+assert.equal(plan(progress,status,closed,null,{...run,created_at:undefined}),null);assert.equal(plan(progress,status,closed,null,{...run,updated_at:'invalid'}),null);
 assert.equal(plan(progress,{...status,skus:999}),null);assert.equal(plan(progress,status,{...closed,complete:false}),null);assert.equal(plan(progress,status,closed,null,{...run,conclusion:'success'}),null);
 console.log('PASS: only a failed exact current image pass with a strictly larger completed prefix may resume; zero progress, stale source, incomplete counts, successful runs and replayed events do not dispatch or recollect.');
