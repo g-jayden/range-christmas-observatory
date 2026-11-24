@@ -1,6 +1,6 @@
 import{springBodyColourFacts}from'../server/spring-colours.mjs';
 import{springReviewExcludes}from'../server/spring-review-evidence.mjs';import{detailFingerprint}from'../server/collection-policy.mjs';
-import{springSourceAlternates}from'../server/repair-spring-source.mjs';
+import{springSourceAlternates,springKnownAddressFailures}from'../server/repair-spring-source.mjs';
 import assert from'node:assert/strict';
 import{collectPartitionedCategory}from'../server/catalogue-partitions.mjs';
 import{SPRING_DEPARTMENTS,SPRING_VERSION,springSourceDecision,springImageDecision}from'../web/spring-model.mjs';
@@ -35,6 +35,12 @@ const reader=async raw=>{catalogueReads++;const u=new URL(raw),f=JSON.parse(u.se
 
 const addresses=springSourceAlternates({sku:'1459028',productCode:'M1459028',sourceUrl:'https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/christow-artificial-olive-tree-4ft\u00136ft/#1459028',detailIssue:{status:403}});assert(addresses[0].endsWith('/p/christow-artificial-olive-tree-4ft-6ft/m1459028#1459028'));assert(addresses.some(u=>u.includes('%C2%BF')));assert.throws(()=>springSourceAlternates({sourceUrl:'https://foreign.invalid/p/test',sku:'1'}));assert.equal(productNames({department:'spring-tree',variantName:'Christow Artificial Olive Tree 4ft&#x2013;6ft'}).en,'Christow Artificial Olive Tree 4ft–6ft');
 console.log('PASS: broken source-address alternatives preserve the official family product code and exact SKU; foreign origins fail and source HTML entities render correctly.');
+assert(addresses.includes('https://www.therange.co.uk/p/product/m1459028#1459028'),'The official product-code route does not depend on a broken listing slug');
+const failedA={sku:'123',sourceUrl:'https://www.therange.co.uk/p/old/m123',status:404},failedB={sku:'123',sourceUrl:'https://www.therange.co.uk/p/product/m123',status:403};
+const failureSnapshot={observedAt:'current',sourceAddressAudit:{failures:[failedA]}};
+assert.deepEqual(springKnownAddressFailures(failureSnapshot,{baseObservedAt:'current',audit:{failures:[failedB]}}),[failedA,failedB]);
+assert.deepEqual(springKnownAddressFailures(failureSnapshot,{baseObservedAt:'old',audit:{failures:[failedB]}}),[failedA]);
+assert.equal(springKnownAddressFailures(failureSnapshot,{baseObservedAt:'current',audit:{failures:[failedA]}}).length,1,'Retained current failures prevent repeat paid reads of the same dead address');
 
 const reviewedObject={sku:'9',variantId:'10',variantName:'Artificial Hanging Ball',productPath:'p/hanging',listingVariantImageUrl:'https://www.therange.co.uk/media/ball.jpg'},review={disposition:'exclude',reason:'Source photo shows a hanging ball without trunk or pot',imageHash:'a'.repeat(64),listingFingerprint:detailFingerprint(reviewedObject),reviewedSourceImageUrl:reviewedObject.listingVariantImageUrl};assert(springReviewExcludes(reviewedObject,review));assert(!springReviewExcludes({...reviewedObject,variantId:'11'},review));assert(!springReviewExcludes({...reviewedObject,listingVariantImageUrl:'https://www.therange.co.uk/media/new.jpg'},review));console.log('PASS: saved visual exclusions avoid repeat collection only while the exact variant, title and source photo remain unchanged.');
 
