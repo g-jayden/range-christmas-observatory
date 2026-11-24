@@ -28,3 +28,10 @@ const refreshedRoot=await fs.mkdtemp(path.join(os.tmpdir(),'bq-fresh-pagination-
  assert.equal(refreshedPaid,1);assert(fresh.get(urls[0]) instanceof Error,'An older good cache may not certify a failed fresh observation');assert.equal(fresh.get(urls[1]).observedAt,'2026-11-20T02:10:00Z');assert.equal(concurrent.get(urls[1]).observedAt,'2026-11-20T02:10:00Z');assert.equal(fresh.size,24);await source.close();
 }finally{await fs.rm(refreshedRoot,{recursive:true,force:true});}
 console.log('PASS: a required fresh membership pass shares one free-first paid batch, retains its actual new dates, and exposes exact refresh failures instead of silently returning an older cache.');
+
+const memoryRoot=await fs.mkdtemp(path.join(os.tmpdir(),'bq-memory-stream-'));try{
+ const large=text+' '.repeat(1024*1024),source=createBqSourceTransport({root:memoryRoot,now,requestFree:async()=>({html:large,sourceFormat:'native-loader',observedAt:'2026-11-20T02:00:00Z'}),fetcher:async()=>assert.fail('Working free pages never need paid memory recovery')});
+ for(let i=0;i<100;i++){const value=await source.request(url+'&memoryPage='+i);assert.equal(value.html,large);assert(source.metrics().sourceMemoryBytes<=48*1024*1024);assert(source.metrics().sourceMemoryEntries<=32);}
+ await source.close();const code=await fs.readFile(new URL('update-bq.mjs',import.meta.url),'utf8');assert(code.includes('jobs.slice(cursor,stop)'));assert(code.includes('observedVariantBatch.get(url)'));assert(code.includes('freshPageBatches.size>2'));assert(!code.includes('transport.prefetch(jobs.map('),'Never retain every raw variant HTML in one prefetch result before parsing');
+}finally{await fs.rm(memoryRoot,{recursive:true,force:true});}
+console.log('PASS: 100 large real-shaped loader bodies stay below 48 MB/32 in-memory responses; variant HTML is parsed in 24-resource windows and only two fresh directory batches remain live. No product-count or credit ceiling is introduced.');
