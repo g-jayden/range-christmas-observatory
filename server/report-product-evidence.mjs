@@ -19,6 +19,7 @@ export function reportProductEvidence(product,candidate,source,{retailerId,now=D
  if(!fullDetail&&!directoryReport)reasons.push('exact-SKU-detail-proof-missing');
  if(!Number.isFinite(product.priceGBP)||product.priceGBP<0)reasons.push('current-price-missing');
  if(product.sourceImageConflict)reasons.push('official-title-photo-conflict');
+ if(product.previewReviewRequired||product.sourcePhotoQuarantined)reasons.push('whole-product-photo-unaccepted');
  if(product.classificationEvidence?.requiresReview||product.taxonomyAudit?.disposition==='exclude')reasons.push('physical-classification-unaccepted');
  return {accepted:!reasons.length,reasons,...(directoryReport?{contract:'current-directory-explicit-title-size-and-exact-SKU-native-gallery',reportSize:explicitSize,descriptionVerified:false}:{})};
 }
