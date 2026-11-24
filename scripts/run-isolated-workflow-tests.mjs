@@ -10,7 +10,7 @@ export async function runIsolatedWorkflowTests({root=process.cwd(),env=process.e
  const head=git(root,['rev-parse','HEAD']),temporary=await fs.mkdtemp(path.join(os.tmpdir(),'observatory-test-worktree-'));let added=false;
  try{
   await fs.access(path.join(root,'node_modules'));git(root,['worktree','add','--detach','--no-checkout',temporary,head]);added=true;
-  git(temporary,['sparse-checkout','set','--no-cone','--stdin'],'/*\n!/web/images/\n!/web/reports/\n!/web/mail-assets/\n');git(temporary,['reset','--hard',head]);
+  git(temporary,['sparse-checkout','set','--no-cone','--stdin'],'/*\n!/web/images/\n!/web/reports/\n!/web/mail-assets/\n!/web/bq/paid-source-checkpoints/\n!/web/bq/source-billing-history/\n');git(temporary,['reset','--hard',head]);
   await fs.symlink(path.resolve(root,'node_modules'),path.join(temporary,'node_modules'),'dir');
   const childEnv=Object.fromEntries(Object.entries(env).filter(([k])=>!/(?:TOKEN|SECRET|API_KEY|PASSWORD|PRIVATE_KEY|CREDENTIAL|CONTROL_API_URL|ACTIONS_ID_TOKEN_REQUEST_URL|ACTIONS_RESULTS_URL|ACTIONS_RUNTIME_URL)/i.test(k)&&!['GIT_DIR','GIT_WORK_TREE','GIT_INDEX_FILE','GIT_COMMON_DIR'].includes(k)));
   Object.assign(childEnv,{GITHUB_WORKSPACE:temporary,PWD:temporary,INIT_CWD:temporary,COLLECTION_CHECKPOINTS:'0'});
