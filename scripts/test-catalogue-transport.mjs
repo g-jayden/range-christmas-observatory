@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {createCatalogueTransport} from '../server/catalogue-transport.mjs';
 await import('./test-range-directory-checkpoint.mjs');
+await import('./test-daily-range-scopes.mjs');
 let calls=0,revision=1;
 const read=createCatalogueTransport(async(fn,urls)=>{calls++;return urls.map(url=>({url,status:200,body:{revision}}));});
 const urls=Array.from({length:25},(_,i)=>'https://search-lon.therange.co.uk/api/productlist?offset='+i);
