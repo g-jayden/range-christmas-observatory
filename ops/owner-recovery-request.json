@@ -1,7 +1,7 @@
 {
-  "requestId": "owner-recovery-20261124-publish-durable-sources",
+  "requestId": "owner-recovery-20261124-publish-source-and-visual-qa",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T14:18:19.230Z",
+  "requestedAt": "2026-11-24T14:26:30.973Z",
   "targets": [
     "static-pages-current"
   ]
