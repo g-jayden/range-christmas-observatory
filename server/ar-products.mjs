@@ -36,7 +36,8 @@ export function arSpecifications(d){
  const explicit=dimensionsText.match(/(?:^|[;.•\n])\s*(?:Size|Dimensions)\s*:?\s*((?:[HWDL]\s*\d+(?:\.\d+)?\s*(?:cm|mm|m|ft|inches?)?\s*[,×x]?\s*){1,4})/i)?.[1]?.trim();
  if(!s.Size&&explicit)s.Size=explicit;
  const size=String(s.Size||''),shared=[...size.matchAll(/\d\s*(cm|mm|m|ft|inches?)\b/ig)].at(-1)?.[1];
- for(const m of size.matchAll(/\b([HWDL])\s*(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)?/ig))if(m[3]||shared)s[({H:'Height',W:'Width',D:'Depth',L:'Length'})[m[1].toUpperCase()]]||=m[2]+(m[3]||shared);
+ const unlabelledSingleD=/^D\s*\d+(?:\.\d+)?\s*(?:cm|mm|m|ft|inches?)$/i.test(size);
+ for(const m of size.matchAll(/\b([HWDL])\s*(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)?/ig))if((m[3]||shared)&&!(unlabelledSingleD&&m[1].toUpperCase()==='D'))s[({H:'Height',W:'Width',D:'Depth',L:'Length'})[m[1].toUpperCase()]]||=m[2]+(m[3]||shared);
  const treeHeight=dimensionsText.match(/\b(\d+(?:\.\d+)?)\s*(ft|cm)\s+(?:(?:artificial|christmas|xmas|pine|spruce)\s+)*tree\b/i);
  if(!s.Height&&treeHeight&&/\btree\b/i.test(title))s.Height=treeHeight[1]+treeHeight[2];
  // The selected official title also carries actual product dimensions. Keep
