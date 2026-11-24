@@ -1,11 +1,1 @@
-{
-  "sourceObservedAt": "2026-11-24T11:38:39.735Z",
-  "previewCompleted": 18440,
-  "products": 25693,
-  "producerRunId": 45397110225,
-  "requestedAt": "2026-11-24T13:55:41.169Z",
-  "mode": "reuse-exact-saved-source-and-reviewed-photos",
-  "sourceRequests": 0,
-  "firecrawlCredits": 0,
-  "reason": "First productive continuation explicitly resumed under owner standing authorisation; completion event preceded workflow registration."
-}
+{"sourceObservedAt":"2026-11-24T22:01:38.119Z","previewCompleted":14523,"products":26428,"producerRunId":45496701922,"requestedAt":"2026-11-24T23:38:43.053Z","mode":"reuse-exact-saved-source-and-reviewed-photos","sourceRequests":0,"firecrawlCredits":0}
