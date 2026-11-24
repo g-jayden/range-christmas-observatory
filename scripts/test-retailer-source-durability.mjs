@@ -45,7 +45,7 @@ for (const [id, clock] of [['ms', dispatchMsDue], ['hb', dispatchHbDue], ['du', 
   assert((await clock({...args, storage: failed, productionQueue: {reason: 'production-queue-unavailable'}})).waiting);
   assert.equal(await failed.get(id + '-clock'), undefined);
 }
-for (const id of ['ms', 'hb']) {
+for (const id of ['ms', 'hb', 'bm']) {
   const workflow = await fs.readFile('.github/workflows/' + id + '.yml', 'utf8');
   assert(workflow.includes("EVIDENCE_ISOLATE_WORKTREE: '1'"));
   assert(workflow.includes('/web/preview-quality-cache.json.gz'));
