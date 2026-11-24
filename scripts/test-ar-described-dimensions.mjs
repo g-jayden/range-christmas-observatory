@@ -8,4 +8,12 @@ for(const title of ['Tree Stand for Trees up to 2.6m','Tree Stand for Trees up t
 assert.deepEqual(specs('Neo Hand-Woven Willow Christmas Tree Skirt Collar - Grey','Measuring 45cm across the top, 65cm across the base and 28cm high, it is suitable for real trees.'),{'Top Diameter':'45cm','Base Diameter':'65cm',Height:'28cm'});
 assert.equal(specs('COSTWAY 2 FT Christmas Tree','Material: New PVC, Cement,linen Height: 60 cm Net weight: 0.75 kg').Material,'New PVC, Cement,linen');
 assert.equal(specs('COSTWAY 6FT Tree','Tree Height: 180cm Tree Width: 76cm').Height,'180cm');
+assert.equal(specs('COSTWAY 6FT Pre-Lit Snow flocked Artificial Christmas Tree - Green & White').Height,'6ft');
+assert.equal(specs('COSTWAY 7FT Artificial Pencil Slim Christmas Tree with Stand - Green').Height,'7ft');
+assert.equal(specs('COSTWAY 7FT Artificial Pencil Slim Christmas Tree with Stand - Green')['Height Source'],'Official selected-SKU product title');
+assert.equal(specs('COSTWAY 7FT Artificial Christmas Tree','Height: 210cm').Height,'210cm','An explicit exact specification retains its original value');
+for(const name of ['Stand for 6FT Artificial Christmas Tree','Set of 3FT Artificial Christmas Trees','6FT Christmas Tree Storage Bag','6FT Christmas Tree Hanging Ornament'])assert.equal(specs(name).Height,undefined,'Related tree heights and multi-product sets cannot silently become physical product height');
+const skirt=specs('OHS Ribbed Faux Fur Christmas Tree Skirt - Cream','Finish a festive tree. Dimensions: D90cm Material: 100% Polyester Care Instructions: Machine washable');
+assert.equal(skirt.Dimensions,'D90cm');assert.equal(skirt.Depth,undefined,'An ambiguous source D code cannot be invented as depth');
+const{productDimensions}=await import('../web/catalogue-model.mjs'),skirtSize=productDimensions(skirt);assert.equal(skirtSize.sourceSize,'D90cm');assert.equal(skirtSize.maxCm,90);assert.equal(skirtSize.evidence.Max.axisOrderUnknown,true);
 console.log('PASS: exact garland title length, explicit collar dimensions and material boundaries are retained without turning supported tree height, family chain length or cable length into product size.');
