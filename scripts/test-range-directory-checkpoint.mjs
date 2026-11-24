@@ -1,0 +1,37 @@
+import assert from'node:assert/strict';
+import fs from'node:fs/promises';
+import os from'node:os';
+import path from'node:path';
+import{gzipSync,gunzipSync}from'node:zlib';
+import{createRangeDirectoryCheckpoint,rangeDirectoryWindowStart}from'../server/range-directory-checkpoint.mjs';
+import{createFirecrawlBrowserReader}from'../server/firecrawl-browser.mjs';
+import{defaults}from'../server/collection-policy.mjs';
+import{apiUrl,parseSource}from'../server/sync.mjs';
+const dir=await fs.mkdtemp(path.join(os.tmpdir(),'range-source-pages-')),file=path.join(dir,'pages.json.gz');
+let time=Date.parse('2026-11-24T22:10:00Z');const now=()=>time;
+const validate=body=>parseSource({success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200}}});
+const url=apiUrl('123',0),body={products:[],totalResults:0};
+try{
+ const first=await createRangeDirectoryCheckpoint({file,validate,now});
+ await first.retain([{url,status:200,body,observedAt:new Date(time).toISOString()},{url:'https://other.example/api/productlist',status:200,body,observedAt:new Date(time).toISOString()}]);
+ const resumed=await createRangeDirectoryCheckpoint({file,validate,now});
+ assert.deepEqual(resumed.read(url).body,body);assert.equal(resumed.read(url).observedAt,'2026-11-24T22:10:00.000Z');assert.equal(resumed.read(url,{fresh:true}),null);
+ assert.equal(resumed.read('https://other.example/api/productlist'),null);
+ const contents=JSON.parse(gunzipSync(await fs.readFile(file)));contents.pages[0].body.totalResults=999;
+ await fs.writeFile(file,gzipSync(JSON.stringify(contents)));assert.equal((await createRangeDirectoryCheckpoint({file,validate,now})).read(url),null,'Body hash corruption never becomes reusable source evidence');
+ time+=4*3600000;assert.equal(resumed.read(url),null,'Expired morning pages require fresh source requests');
+ assert.equal(rangeDirectoryWindowStart(Date.parse('2026-11-24T22:10:00Z')),Date.parse('2026-11-24T22:00:00Z'));
+ time=Date.parse('2026-11-24T22:10:00Z');await fs.rm(file);
+ const urls=Array.from({length:25},(_,i)=>apiUrl('123',i*100));let executions=0,networkFailure=true;
+ process.env.FIRECRAWL_API_KEY='test-only-never-sent';
+ const fetcher=async(target,options)=>{assert.equal(target,'https://api.firecrawl.dev/v2/scrape');executions++;const input=JSON.parse(options.body),batch=JSON.parse(input.actions[0].script.match(/\)\((\[.*\])\)$/s)[1]);if(networkFailure&&executions===2)throw Error('Simulated later batch transport failure');return Response.json({success:true,data:{metadata:{statusCode:200,creditsUsed:1},actions:{javascriptReturns:[{value:batch.map(url=>({url,status:200,body,observedAt:new Date(time).toISOString()}))}]}}});};
+ const config={policy:{...defaults,catalogueTransport:'enhanced-batch',cataloguePageCheckpoint:file},budget:{limit:60},fetcher,now};
+ const failed=await createFirecrawlBrowserReader(config);await assert.rejects(failed.many(urls),/later batch/);await failed.close();
+ assert.equal(JSON.parse(gunzipSync(await fs.readFile(file))).pages.length,24,'Successful paid batch is saved before the following request fails');
+ networkFailure=false;time+=15*60000;const next=await createFirecrawlBrowserReader(config);await next.many(urls);
+ assert.equal(executions,3,'Resume requests only the one missing page, never the 24 completed pages');assert.equal(next.metrics().catalogueCheckpointPagesReused,24);
+ await next.fresh(urls[0]);assert.equal(executions,4,'Independent final source verification bypasses memory and disk caches');
+ assert.equal(next.metrics().catalogueObservation.originalTimestampsPreserved,true);await next.close();
+ time=Date.parse('2026-11-25T22:10:00Z');assert.equal((await createRangeDirectoryCheckpoint({file,validate,now})).read(urls[0]),null,'A subsequent day cannot reuse yesterday as a fresh observation');
+ console.log('PASS: interrupted paid catalogue batches resume only missing exact URLs; fresh closing reads, source timestamps, hashes and morning boundaries stay strict.');
+}finally{await fs.rm(dir,{recursive:true,force:true});}
