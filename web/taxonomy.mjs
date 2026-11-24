@@ -80,7 +80,7 @@ export function offeredObject(p,{visual=p.taxonomyVisual}={}){
  if(hanging){if(small||/tree decorations?/i.test(String(p.specifications?.['Decoration Type']||''))||/tree decorations?/i.test(crumbs))return r('tree-decorations','small-hanging-tree-ornament');if(size>22)return r('wall','larger-hanging-decoration');return r('ornaments','hanging-decoration-size-or-use-unspecified');}
  if(/\b(?:LEDs?|lights|lighting|lamps?|light up|light-up|infinity light|neon|light sign|night light|light decoration|Christmas light)\b/i.test(nounBody))return r('lights','offered-decorative-lighting-after-specific-object-checks');
  if(/tree decorations?/i.test(crumbs))return r('tree-decorations','official-ornament-category-after-physical-object-exclusions');
- if(/\b(?:nutcracker|gonks?|gnomes?|santa|snowman|penguin|reindeer|polar bear|figurine|figure|elf|elves|soldier)\b/i.test(body)&&!/\b(?:clip|hanging|pendant|bauble|sticker|ribbon|sign|paper|wrap)\b/i.test(body))return r('standing','decorative-figure-without-hanging-or-printed-support');
+ if(/\b(?:nutcracker|gonks?|gnomes?|santa|snowman|penguin|reindeer|deers?|sleigh|polar bear|figurine|figure|elf|elves|soldier)\b/i.test(body)&&!/\b(?:clip|hanging|pendant|bauble|sticker|ribbon|sign|paper|wrap)\b/i.test(body))return r('standing','decorative-figure-without-hanging-or-printed-support');
  return r('ornaments','other-offered-christmas-decoration');
 }
 
