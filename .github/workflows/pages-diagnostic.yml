@@ -20,7 +20,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           node --input-type=module <<'JS'
-          const repo='g-jayden/range-christmas-observatory',root='https://api.github.com/repos/'+repo,headers={authorization:'Bearer '+process.env.GH_TOKEN,accept:'application/vnd.github+json'},sha='3be9520548cf5558650ab25ea482ee834829ee6e',artifact=14905872175;
+          const repo='g-jayden/range-christmas-observatory',root='https://api.github.com/repos/'+repo,headers={authorization:'Bearer '+process.env.GH_TOKEN,accept:'application/vnd.github+json'},sha='ca43b93e33a1ecd3333b3b4713f0d30dcd5f183e',artifact=14917021051;
           const deployment=await fetch(root+'/pages/deployments/'+sha,{headers,signal:AbortSignal.timeout(20000)}),d=await deployment.json();
           console.log(JSON.stringify({phase:'saved-pages-deployment-diagnostic',http:deployment.status,status:d.status,error:d.error,message:d.message,progress:d.progress,statusKeys:Object.keys(d),sourceRequests:0,firecrawlCredits:0}));
           const details=await fetch(root+'/actions/artifacts/'+artifact,{headers,signal:AbortSignal.timeout(20000)}),a=await details.json();if(!details.ok)throw Error('Saved artifact metadata '+details.status);

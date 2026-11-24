@@ -41,7 +41,7 @@ if(artifact.size_in_bytes>1073741824)throw Error('Pages artifact exceeds the doc
   let status;try{status=await request(url,{headers});errors=0;}catch(e){errors++;if(errors>=5){await cancel();throw Error('Pages status could not be verified after five bounded API errors');}log({phase:'pages-status-temporarily-unavailable',errors,status:e.status||0});continue;}
   const state=status.status||'pending';if(state!==lastState){log({phase:'pages-status',deploymentId:id,state,elapsedSeconds:Math.round((now()-startedAt)/1000)});lastState=state;}
   if(state==='succeed')return {deploymentId:id,pageUrl:'https://g-jayden.github.io/range-christmas-observatory/',artifactId:artifact.id,elapsedMs:now()-startedAt,sourceRequests:0,firecrawlCredits:0};
-  if(['deployment_failed','deployment_content_failed','deployment_cancelled','deployment_lost'].includes(state))throw Error('Pages reported '+state+'; captured source files remain saved');
+  if(['deployment_failed','deployment_content_failed','deployment_cancelled','deployment_lost'].includes(state)){log({phase:'pages-terminal-diagnostic',deploymentId:id,state,error:status.error||null,message:status.message||null,progress:status.progress||null});throw Error('Pages reported '+state+'; captured source files remain saved');}
   delay=Math.min(30000,Math.round(delay*1.5));
  }
  await cancel();throw Error('Pages file sync exceeded the bounded wait; no source recollection was started');
