@@ -1,8 +1,8 @@
 {
-  "requestId": "owner-recovery-20261124-next-six-reviewed-evidence",
+  "requestId": "owner-recovery-20261124-bq-memory-streamed-source",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T12:32:26.073Z",
+  "requestedAt": "2026-11-24T12:48:26.578Z",
   "targets": [
-    "nx-review-current"
+    "bq-current"
   ]
 }
