@@ -46,3 +46,8 @@ for (const id of ['ms', 'hb']) {
   assert(delivery.includes('const revision=publishedEvidenceRevision()'));
 }
 console.log('PASS: all ten retailer scans require a durable matching commit; failed publication cannot suppress recovery or release a partial digest; repeated scan preserves proof, changed scan invalidates it, and archived source can be reused.');
+
+const du = await fs.readFile('.github/workflows/du.yml', 'utf8');
+assert(du.includes('group: range-du-source'));
+const range = await fs.readFile('.github/workflows/daily-pages.yml', 'utf8');
+assert(range.includes("inputs.mode == 'asda' && 'range-asda-source'"), 'ASDA cannot wait behind an unrelated full Range collection');
