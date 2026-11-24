@@ -19,7 +19,7 @@ export function arGallery(d,sku){
   const meta=d.legacy?.media?.meta?.[url]||{};return{url:u.href,selectedSku:sku,variantId:sku,sourceParentId:sku,sourceUrl:d.sourceUrl,sourceWidth:Number(meta.width)||null,sourceHeight:Number(meta.height)||null,verification:'exact-public-Product-SKU-and-official-gallery'};
  });
 }
-export function arSpecifications(d){
+export function arSpecifications(d,{legacy=false}={}){
  const a=d.legacy?.dimensions?.attributes||{},s={},description=arPlainText(d.structuredProduct.description||''),title=arPlainText(d.structuredProduct.name);
  for(const[k,v]of Object.entries(a))if(v!==null&&v!==undefined&&v!=='')s[k[0].toUpperCase()+k.slice(1)]=String(v);
  const boundary='(?:Colour|Color|Material|Tree width|Total height|Tree height|Height|Width|Length|Depth|Stand size|Overall dimensions|Dimensions|Size|With \\d+|Assembly required|Power source|Number of|Voltage|Suitable for)';
@@ -36,20 +36,20 @@ export function arSpecifications(d){
  const explicit=dimensionsText.match(/(?:^|[;.•\n])\s*(?:Size|Dimensions)\s*:?\s*((?:[HWDL]\s*\d+(?:\.\d+)?\s*(?:cm|mm|m|ft|inches?)?\s*[,×x]?\s*){1,4})/i)?.[1]?.trim();
  if(!s.Size&&explicit)s.Size=explicit;
  const size=String(s.Size||''),shared=[...size.matchAll(/\d\s*(cm|mm|m|ft|inches?)\b/ig)].at(-1)?.[1];
- const unlabelledSingleD=/^D\s*\d+(?:\.\d+)?\s*(?:cm|mm|m|ft|inches?)$/i.test(size);
+ const unlabelledSingleD=!legacy&&/^D\s*\d+(?:\.\d+)?\s*(?:cm|mm|m|ft|inches?)$/i.test(size);
  for(const m of size.matchAll(/\b([HWDL])\s*(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)?/ig))if((m[3]||shared)&&!(unlabelledSingleD&&m[1].toUpperCase()==='D'))s[({H:'Height',W:'Width',D:'Depth',L:'Length'})[m[1].toUpperCase()]]||=m[2]+(m[3]||shared);
  const treeHeight=dimensionsText.match(/\b(\d+(?:\.\d+)?)\s*(ft|cm)\s+(?:(?:artificial|christmas|xmas|pine|spruce)\s+)*tree\b/i);
  if(!s.Height&&treeHeight&&/\btree\b/i.test(title))s.Height=treeHeight[1]+treeHeight[2];
  // The selected official title also carries actual product dimensions. Keep
  // its original unit; never turn a stand's supported tree height into its size.
  const titledTreeHeight=title.match(/\b(\d+(?:\.\d+)?)\s*(ft|cm)\s+(?:(?:[a-z-]+)\s+){0,8}(?:christmas|xmas)\s+tree\b/i);
- if(!s.Height&&titledTreeHeight&&!/\b(?:set|trees|skirt|collar|topper|ornament|decoration|storage|bag|up to|suitable for|stand for|base for)\b/i.test(title)){s.Height=titledTreeHeight[1]+titledTreeHeight[2].toLowerCase();s['Height Source']='Official selected-SKU product title';}
+ if(!legacy&&!s.Height&&titledTreeHeight&&!/\b(?:set|trees|skirt|collar|topper|ornament|decoration|storage|bag|up to|suitable for|stand for|base for)\b/i.test(title)){s.Height=titledTreeHeight[1]+titledTreeHeight[2].toLowerCase();s['Height Source']='Official selected-SKU product title';}
  const base=dimensionsText.match(/\bbase of (?:the )?tree diameter\s*(\d+(?:\.\d+)?)\s*(cm|mm|m|ft|inches?)\b/i);if(base)s['Base Diameter']=base[1]+base[2];
  const dimension=field('Overall dimensions')||field('Dimensions');if(dimension&&!s.Size&&/\d\s*[x×]/i.test(dimension))s.Size=dimension;
  // Preserve single unlabelled source measures too. D90cm stays the exact
  // source string with an unspecified axis, rather than becoming an invented
  // depth or silently disappearing because it lacks a multiplication sign.
- if(dimension&&!s.Size&&!s.Dimensions&&/\d+(?:\.\d+)?\s*(?:cm|mm|m|ft|inches?)\b/i.test(dimension)&&!/\b(?:cable|lead|cord|wire|boxed|packaged|shipping|up to|suitable for)\b/i.test(dimension))s.Dimensions=dimension;
+ if(!legacy&&dimension&&!s.Size&&!s.Dimensions&&/\d+(?:\.\d+)?\s*(?:cm|mm|m|ft|inches?)\b/i.test(dimension)&&!/\b(?:cable|lead|cord|wire|boxed|packaged|shipping|up to|suitable for)\b/i.test(dimension))s.Dimensions=dimension;
  const specifiedSize=dimensionsText.match(/(?:^|[;.•\n])\s*(?:Approx(?:imate)?\s+)?(?:Size|Dimensions)\s*:\s*([^;\n•]{1,110})/i)?.[1]?.trim();
  if(!s.Size&&specifiedSize&&/\d+(?:\.\d+)?\s*(?:cm|mm|m|ft|inches?)\b/i.test(specifiedSize))s.Size=specifiedSize;
  if(!s.Size&&!s.Height&&!s.Length&&!s.Diameter){const measured=dimensionsText.match(/\bMeasures\s+(\d+(?:\.\d+)?\s*(?:cm|mm|m|ft|inches?))\b/i);if(measured)s.Size=measured[1];}
@@ -82,6 +82,10 @@ export function buildArSnapshot(source,details,{previous={products:[]},allowInco
   const sourceDescription=arPlainText(structured.description||legacy?.attributes?.description||''),specifications=arSpecifications(d),dimensions=productDimensions(specifications),materials=duMaterialFacts(specifications,sourceDescription),gallery=arGallery(d,sku),a=legacy?.attributes||d.flight?.availability||{},listing=row.attributes||{},newStatus=(listingCurrent?false:(legacy?.badges||[]).some(b=>b.attributes?.badgeReference==='new_badge'))||listing.badge?.BADGE_PRODUCT?.includes('new_badge')===true;
   if(specifications['Height Source']&&dimensions.evidence?.Height)dimensions.evidence.Height.source=specifications['Height Source'];
   const was=Number(listingCurrent?listing.wasPrice:lp?.was??listing.wasPrice),sourceColour=specifications.Colour||'',p={...prior,retailerId:'ar',retailerName:'Argos',recordType:'sku',sku,sourceSku:sku,variantId:sku,parentGroupId:sku,baseName:structured.name,variantName:structured.name,brand:structured.brand?.name||listing.brand||'Argos',sourceUrl:d.sourceUrl,sourceDescription,productSummary:sourceDescription,sourceDescriptionAbsent:!sourceDescription,detailsReady:true,observedAt:listingCurrent?listedAt:d.observedAt,priceEvidence:{sourceUrl:listingCurrent?listedUrl:d.sourceUrl,observedAt:listingCurrent?listedAt:d.observedAt,selectedSku:sku,method:listingCurrent?'exact-current-official-directory-SKU':'exact-current-public-Product-offer'},attributeObservedAt:d.observedAt,detailEvidence:{selectedSku:sku,sourceParentId:sku,sourceUrl:d.sourceUrl,verifiedProductSection:true,sourceTransport:legacy?'Argos-selected-Product-JSON-LD-and-legacy-business-state':'Argos-selected-Product-JSON-LD-and-app-router-page',descriptionHash:hash(sourceDescription),specificationHash:hash(specifications),observedAt:d.observedAt},arSource:{groups:[...new Set(groups)],listedPrice:listing.price,listedWasPrice:listing.wasPrice,marketplace:listing.soldByTrustedSeller===true,sourceProductId:sku},priceGBP:current,price:Math.round(current*100),originalPrice:Number.isFinite(was)&&was>current?Math.round(was*100):null,originalPriceKind:Number.isFinite(was)&&was>current?'WAS':null,sourcePriceBadge:listingCurrent?(listing.specialOfferText||''):(lp?.flashText||listing.specialOfferText||''),inStock:listingCurrent&&(typeof listing.deliverable==='boolean'||typeof listing.reservable==='boolean')?(listing.deliverable===true||listing.reservable===true):a.globallyOutOfStock!==true&&a.endOfLineOutOfStock!==true&&(a.deliverable===true||a.collectable===true||listing.deliverable===true||listing.reservable===true),newStatus,everNew:prior?.everNew||newStatus,baselineRecord:prior?.baselineRecord||baseline,specifications,dimensions,material:materials.label,appearanceSource:{materials},sourceColour,colorValues:normaliseColors(sourceColour),images:gallery.map(g=>g.url),originalImages:gallery,imageUrl:gallery[0].url,variantImageUrl:gallery[0].url,originalImageUrl:gallery[0].url};
+  // Recompute the previous parser's hash from this same current official
+  // document. A parser upgrade alone must not discard an accepted exact photo;
+  // changed source facts still produce a different old-parser hash as well.
+  p.detailEvidence.legacySpecificationHash=hash(arSpecifications(d,{legacy:true}));
   const c=arMemberships(p);p.department=c.primary;p.departmentIds=c.memberships;p.classificationEvidence=c;p.kind=p.department==='ar-tree'?'tree':p.department==='ar-skirt-stand'?'skirt':'decoration';p.treeColor=p.colorValues.join(' / ');
   if(p.kind==='tree'){p.heightCm=toCentimetres(specifications.Height)||null;p.heightLabel=specifications.Height||specifications.Size||'';p.style=jlTreeStyle(p.baseName,specifications);}if(p.kind==='skirt')p.skirtSizeCm=dimensions.values.Diameter||dimensions.maxCm||null;
   if(!p.department)p.taxonomyAudit={disposition:'exclude',memberships:[],reason:c.reason};
