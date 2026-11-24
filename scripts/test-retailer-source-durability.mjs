@@ -60,3 +60,4 @@ const du = await fs.readFile('.github/workflows/du.yml', 'utf8');
 assert(du.includes('group: range-du-source'));
 const range = await fs.readFile('.github/workflows/daily-pages.yml', 'utf8');
 assert((await fs.readFile('.github/workflows/asda.yml', 'utf8')).includes('group: range-asda-source'), 'ASDA cannot wait behind an unrelated full Range collection');
+await import('./test-saved-ms-evidence.mjs');
