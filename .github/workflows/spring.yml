@@ -102,10 +102,12 @@ jobs:
           git diff --cached --quiet || git commit -m "Save official spring botanical source evidence [skip ci]"
           EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
       - name: Enable reviewed baseline and the existing single daily PDF queue
+        id: spring-sync
         run: node scripts/sync-spring-service.mjs
       - name: Save baseline state
+        if: steps.spring-sync.outputs.ready == 'true'
         run: |
-          git add --sparse -- web/spring
+          git add --sparse -- web/spring web/collection-ledger.json web/preview-quality-cache.json.gz web/paid-native-index.json
           git diff --cached --quiet || git commit -m "Confirm spring baseline without historical NEW email flood [skip ci]"
           EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
       - name: Publish the saved catalogue without recollection
