@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "reviewedAt": "2026-11-24T11:25:48.384459+00:00",
+  "reviewedAt": "2026-11-24T11:34:05.181965+00:00",
   "approvals": {
     "52659107a51ee926681fd938a6239ebc519d2cded9e4ffa2039d2222f8ef01a8": {
       "sourceUrl": "https://media.4rgos.it/i/Argos/8896199_R_Z002A",
@@ -5467,6 +5467,32 @@
       "nativeImageSha256": "d4fede31162ecd90bfb32c003d43dfaf8b280080e90de02156bf16424dc18e94",
       "nativeWidth": 2111,
       "nativeHeight": 2111
+    },
+    "c7069ab160090a00dba7d4d29cd8915f63e3bac3938c7fd9856ae68f04d4a927": {
+      "sourceUrl": "https://media.4rgos.it/i/Argos/y3r24nmq_R_Z002A",
+      "imageSha256": "c7069ab160090a00dba7d4d29cd8915f63e3bac3938c7fd9856ae68f04d4a927",
+      "wholeObject": true,
+      "objectType": "ar-tree",
+      "reviewedAt": "2026-11-24T11:34:05.181965+00:00",
+      "method": "direct-native-gallery-visual-review-with-exact-official-SKU-description-and-physical-object",
+      "reviewSheet": "ar-remaining-y3r24nmq.jpg",
+      "reviewCell": 1,
+      "nativeImageSha256": "e994635727c8b45c217388425e18c0ebea8687a11472a21d80e51d23e88611d6",
+      "nativeWidth": 1600,
+      "nativeHeight": 1600
+    },
+    "5db59bca6be01c1641701c228f28d69f10ed8b00f5b9118f2f84ed349fd7a4ca": {
+      "sourceUrl": "https://media.4rgos.it/i/Argos/mwxc4fmz_R_Z002A",
+      "imageSha256": "5db59bca6be01c1641701c228f28d69f10ed8b00f5b9118f2f84ed349fd7a4ca",
+      "wholeObject": true,
+      "objectType": "ar-tree",
+      "reviewedAt": "2026-11-24T11:34:05.181965+00:00",
+      "method": "direct-native-gallery-visual-review-with-exact-official-SKU-description-and-physical-object",
+      "reviewSheet": "ar-remaining-mwxc4fmz.jpg",
+      "reviewCell": 1,
+      "nativeImageSha256": "97666aeeb484240b7b43284a76860c10506acd458d769fcef648dc0b85ee1e55",
+      "nativeWidth": 2000,
+      "nativeHeight": 2000
     }
   },
   "previewRejected": [
@@ -7380,6 +7406,20 @@
       "sourceUrl": "https://media.4rgos.it/i/Argos/gf78n9xp_R_Z001A",
       "reviewedAt": "2026-11-24T11:25:48.384459+00:00",
       "method": "direct-human-model-visual-review-of-native-bound-contact-sheet-with-official-title-description-and-physical-category"
+    },
+    "y3r24nmq": {
+      "sha256": "c7069ab160090a00dba7d4d29cd8915f63e3bac3938c7fd9856ae68f04d4a927",
+      "selectedSku": "y3r24nmq",
+      "sourceUrl": "https://media.4rgos.it/i/Argos/y3r24nmq_R_Z002A",
+      "reviewedAt": "2026-11-24T11:34:05.181965+00:00",
+      "method": "direct-native-gallery-visual-review-with-exact-official-SKU-description-and-physical-object"
+    },
+    "mwxc4fmz": {
+      "sha256": "5db59bca6be01c1641701c228f28d69f10ed8b00f5b9118f2f84ed349fd7a4ca",
+      "selectedSku": "mwxc4fmz",
+      "sourceUrl": "https://media.4rgos.it/i/Argos/mwxc4fmz_R_Z002A",
+      "reviewedAt": "2026-11-24T11:34:05.181965+00:00",
+      "method": "direct-native-gallery-visual-review-with-exact-official-SKU-description-and-physical-object"
     }
   },
   "alternateGalleryReview": {
@@ -10685,6 +10725,28 @@
       "reviewedAt": "2026-11-24T11:25:48.384459+00:00",
       "method": "direct-human-model-visual-review-of-native-bound-contact-sheet-with-official-title-description-and-physical-category",
       "colourSelectionNote": "按对应官网规格原图的产品本体及描述核对；不统计背景、搭配道具和灯光颜色。Exact-SKU native photo and description reviewed; background, display props and emitted light excluded."
+    },
+    "y3r24nmq": {
+      "imageSha256": "c7069ab160090a00dba7d4d29cd8915f63e3bac3938c7fd9856ae68f04d4a927",
+      "objectType": "ar-tree",
+      "colors": [
+        "绿色"
+      ],
+      "bodyColourDisclosure": false,
+      "reviewedAt": "2026-11-24T11:34:05.181965+00:00",
+      "method": "direct-native-gallery-visual-review-with-exact-official-SKU-description-and-physical-object",
+      "colourSelectionNote": "完整原图显示绿色仿真圣诞树；灯光多色不作为树体颜色。The full original shows green artificial Christmas trees; multicolour illumination is separate from foliage colour."
+    },
+    "mwxc4fmz": {
+      "imageSha256": "5db59bca6be01c1641701c228f28d69f10ed8b00f5b9118f2f84ed349fd7a4ca",
+      "objectType": "ar-tree",
+      "colors": [
+        "绿色"
+      ],
+      "bodyColourDisclosure": false,
+      "reviewedAt": "2026-11-24T11:34:05.181965+00:00",
+      "method": "direct-native-gallery-visual-review-with-exact-official-SKU-description-and-physical-object",
+      "colourSelectionNote": "完整原图显示绿色仿真圣诞树；灯光多色不作为树体颜色。The full original shows green artificial Christmas trees; multicolour illumination is separate from foliage colour."
     }
   },
   "sourceConflicts": {
