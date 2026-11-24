@@ -1250,6 +1250,54 @@
       "sourceUrl": "https://www.therange.co.uk/home-furnishings/vases-and-artificial-plants/indoor-pots-and-planters/pack-of-6-x-artificial-poppy-stem-2-flowers/#4774256",
       "sourceStatus": 404,
       "observedAt": "2026-11-24T01:36:11.006Z"
+    },
+    {
+      "id": "mcp-01a20b60-0230-728a-9eca-1b9dcebbeb26",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-all-collection-unrestricted-20261123",
+      "retailerId": "the-range",
+      "purpose": "Targeted Spring broken-address diagnosis after free HTTP/HTTP2 failed; official search JavaScript, exact catalogue search or normalized broken source slug, with no inferred product specifications.",
+      "sourceUrl": "https://www.therange.co.uk/js/global.js",
+      "sourceStatus": 200,
+      "observedAt": "2026-11-24T02:30:11.400Z"
+    },
+    {
+      "id": "mcp-01a20b61-c740-76d8-b096-f648c99e117c",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-all-collection-unrestricted-20261123",
+      "retailerId": "the-range",
+      "purpose": "Targeted Spring broken-address diagnosis after free HTTP/HTTP2 failed; official search JavaScript, exact catalogue search or normalized broken source slug, with no inferred product specifications.",
+      "sourceUrl": "https://search-lon.therange.co.uk/api/productlist?searchTerm=1281039&offset=0&limit=20&sort=relevance&filters=%7B%22in_stock_f%22%3A%5B%22true%22%5D%7D",
+      "sourceStatus": 200,
+      "observedAt": "2026-11-24T02:30:11.400Z"
+    },
+    {
+      "id": "mcp-01a20b62-1070-71f7-a9e5-bb082fb91352",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-all-collection-unrestricted-20261123",
+      "retailerId": "the-range",
+      "purpose": "Targeted Spring broken-address diagnosis after free HTTP/HTTP2 failed; official search JavaScript, exact catalogue search or normalized broken source slug, with no inferred product specifications.",
+      "sourceUrl": "https://search-lon.therange.co.uk/api/productlist?searchTerm=Christow%20Artificial%20Olive%20Tree&offset=0&limit=120&sort=relevance&filters=%7B%22in_stock_f%22%3A%5B%22true%22%5D%7D",
+      "sourceStatus": 200,
+      "observedAt": "2026-11-24T02:30:11.401Z"
+    },
+    {
+      "id": "mcp-01a20b62-bfeb-74d9-8b3a-75f314ea02bf",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-all-collection-unrestricted-20261123",
+      "retailerId": "the-range",
+      "purpose": "Targeted Spring broken-address diagnosis after free HTTP/HTTP2 failed; official search JavaScript, exact catalogue search or normalized broken source slug, with no inferred product specifications.",
+      "sourceUrl": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/christow-artificial-olive-tree-4ft-6ft/",
+      "sourceStatus": 404,
+      "observedAt": "2026-11-24T02:30:11.401Z"
     }
   ],
   "unreceipted": [
