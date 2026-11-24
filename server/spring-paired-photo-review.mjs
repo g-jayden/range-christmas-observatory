@@ -23,16 +23,18 @@ export async function compareSpringPhotoPair(thumbnail,original){
 export async function pairedSpringPhotoReviews(products,reviews,entries){
  const effective={...reviews,products:{...reviews.products}},proofs=[];
  for(const p of products){
-  const r=reviews.products?.[p.sku],e=p.originalImageEvidence;
-  if(r?.disposition!=='include'||r.wholeProductFrame!==true||!r.reason||!r.reviewArtifact||!e?.sha256||r.imageHash===e.sha256||!p.detailsReady||!p.detailEvidence?.verifiedProductSection||String(p.detailEvidence.selectedSku)!==String(p.sku)||r.sourceContentHash!==p.detailEvidence.sourceContentHash)continue;
-  const g=p.originalImages?.find(g=>g.url===e.sourceUrl&&g.thumbnail&&exactNativeGalleryMember(p,g)&&String(g.variantId)===String(p.variantId)&&(!r.selectedNativeSourceUrl||g.thumbnail===r.selectedNativeSourceUrl)),old=g&&entries?.[g.thumbnail],next=entries?.[e.sourceUrl];
-  if(old?.ok!==true||next?.ok!==true||old.hash!==r.imageHash||next.hash!==e.sha256||!/^images\/source\/[a-f0-9]{64}\.[a-z0-9]+$/.test(old.cachedImageUrl||'')||!/^images\/source\/[a-f0-9]{64}\.[a-z0-9]+$/.test(p.originalCachedImageUrl||''))continue;
+  const r=reviews.products?.[p.sku];
+  if(r?.disposition!=='include'||r.wholeProductFrame!==true||!r.reason||!r.reviewArtifact||r.imageHash===p.originalImageEvidence?.sha256||!p.detailsReady||!p.detailEvidence?.verifiedProductSection||String(p.detailEvidence.selectedSku)!==String(p.sku)||r.sourceContentHash!==p.detailEvidence.sourceContentHash)continue;
+  // An automatic preview may have selected a different saved angle. Recover
+  // the actual inspected angle from its explicit thumbnail anchor instead.
+  const g=p.originalImages?.find(g=>g.thumbnail&&exactNativeGalleryMember(p,g)&&String(g.variantId)===String(p.variantId)&&(!r.selectedNativeSourceUrl||g.thumbnail===r.selectedNativeSourceUrl)&&entries?.[g.thumbnail]?.hash===r.imageHash&&entries?.[g.url]?.ok),old=g&&entries?.[g.thumbnail],next=g&&entries?.[g.url];
+  if(old?.ok!==true||next?.ok!==true||old.hash!==r.imageHash||next.hash===r.imageHash||!/^images\/source\/[a-f0-9]{64}\.[a-z0-9]+$/.test(old.cachedImageUrl||'')||!/^images\/source\/[a-f0-9]{64}\.[a-z0-9]+$/.test(next.cachedImageUrl||''))continue;
   try{
-   await Promise.all([materializeCommittedImage(old.cachedImageUrl,old.hash),materializeCommittedImage(p.originalCachedImageUrl,e.sha256)]);
-   const [thumbnail,original]=await Promise.all([fs.readFile('web/'+old.cachedImageUrl),fs.readFile('web/'+p.originalCachedImageUrl)]);if(digest(thumbnail)!==old.hash||digest(original)!==e.sha256)continue;
+   await Promise.all([materializeCommittedImage(old.cachedImageUrl,old.hash),materializeCommittedImage(next.cachedImageUrl,next.hash)]);
+   const [thumbnail,original]=await Promise.all([fs.readFile('web/'+old.cachedImageUrl),fs.readFile('web/'+next.cachedImageUrl)]);if(digest(thumbnail)!==old.hash||digest(original)!==next.hash)continue;
    const comparison=await compareSpringPhotoPair(thumbnail,original);if(!comparison.equivalent)continue;
-   const proof={...comparison,sku:String(p.sku),variantId:String(p.variantId),thumbnailUrl:g.thumbnail,reviewedThumbnailHash:r.imageHash,originalUrl:e.sourceUrl,originalHash:e.sha256,sourceContentHash:r.sourceContentHash,humanReviewArtifact:r.reviewArtifact,verifiedAt:new Date().toISOString()};
-   effective.products[p.sku]={...r,imageHash:e.sha256,selectedNativeSourceUrl:e.sourceUrl,nativeEquivalence:proof};proofs.push(proof);
+   const proof={...comparison,sku:String(p.sku),variantId:String(p.variantId),thumbnailUrl:g.thumbnail,reviewedThumbnailHash:r.imageHash,originalUrl:g.url,originalHash:next.hash,sourceContentHash:r.sourceContentHash,humanReviewArtifact:r.reviewArtifact,verifiedAt:new Date().toISOString()};
+   effective.products[p.sku]={...r,imageHash:next.hash,selectedNativeSourceUrl:g.url,nativeEquivalence:proof};proofs.push(proof);
   }catch{}
  }
  return{reviews:effective,audit:{applied:proofs.length,proofs,sourceRequests:0,firecrawlCredits:0}};
