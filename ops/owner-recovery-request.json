@@ -1,14 +1,10 @@
 {
-  "requestId": "owner-recovery-20261124-spring-browse-and-alert-scope-isolation",
+  "version": 1,
+  "requestId": "owner-recovery-20261124-exact-gallery-completeness",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T18:16:28.618Z",
+  "requestedAt": "2026-11-24T19:24:24.449Z",
   "targets": [
-    "static-pages-current"
+    "range-native-current"
   ],
-  "supersedeReadOnlyPagesBeforeDeployment": [
-    {
-      "runId": 45456045655,
-      "expectedCommit": "46a797e38daa77933e9bef26a701c34d405cc64b"
-    }
-  ]
+  "reason": "Owner requires all product main and detail originals across all enabled seasons. Correct the old primary-image-only plan, restore every exact accepted Range/Spring gallery frame, reuse saved bytes first, then ordinary free sources, and paid fallback only after free failure under the standing unlimited authorization. No directory recollection, no changed product facts, no unrelated images, no email."
 }
