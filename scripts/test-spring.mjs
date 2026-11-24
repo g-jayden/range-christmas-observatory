@@ -12,6 +12,8 @@ for(const title of ['Autumnal Plum Wreath','125cm Artificial Autumn Maple Tree',
 for(const[title,id]of [['Petunia Garland','spring-wreath-garland'],['Small Gypsophila Pick','spring-stems'],['Hydrangea Vase Arrangement','spring-potted'],['Faux Hydrangea Arrangement in Ceramic Vase','spring-potted'],['Olive Tree in Pot','spring-tree'],['Potted Orchid','spring-potted']])assert.equal(springSourceDecision({variantName:title}).department,id,title);
 for(const title of ['Artificial Single Sea Holly Flower Stem L55cm - Green','Cream Sea Holly Spray Artificial Flower Stem'])assert.equal(springSourceDecision({variantName:title}).department,'spring-stems');
 assert.equal(springSourceDecision({variantName:'180cm Fire-Retardant Artificial Black Olive Tree with 2,925 Leaves'}).department,'spring-tree','A species name is not a black botanical palette');
+assert.equal(springSourceDecision({variantName:'Apulia Olive Tree In White Pot 150Cm Artificial Flower Stem - White'}).department,'spring-tree','A generic publisher suffix cannot turn an offered full tree into a stem or potted flower');
+assert.equal(springSourceDecision({variantName:'Olive Tree Branch Artificial Flower Stem - Green'}).department,'spring-stems','A real offered branch remains a stem');
 assert.equal(springSourceDecision({variantName:'Christmas Sea Holly Spray'}).disposition,'exclude','An explicit Christmas identity is still excluded');
 assert.equal(springSourceDecision({variantName:'Sea Holly Spray',specifications:{Occasion:'Christmas'}}).disposition,'exclude');
 assert.equal(springImageDecision({variantName:'Sea Holly Spray',detailsReady:false},{}).disposition,'review','Removing a false season exclusion never accepts missing facts or photos');

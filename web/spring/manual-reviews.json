@@ -14915,6 +14915,70 @@
       "reviewArtifact": "native-human-sheet-36",
       "wholeProductFrame": true
     },
+    "1590728": {
+      "imageHash": "13ef8c31848c3c1769ebd660dba5066fbd10560d60fbf128b76b0bf4dc955d53",
+      "sourceContentHash": "8726b47b605f9fc5e445e515aba1f958909161088b4b9e09db591d03024b67a9",
+      "listingFingerprint": "f0bf5c040c46b7ce7716d5232b467b83017e57a3547b19d5eeb3c9b9080575f5",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/1/1791786848_6836.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.769Z",
+      "disposition": "include",
+      "department": "spring-tree",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/0/7/1791786848_8503.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
+    "1590730": {
+      "imageHash": "15353e75ec8e5d78ceaf7243ecf828413a35450b6ff06f2cf1d0fe1d2455653f",
+      "sourceContentHash": "815264930043d64dfb870e5ccd2fa51a455675631ede6aca3324ddfd4d7a2e17",
+      "listingFingerprint": "5b12d658e8bbb2e75b68beb81e2fe0faa99ae8c4acb3ad1b32c9dc9ff94cfeff",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/4/1791786852_4791.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.768Z",
+      "disposition": "include",
+      "department": "spring-tree",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/4/3/1791786852_9919.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
+    "1590731": {
+      "imageHash": "47e21b36132dedeb8b6eff1c769017b90e7ec5879e90e80594d535669520b6ce",
+      "sourceContentHash": "3ddf7d3a8948e790710ba1406fd47c339855835455004cb59f0fbf4d6e1d36af",
+      "listingFingerprint": "cceb64b0764184d65be8c4556f9f53129b99bf568e628f07fcbcade0e34beb25",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/4/1791786855_4703.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.769Z",
+      "disposition": "include",
+      "department": "spring-tree",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/7/1791786855_1716.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
+    "1590732": {
+      "imageHash": "0f72802af0a72b890b944169b71017ad4c1221ab8b61b32fa766d0a57b179e4b",
+      "sourceContentHash": "73d48954b1897c6cd91d80fccda42a04433f2f446a107244ecbf14a0c7232924",
+      "listingFingerprint": "118e24795c93e8b963cd4dd62e384fb9273becf9c9401a413a1705f86564a6c1",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/5/1791786856_5053.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.769Z",
+      "disposition": "include",
+      "department": "spring-tree",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/3/6/1791786856_3342.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1590745": {
       "disposition": "include",
       "department": "spring-stems",
@@ -15110,6 +15174,16 @@
         "白色",
         "绿色"
       ]
+    },
+    "1591137": {
+      "imageHash": "9c39d81a3b3e2cc3fbd5a6022c466a86ad57b0634157f03d275889b029a47fb4",
+      "sourceContentHash": "7fee29d36bb82bce8c5fdfd2df009dd1ea623abafe72215e2ca8db3fe4194228",
+      "listingFingerprint": "17b2b152b6a81b62a7c0c90b2dc201cace9ed12cc5b62c328a7a34f85f10aa79",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/3/1791797677_9766.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.769Z",
+      "disposition": "exclude",
+      "reason": "Native berry spray has muted brown/rust berry clusters and bare brown foliage; source describes its autumnal richness, outside the requested fresh spring palette."
     },
     "1591138": {
       "disposition": "include",
@@ -15310,6 +15384,23 @@
       "reviewArtifact": "native-human-sheet-12",
       "wholeProductFrame": true
     },
+    "1591173": {
+      "imageHash": "612d27c11141d76fb67cbe57c0c44651ff84aabe6c619a327e2ecddd918bbe9a",
+      "sourceContentHash": "3c9d577914299807044f891fb0ebd42a07a07942024721a2ac68460bf421482a",
+      "listingFingerprint": "2df1ec593423f872651b144dae1e75c50036207edbe16f753465e9897cd96582",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/9/1791797731_2818.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.766Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "白色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/6/9/1791797731_6024.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1591177": {
       "imageHash": "70800dd13347b5aa2619f83da2d648de04b55a58b29458d15b63404b94d40753",
       "sourceContentHash": "c2b8582a6a4cd061bde7777c6ccbd5946d5c23881516e7a43cc6d018f8523e0c",
@@ -15319,6 +15410,16 @@
       "reviewedAt": "2026-11-24T02:55:22.016Z",
       "disposition": "exclude",
       "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
+    },
+    "1591179": {
+      "imageHash": "d11b61b2d1f94e01a7dac80803e9fa2b1e8a8849aa8d5998b29dc0291dead01e",
+      "sourceContentHash": "50d33bb02f97b7fc75f4d74331a89320d5c749fc075612c03a86681ddf8e0756",
+      "listingFingerprint": "3dc7beddf0337a7206d8289713e0ac7983294c7975ecc7fc6bf554a586148756",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/8/1791797739_5132.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.770Z",
+      "disposition": "exclude",
+      "reason": "Native maple leaves are predominantly brown/amber/burgundy, and the exact description explicitly identifies autumnal foliage."
     },
     "1591180": {
       "disposition": "include",
@@ -15408,6 +15509,22 @@
       "reviewArtifact": "native-human-sheet-12",
       "wholeProductFrame": true
     },
+    "1591189": {
+      "imageHash": "cd584037cf250be6cc074200ea2e09e76a649941b578889a1e5f0d5ea53900cb",
+      "sourceContentHash": "60bfbbd52abb456dde40a4bf0c09c1bafa241451de89d476f43a75b313c77a19",
+      "listingFingerprint": "8c5417a61be151bec5a0e4f41b935341d27868cd028883913b4aff29ccb9b1d2",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/8/1791797752_4162.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.767Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/6/6/1791797753_1293.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1591191": {
       "disposition": "include",
       "department": "spring-stems",
@@ -15482,6 +15599,24 @@
       "disposition": "exclude",
       "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
+    "1591199": {
+      "imageHash": "4975b81891db1ee0246e25cc72389935ec279d698e31d3a1737bf45efe40c354",
+      "sourceContentHash": "45f6f9b41c32c9fdbf1ce2c957c3d53b37c8e6258f24e0bb788493c145daade3",
+      "listingFingerprint": "9b2ad22767d782eab85c4dcedff310ecca651fda019901a0d212ee1a91223bd8",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/8/1791797770_7862.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.767Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "白色",
+        "粉色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/6/0/1791797770_1100.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1591201": {
       "disposition": "include",
       "department": "spring-potted",
@@ -15533,6 +15668,23 @@
       "reviewedAt": "2026-11-24T00:32:37.270Z",
       "reviewArtifact": "native-human-sheet-12",
       "wholeProductFrame": true
+    },
+    "1591211": {
+      "imageHash": "747cd637b3d308e08257c4511de46fb0daefd6ff513a2f4f825d57432511924e",
+      "sourceContentHash": "85151f4f2f72e4175bd23310314e7cbb9a1e1fcef086813a867d05ca5118621e",
+      "listingFingerprint": "d852c541aaf2a1ab61b66bedaf2e3797ad372237a9d668835728602b39493d76",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/7/1791797788_1671.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.766Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "紫色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/3/7/1791797789_1288.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
     },
     "1591215": {
       "disposition": "include",
@@ -15646,6 +15798,16 @@
       "reviewArtifact": "native-human-sheet-12",
       "wholeProductFrame": true
     },
+    "1591228": {
+      "imageHash": "998cc30c608ba71d51f3306181bc158410742582e96aca2967f73bf9fa218ef3",
+      "sourceContentHash": "38ed586e5a0e04aac78194a43821e54400702368aad57807156a9dd4ca3512ca",
+      "listingFingerprint": "604c43ba640cfcbfe0f933390091935f043b7e4caede1c7d5c88d2c25c3fe2d1",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/4/1791797826_4862.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.770Z",
+      "disposition": "exclude",
+      "reason": "The native flowers have a warm burnt-orange autumn palette and the exact description confirms autumnal tones; excluded from spring."
+    },
     "1591230": {
       "disposition": "include",
       "department": "spring-stems",
@@ -15709,6 +15871,23 @@
       "reviewedAt": "2026-11-24T00:32:37.271Z",
       "reviewArtifact": "native-human-sheet-12",
       "wholeProductFrame": true
+    },
+    "1591238": {
+      "imageHash": "a113cae4584fbe13a6f95dc6448d39f12b596cc6938be2cb144685fdf91983dc",
+      "sourceContentHash": "b221583a7292248cca307c7b56c9a64e49ee3f31131b1922e8056f5b165d4417",
+      "listingFingerprint": "500949274d442daade8ddb8e0e23526d7d05f25471c60b8095eb85095353f521",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/6/1791797862_7450.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.767Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "白色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/2/8/1791797862_8523.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
     },
     "1591239": {
       "disposition": "include",
@@ -15793,6 +15972,23 @@
       "reviewedAt": "2026-11-24T00:32:37.271Z",
       "reviewArtifact": "native-human-sheet-12",
       "wholeProductFrame": true
+    },
+    "1591251": {
+      "imageHash": "5e2e9b246810440cda9d57d34b09e1cd35a20650220ef1daa74d2884ebee3a11",
+      "sourceContentHash": "879725613b9b7f3f3161d3597d5088fc40af1104a23c5f6b98b8640050629a24",
+      "listingFingerprint": "69ecb0586f9df2f61fb2ed77ecc4d4a56b47cd285ca43a46c9e1ea37fd7904dc",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/5/1791797897_5400.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.768Z",
+      "disposition": "include",
+      "department": "spring-potted",
+      "colours": [
+        "白色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/2/2/1791797898_2458.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
     },
     "1591253": {
       "disposition": "include",
@@ -15920,6 +16116,16 @@
       "reviewArtifact": "native-human-sheet-12",
       "wholeProductFrame": true
     },
+    "1591267": {
+      "imageHash": "e01662626fcd095784c574b97be71fbc8bcb61c218f5721207a7b2120181defb",
+      "sourceContentHash": "00fd8337d2ece9c569670ad5ea7932292554b6db93575048ce3933747b6ded02",
+      "listingFingerprint": "6300e42b3d1ee0737025e593341b9538f9f099479dd60bae971546963ebab559",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/2/1791797926_2518.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.770Z",
+      "disposition": "exclude",
+      "reason": "The native flowers have a warm burnt-orange autumn palette and the exact description confirms autumnal tones; excluded from spring."
+    },
     "1591269": {
       "disposition": "include",
       "department": "spring-stems",
@@ -16020,6 +16226,22 @@
       "reviewArtifact": "native-human-sheet-12",
       "wholeProductFrame": true
     },
+    "1591279": {
+      "imageHash": "336eb032dc54e7d8b26f01ea30cd71f9e7b7489830694a73c187db85e78bcef0",
+      "sourceContentHash": "6b747d5656294f39a3caf31d9633046e7ff79f6da8df6c5d193bedffad2a63ab",
+      "listingFingerprint": "cd757b314fb3699c7eaeefd715fa02f43abadad78360302b85bc5b9822d3f64b",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/0/1791797955_2087.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.765Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/2/1/1791797956_4414.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1591281": {
       "disposition": "include",
       "department": "spring-stems",
@@ -16067,6 +16289,40 @@
       "reviewedAt": "2026-11-24T00:32:37.273Z",
       "reviewArtifact": "native-human-sheet-13",
       "wholeProductFrame": true
+    },
+    "1591288": {
+      "imageHash": "81e8b2bad461032265595405627d14d3018d9da10730fa3a9c1b9fac7bcb3f63",
+      "sourceContentHash": "6624facde00a004da17f54dec2758ad4f3911008b240687dcd778867ce55d6a4",
+      "listingFingerprint": "6a33bd4a97fb914299da3473ac53bcce1f3fb880df888190e0af1a9fad50686d",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/6/1791797973_2374.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.766Z",
+      "disposition": "include",
+      "department": "spring-potted",
+      "colours": [
+        "绿色",
+        "灰色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/5/2/1791797973_1968.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
+    "1591289": {
+      "imageHash": "22be27a41861ca6e422013e83c73906467d395b0dffc9a8530c67a009223ec49",
+      "sourceContentHash": "fd471be972090908ef185f1756ef316250d6d2477d197fa62fb19dd5bcf5e58b",
+      "listingFingerprint": "35ec5f2936638bb0543db459f5482ee2128476696eba40a367049a1d98c3a044",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/1/1791797974_5848.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.768Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "粉色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/9/1/1791797974_3593.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
     },
     "1591290": {
       "disposition": "include",
@@ -16221,6 +16477,23 @@
       "reviewedAt": "2026-11-24T00:32:37.273Z",
       "reviewArtifact": "native-human-sheet-13",
       "wholeProductFrame": true
+    },
+    "1591313": {
+      "imageHash": "c7ca6dbfb799aace55176405500cb172312ce60e619d30524109d1cee27a7c4c",
+      "sourceContentHash": "92e3810cfd8e23f82b431828b654c965e6de616e7ff22b08341b5b9d5fc079f7",
+      "listingFingerprint": "6d20379153764701c79eee4b3f717c18dd9c3acfb1d3bc502138f05e355d771e",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/1/1791798024_4189.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.766Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "紫色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/0/1791798025_5525.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
     },
     "1591315": {
       "disposition": "include",
@@ -16443,6 +16716,40 @@
       "reviewArtifact": "native-human-sheet-13",
       "wholeProductFrame": true
     },
+    "1591360": {
+      "imageHash": "79caaf3c50d0b86a4669a8ab70a19a5a1c9a057d533584b97ce3760d8439df12",
+      "sourceContentHash": "4fdf940346d75478e6f3a3173df32e22b1e84665ad719ac0679ade2c13bc1646",
+      "listingFingerprint": "b351a3734bd0973dbbd741b5bfa2c8a457fc0478f0f0cee8f8881686fa18561d",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/7/1791798075_2343.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.766Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "白色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/8/5/1791798076_5187.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
+    "1591361": {
+      "imageHash": "5e84ff5109350a5baabd07ac6d8e8f6ad0433c7103187038507403e5f3446152",
+      "sourceContentHash": "ee9040353bd63436405651b96975010bacbda990065a3d74d1c40edb26fd3587",
+      "listingFingerprint": "a973ff386d8bfd0ce30ce93017d59b99caa6688108a3eca1fb8b8050496bf6ac",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/7/1791798080_5202.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.767Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "白色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/7/1/1791798080_7682.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1591362": {
       "disposition": "include",
       "department": "spring-stems",
@@ -16470,6 +16777,23 @@
         "紫色",
         "绿色"
       ]
+    },
+    "1591365": {
+      "imageHash": "6fcd17cd5d34040bef64f71506c52f100edee00e22ba383c55f389c838b039a3",
+      "sourceContentHash": "52dd5db2fce30aa37ca3e0333201c027d8d806e6d8da3832fc80d54b967c5c08",
+      "listingFingerprint": "d8beb44222deda71c775be9b3bd79fd862880b3e108692942961cb458ecebf49",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/6/1791798086_9024.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.769Z",
+      "disposition": "include",
+      "department": "spring-potted",
+      "colours": [
+        "白色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/0/1791798086_4141.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
     },
     "1591366": {
       "disposition": "review",
@@ -16723,6 +17047,23 @@
       "reviewArtifact": "native-human-sheet-13",
       "wholeProductFrame": true
     },
+    "1591945": {
+      "imageHash": "ca3e5aeff9e06338e0aca0481c5a9e91a1c314d2a66bf7e9cba4b6ee640698eb",
+      "sourceContentHash": "89a0d1e08d13e2a1e180506654e5ca00c0486e2a27ff0e9874b54e55387d03cc",
+      "listingFingerprint": "da9c7795e772cb61dd267e0e394f84e34ce18c5eb09284084e003d26f9a7fc76",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/5/1791806772_3520.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.766Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "绿色",
+        "白色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/9/9/1791806772_4929.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1591949": {
       "disposition": "include",
       "department": "spring-stems",
@@ -16747,6 +17088,49 @@
       "reviewArtifact": "current-native-sheet-02",
       "wholeProductFrame": false
     },
+    "1591955": {
+      "imageHash": "8f625ab459411c10cb65bf097bc581198fe96a92b0002036a1d6377fe44231ce",
+      "sourceContentHash": "77ee3143f16b3c43ca93cc54a4bda0e5ef585a743d973f418ed7c10168b39ece",
+      "listingFingerprint": "6029347a9f2f93b36c1a2421ab77a94e56c2a8ebc46db272629df50fd33034aa",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/8/1791806795_4398.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.766Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/2/7/1791806795_6941.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
+    "1591956": {
+      "imageHash": "00ec69952fd26c11e2001699c9b96bee4eff470b03ac9709337350cbd1740bad",
+      "sourceContentHash": "23464ed167402c9a409301433b7adc5bf73119d61021a431226731eb8966bc65",
+      "listingFingerprint": "ae8a39abf3dd51284eab2a1e42f01549b4d2f5d6a7465b8e29aa71ef9f65d0b2",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/4/1791806798_4739.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.770Z",
+      "disposition": "exclude",
+      "reason": "The native coffee allium has beige/brown dried-looking flower heads, corroborated by the coffee-hue source identity; not a fresh spring floral palette."
+    },
+    "1591957": {
+      "imageHash": "21040ea4c23f5d063729f66f88073de3debeb416e6fa0102440113638b16fae4",
+      "sourceContentHash": "2b063568117f6dad92c616fe91547285e8b7714c2dccfc07d3e59e8648195677",
+      "listingFingerprint": "d1ada6f8ac03630d175cbb45c9e6f190a6f51339745745262b7d329a51e32120",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/9/1791806799_7652.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.768Z",
+      "disposition": "include",
+      "department": "spring-potted",
+      "colours": [
+        "绿色",
+        "白色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/5/8/1791806799_6119.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1591962": {
       "disposition": "include",
       "department": "spring-stems",
@@ -16758,6 +17142,16 @@
       "reviewedAt": "2026-11-24T00:32:37.276Z",
       "reviewArtifact": "native-human-sheet-13",
       "wholeProductFrame": true
+    },
+    "1591964": {
+      "imageHash": "ff189d290453fc4e7bf6d6a5ef07cccf728e5ef46bc04f000417cf3467b40676",
+      "sourceContentHash": "f6538e83ba047097f71eba3e5cd783e4c2543d1939656b436c47020ba1f0b225",
+      "listingFingerprint": "3d98effffa04ee3a28930f11a51bfa9c5308541f47b7c5e81a8d2c310a5e0246",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/4/1791806811_1580.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.770Z",
+      "disposition": "exclude",
+      "reason": "Viewed exact native flower has predominantly deep burgundy or near-black petals, corroborated by the exact source colour/design, outside the fresh spring palette."
     },
     "1591967": {
       "disposition": "exclude",
@@ -16782,6 +17176,16 @@
       "reviewedAt": "2026-11-24T00:32:37.276Z",
       "reviewArtifact": "native-human-sheet-13",
       "wholeProductFrame": true
+    },
+    "1591975": {
+      "imageHash": "60a5f6375cc4a7978040323a8648904cfab108000ce4b3a5ff6e1ff75eb007c9",
+      "sourceContentHash": "162591a32348e736423790e5d8bda613640bff30290ba912cc0ff1abb58c9a93",
+      "listingFingerprint": "da10a5897f50bd57a6c75c85ace2bcde00de3a00e258d34435a4d1ccf36c899f",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/3/1791806831_7225.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.769Z",
+      "disposition": "exclude",
+      "reason": "Viewed exact native flower has predominantly deep burgundy or near-black petals, corroborated by the exact source colour/design, outside the fresh spring palette."
     },
     "1591977": {
       "disposition": "include",
@@ -16840,6 +17244,23 @@
       "reviewedAt": "2026-11-24T00:32:37.276Z",
       "reviewArtifact": "native-human-sheet-13",
       "wholeProductFrame": true
+    },
+    "1591994": {
+      "imageHash": "9ceb4d50e706f92a5325fa129c402e02d15eddd5bdfd3da7a3ca233b4300b7ea",
+      "sourceContentHash": "bfd8511bcc3603c48e3cbb37f7d486cb0e0bb8a92f4066fa51e36c5d4fb465c3",
+      "listingFingerprint": "95e4856541c5301c317c9074549996225a047ecb2b3a3941cfdbcfbabc2974e2",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/8/1791806857_2350.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.767Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "白色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/3/0/1791806857_4397.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
     },
     "1591996": {
       "disposition": "include",
@@ -16928,6 +17349,22 @@
       "reviewArtifact": "native-human-sheet-13",
       "wholeProductFrame": true
     },
+    "1592015": {
+      "imageHash": "cfc33b0c4c01218f4bfe1907a46d1589644e6ff4701cd0235c9d7dcc59a2182d",
+      "sourceContentHash": "0babdd1b59b564125da3373b5ab2f6829f9f2af4c396c7719e456c53a9982206",
+      "listingFingerprint": "f7aa266652eba7d4a4fd37399a91c6bfa75c806057501237c477801f8540f1e3",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/9/1791806882_8509.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.768Z",
+      "disposition": "include",
+      "department": "spring-potted",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/4/1791806883_3428.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1592018": {
       "disposition": "exclude",
       "department": "spring-potted",
@@ -16968,6 +17405,23 @@
         "绿色"
       ]
     },
+    "1592030": {
+      "imageHash": "90137861e448274eea98186f5b95603a11d6677fd69cb5894477dc928fa92769",
+      "sourceContentHash": "46771c6bb3325a47642030b53003d1df92fa3afaa8e1f51b21f365ce37750e11",
+      "listingFingerprint": "ae93fda2364a9b847d82d7c84c907bab50f3ac0225ad6ccca4698d8879d53784",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/6/1791806899_4842.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.767Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "蓝色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/7/3/1791806899_8408.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1592031": {
       "disposition": "include",
       "department": "spring-stems",
@@ -16979,6 +17433,26 @@
       "reviewedAt": "2026-11-24T00:32:37.277Z",
       "reviewArtifact": "native-human-sheet-13",
       "wholeProductFrame": true
+    },
+    "1592032": {
+      "imageHash": "8156d52c1baaa2df7c5daae7ab4879c422a770252e1b0ba5178ea9222442b85f",
+      "sourceContentHash": "c3eb0fed9642a26a9ae52bae964067e1c8540b713528f2e6147d5682094e8b2a",
+      "listingFingerprint": "2a09601a3140948acd724699bac2ea807bea5cf8ba5721f720c230c870e0bf38",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/0/1791806902_2270.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.770Z",
+      "disposition": "exclude",
+      "reason": "The exact native hydrangea is predominantly russet brown/deep burgundy, and its description identifies late-autumn botanical tones."
+    },
+    "1592033": {
+      "imageHash": "f562983259a8dbeddbea9131b1fa09b8a2832aaa8cd030ffaafb3d6bfcae24c4",
+      "sourceContentHash": "7c7891fb132b6eee35f68127334055d42cb398e21424256028a9429ffde3e2aa",
+      "listingFingerprint": "884aa9baf975e7c9d5ac49da57fc3126cc24093cf3e25ef5499e24b3fd96247f",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/8/1791806903_1411.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.770Z",
+      "disposition": "exclude",
+      "reason": "The native rosehip stem consists of dark burgundy/brown fruit on bare woody branches; source corroborates the warm autumn decorative palette."
     },
     "1592034": {
       "disposition": "include",
@@ -17052,6 +17526,40 @@
       "reviewArtifact": "native-human-sheet-13",
       "wholeProductFrame": true
     },
+    "1592051": {
+      "imageHash": "275197b18bbce73bcfe6b182d8676f7ecbeb0454ac50a5a5fc9fc5aa0f522a0c",
+      "sourceContentHash": "9a501c689fcc6b06a3d615ca9afec1ff5a1c8b9e114433b921f7bec4c89da9a5",
+      "listingFingerprint": "2b924d055d5fa57f564d62446d18c9c814639853dd2cae5a885a2edb61747b22",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/9/1791806926_7981.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.766Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "白色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/3/9/1791806926_2792.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
+    "1592053": {
+      "imageHash": "d6775db4b6554cbda6b0d60943a8a7a79e52354a7243a7796df57caa7b909ec4",
+      "sourceContentHash": "19223baab5e8c324276cebbb06e57b7293abc0a63af3152f93052341512d8991",
+      "listingFingerprint": "cc0658ed6bfd793541974abe3ab3380db23937bca31841d0f779d456441870e4",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/2/1791806927_7832.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.768Z",
+      "disposition": "include",
+      "department": "spring-potted",
+      "colours": [
+        "紫色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/0/2/1791806927_7832.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1592055": {
       "disposition": "include",
       "department": "spring-stems",
@@ -17063,6 +17571,16 @@
       "reviewedAt": "2026-11-24T00:32:37.277Z",
       "reviewArtifact": "native-human-sheet-14",
       "wholeProductFrame": true
+    },
+    "1592056": {
+      "imageHash": "be11b7e2a1384db9fedb74f361c19162efe4111026b8739784d94dd876333bc6",
+      "sourceContentHash": "330b13def9b9df788d3326873ea91ef30295e9ee2da8014e0304b08066305e7f",
+      "listingFingerprint": "f0c79aea4ef276d5020af7087095f0db1ffd32feaa085f8c8a50f107cd681d51",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/8/1791806930_5846.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.770Z",
+      "disposition": "exclude",
+      "reason": "Native offered spray is a bare aged woody branch without fresh green foliage or flowers. Source explicitly describes aged wood; outside requested spring colours."
     },
     "1592060": {
       "disposition": "include",
@@ -17088,6 +17606,23 @@
       "reviewArtifact": "native-human-sheet-14",
       "wholeProductFrame": true
     },
+    "1592062": {
+      "imageHash": "3fca5d3abcc439dff5cba08fab1084892de85f53b9f1a1754d221bd4ed23a763",
+      "sourceContentHash": "d6861f99102cd5728bc93583c2730aaaf85650c953d723c7a22a02f11cfef65d",
+      "listingFingerprint": "0de43fff5059bb2b79856b4da005e40934d37fea8577f7fbdf5b5f9281bcf858",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/2/1791806937_3938.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.765Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "绿色",
+        "灰色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/0/8/1791806937_6968.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1592065": {
       "disposition": "include",
       "department": "spring-stems",
@@ -17100,6 +17635,23 @@
       "reviewArtifact": "native-human-sheet-14",
       "wholeProductFrame": true
     },
+    "1592066": {
+      "imageHash": "60798902a014eaff714dd9c5c996b136652a4ed9f765496a614cb9acaaa5243f",
+      "sourceContentHash": "62d564b02686bb9b03e2cd21b130ff1f08ff20ab76beaf075933572ffe71d586",
+      "listingFingerprint": "a6cab527b191b58867cc062f4bd697acacd0e3a1ece393f8dab8b677670230ad",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/4/1791806946_6285.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.766Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "绿色",
+        "白色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/5/8/1791806946_2484.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1592067": {
       "disposition": "include",
       "department": "spring-stems",
@@ -17111,6 +17663,22 @@
       "reviewedAt": "2026-11-24T00:32:37.278Z",
       "reviewArtifact": "native-human-sheet-14",
       "wholeProductFrame": true
+    },
+    "1592068": {
+      "imageHash": "536e9d36e9d78ec9461d9e81f1ef7c1b0e88859c433c6c8f69b093aea32b4363",
+      "sourceContentHash": "7a242146722a54d6c70b23df9f91f82e255a744ec341ef757186fb6697d6d0ce",
+      "listingFingerprint": "76a9710540d0fe1da005d97a15fc18c72cfff08e4b227beaffe0a0e91819c2ef",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/1/1791806949_3883.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.769Z",
+      "disposition": "include",
+      "department": "spring-tree",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/7/8/1791806949_6090.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
     },
     "1592069": {
       "disposition": "include",
@@ -17302,6 +17870,16 @@
       "reviewArtifact": "native-human-sheet-14",
       "wholeProductFrame": true
     },
+    "1592101": {
+      "imageHash": "6ca380b8705cffba5f3a76ca1d8e119db09cb74da0e4f6104cb61a9e2b90de78",
+      "sourceContentHash": "e2ac62378304d7e7e6a0c9927b4317f26c45e4c498dbfc4f8d3b06c1f5b8a115",
+      "listingFingerprint": "90286c94cf64b34317908e5b3be2a92e149522ff4383d3af52999cf29d8b6808",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/4/1791807003_6545.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.770Z",
+      "disposition": "review",
+      "reason": "The native image is a styled vase holding multiple bellflower stems, obscuring supplied stem ends; the exact offer is one stem. Select a complete single-offer native frame."
+    },
     "1592102": {
       "disposition": "include",
       "department": "spring-stems",
@@ -17330,6 +17908,23 @@
         "绿色"
       ]
     },
+    "1592109": {
+      "imageHash": "6f202930c2bb2235fed229734b96b006ee144eab11d3d2cfd04f3d6e19c2140b",
+      "sourceContentHash": "88d7c69a2a1390a5a973be516a8cd1feab774201828bf8ad65bc3f8018bd37ba",
+      "listingFingerprint": "294743aee4f0d5ae448f1764831c01bf8217cb82ac8472d2185fde2df3296cb4",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/7/1791807012_2030.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.767Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "绿色",
+        "白色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/7/6/1791807012_2802.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1592110": {
       "disposition": "exclude",
       "department": "spring-stems",
@@ -17353,6 +17948,16 @@
       "reviewedAt": "2026-11-24T00:32:37.279Z",
       "reviewArtifact": "native-human-sheet-14",
       "wholeProductFrame": true
+    },
+    "1592112": {
+      "imageHash": "02c2428c1f40c197cd0bc2a366845e6121d15a682fc75483b79ebb98a8af7c5a",
+      "sourceContentHash": "3b5d7840f3abc51921d14b98928ddbc9ac2791ad6fc631383152243279a57df3",
+      "listingFingerprint": "bc045ee4f8554c9461701646007f39f5981e41d00dc7a9001090f5d1b0d822cf",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/3/1791807019_8826.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.771Z",
+      "disposition": "review",
+      "reason": "The viewed allium is green/beige, but the exact description calls it coffee-hued Coffee Allium. Confirm the exact offered variant and fresh colour against the source gallery before release."
     },
     "1592116": {
       "disposition": "include",
@@ -17414,6 +18019,22 @@
       "reviewArtifact": "native-human-sheet-14",
       "wholeProductFrame": true
     },
+    "1592147": {
+      "imageHash": "4553835ccb19c3be3ccecd9e0482e6ce5cd2dd2401d5812017fef67dfadf4206",
+      "sourceContentHash": "12736895b63943e58caee2a8fda669e8cacf8f386cfdf776aebdce4d068031e2",
+      "listingFingerprint": "791eb59ac0fc5b826a7d71680addee31ec278197459d761e8c9cfe89b01ab7ea",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/1/1791807050_7735.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.767Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/7/8/1791807050_7451.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1592148": {
       "disposition": "include",
       "department": "spring-stems",
@@ -17450,6 +18071,22 @@
       "reviewArtifact": "extra-human-sheet-04",
       "wholeProductFrame": true
     },
+    "1592165": {
+      "imageHash": "e4003e9e1b4c758e6a3e017c3c2640bf860458414d155bc1ab045e0e621cad03",
+      "sourceContentHash": "d8cebb8596632226ae135d672bddcab1de002071aa0a3fac4f39549a6942a8db",
+      "listingFingerprint": "e60bed684a07ffc75833801b51b9f3461dd9a1e8fbc8f6fdd569fdf8f4b75389",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/1/1791807073_3365.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.767Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/3/8/1791807074_6866.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1592166": {
       "disposition": "include",
       "department": "spring-potted",
@@ -17464,6 +18101,16 @@
       "colours": [
         "绿色"
       ]
+    },
+    "1592167": {
+      "imageHash": "5f57c1fdede96232eda607f1f4be23e8b884c762f20567cd4137bb2115974597",
+      "sourceContentHash": "860b1721b6398176683d710b3428166a1df8419983d78e24bb44ade52329de8d",
+      "listingFingerprint": "8b8a728f69f6ebf903fe51c6a2d3e4c7b1cf69347773d28886b34238f0d19d60",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/7/1791807079_5305.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.770Z",
+      "disposition": "exclude",
+      "reason": "Viewed exact native flower has predominantly deep burgundy or near-black petals, corroborated by the exact source colour/design, outside the fresh spring palette."
     },
     "1592171": {
       "disposition": "include",
@@ -17499,6 +18146,39 @@
       "disposition": "exclude",
       "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
+    "1592184": {
+      "imageHash": "4abf25d53a664a8dd71306a622498e7eccae803247ab137a23b48d81eb9b5c15",
+      "sourceContentHash": "40d3d61eab8dd623b0fb9c7aa0d48ae00363f44d369466442fda92a796f53589",
+      "listingFingerprint": "14582139151954522ee7f2a3fe267a49ce78e29c754e3521e3898d02e1f78598",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/7/1791807104_9237.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.767Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "白色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/5/8/1791807104_1137.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
+    "1592186": {
+      "imageHash": "e0c3c75a114ebca86fa9883e602911cd21bc1253945bc0cc0f626d6d24f9e2ac",
+      "sourceContentHash": "2e8f586eabc92235f226b81bc33a1134b0fd5c272c76b9217aaa11a2ba96aa23",
+      "listingFingerprint": "7fc80c6c9f23b0a4bd7472b936651ab3d5d80126d1b8630e3d602b13b70470f6",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/3/1791807124_1897.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.767Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/0/7/1791807124_2697.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
     "1592188": {
       "disposition": "include",
       "department": "spring-stems",
@@ -17522,6 +18202,48 @@
       "reviewedAt": "2026-11-24T00:32:37.280Z",
       "reviewArtifact": "native-human-sheet-14",
       "wholeProductFrame": true
+    },
+    "1592214": {
+      "imageHash": "431c53ac9855f799643495578e63dc55da73bcbacb6fef449ba116294a7f3317",
+      "sourceContentHash": "ed3967cd215b8682522ff1880c46f1d1521bfdd0224f724e26b828de67102024",
+      "listingFingerprint": "cb485dff93abfb7985954806c8d280419eee3bbcf5b29b94cd88498f54ec1092",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/0/1791807158_3981.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.769Z",
+      "disposition": "exclude",
+      "reason": "Viewed exact native flower has predominantly deep burgundy or near-black petals, corroborated by the exact source colour/design, outside the fresh spring palette."
+    },
+    "1592216": {
+      "imageHash": "775074818a0de58807d11168bb87420b9bbcb07dfd3ab688eb3a12ad7fb09f17",
+      "sourceContentHash": "f5a0c13320ea946ea75fcde32f63be07f2f07b041350e6901bbe8195f0e96658",
+      "listingFingerprint": "01b46b7163d2a05c68c55953df0eab74b87703f02d83b0a4a8e2bd5ee9e4882c",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/5/1791807164_3034.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.768Z",
+      "disposition": "include",
+      "department": "spring-potted",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/6/5/1791807164_2349.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
+    },
+    "1592232": {
+      "imageHash": "9711bf0a97f33c8462385eeabcb1b2fda901a8506cafba3be32b33e7ef72ae76",
+      "sourceContentHash": "de59619243c339af20302c6611217254d4236763eafc579a8a2178e346e54e69",
+      "listingFingerprint": "392360f9c17b013c672707f1edb63a06d6d93ff920d96af924a255f44f6d7353",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/3/1791807185_6755.jpg",
+      "reviewArtifact": "season-usage-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T03:30:04.768Z",
+      "disposition": "include",
+      "department": "spring-potted",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/7/2/1791807186_7317.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete exact-SKU native botanical and checked source title, description and specifications. Fresh green foliage or light/bright flowers agree with the actual offered form. Generic end-use autumn suggestions and container colours do not override the inspected botanical body; full olive trees remain trees despite a publisher flower-stem suffix."
     },
     "1592434": {
       "disposition": "exclude",

@@ -45,9 +45,13 @@ export function springSourceDecision(p){
  const bare=/\b(?:bare[ -]stem(?:med)?|unpotted|with\s+no\s+pots?|no\s+(?:pot|planter)(?:\s+or\s+(?:pot|planter))?\s+(?:is\s+)?included|(?:supplied|provided)\s+without\s+(?:a\s+)?(?:pot|planter))\b/i.test(title+' '+exactText);
  const titledPot=/\bpotted\b|\b(?:in|with)\s+(?:(?!no\b|not\b)\w+\s+){0,5}(?:pot|planter|vase|basket)\b/i.test(title);
  if(bare&&titledPot)return{disposition:'review',reason:'offered-pot-contents-conflict',evidence:title+' '+offered};
+ // Some exact retailer titles append "Artificial Flower Stem" even to a
+ // complete 150–240cm olive tree. Ignore that generic suffix for the tree
+ // candidate only; genuine branches/stems earlier in the offer still win.
+ const treeFormTitle=title.replace(/\bArtificial Flower Stem\b(?=\s*(?:-|$))/i,'');
  let department;
  if(/\b(?:garlands?|wreaths?|swags?)\b/i.test(title))department='spring-wreath-garland';
- else if((/\btrees?\b/i.test(title)||/\btopiar(?:y|ies)\b/i.test(title)&&/\b(?:trees?|trunk)\b/i.test(featureHead))&&!/\b(?:stems?|sprays?|picks?|branches|branch)\b/i.test(title))department='spring-tree';
+ else if((/\btrees?\b/i.test(treeFormTitle)||/\btopiar(?:y|ies)\b/i.test(title)&&/\b(?:trees?|trunk)\b/i.test(featureHead))&&!/\b(?:stems?|sprays?|picks?|branches|branch)\b/i.test(treeFormTitle))department='spring-tree';
  else if(bare)department='spring-stems';
  else if(/\b(?:potted|hanging\s+(?:flower\s+)?baskets?|window\s+box|(?:in|with)\s+(?:(?!not\b|no\b)\w+\s+){0,5}(?:pots?|vases?|planters?|baskets?|jugs?)|vase arrangement|pot arrangement)\b/i.test(title))department='spring-potted';
  else if(/\b(?:bouquets?|picks?|stems?|sprays?|branches|branch|bunches|bunch|bushes|bush|bundle)\b/i.test(title))department='spring-stems';
