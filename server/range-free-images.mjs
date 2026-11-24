@@ -4,7 +4,7 @@ import {createHash} from 'node:crypto';
 import fs from 'node:fs/promises';
 import sharp from 'sharp';
 const exec=promisify(execFile);
-const allowed=url=>{const u=new URL(url);if(u.username||u.password||u.port||!['https://www.therange.co.uk','https://kube-media-unpublished.rstore.com'].includes(u.origin)||!/^\/media\/.+\.(?:jpe?g|png|webp|avif|gif)$/i.test(u.pathname))throw Error('An observed official source image is required');return u.origin;};
+const allowed=url=>{const u=new URL(url),range=['https://www.therange.co.uk','https://kube-media-unpublished.rstore.com'].includes(u.origin)&&/^\/media\/.+\.(?:jpe?g|png|webp|avif|gif)$/i.test(u.pathname),leaf=u.origin==='https://cdn.shopify.com'&&/^\/s\/files\/1\/1032\/7795\/3356\/(?:files|products)\/.+\.(?:jpe?g|png|webp|avif|gif)$/i.test(u.pathname)&&[...u.searchParams.keys()].every(k=>k==='v');if(u.username||u.password||u.port||!range&&!leaf)throw Error('An observed official source image is required');return u.origin;};
 export async function ordinaryBinaryHttp2(url){
  allowed(url);try{const{stdout}=await exec('curl',['--disable','--http2','--location','--max-time','12','--silent','--show-error','--write-out','\n%{http_code}',url],{encoding:'buffer',timeout:13000,maxBuffer:25000000});const cut=stdout.lastIndexOf(10);return{status:Number(stdout.subarray(cut+1).toString('ascii')),bytes:stdout.subarray(0,cut)};}catch(e){return{status:0,error:String(e.message).slice(0,150)};}
 }

@@ -2,6 +2,7 @@ import {detailFingerprint} from './collection-policy.mjs';
 import {exactNativeGalleryMember} from './native-gallery-identity.mjs';
 import {validSpringListingRecovery} from './spring-listing-recovery.mjs';
 import {validSpringListingEquivalent} from './spring-listing-equivalence.mjs';
+import {validSpringManufacturerPhoto} from './spring-manufacturer-photo.mjs';
 
 // Some official PDP JSON records omit their gallery. The complete catalogue
 // still supplies an image on the exact SKU row. Preserve that evidence as a
@@ -17,7 +18,7 @@ export function bindSpringListingNativeImages(snapshot){
   const native=(p.originalImages||[]).filter(g=>!g.listingEvidence&&exactNativeGalleryMember(p,g));
   if(native.length){
    const fallback=(p.originalImages||[]).filter(g=>g.listingEvidence);
-   const retained=fallback.filter(g=>(g.url===p.listingVariantImageUrl&&g.listingEvidence?.resolutionVerified===true&&g.listingEvidence.sha256===p.springListingImageRecovery?.sha256&&validSpringListingRecovery(p,snapshot))||validSpringListingEquivalent(p,g,snapshot));
+   const retained=fallback.filter(g=>(g.url===p.listingVariantImageUrl&&g.listingEvidence?.resolutionVerified===true&&g.listingEvidence.sha256===p.springListingImageRecovery?.sha256&&validSpringListingRecovery(p,snapshot))||validSpringListingEquivalent(p,g,snapshot)||validSpringManufacturerPhoto(p,g,snapshot));
    if(fallback.length){p.originalImages=[...native,...retained];retiredListingFallbacks+=fallback.length-retained.length;}
    if(![...native,...retained].some(g=>g.url===p.originalImageUrl)){
     p.originalImageUrl=native.find(g=>g.thumbnail===p.listingVariantImageUrl)?.url||native[0].url;

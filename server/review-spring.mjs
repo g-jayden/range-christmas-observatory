@@ -1,5 +1,7 @@
 import{springDimensionFacts}from'./spring-dimensions.mjs';
 import{springSourceText}from'../web/spring-source-facts.mjs';
+import{applySpringManufacturerPhotos}from'./spring-manufacturer-photo.mjs';
+import{revalidateSpringReviews}from'./spring-review-fingerprint.mjs';
 import fs from'node:fs/promises';import{springBodyColourFacts}from'./spring-colours.mjs';import{springReviewExcludes,springReviewedFamilyReferences}from'./spring-review-evidence.mjs';import{catalogueIdentityIndex}from'./catalogue-identities.mjs';import path from'node:path';import{createHash}from'node:crypto';import{fileURLToPath}from'node:url';
 import{SPRING_VERSION,SPRING_DEPARTMENTS,springSourceDecision,springImageDecision}from'../web/spring-model.mjs';
 import{exactNativeGalleryMember}from'./native-gallery-identity.mjs';
@@ -18,8 +20,8 @@ import{SPRING_VISUAL_PROMPTS,SPRING_VISUAL_PROMPT_VERSION,springVisualScores}fro
 import{localVisualClassifier as classifier}from'./local-visual-classifier.mjs';
 export async function reviewSpring({repair=true}={}){
  const snapshot=await readSpring();if(!snapshot.source?.complete||snapshot.source.expected!==snapshot.products.length)throw Error('Complete official spring root observation required');
- const listingImages=await read('web/spring/image-checkpoint.json',{});snapshot.listingNativeEquivalenceAudit=await applySpringListingEquivalences(snapshot,{...snapshot.imageAudit?.entries,...listingImages.entries});snapshot.listingNativeBindingAudit=bindSpringListingNativeImages(snapshot);
- let reviews=await read('web/spring/manual-reviews.json',{products:{}});const candidates=snapshot.products.filter(p=>springSourceDecision(p).disposition!=='exclude'&&!springReviewExcludes(p,reviews.products[p.sku]));
+ const listingImages=await read('web/spring/image-checkpoint.json',{});const manufacturer=await applySpringManufacturerPhotos(snapshot,{...snapshot.imageAudit?.entries,...listingImages.entries});const {nativeEntries,...manufacturerAudit}=manufacturer;snapshot.manufacturerPhotoAudit=manufacturerAudit;snapshot.imageAudit||={};snapshot.imageAudit.entries={...snapshot.imageAudit.entries,...nativeEntries};snapshot.listingNativeEquivalenceAudit=await applySpringListingEquivalences(snapshot,{...snapshot.imageAudit?.entries,...listingImages.entries});snapshot.listingNativeBindingAudit=bindSpringListingNativeImages(snapshot);
+ let reviews=await read('web/spring/manual-reviews.json',{products:{}});snapshot.reviewRevalidationAudit=revalidateSpringReviews(snapshot,reviews);await atomicJson('web/spring/manual-reviews.json',reviews);const candidates=snapshot.products.filter(p=>springSourceDecision(p).disposition!=='exclude'&&!springReviewExcludes(p,reviews.products[p.sku]));
  const pairReviewedOriginals=async()=>{const saved=await read('web/spring/image-checkpoint.json',{}),paired=await pairedSpringPhotoReviews(candidates,reviews,{...snapshot.imageAudit?.entries,...saved.entries});reviews=paired.reviews;snapshot.humanPairedOriginalAudit=paired.audit;};
  const selectHumanOriginals=async()=>{const saved=await read('web/spring/image-checkpoint.json',{});return applyHumanSelectedSpringOriginals(candidates,reviews,{...snapshot.imageAudit?.entries,...saved.entries});};let reader,budget;
  try{if(repair){const policy={...await loadPolicy(),maxRunSeconds:18000,repairImagesOnly:true,preferNativePreviewAssets:true,imageCheckpoint:'web/spring/image-checkpoint.json',imageBatchProbe:false};budget=await openCreditBudget(policy);reader=await createFirecrawlBrowserReader({policy,budget});

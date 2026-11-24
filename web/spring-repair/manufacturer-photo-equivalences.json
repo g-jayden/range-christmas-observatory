@@ -1,0 +1,701 @@
+{
+  "version": 1,
+  "method": "exact-listed-photo-and-primary-manufacturer-native",
+  "observedAt": "2026-11-24T06:51:47.536Z",
+  "retailerFactsCopied": false,
+  "firecrawlCredits": 0,
+  "proofs": [
+    {
+      "sku": "1438812",
+      "variantId": "10232039",
+      "rootImageUrl": "https://www.therange.co.uk/media/9/1/1785772289_8638.jpg",
+      "rootImageHash": "74227e4907c7abe31d4b27008b1c582c8a8db31940e871d8cb9d60032e0a475b",
+      "rootInputFingerprint": "d2884e5016f5574aaee9e16e2a55bde32e7b667243e10425f82ccf340dc4e9d6",
+      "sourceContentHash": "4d0a40cc1aceb2413c4c77660590127b170ea0762cd9533226b0a18b314e9b82",
+      "nativeImageUrl": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7638.jpg?v=1771413124",
+      "nativeImageHash": "4d76d3ed4e9036a2fcf145b7ce80cef3eec511aee6d39e664b903afbd4d3579d",
+      "nativeCachePath": "images/source/4d76d3ed4e9036a2fcf145b7ce80cef3eec511aee6d39e664b903afbd4d3579d.jpg",
+      "nativeObservedAt": "2026-11-24T06:40:49.517Z",
+      "mime": "image/jpeg",
+      "reference": {
+        "sourceUrl": "https://www.leafplants.co.uk/products/75cm-artificial-palm-tree-unpotted-6-leaves-2",
+        "sourceHash": "a6229f3cffca824109fb7fefb753aa781f87dfd3b0ca0932091ecb2033801879",
+        "product": {
+          "id": 15585396490572,
+          "handle": "75cm-artificial-palm-tree-unpotted-6-leaves-2",
+          "title": "75cm Artificial Palm Tree - Unpotted 6 Leaves",
+          "updated_at": "2026-11-24T06:18:53+00:00",
+          "images": [
+            {
+              "id": 78853069799756,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7638-L_u26.jpg?v=1793021756",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70269222289740,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7638.jpg?v=1771413124",
+              "width": 2000,
+              "height": 2000
+            },
+            {
+              "id": 70269222322508,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7638-3.jpg?v=1771413124",
+              "width": 2000,
+              "height": 2000
+            },
+            {
+              "id": 70269222355276,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7638-4.jpg?v=1771413124",
+              "width": 2000,
+              "height": 2000
+            },
+            {
+              "id": 70269222388044,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7638-2.jpg?v=1771413125",
+              "width": 2000,
+              "height": 2000
+            },
+            {
+              "id": 70269222420812,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7637-7636-7201-2_465a44a8-5bc4-4f84-b1e2-73a6c6c0fe4b.jpg?v=1771413124",
+              "width": 2000,
+              "height": 2000
+            }
+          ],
+          "variants": [
+            {
+              "id": 56751616524620,
+              "sku": "LEAF-7638"
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "equivalent": true,
+        "rms": 2.43896023301512,
+        "meanAbsolute": 0.9235026041666666,
+        "outlierRatio": 0.00189208984375,
+        "foregroundRms": 5.113193425499004,
+        "maxBlockRms": 6.7638746292343415,
+        "thumbnailWidth": 300,
+        "thumbnailHeight": 300,
+        "originalWidth": 2000,
+        "originalHeight": 2000,
+        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
+      }
+    },
+    {
+      "sku": "1438932",
+      "variantId": "10232599",
+      "rootImageUrl": "https://www.therange.co.uk/media/8/1/1785774064_4805.jpg",
+      "rootImageHash": "93c758f1eb909ecc4a83109cff77a9c8ab78acee843f1b346ff2849e3d7ea78c",
+      "rootInputFingerprint": "1fe2eb8714cef958a745e34164352500d8e5e5f1fe0e5ec263eeaf43a7b8e18b",
+      "sourceContentHash": "18ee12d520eb6baa038a4d6554b9d8c4bac5c274c167bf5bdc2428154c5f2ef9",
+      "nativeImageUrl": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7529.jpg?v=1772801969",
+      "nativeImageHash": "40f67274eb854e61c6d2de3d75d14a3fa847f71b007379f285ea6fc5a7772e9d",
+      "nativeCachePath": "images/source/40f67274eb854e61c6d2de3d75d14a3fa847f71b007379f285ea6fc5a7772e9d.jpg",
+      "nativeObservedAt": "2026-11-24T06:40:49.517Z",
+      "mime": "image/jpeg",
+      "reference": {
+        "sourceUrl": "https://www.leafplants.co.uk/products/35cm-artificial-potted-lady-fern-athyrium-filix-femina",
+        "sourceHash": "07ed5b57252371ec24170d6075ec4596bc00544c3f58b3bcb71c66092581bc9f",
+        "product": {
+          "id": 15585345536332,
+          "handle": "35cm-artificial-potted-lady-fern-athyrium-filix-femina",
+          "title": "30cm Artificial Potted Lady Fern (Athyrium Filix-Femina)",
+          "updated_at": "2026-11-24T06:18:53+00:00",
+          "images": [
+            {
+              "id": 78853068521804,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7529-L_u26.jpg?v=1793021753",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 75295592186188,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7529-L.jpg?v=1783199424",
+              "width": 1254,
+              "height": 1254
+            },
+            {
+              "id": 70268879634764,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7529.jpg?v=1772801969",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70268879667532,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7529-2.jpg?v=1772801969",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70268879700300,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7529-7528-7527-1_4a538311-fc45-48c0-a266-d17973eefbf2.jpg?v=1772801969",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70268879765836,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7529-1.jpg?v=1772801969",
+              "width": 1920,
+              "height": 1920
+            }
+          ],
+          "variants": [
+            {
+              "id": 56751479685452,
+              "sku": "LEAF-7529"
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "equivalent": true,
+        "rms": 2.5155360362116,
+        "meanAbsolute": 1.1046956380208333,
+        "outlierRatio": 0.0018717447916666667,
+        "foregroundRms": 4.154695384919619,
+        "maxBlockRms": 6.035485343643321,
+        "thumbnailWidth": 300,
+        "thumbnailHeight": 300,
+        "originalWidth": 1920,
+        "originalHeight": 1920,
+        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
+      }
+    },
+    {
+      "sku": "1438843",
+      "variantId": "10232184",
+      "rootImageUrl": "https://www.therange.co.uk/media/5/6/1785774364_9910.jpg",
+      "rootImageHash": "19e0838d315121cb42cd2f6fbfeba97da2c3fbf115a3256c9aa2f43f795e706d",
+      "rootInputFingerprint": "2d9136902e402ed77df30386108e26ca5ae98a919d178164c4956ab4197cb561",
+      "sourceContentHash": "b8b28ab745ab3cef7c433e494945a7a6df70580597d37172230c61c697c57d4e",
+      "nativeImageUrl": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7544.jpg?v=1772483978",
+      "nativeImageHash": "1375b5839db508c364423a1b2f01447852026e0bad541caa0008196a451272bc",
+      "nativeCachePath": "images/source/1375b5839db508c364423a1b2f01447852026e0bad541caa0008196a451272bc.jpg",
+      "nativeObservedAt": "2026-11-24T06:40:49.517Z",
+      "mime": "image/jpeg",
+      "reference": {
+        "sourceUrl": "https://www.leafplants.co.uk/products/artificial-flowering-rose-tree-twisted-vine-detail-90cm-3ft",
+        "sourceHash": "7e46d95c335b1e021a1755a26b43e5a46f3069e9b13897edec7c754261b38baf",
+        "product": {
+          "id": 15585348190540,
+          "handle": "artificial-flowering-rose-tree-twisted-vine-detail-90cm-3ft",
+          "title": "Artificial Floral Rose Tree Wedding Twisted Vine Detail 90cm (3ft)",
+          "updated_at": "2026-11-24T06:18:53+00:00",
+          "images": [
+            {
+              "id": 78704559685964,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7544-L.jpg?v=1792584685",
+              "width": 2000,
+              "height": 2000
+            },
+            {
+              "id": 70268896674124,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7544.jpg?v=1772483978",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70566163382604,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-40777_237c3eb9-b041-4596-bf1a-addb0ea8b19c.jpg?v=1772483978",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70566163513676,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-70548_9c480945-5bc9-4bf2-a307-0897ed4ce046.jpg?v=1772483978",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70268896706892,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7544-2.jpg?v=1772483978",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70268896739660,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7544-3.jpg?v=1772483978",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70268896772428,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7544-4.jpg?v=1772483978",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70268896805196,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7544-5.jpg?v=1772483978",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70268896837964,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7544-6.jpg?v=1772483978",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70566163415372,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-40777-2_37b23c06-76c0-4fb8-b85f-ed038119261b.jpg?v=1772483978",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70566163448140,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-40777-3_cd0658cd-49b5-4078-935f-7f5b279a828d.jpg?v=1772483978",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70566163480908,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-40777-4_d6ce4602-8e3f-4b72-9dca-4838a1f43c9a.jpg?v=1772483978",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70566163546444,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-70548-2_a8ac738f-db4e-4ee6-a5a6-b5bf43b8fe38.jpg?v=1772483978",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70566163579212,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-70548-3_3e2b5c2f-231f-42b1-84d3-f6554d3e8313.jpg?v=1772483978",
+              "width": 1561,
+              "height": 1561
+            },
+            {
+              "id": 78704559718732,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/40777-L.jpg?v=1792584685",
+              "width": 2000,
+              "height": 2000
+            },
+            {
+              "id": 78704559751500,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/70548-L.jpg?v=1792584685",
+              "width": 2000,
+              "height": 2000
+            },
+            {
+              "id": 78704559784268,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7544-L-detail.jpg?v=1792584685",
+              "width": 2048,
+              "height": 2048
+            }
+          ],
+          "variants": [
+            {
+              "id": 56751488139596,
+              "sku": "LEAF-7544"
+            },
+            {
+              "id": 56883218186572,
+              "sku": "LEAF-40777"
+            },
+            {
+              "id": 56883218219340,
+              "sku": "LEAF-70548"
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "equivalent": true,
+        "rms": 0.43298920881231745,
+        "meanAbsolute": 0.14235432942708334,
+        "outlierRatio": 0,
+        "foregroundRms": 0.9402738841992319,
+        "maxBlockRms": 1.0180659769058846,
+        "thumbnailWidth": 300,
+        "thumbnailHeight": 300,
+        "originalWidth": 1920,
+        "originalHeight": 1920,
+        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
+      }
+    },
+    {
+      "sku": "1438904",
+      "variantId": "10232469",
+      "rootImageUrl": "https://www.therange.co.uk/media/5/3/1785774122_8962.jpg",
+      "rootImageHash": "5b2a76a3f05b8bbaa28fe1e9bd0ba3586d8e6bef3752ab46d318b964839e6a2b",
+      "rootInputFingerprint": "7d82a931c42e238fc5a8c0fcf1e465e1bac60092e83a3657dc4b8dc33c5ed47c",
+      "sourceContentHash": "18c76dfbace53333ce401ca99813da5acc4d5a7d91362bec94c66105ed92e62b",
+      "nativeImageUrl": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7360-1.jpg?v=1771411698",
+      "nativeImageHash": "5c064912765ded5e5e0291b46516cb07bf3f6a86748ab3b64bcf565d62199080",
+      "nativeCachePath": "images/source/5c064912765ded5e5e0291b46516cb07bf3f6a86748ab3b64bcf565d62199080.jpg",
+      "nativeObservedAt": "2026-11-24T06:40:49.517Z",
+      "mime": "image/jpeg",
+      "reference": {
+        "sourceUrl": "https://www.leafplants.co.uk/products/70cm-artificial-orchid-light-pink-with-black-ceramic-planter",
+        "sourceHash": "389d5d4db60d7479369d7f09e738ff0d4ab74b28c977e1eaf0740f444a58218c",
+        "product": {
+          "id": 15585321025868,
+          "handle": "70cm-artificial-orchid-light-pink-with-black-ceramic-planter",
+          "title": "70cm Artificial Orchid Light Pink with Black Ceramic Planter",
+          "updated_at": "2026-11-24T06:18:53+00:00",
+          "images": [
+            {
+              "id": 78853058953548,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7360-L_u26.jpg?v=1793021737",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70268707701068,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7360-1.jpg?v=1771411698",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70268707733836,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7360-2-1.jpg?v=1771411699",
+              "width": 902,
+              "height": 902
+            },
+            {
+              "id": 70268707766604,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7360-3.jpg?v=1771411698",
+              "width": 1470,
+              "height": 1470
+            },
+            {
+              "id": 70268707799372,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7361-7360-7359_3fb7c079-a008-4319-9e16-750038de8bbd.jpg?v=1771411699",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70268707832140,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7351-7360-7354-pink_901510e0-50b1-489e-bd3f-b97a4b83fb8c.jpg?v=1771411699",
+              "width": 1920,
+              "height": 1920
+            }
+          ],
+          "variants": [
+            {
+              "id": 56751422079308,
+              "sku": "LEAF-7360"
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "equivalent": true,
+        "rms": 1.9642858199742936,
+        "meanAbsolute": 0.6080525716145834,
+        "outlierRatio": 0.0012003580729166667,
+        "foregroundRms": 4.823423343246098,
+        "maxBlockRms": 6.687986742411102,
+        "thumbnailWidth": 300,
+        "thumbnailHeight": 300,
+        "originalWidth": 1920,
+        "originalHeight": 1920,
+        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
+      }
+    },
+    {
+      "sku": "1438857",
+      "variantId": "10232249",
+      "rootImageUrl": "https://www.therange.co.uk/media/9/4/1785774945_8063.jpg",
+      "rootImageHash": "8cfbc4ec022cfd6bcab72e34606675a09ef0b6be4d8dced3f08d29937a9bb2c4",
+      "rootInputFingerprint": "d54ef9ceff80530bb4c195c26f4357b3874b93bdaf9323ff9b9745def0155060",
+      "sourceContentHash": "699c1153dbb386ea7ee56620c77bb2000ce768fed216e15bf838b541ee063bc7",
+      "nativeImageUrl": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7372.jpg?v=1772801980",
+      "nativeImageHash": "aee119fb901cb6f178022e6b1f042e5baedee48fdfbfaf33100c417fe8d2a8c2",
+      "nativeCachePath": "images/source/aee119fb901cb6f178022e6b1f042e5baedee48fdfbfaf33100c417fe8d2a8c2.jpg",
+      "nativeObservedAt": "2026-11-24T06:40:49.517Z",
+      "mime": "image/jpeg",
+      "reference": {
+        "sourceUrl": "https://www.leafplants.co.uk/products/90cm-artificial-evergreen-ficus-tree",
+        "sourceHash": "df2f66c837be23ed297f7abbd053e2d2add720ce1c6101c1778eee1b18f910fa",
+        "product": {
+          "id": 15585316995404,
+          "handle": "90cm-artificial-evergreen-ficus-tree",
+          "title": "90cm Artificial Evergreen Ficus Tree",
+          "updated_at": "2026-11-24T06:18:53+00:00",
+          "images": [
+            {
+              "id": 78704599630156,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7372-L.jpg?v=1792584881",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70268678537548,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7372.jpg?v=1772801980",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 74018152284492,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7372.jpg?v=1780240696",
+              "width": 1254,
+              "height": 1254
+            },
+            {
+              "id": 70268678570316,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7372-3.jpg?v=1772801980",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70268678603084,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7372-2.jpg?v=1772801980",
+              "width": 2048,
+              "height": 2048
+            }
+          ],
+          "variants": [
+            {
+              "id": 56751406285132,
+              "sku": "LEAF-7372"
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "equivalent": true,
+        "rms": 2.729176606215997,
+        "meanAbsolute": 1.129638671875,
+        "outlierRatio": 0.0026448567708333335,
+        "foregroundRms": 4.949147680667362,
+        "maxBlockRms": 6.6981029652681014,
+        "thumbnailWidth": 300,
+        "thumbnailHeight": 300,
+        "originalWidth": 2048,
+        "originalHeight": 2048,
+        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
+      }
+    },
+    {
+      "sku": "1438468",
+      "variantId": "10230344",
+      "rootImageUrl": "https://www.therange.co.uk/media/7/2/1785761001_4354.jpg",
+      "rootImageHash": "e07a7f571586c45be9c4c3288012153328559f2f5335fe44af792ef87ac78b43",
+      "rootInputFingerprint": "07c982b3b2a2e0ed43fda4bb2b97f95518a5a31541905da9eff16ab2e53d7d8e",
+      "sourceContentHash": "4a5ec1305beca90fbea9640a429b7847eeb8ae07f8c69c44e7b53bfbcc7b715d",
+      "nativeImageUrl": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7106-7201.jpg?v=1772630307",
+      "nativeImageHash": "1e1abfce4766c06c0f8ef394b80abaa2a23f91e4b33f43c5b1d6b15cecf2aed4",
+      "nativeCachePath": "images/source/1e1abfce4766c06c0f8ef394b80abaa2a23f91e4b33f43c5b1d6b15cecf2aed4.jpg",
+      "nativeObservedAt": "2026-11-24T06:40:49.517Z",
+      "mime": "image/jpeg",
+      "reference": {
+        "sourceUrl": "https://www.leafplants.co.uk/products/120cm-large-artificial-mango-tree-plant-with-optional-metal-planter",
+        "sourceHash": "4972a9a2d7242c960979d779df66fcdfddc91c8dc44d8d7ba90df8850a3d5ddc",
+        "product": {
+          "id": 15585311719756,
+          "handle": "120cm-large-artificial-mango-tree-plant-with-optional-metal-planter",
+          "title": "120cm (4ft) Tall Large Artificial Mango Tree Plant",
+          "updated_at": "2026-11-24T06:18:53+00:00",
+          "images": [
+            {
+              "id": 78853047845196,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7106-7201-L_26_Oct_u26.jpg?v=1793021719",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70268628959564,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7106-7201.jpg?v=1772630307",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70943683576140,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/7106--square.png?v=1773763949",
+              "width": 1002,
+              "height": 1002
+            },
+            {
+              "id": 70268629057868,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/mangotree_91398912-0f5a-4345-8e3f-15f859c393e8.jpg?v=1773763949",
+              "width": 1159,
+              "height": 1516
+            },
+            {
+              "id": 70268628992332,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7106-2_cd49c846-8d88-4d98-8aca-1278a5cdb33a.jpg?v=1773763949",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70268629025100,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7106-3_b41457d3-1765-4eb7-87ee-75bc475bca05.jpg?v=1773763949",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70614766092620,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7106_f5e21aa2-6377-4a93-86fb-73a63ba67fe2.jpg?v=1773763949",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70614766125388,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-7106-7237-7236_6a8309a3-a59a-4e0f-a36e-149460d83b27.jpg?v=1773763949",
+              "width": 2048,
+              "height": 2048
+            }
+          ],
+          "variants": [
+            {
+              "id": 56896574783820,
+              "sku": "LEAF-7106"
+            },
+            {
+              "id": 56751397601612,
+              "sku": "LEAF-7106-7201"
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "equivalent": true,
+        "rms": 2.3686481329789326,
+        "meanAbsolute": 0.9956258138020834,
+        "outlierRatio": 0.0009969075520833333,
+        "foregroundRms": 4.25507291313045,
+        "maxBlockRms": 5.916079783099616,
+        "thumbnailWidth": 300,
+        "thumbnailHeight": 300,
+        "originalWidth": 1920,
+        "originalHeight": 1920,
+        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
+      }
+    },
+    {
+      "sku": "1438480",
+      "variantId": "10230444",
+      "rootImageUrl": "https://www.therange.co.uk/media/0/0/1785761660_5268.jpg",
+      "rootImageHash": "2d8c8c9aef2d8fd7c85eea4dd86d122f3e91725ede1703530ccb9c92ded1bea8",
+      "rootInputFingerprint": "0f4a54d410cb435d18852aeb70f19636c04dfa7dc551903011c387ca52960ced",
+      "sourceContentHash": "85461b68a38cb241b05e43d4e680b96f1fc16f62afaf325c6a73ae667a7f83d5",
+      "nativeImageUrl": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-40626_5cfcf35c-c890-424f-8c12-ef1365ac1977.jpg?v=1772629485",
+      "nativeImageHash": "e9bb6082b069ff4baaf8d484f2c3ed6cf1bf41b57ca0ed9615eca69b4792bd04",
+      "nativeCachePath": "images/source/e9bb6082b069ff4baaf8d484f2c3ed6cf1bf41b57ca0ed9615eca69b4792bd04.jpg",
+      "nativeObservedAt": "2026-11-24T06:40:49.517Z",
+      "mime": "image/jpeg",
+      "reference": {
+        "sourceUrl": "https://www.leafplants.co.uk/products/180cm-artificial-twisted-trunk-fruticosa-ficus-tree-triple-ball-topiary-1984-leaves-with-optional-metal-planter",
+        "sourceHash": "8fc866b21fda71753503bf9f04e56fac2fb01b62108ac24cbfee51e25640335a",
+        "product": {
+          "id": 15585640382796,
+          "handle": "180cm-artificial-twisted-trunk-fruticosa-ficus-tree-triple-ball-topiary-1984-leaves-with-optional-metal-planter",
+          "title": "180cm Artificial Fruticosa Ficus Triple Ball Topiary - 1984 Leaves",
+          "updated_at": "2026-11-24T06:18:53+00:00",
+          "images": [
+            {
+              "id": 78704554934604,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/40626-L.jpg?v=1792584666",
+              "width": 2048,
+              "height": 2048
+            },
+            {
+              "id": 70614779068748,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-40626_5cfcf35c-c890-424f-8c12-ef1365ac1977.jpg?v=1772629485",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70943685574988,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/40626--square.png?v=1773764280",
+              "width": 1024,
+              "height": 1024
+            },
+            {
+              "id": 70478824177996,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/40626-7201_2b670d14-0004-4d8c-b38c-96ef231c4ebb.jpg?v=1773764280",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70478824210764,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/40626-7315_24954a1f-09dc-451d-b8ce-984374ea9436.jpg?v=1773764280",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70270926127436,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/40626-7316.jpg?v=1773764280",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70270926160204,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-40626-2-1_430f1155-fdd2-45db-aec7-d0efa0a0b146.jpg?v=1773764280",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70270926192972,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-40626-3-1_528f446e-81f0-427d-82cc-5d1cb99490af.jpg?v=1773764280",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70614779101516,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/40626_da94965a-5877-4d8e-a79b-8044c7491bb5.jpg?v=1773764280",
+              "width": 908,
+              "height": 908
+            },
+            {
+              "id": 70614779134284,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-40626-2_adf7a72f-f3b3-481a-b59a-2c418f347392.jpg?v=1773764280",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 70614779167052,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/LEAF-40626-3_98c4ea02-ce30-476a-adf2-8f1552896589.jpg?v=1773764280",
+              "width": 1920,
+              "height": 1920
+            },
+            {
+              "id": 78704554967372,
+              "src": "https://cdn.shopify.com/s/files/1/1032/7795/3356/files/40626-L-DETAIL-2.jpg?v=1792584667",
+              "width": 2048,
+              "height": 2048
+            }
+          ],
+          "variants": [
+            {
+              "id": 56896579207500,
+              "sku": "LEAF-40626"
+            },
+            {
+              "id": 56853284356428,
+              "sku": "40626-7201"
+            },
+            {
+              "id": 56853284389196,
+              "sku": "40626-7315"
+            },
+            {
+              "id": 56752250192204,
+              "sku": "40626-7316"
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "equivalent": true,
+        "rms": 2.3806812531640325,
+        "meanAbsolute": 0.8509928385416666,
+        "outlierRatio": 0.0020345052083333335,
+        "foregroundRms": 5.261224370281825,
+        "maxBlockRms": 6.489173676208705,
+        "thumbnailWidth": 300,
+        "thumbnailHeight": 300,
+        "originalWidth": 1920,
+        "originalHeight": 1920,
+        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
+      }
+    }
+  ]
+}
