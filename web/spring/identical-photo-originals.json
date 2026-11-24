@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "products": [
+    {
+      "sku": "6728716",
+      "variantId": "8046906",
+      "sourceFactsFingerprint": "2965701436fcecf453fa44853f29aec6b8844ef3d86c382310406fc719eef1e1",
+      "rootUrl": "https://www.therange.co.uk/media/4/9/1790270031_2220.jpg",
+      "rootHash": "3bc3d9b2edbe77b11e0745f5a9f669662e2ae84cb866ed778521b3c344db8d14",
+      "nativeSourceSku": "1239957",
+      "nativeSourceFactsFingerprint": "cc7b0f9e1cea3fb554dc8694a6beea354c1062e9b9a54f46bc226426d6469952",
+      "nativeUrl": "https://www.therange.co.uk/media/2/9/1669122332_2855.jpg",
+      "nativeHash": "c59184794ab6f3bac6d224f1c603d9837357840350a78d9eb8d4284a8bc8b7f8",
+      "reviewArtifact": "same-retailer-300-to-1500-exact-original-photo-20261125",
+      "reviewedAt": "2026-11-24T18:05:19.986Z",
+      "reviewNote": "The exact offered palm in its light grey/white planter is fully visible in the source 300px photograph. The same photograph has a 1500px original in the retailer gallery of another offer. All six strict decoded pixel thresholds pass; only photo bytes are reused. Model suffixes, offers, names, prices, dimensions and identities are not merged or copied."
+    }
+  ]
+}

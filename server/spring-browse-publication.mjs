@@ -36,10 +36,12 @@ export async function publishVerifiedSpringBrowse(sourceRoot='web',targetRoot='p
  if(inputs.every(r=>r.status==='rejected'&&r.reason.code==='ENOENT'))return {browseReady:false,products:0,sourceRequests:0,firecrawlCredits:0};
  for(const r of inputs)if(r.status==='rejected')throw r.reason;
  const [candidate,review,status]=inputs.map(r=>r.value);
- const catalogue=verifiedSpringBrowse(candidate,review,status),output=path.join(targetRoot,'spring');
+ let catalogue=verifiedSpringBrowse(candidate,review,status);const output=path.join(targetRoot,'spring');
+ const proofs=await fs.readFile(path.join(sourceRoot,'spring','identical-photo-originals.json'),'utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return null;throw e;});
+ if(proofs?.products?.length){const {applyIdenticalSpringNativePhotos}=await import('./spring-identical-native.mjs'),source=JSON.parse(await fs.readFile(path.join(sourceRoot,'spring','source.json'),'utf8')),result=await applyIdenticalSpringNativePhotos(catalogue,source,proofs,{sourceRoot});catalogue=result.catalogue;}
  await fs.mkdir(output,{recursive:true});
  await fs.writeFile(path.join(output,'catalogue.json'),JSON.stringify(catalogue));
- await fs.writeFile(path.join(output,'status.json'),JSON.stringify({...status,browseReady:true,reviewComplete:catalogue.reviewComplete,ready:catalogue.ready}));
+ await fs.writeFile(path.join(output,'status.json'),JSON.stringify({...status,revision:catalogue.revision,browseReady:true,reviewComplete:catalogue.reviewComplete,ready:catalogue.ready,...(catalogue.originalPhotoUpgradeAudit?{originalPhotoUpgradeAudit:catalogue.originalPhotoUpgradeAudit}:{})}));
  await fs.writeFile(path.join(output,'review.json'),JSON.stringify(review));
- return {browseReady:true,products:catalogue.products.length,counts:review.counts,reviewPending:catalogue.reviewPending,reviewComplete:catalogue.reviewComplete,sourceRequests:0,firecrawlCredits:0,sourceFactsChanged:false};
+ return {browseReady:true,products:catalogue.products.length,counts:review.counts,reviewPending:catalogue.reviewPending,reviewComplete:catalogue.reviewComplete,originalPhotoUpgradeAudit:catalogue.originalPhotoUpgradeAudit,sourceRequests:0,firecrawlCredits:0,sourceFactsChanged:false};
 }
