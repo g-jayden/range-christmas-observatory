@@ -42,8 +42,9 @@ export function mergeCollectorNativeIndexes(base={},a={},b={}){
   const latest=Date.parse(y.observedAt||0)>Date.parse(x.observedAt||0)?y:x;
   entries[source]={...clone(latest),bindings:[...new Set([...(x.bindings||[]),...(y.bindings||[])])].sort(),selectedSkus:[...new Set([...(x.selectedSkus||[]),...(y.selectedSkus||[])])].sort()};
  }
- const strip=x=>Object.fromEntries(Object.entries(x).filter(([k])=>!['entries','lastReceipt'].includes(k))),lastReceipt=newestReceipt(a.lastReceipt,b.lastReceipt);
- return {...mergeValue(strip(base),strip(a),strip(b),'native-index'),entries,...(lastReceipt?{lastReceipt}: {})};
+ const strip=x=>Object.fromEntries(Object.entries(x).filter(([k])=>!['entries','lastReceipt','checkedAt'].includes(k))),lastReceipt=newestReceipt(a.lastReceipt,b.lastReceipt),checks=[a.checkedAt,b.checkedAt].filter(v=>v!==undefined);
+ if(checks.some(v=>!Number.isFinite(Date.parse(v))))throw Error('Invalid native index observation time');
+ return {...mergeValue(strip(base),strip(a),strip(b),'native-index'),entries,...(checks.length?{checkedAt:new Date(Math.max(...checks.map(Date.parse))).toISOString()}:{}),...(lastReceipt?{lastReceipt}: {})};
 }
 export function mergeCollectorImageCaches(base={},a={},b={}){
  const entries={};for(const key of new Set([...Object.keys(a.entries||{}),...Object.keys(b.entries||{})])){

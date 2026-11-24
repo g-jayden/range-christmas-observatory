@@ -1,14 +1,8 @@
 {
-  "requestId": "owner-recovery-20261124-retire-incomplete-browser-artifact",
+  "requestId": "owner-recovery-20261124-priority-native-510041",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T20:14:11Z",
+  "requestedAt": "2026-11-24T21:15:37.468438Z",
   "targets": [
-    "static-pages-current"
-  ],
-  "supersedeReadOnlyPagesBeforeDeployment": [
-    {
-      "runId": 45474790030,
-      "expectedCommit": "9a7013be0620e6d3d2cb3f36fd7db3b917738b8b"
-    }
+    "range-native-resolution"
   ]
 }

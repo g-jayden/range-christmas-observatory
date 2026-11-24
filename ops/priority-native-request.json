@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "authorization": "owner-all-collection-unrestricted-20261123",
+  "requestId": "priority-native-20261125-spring-510041",
+  "requestedAt": "2026-11-24T21:15:37.468438Z",
+  "products": [
+    {
+      "sku": "510041",
+      "variantId": "9052034",
+      "sourceUrl": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/bouquets-and-arrangements/hydrangea-vase-arrangement/#510041",
+      "sourceContentHash": "a85fb3b4f69b8a2ac01962d04a93519eb784d5d979e6c80df85be0718ebee2ff",
+      "imageUrls": [
+        "https://www.therange.co.uk/media/3/8/1776076223_8823.jpg",
+        "https://www.therange.co.uk/media/1/7/1776076229_8195.jpg",
+        "https://www.therange.co.uk/media/3/3/1776076235_7094.jpg",
+        "https://www.therange.co.uk/media/0/5/1776076242_1764.jpg",
+        "https://www.therange.co.uk/media/8/1/1776076251_2304.jpg"
+      ]
+    }
+  ]
+}
