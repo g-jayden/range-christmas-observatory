@@ -44,7 +44,7 @@ export async function runMonitorDaily({previous,policy,readerFactory,budgetFacto
  const probe=process.env.COLLECTION_MODE==='monitor-probe',state=await readState();let reader,budget;if(!probe){state.completed=[];state.attempted={};}
  let daily=await readDailyMonitor(new Date(now())),outcome,catalogueReady=false,sourceObservedAt;
  try{
-  budget=await budgetFactory(policy);if(policy.nativeCaptureEnabled===false)policy.maxFallbackScrapesPerRun=budget.limit||policy.maxCreditsPerRun||60;reader=await readerFactory({policy:probe?{...policy,repairImagesOnly:true}:policy,budget});
+  budget=await budgetFactory(policy);if(policy.nativeCaptureEnabled===false)policy.maxFallbackScrapesPerRun=budget.limit||policy.maxCreditsPerRun||60;if(!probe&&!recoveryOnly)policy.cataloguePageCheckpoint='web/range-daily-directory-pages.json.gz';reader=await readerFactory({policy:probe?{...policy,repairImagesOnly:true}:policy,budget});
   if(recoveryOnly&&(!previous.observedAt||now()-Date.parse(previous.observedAt)>6*3600000))throw Error('Saved discovery is older than six hours; a fresh NEW check is required');
   const [previousDecorations,previousLights,previousThemes]=await Promise.all([readDecorations(),readLights(),readThemes()]);
   if(!probe&&!recoveryOnly){const proof=await fs.readFile('web/monitor-proof.json','utf8').then(JSON.parse).catch(()=>null);recoveryOnly=canResumeDiscovery({proof,snapshots:{catalogue:previous,decorations:previousDecorations,lights:previousLights,themes:previousThemes},now:now()});if(recoveryOnly){policy.retryPendingNow=true;policy.nativeCaptureEnabled=false;console.log(JSON.stringify({phase:'resume-verified-daily-discovery',sourceObservedAt:previous.observedAt,directoryRequests:0,timestampsPreserved:true}));}}
