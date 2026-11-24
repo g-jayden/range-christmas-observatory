@@ -65,7 +65,8 @@ export function restoreExactRangeGalleryPreview(p){
 export function applyDetails(p,d){
  const s=d.specs,t=d.featuresText,lower=t.toLowerCase();p.sourceDescription=t;
  if(p.kind==='decoration'){p.sourceDescription=t;p.dimensions=productDimensions(s,t);p.detailsReady=true;delete p.detailIssue;delete p.detailError;}
- const keepGallery=d.htmlAvailable===false&&!d.originalImages?.length&&p.originalSourceEvidence?.selectedSku===p.sku&&p.originalSourceEvidence.sourceUrl?.replace(/\/$/,'')===d.sourceUrl.replace(/\/$/,'')&&p.originalImages?.some(g=>g.thumbnail===(p.listingVariantImageUrl||p.variantImageUrl)||g.url===p.variantImageUrl);
+ const familyPath=raw=>{try{const u=new URL(raw);return u.origin==='https://www.therange.co.uk'&&!u.username&&!u.password&&!u.port?u.origin+u.pathname.replace(/\/$/,''):null;}catch{return null;}},galleryPath=familyPath(p.originalSourceEvidence?.sourceUrl);
+ const keepGallery=d.htmlAvailable===false&&!d.originalImages?.length&&String(d.sku)===String(p.sku)&&p.originalSourceEvidence?.selectedSku===p.sku&&galleryPath&&galleryPath===familyPath(d.sourceUrl)&&(!d.exactVariantSource?.variantId||String(d.exactVariantSource.variantId)===String(p.variantId))&&p.originalImages?.some(g=>g.thumbnail===(p.listingVariantImageUrl||p.variantImageUrl)||g.url===p.variantImageUrl);
  if(!keepGallery){p.originalImages=d.originalImages||[];if(p.originalImages.length)p.originalSourceEvidence={version:'verified-official-gallery-v1',selectedSku:p.sku,sourceUrl:d.sourceUrl,observedAt:d.observedAt};p.originalImageUrl=p.originalImages.find(g=>g.thumbnail===p.variantImageUrl)?.url||p.originalImages[0]?.url||null;}
  p.appearanceSource=descriptionFacts(p,s,t);p.sourceColour=s.Colour||s.Color||null;p.sourceMaterial=s.Material||s['Material Composition']||null;
  const info=productInformation(p,s);
