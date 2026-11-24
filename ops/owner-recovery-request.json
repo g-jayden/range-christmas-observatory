@@ -1,8 +1,8 @@
 {
-  "requestId": "owner-recovery-20261124-exact-row-originals-without-pdp",
+  "requestId": "owner-recovery-20261124-bq-membership-not-presentation-order",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T12:04:16.371769+00:00",
+  "requestedAt": "2026-11-24T12:15:59.207207+00:00",
   "targets": [
-    "range-native-current"
+    "bq"
   ]
 }
