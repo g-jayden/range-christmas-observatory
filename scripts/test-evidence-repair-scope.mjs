@@ -1,0 +1,10 @@
+import assert from'node:assert/strict';
+import{evidenceRepairScope}from'../server/evidence-repair-scope.mjs';
+const current={observedAt:'2026-11-24T11:23:23Z',products:[{sku:'101',priceGBP:19.99},{sku:'102',priceGBP:39.99}]},before=JSON.stringify(current);
+const narrowed=evidenceRepairScope({targetSkus:['102'],detailsOnly:true});
+assert.equal(narrowed.includes(current.products[0]),false);assert.equal(narrowed.includes(current.products[1]),true);assert.deepEqual(narrowed.photos([current])[0].products,[]);
+assert.equal(narrowed.photos([current])[0].observedAt,current.observedAt);assert.equal(JSON.stringify(current),before,'A repair plan must never remove real records, prices or source dates');
+assert.deepEqual(evidenceRepairScope({targetSkus:['102']}).photos([current])[0].products,[current.products[1]]);
+assert.deepEqual(evidenceRepairScope().photos([current])[0].products,current.products,'Existing full evidence repairs retain their scope');
+for(const targetSkus of[null,'102',[],['102','102'],['../102'],[102]])assert.throws(()=>evidenceRepairScope({targetSkus}),/exact evidence repair/);
+console.log('PASS: exact-SKU detail repair excludes unrelated products and image requests, preserves source facts and rejects malformed target lists.');
