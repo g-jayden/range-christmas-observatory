@@ -1,0 +1,15 @@
+import assert from'node:assert/strict';
+import{createHash}from'node:crypto';
+import{publicImage}from'../cloud/public-image.mjs';
+const bytes=Buffer.from('unaltered native photograph'),hash=createHash('sha256').update(bytes).digest('hex'),root='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/',source=root+'main/web/images/source/'+hash+'.jpg',request=(url,suffix='')=>new Request('https://owner.example.invalid/public/image?url='+encodeURIComponent(url)+suffix),saved=new Map(),pending=[];
+const cache={match:async key=>saved.get(key.url)?.clone(),put:async(key,r)=>{saved.set(key.url,r);}},waitUntil=p=>pending.push(p);let reads=0,release;
+const gate=new Promise(r=>release=r),fetcher=async()=>{reads++;await gate;return new Response(bytes,{headers:{'content-type':'image/jpeg'}});};
+const tasks=[publicImage(request(source,'&unused=1'),{cache,fetcher,waitUntil}),publicImage(request(root+'a'.repeat(40)+'/web/images/source/'+hash+'.jpg'),{cache,fetcher,waitUntil})];await new Promise(r=>setTimeout(r,0));assert.equal(reads,1,'Concurrent requests for the same exact native bytes share one transfer across commit and branch URLs');release();
+for(const r of await Promise.all(tasks)){assert.equal(r.status,200);assert.equal(r.headers.get('x-image-sha256'),hash);assert.match(r.headers.get('cache-control'),/31536000,immutable/);assert.deepEqual(Buffer.from(await r.arrayBuffer()),bytes);}
+await Promise.all(pending);const cached=await publicImage(request(source),{cache,fetcher:()=>{throw Error('No second upstream request');},waitUntil});assert.deepEqual(Buffer.from(await cached.arrayBuffer()),bytes);
+const bad=root+'main/web/images/source/'+'b'.repeat(64)+'.jpg',badCache=new Map(),options={cache:{match:async()=>null,put:async(k,v)=>badCache.set(k.url,v)},waitUntil,fetcher:async()=>new Response(bytes,{headers:{'content-type':'image/jpeg'}})};
+const mismatch=await publicImage(request(bad),options);assert.equal(mismatch.status,502);assert.equal(mismatch.headers.get('cache-control'),'no-store');assert.equal(badCache.size,0,'A response that does not match its declared native digest is never cached');
+const mutable=await publicImage(request('https://www.therange.co.uk/media/4/1/current.jpg'),{cache:null,fetcher:options.fetcher});assert.equal(mutable.headers.get('cache-control'),'public,max-age=3600');assert.equal(mutable.headers.get('x-image-sha256'),null);
+const denied=await publicImage(request('https://foreign.example.invalid/native.jpg'),options);assert.equal(denied.status,400);
+let failReads=0;const transient={cache:null,fetcher:async()=>{failReads++;if(failReads===1)throw Error('Transient upstream outage');return new Response(bytes,{headers:{'content-type':'image/jpeg'}});}};assert.equal((await publicImage(request(source),transient)).status,502);assert.equal((await publicImage(request(source),transient)).status,200);assert.equal(failReads,2,'A failed transfer cannot poison the next request');
+console.log('PASS: exact native bytes use SHA-verified immutable edge caching and one concurrent transfer; mutable URLs, failures and wrong digests retain safe handling.');
