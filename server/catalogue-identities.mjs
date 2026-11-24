@@ -24,7 +24,7 @@ async function savedGalleryHashes(products){
  for(const p of products)for(const g of p.originalImages||[]){
   let hash;if(productRetailer(p)==='bq'){try{hash=bq[bqImageKey(g.url)]?.sha256;}catch{}}
   else if(productRetailer(p)==='ar')hash=ar[g.url]?.hash;
-  else if(productRetailer(p)==='the-range')hash=rangeEntries[g.url]?.sha256;
+  else if(productRetailer(p)==='the-range'){const e=rangeEntries[g.url];if(e?.ok===true&&e.url===g.url)hash=e.hash||e.sha256;}
   if(/^[a-f0-9]{64}$/.test(hash||''))hashes[g.url]=hash;
  }
  return hashes;

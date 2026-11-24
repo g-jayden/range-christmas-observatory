@@ -1,4 +1,5 @@
 import assert from'node:assert/strict';import{catalogueIdentityIndex}from'../server/catalogue-identities.mjs';
+await import('./test-range-gallery-identity-index.mjs');
 const p={originalImages:[{url:'https://official.example.invalid/shared-full-product.jpg'}],retailerId:'du',sku:'100',inStock:true,variantName:'Green Christmas Tree with 100 Warm White LEDs',brand:'Brand',dimensions:{values:{Height:180,Width:90}},colorValues:['绿色'],specifications:{'Number of LEDs':'100'},previewImage:{sha256:'a'.repeat(64)},imageCacheEvidence:{sha256:'a'.repeat(64)}};
 let d=catalogueIdentityIndex([p,{...p,sku:'200'}]);assert.equal(Object.keys(d.canonical).length,1);
 d=catalogueIdentityIndex([p,{...p,sku:'200',specifications:{'Number of LEDs':'200'}}]);assert.equal(Object.keys(d.canonical).length,0,'Distinct LED counts remain distinct even with the same stock photo');
