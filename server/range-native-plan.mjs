@@ -2,6 +2,7 @@ import {validProductImage} from './details.mjs';
 import {nativeSourceUrl} from '../web/product-facts.mjs';
 import {exactNativeGalleryMember} from './native-gallery-identity.mjs';
 import{createHash}from'node:crypto';
+import {mergeNativeBindings,compactNativeEntries} from './native-bindings.mjs';
 export function rangeNativeTargets(products,{includeGallery=false}={}){const targets=new Map();for(const p of products){const spring=p.collectionId==='spring'&&p.springAudit?.disposition==='include'&&p.detailsReady===true&&p.detailEvidence?.verifiedProductSection===true&&String(p.detailEvidence.selectedSku)===String(p.sku);if(p.taxonomyAudit?.disposition!=='include'&&!spring||p.sourceImageConflict)continue;
  const selected=nativeSourceUrl(p),rejected=new Set([...(p.galleryRejections||[]),...(p.sourceFamilyReferenceImages||[])].map(g=>(g.url||g.sourceUrl||'').split('?')[0])),equivalent=p.identicalPhotoOriginalEvidence,urls=[selected,...(includeGallery?(p.originalImages||[]).map(g=>g.url):[])];
  for(const url of new Set(urls)){const gallery=p.originalImages?.find(g=>g.url===url&&exactNativeGalleryMember(p,g));if(!gallery||!validProductImage(url)||new URL(url).hostname!=='www.therange.co.uk'||rejected.has(url.split('?')[0])||equivalent?.comparison?.equivalent===true&&url===equivalent.rootUrl||targets.has(url))continue;
@@ -22,14 +23,14 @@ export function prioritiseRangeNativeArrivals(pending,products,newSkus){
 // into the working-copy index while this process still holds an older object.
 // Reuse only committed, exact-response proofs before saving the next batch.
 export function mergeCommittedRangeNativeEntries(current,checkpoint,targets,tracked){
- const merged={...current};
+ const merged=compactNativeEntries(current);
  for(const[url,e]of Object.entries(checkpoint||{})){
   if(!committedNativeMirror(e,tracked))continue;
   try{if(new URL(url).origin!=='https://www.therange.co.uk'||!validProductImage(url))continue;validateRangeNativeEntry(targets.get(url)||{variantImageUrl:url},e);}catch{continue;}
-  const prior=merged[url];if(!prior){merged[url]=e;continue;}
+  const prior=merged[url];if(!prior){merged[url]=compactNativeEntries({[url]:e})[url];continue;}
   try{validateRangeNativeEntry(targets.get(url)||{variantImageUrl:url},prior);}catch{merged[url]=e;continue;}
   if(prior.hash!==e.hash||prior.width!==e.width||prior.height!==e.height||Number.isFinite(prior.bytes)&&Number.isFinite(e.bytes)&&prior.bytes!==e.bytes)throw Error('Concurrent native image pixels changed; source review required: '+url);
-  const latest=Date.parse(e.observedAt||0)>Date.parse(prior.observedAt||0)?e:prior,bindings=[...new Set([...(prior.bindings||[]),...(e.bindings||[])])].sort(),selectedSkus=[...new Set([...(prior.selectedSkus||[]),...(e.selectedSkus||[])])].sort();
+  const latest=Date.parse(e.observedAt||0)>Date.parse(prior.observedAt||0)?e:prior,bindings=mergeNativeBindings(prior.bindings,e.bindings),selectedSkus=[...new Set([...(prior.selectedSkus||[]),...(e.selectedSkus||[])])].sort();
   merged[url]={...latest,...(Number.isFinite(prior.bytes??e.bytes)?{bytes:prior.bytes??e.bytes}:{}),...(bindings.length?{bindings}:{}),...(selectedSkus.length?{selectedSkus}:{})};
  }return merged;
 }
