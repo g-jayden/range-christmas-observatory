@@ -1,7 +1,8 @@
 import{createHash}from'node:crypto';
 export const arPreviewFingerprint=p=>createHash('sha256').update(JSON.stringify([String(p.sku),p.sourceUrl,p.variantName,p.department,p.detailEvidence?.descriptionHash,p.detailEvidence?.specificationHash,(p.originalImages||[]).map(g=>[g.url,String(g.selectedSku)]).sort((a,b)=>a[0].localeCompare(b[0]))])).digest('hex');
 export function savedArPreview(p,saved,index){
- if(!saved||saved.selectedSku!==String(p.sku)||saved.sourceFingerprint!==arPreviewFingerprint(p)||saved.objectType!==p.department||saved.accepted!==true||p.sourceImageConflict)return null;
+ const legacy=p.detailEvidence?.legacySpecificationHash,exact=saved?.sourceFingerprint===arPreviewFingerprint(p),sameCurrentSourceWithPriorParser=legacy&&saved?.sourceFingerprint===arPreviewFingerprint({...p,detailEvidence:{...p.detailEvidence,specificationHash:legacy}});
+ if(!saved||saved.selectedSku!==String(p.sku)||!exact&&!sameCurrentSourceWithPriorParser||saved.objectType!==p.department||saved.accepted!==true||p.sourceImageConflict)return null;
  const member=p.originalImages?.find(g=>g.url===saved.imageSourceUrl&&String(g.selectedSku)===String(p.sku)),image=index[saved.imageSourceUrl];if(!member||image?.hash!==saved.sha256||image.error||saved.nativeImageEvidence?.width!==image.sourceWidth||saved.nativeImageEvidence?.height!==image.sourceHeight||!saved.photoAgreement?.agrees||!saved.nativeImageEvidence||String(saved.nativeImageEvidence.selectedSku)!==String(p.sku)||saved.nativeImageEvidence.sourceUrl!==saved.imageSourceUrl||saved.nativeImageEvidence.sourcePreviewHash!==saved.sha256)return null;
  return saved;
 }
