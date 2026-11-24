@@ -1,7 +1,12 @@
 import{createHash}from'node:crypto';
-import{springReviewFingerprint}from'./spring-review-fingerprint.mjs';
+import{springReviewFingerprint,revalidateSpringReviews}from'./spring-review-fingerprint.mjs';
 const canonical=v=>Array.isArray(v)?v.map(canonical):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,canonical(v[k])])):v;
 const authorityHash=r=>createHash('sha256').update(JSON.stringify(canonical(r))).digest('hex');
+
+export function effectiveSpringReviews(snapshot,authored,bindings={}){
+ const bound=boundSpringReviews(snapshot,authored,bindings);
+ return {...bound,revalidation:revalidateSpringReviews(snapshot,bound.reviews)};
+}
 
 // Machine metadata never rewrites the human decision file. A binding applies
 // only to the exact authored record and unchanged current product facts.
