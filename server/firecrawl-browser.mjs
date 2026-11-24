@@ -58,7 +58,7 @@ export async function findExactSkuPages({products,concurrency=6}){
  const results=[];let cursor=0;
  await Promise.all(Array.from({length:Math.min(concurrency,products.length)},async()=>{while(cursor<products.length){
   const p=products[cursor++],checked=[];let found=null,exactSkuListed=false,lookupComplete=false;
-  const titleDoc=new DOMParser().parseFromString('<html><body>'+String(p.variantName||'').replaceAll('<','&lt;')+'</body></html>','text/html'),title=titleDoc.body.textContent.replace(/[\u0000-\u001f\u00a0]/g,' ').replace(/\s+/g,' ').trim().slice(0,100);
+  const titleDoc=new DOMParser().parseFromString('<html><body>'+String(p.variantName||'').replaceAll('<','&lt;')+'</body></html>','text/html'),title=(titleDoc.body?.textContent??String(p.variantName||"")).replace(/[\u0000-\u001f\u00a0]/g,' ').replace(/\s+/g,' ').trim().slice(0,100);
   const inspect=(rows,searchUrl)=>{for(const row of Array.isArray(rows)?rows:[]){if(String(row.sku)!==String(p.sku))continue;exactSkuListed=true;
    for(const raw of[row.variantPath,row.page_url,row.productUrl,row.url]){if(typeof raw!=='string'||/[\u0000-\u001f\u007f]|%(?:0[0-9a-f]|1[0-9a-f]|7f)/i.test(raw))continue;let target;try{target=new URL(raw,'https://www.therange.co.uk/');}catch{continue;}if(target.origin!=='https://www.therange.co.uk'||target.hash&&target.hash.replace(/^#/,'')!==String(p.sku)||target.pathname.startsWith('/search')||canonical(target.href)===canonical(p.sourceUrl))continue;target.hash=String(p.sku);target.pathname=target.pathname.replace(/\/+$/,'')+'/';return{sku:String(p.sku),sourceUrl:target.href,searchUrl,exactSkuListed:true,methodVersion};}
   }return null;};
