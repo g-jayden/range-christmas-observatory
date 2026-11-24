@@ -57,16 +57,16 @@ export async function findExactSkuPages({products,concurrency=6}){
  const canonical=raw=>{try{const u=new URL(raw,'https://www.therange.co.uk/');return u.origin+u.pathname.replace(/\/+$/,'');}catch{return null;}};
  const results=[];let cursor=0;
  await Promise.all(Array.from({length:Math.min(concurrency,products.length)},async()=>{while(cursor<products.length){
-  const p=products[cursor++],checked=[];let found=null,exactSkuListed=false;
+  const p=products[cursor++],checked=[];let found=null,exactSkuListed=false,lookupComplete=false;
   const titleDoc=new DOMParser().parseFromString('<html><body>'+String(p.variantName||'').replaceAll('<','&lt;')+'</body></html>','text/html'),title=titleDoc.body.textContent.replace(/[\u0000-\u001f\u00a0]/g,' ').replace(/\s+/g,' ').trim().slice(0,100);
   const inspect=(rows,searchUrl)=>{for(const row of Array.isArray(rows)?rows:[]){if(String(row.sku)!==String(p.sku))continue;exactSkuListed=true;
    for(const raw of[row.variantPath,row.page_url,row.productUrl,row.url]){if(typeof raw!=='string'||/[\u0000-\u001f\u007f]|%(?:0[0-9a-f]|1[0-9a-f]|7f)/i.test(raw))continue;let target;try{target=new URL(raw,'https://www.therange.co.uk/');}catch{continue;}if(target.origin!=='https://www.therange.co.uk'||target.hash&&target.hash.replace(/^#/,'')!==String(p.sku)||target.pathname.startsWith('/search')||canonical(target.href)===canonical(p.sourceUrl))continue;target.hash=String(p.sku);target.pathname=target.pathname.replace(/\/+$/,'')+'/';return{sku:String(p.sku),sourceUrl:target.href,searchUrl,exactSkuListed:true,methodVersion};}
   }return null;};
   for(const term of new Set([String(p.sku),title])){
    if(!term)continue;const api=new URL('https://search-lon.therange.co.uk/api/productlist');api.search=new URLSearchParams({searchTerm:term,offset:'0',limit:'120',sort:'relevance',filters:JSON.stringify({in_stock_f:['true']})});
-   try{const response=await fetch(api.href,{credentials:'include',signal:AbortSignal.timeout(10000)});const proof={url:api.href,status:response.status};checked.push(proof);if(response.ok){let data;try{data=JSON.parse(await response.text());}catch{}if(Array.isArray(data?.products)&&Number.isInteger(data.totalResults)){proof.totalResults=data.totalResults;found=inspect(data.products,api.href);if(found)break;}}}catch(e){checked.push({url:api.href,error:String(e.message).slice(0,100)});}
+   try{const response=await fetch(api.href,{credentials:'include',signal:AbortSignal.timeout(10000)});const proof={url:api.href,status:response.status};checked.push(proof);if(response.ok){let data;try{data=JSON.parse(await response.text());}catch{}if(Array.isArray(data?.products)&&Number.isInteger(data.totalResults)){proof.totalResults=data.totalResults;found=inspect(data.products,api.href);if(term===title&&data.totalResults<=data.products.length||exactSkuListed)lookupComplete=true;if(found)break;}}}catch(e){checked.push({url:api.href,error:String(e.message).slice(0,100)});}
   }
-  for(const term of found||exactSkuListed?[]:new Set([String(p.sku),title])){
+  for(const term of found||exactSkuListed||lookupComplete?[]:new Set([String(p.sku),title])){
    if(!term)continue;const searchUrl='https://www.therange.co.uk/search?q='+encodeURIComponent(term);
    try{
     const response=await fetch(searchUrl,{credentials:'include',signal:AbortSignal.timeout(10000)});checked.push({url:searchUrl,status:response.status});if(!response.ok)continue;
@@ -75,7 +75,7 @@ export async function findExactSkuPages({products,concurrency=6}){
     if(found)break;
    }catch(e){checked.push({url:searchUrl,error:String(e.message).slice(0,100)});}
   }
-  results.push(found||{sku:String(p.sku),noExactSkuMatch:!exactSkuListed,exactSkuListed,methodVersion,checked});
+  results.push(found||{sku:String(p.sku),noExactSkuMatch:!exactSkuListed,exactSkuListed,lookupComplete,methodVersion,checked});
  }}));return results;
 }
 
@@ -300,7 +300,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  const reader=async url=>parseSource(await raw(url));reader.raw=raw;if(policy.catalogueTransport==='enhanced-batch'){reader.many=urls=>Promise.all(urls.map(reader));reader.fresh=url=>catalogueBatch.fresh(sourceUrl(url));}
  reader.batchDocuments=async(fn,payload)=>scriptAction('('+fn.toString()+')('+JSON.stringify(payload)+')');
  reader.discoverImageGalleries=products=>scriptAction('(async()=>{const lookup='+findExactSkuPages.toString()+';return ('+readRangeImageGalleries.toString()+')({...'+JSON.stringify({products:products.map(p=>({sku:p.sku,variantId:p.variantId,variantName:p.variantName,sourceUrl:p.sourceUrl,variantImageUrl:p.variantImageUrl||p.imageUrl})),concurrency:6,timeoutMs:5000})+',lookup})})()');
- reader.resolveProductPages=async products=>{const offered=products.map(p=>({sku:p.sku,variantName:p.variantName,sourceUrl:p.sourceUrl})),freeRows=freeSource?.resolveProductPages?await freeSource.resolveProductPages(offered,findExactSkuPages):[],found=freeRows.filter(r=>r.sourceUrl),known=new Set(found.map(r=>String(r.sku))),missing=offered.filter(p=>!known.has(String(p.sku)));return[...found,...(missing.length?await scriptAction('('+findExactSkuPages.toString()+')('+JSON.stringify({products:missing})+')'):[])];};
+ reader.resolveProductPages=async products=>{const offered=products.map(p=>({sku:p.sku,variantName:p.variantName,sourceUrl:p.sourceUrl})),freeRows=freeSource?.resolveProductPages?await freeSource.resolveProductPages(offered,findExactSkuPages):[],found=freeRows.filter(r=>r.sourceUrl||r.lookupComplete===true),known=new Set(found.map(r=>String(r.sku))),missing=offered.filter(p=>!known.has(String(p.sku)));return[...found,...(missing.length?await scriptAction('('+findExactSkuPages.toString()+')('+JSON.stringify({products:missing})+')'):[])];};
  reader.readSelectedDetails=async p=>{
   const script='(async()=>{const sku='+JSON.stringify(String(p.sku))+';let variants=typeof g_variantArr!=="undefined"?g_variantArr:[];const selected=variants.find(v=>String(v.sku)===sku);if(selected&&typeof selectAttrFilterByVariant==="function")selectAttrFilterByVariant(selected);const end=Date.now()+7000;while(Date.now()<end&&(document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"").replace(/^0+(?=\\d)/,"")!==sku)await new Promise(r=>setTimeout(r,200));const visible=(document.querySelector("#product-dyn-code")?.textContent||"").trim().replace(/^[PM]/i,"").replace(/^0+(?=\\d)/,"");if(visible!==sku)throw Error("Rendered page selected another SKU");const text=selector=>Array.from(document.querySelectorAll(selector)).map(e=>e.textContent.trim().replace(/\\s+/g," "));const features=text("#product-dyn-features-ul li"),specs=text("#product-dyn-specification-ul li");if(!features.length&&!specs.length)throw Error("Rendered product has no source specification section");const markdown="## Features\\n"+features.map(x=>"- "+x).join("\\n")+"\\n## Information\\n"+(document.querySelector("#product-description")?.textContent||"")+"\\n## Specification\\n"+specs.map(x=>"- "+x).join("\\n")+"\\nAdditional Information";return [{success:true,data:{rawHtml:document.documentElement.outerHTML,markdown,metadata:{statusCode:200,renderedProductSection:true,sourceURL:location.href}}}]})()';
   const rows=await scriptAction(script,{entryUrl:sourceUrl(p.sourceUrl)});if(rows.length!==1||!rows[0].data?.rawHtml)throw Error('Rendered exact-SKU details were unavailable');return rows[0];
