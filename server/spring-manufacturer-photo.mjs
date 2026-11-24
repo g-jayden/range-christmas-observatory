@@ -1,6 +1,7 @@
 import fs from'node:fs/promises';
 import{createHash}from'node:crypto';
 import{detailFingerprint}from'./collection-policy.mjs';
+import{springReviewFingerprint}from'./spring-review-fingerprint.mjs';
 import{materializeCommittedImage}from'./committed-image-file.mjs';
 import{compareSpringPhotoPair}from'./spring-paired-photo-review.mjs';
 
@@ -13,7 +14,7 @@ export function validSpringManufacturerPhoto(p,g,snapshot){
  const proof=g.listingEvidence?.nativeEquivalence,ref=proof?.reference,product=ref?.product;
  if(g.listingEvidence?.method!==MANUFACTURER_PHOTO_METHOD||!snapshot.source?.complete||snapshot.source.expected!==snapshot.products?.length||!proof||!ref||!product||!exactComparison(proof.comparison))return false;
  const sourcePath='https://www.leafplants.co.uk/products/'+product.handle;
- return Boolean(p.retailerId==='the-range'&&p.collectionId==='spring'&&p.recordType==='sku'&&p.detailsReady&&p.detailEvidence?.verifiedProductSection&&String(p.detailEvidence.selectedSku)===String(p.sku)&&String(p.detailEvidence.exactVariantSource?.variantId)===String(p.variantId)&&proof.sku===String(p.sku)&&proof.variantId===String(p.variantId)&&String(g.selectedSku)===String(p.sku)&&String(g.variantId)===String(p.variantId)&&snapshot.products.filter(r=>String(r.sku)===String(p.sku)).length===1&&proof.rootImageUrl===p.listingVariantImageUrl&&proof.rootInputFingerprint===detailFingerprint(p)&&proof.sourceContentHash===p.detailEvidence.sourceContentHash&&/^[a-f0-9]{64}$/.test(proof.rootImageHash||'')&&/^[a-f0-9]{64}$/.test(proof.nativeImageHash||'')&&proof.nativeImageUrl===g.url&&g.thumbnail===proof.rootImageUrl&&nativeUrl(g.url)&&/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(product.handle||'')&&ref.sourceUrl===sourcePath&&ref.sourceHash===manufacturerPhotoSourceHash(product)&&product.images?.some(i=>i.src===g.url&&i.width===proof.comparison.originalWidth&&i.height===proof.comparison.originalHeight));
+ return Boolean(p.retailerId==='the-range'&&p.collectionId==='spring'&&p.recordType==='sku'&&p.detailsReady&&p.detailEvidence?.verifiedProductSection&&String(p.detailEvidence.selectedSku)===String(p.sku)&&String(p.detailEvidence.exactVariantSource?.variantId)===String(p.variantId)&&proof.sku===String(p.sku)&&proof.variantId===String(p.variantId)&&String(g.selectedSku)===String(p.sku)&&String(g.variantId)===String(p.variantId)&&snapshot.products.filter(r=>String(r.sku)===String(p.sku)).length===1&&proof.rootImageUrl===p.listingVariantImageUrl&&proof.rootInputFingerprint===detailFingerprint(p)&&(proof.sourceFactsFingerprint?proof.sourceFactsFingerprint===springReviewFingerprint(p):proof.sourceContentHash===p.detailEvidence.sourceContentHash)&&/^[a-f0-9]{64}$/.test(proof.rootImageHash||'')&&/^[a-f0-9]{64}$/.test(proof.nativeImageHash||'')&&proof.nativeImageUrl===g.url&&g.thumbnail===proof.rootImageUrl&&nativeUrl(g.url)&&/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(product.handle||'')&&ref.sourceUrl===sourcePath&&ref.sourceHash===manufacturerPhotoSourceHash(product)&&product.images?.some(i=>i.src===g.url&&i.width===proof.comparison.originalWidth&&i.height===proof.comparison.originalHeight));
 }
 
 // The root SKU supplies the photograph identity. A manufacturer's image is

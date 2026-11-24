@@ -83,7 +83,8 @@
         "originalWidth": 2000,
         "originalHeight": 2000,
         "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
-      }
+      },
+      "sourceFactsFingerprint": "cfd88f9b70f65cd38676f53a44597caa062a93c922558eb43c7d27cf9da50aad"
     },
     {
       "sku": "1438932",
@@ -163,7 +164,8 @@
         "originalWidth": 1920,
         "originalHeight": 1920,
         "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
-      }
+      },
+      "sourceFactsFingerprint": "ade2967d2979881dd91f620f8d28eeab6e4810f10ace1e847f8190a5c75848e9"
     },
     {
       "sku": "1438843",
@@ -317,7 +319,8 @@
         "originalWidth": 1920,
         "originalHeight": 1920,
         "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
-      }
+      },
+      "sourceFactsFingerprint": "03ab2bfde0fe924e3788364bdd1e44665b9e0d383a862697b14a34e57e1b9c45"
     },
     {
       "sku": "1438904",
@@ -397,7 +400,8 @@
         "originalWidth": 1920,
         "originalHeight": 1920,
         "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
-      }
+      },
+      "sourceFactsFingerprint": "ca1dea7234319f41728fe25e56a1c4d4e92172bf2433ba21cfe96c0689605c06"
     },
     {
       "sku": "1438857",
@@ -471,7 +475,8 @@
         "originalWidth": 2048,
         "originalHeight": 2048,
         "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
-      }
+      },
+      "sourceFactsFingerprint": "0e1e813a4caabc76851bf4013a7b63287cb94ab75e64de3ec2f90600819776e7"
     },
     {
       "sku": "1438468",
@@ -567,7 +572,8 @@
         "originalWidth": 1920,
         "originalHeight": 1920,
         "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
-      }
+      },
+      "sourceFactsFingerprint": "27abb1139e32d2df81b47e41a94f0b601bdceb8971003c0889a144119ac0853e"
     },
     {
       "sku": "1438480",
@@ -695,7 +701,8 @@
         "originalWidth": 1920,
         "originalHeight": 1920,
         "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
-      }
+      },
+      "sourceFactsFingerprint": "6a6c5f15e11912130043ed7f28592a357de237bfb14e4dbf74abbf9eba40b9a2"
     },
     {
       "sku": "1438749",
@@ -901,7 +908,8 @@
         "originalWidth": 2048,
         "originalHeight": 2048,
         "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
-      }
+      },
+      "sourceFactsFingerprint": "ea80c3c72a580fac8c8c950c91661c7682700fcd911841d9ca54395493518cbc"
     },
     {
       "sku": "1438781",
@@ -1053,7 +1061,8 @@
         "originalWidth": 2048,
         "originalHeight": 2048,
         "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
-      }
+      },
+      "sourceFactsFingerprint": "d645b2937c6e5058cf3a6b6db34c2d0d9768c522179c76270bfd742609f3ce14"
     },
     {
       "sku": "1438841",
@@ -1259,7 +1268,8 @@
         "originalWidth": 2048,
         "originalHeight": 2048,
         "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
-      }
+      },
+      "sourceFactsFingerprint": "4d06bcd349e9d034217893ef01b8344fb97588a80d0a722febcfd1500d6c7536"
     },
     {
       "sku": "1438856",
@@ -1357,7 +1367,8 @@
         "originalWidth": 1920,
         "originalHeight": 1920,
         "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1"
-      }
+      },
+      "sourceFactsFingerprint": "e14467362ad234ba6134ee66ab10bb7400f5ecaecceee7dac940e3c50997e17d"
     }
   ]
 }
