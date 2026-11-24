@@ -1,7 +1,8 @@
+import{hasCommittedRetailerSource}from'./retailer-published.mjs';
 export async function dispatchDuDue({storage,env,now=Date.now(),fetcher=fetch}){
  const base={firecrawlCredits:0,sourceRequestsMade:false,mailSent:false};if(!env.GITHUB_DISPATCH_TOKEN||!await storage.get('baseline/du-christmas-v1'))return {...base,enabled:false};
  const shifted=new Date(now+28800000),day=shifted.toISOString().slice(0,10);if(shifted.getUTCHours()<6)return {...base,enabled:true,due:false};
- const status=await storage.get('du-monitor');if(Date.parse(status?.observedAt)>=Date.parse(day+'T06:00:00+08:00'))return {...base,enabled:true,due:false};
+ const status=await storage.get('du-monitor');if(hasCommittedRetailerSource(status)&&Date.parse(status.observedAt)>=Date.parse(day+'T06:00:00+08:00'))return {...base,enabled:true,due:false};
  let claim;await storage.transaction(async db=>{const p=await db.get('du-clock');if(p?.day===day&&(p.attempts>=3||p.pendingUntil>now||now-Date.parse(p.lastAttemptAt)<15*60000))return;claim={day,attempts:p?.day===day?p.attempts+1:1,lastAttemptAt:new Date(now).toISOString(),pendingUntil:now+120000};await db.put('du-clock',claim);});
  if(!claim)return {...base,enabled:true,due:true,bounded:true};let statusCode=0;
  try{const r=await fetcher('https://api.github.com/repos/g-jayden/range-christmas-observatory/actions/workflows/du.yml/dispatches',{method:'POST',headers:{authorization:'Bearer '+env.GITHUB_DISPATCH_TOKEN,accept:'application/vnd.github+json','content-type':'application/json','user-agent':'range-christmas-scheduler','x-github-api-version':'2022-11-28'},body:JSON.stringify({ref:'main',inputs:{mode:'daily'}}),signal:AbortSignal.timeout(20000)});statusCode=r.status;}catch{}
