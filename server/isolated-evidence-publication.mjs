@@ -15,7 +15,7 @@ export async function isolateEvidencePublication({root=process.cwd(),env=process
   capture(root,['worktree','add','--no-checkout','--detach',directory,publicationBase]);
   // Git checkout already enables worktree-local configuration for sparse jobs.
   // Sparse settings in this detached publisher cannot alter the live collector.
-  const sparse=env.EVIDENCE_NATIVE_ONLY==='1'?'/server/\n/scripts/\n/web/collection-ledger.json\n/web/preview-quality-cache.json.gz\n/web/paid-native-index.json\n':'/*\n!/web/images/\n!/web/reports/\n!/web/mail-assets/\n';
+  const sparse=env.EVIDENCE_NATIVE_ONLY==='1'?'/server/\n/scripts/\n/web/collection-ledger.json\n/web/preview-quality-cache.json.gz\n/web/paid-native-index.json\n':'/*\n!/web/images/\n!/web/reports/\n!/web/mail-assets/\n!/web/bq/paid-source-checkpoints/\n!/web/bq/source-billing-history/\n';
   execFileSync('git',['sparse-checkout','set','--no-cone','--stdin'],{cwd:directory,input:sparse,stdio:['pipe','pipe','pipe']});
   // --no-checkout leaves the new worktree index unpopulated. Initialise only
   // this disposable publisher, with the collector's exact committed evidence.
