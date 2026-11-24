@@ -1,5 +1,6 @@
 import {detailFingerprint} from './collection-policy.mjs';
 import {springSourceDecision} from '../web/spring-model.mjs';
+import {productInformation} from './details.mjs';
 // Targeted source repairs can finish while a photo review is running. Apply
 // only exact-SKU detail fields, never an older copy of prices, NEW history,
 // stock or already-downloaded native files from that independent repair job.
@@ -16,6 +17,7 @@ export function applySavedSpringSourcePatches(snapshot,patch){
    report.rejected.push({sku:String(record.sku),reason:'source-repair-identity-or-proof-changed'});continue;
   }
   for(const field of fields)if(Object.hasOwn(record,field))p[field]=structuredClone(record[field]);
+  const info=productInformation(p,p.specifications||{});p.productSummary=info.summary;p.detailEvidence.text=info.text;
   if(!p.originalImageEvidence&&record.originalImageUrl)p.originalImageUrl=record.originalImageUrl;
   p.detailInputFingerprint=detailFingerprint(p);p.springCandidate=springSourceDecision(p);delete p.detailIssue;delete p.detailError;report.applied++;
  }
