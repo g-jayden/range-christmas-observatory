@@ -1,6 +1,8 @@
+import{retailerSourceBusy}from'./retailer-clock-source.mjs';
 import{hasCommittedRetailerSource}from'./retailer-published.mjs';
-export async function dispatchMsDue({storage,env,now=Date.now(),fetcher=fetch}){
+export async function dispatchMsDue({storage,env,now=Date.now(),fetcher=fetch,productionQueue}){
  const base={firecrawlCredits:0,sourceRequestsMade:false,mailSent:false};if(!env.GITHUB_DISPATCH_TOKEN||!await storage.get('baseline/ms-christmas-v1'))return {...base,enabled:false};
+ if(retailerSourceBusy(productionQueue,'ms'))return {...base,enabled:true,waiting:true,sameRetailerBusy:true};
  const shifted=new Date(now+28800000),day=shifted.toISOString().slice(0,10);if(shifted.getUTCHours()<6)return {...base,enabled:true,due:false};
  const status=await storage.get('ms-monitor');if(hasCommittedRetailerSource(status)&&Date.parse(status.observedAt)>=Date.parse(day+'T06:00:00+08:00'))return {...base,enabled:true,due:false};
  let claim;await storage.transaction(async db=>{const p=await db.get('ms-clock');if(p?.day===day&&(p.attempts>=3||p.pendingUntil>now||now-Date.parse(p.lastAttemptAt)<15*60000))return;claim={day,attempts:p?.day===day?p.attempts+1:1,lastAttemptAt:new Date(now).toISOString(),pendingUntil:now+120000};await db.put('ms-clock',claim);});
