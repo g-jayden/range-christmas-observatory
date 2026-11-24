@@ -61,5 +61,7 @@ const{deriveCatalogueIdentities}=await import('../server/catalogue-identities.mj
 // ASDA productSetProduct marks a set member; numeric members remain individual SKUs.
 try{const p='public/asda/catalogue.json',d=JSON.parse(await fs.readFile(p,'utf8'));for(const item of d.products)item.recordType=item.sku.startsWith('SET')?'product-set':item.sku.startsWith('GEM')?'product-family':'sku';await fs.writeFile(p,JSON.stringify(d));}catch(e){if(e.code!=='ENOENT')throw e;}
 const {buildBrowseCatalogues}=await import('./build-browse-catalogues.mjs');console.log(JSON.stringify({phase:'immutable-department-browsing-views',...await buildBrowseCatalogues('public')}));
-await fs.writeFile('public/.nojekyll','');console.log('Static cloud website built.');
+await fs.writeFile('public/.nojekyll','');
+const {packStaticJson}=await import('./pack-static-json.mjs');console.log(JSON.stringify({phase:'lossless-static-site-size-budget',...await packStaticJson('public')}));
+console.log('Static cloud website built.');
 

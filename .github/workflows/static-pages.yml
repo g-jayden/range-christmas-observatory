@@ -66,6 +66,8 @@ jobs:
           restore-keys: bq-source-checkpoints-
       - name: Verify committed catalogue and publication logic without source requests
         run: npm test
+      - name: Verify lossless large-catalogue transport and unchanged native files
+        run: node scripts/test-static-json-transport.mjs
       - name: Restore this commit's catalogue after isolated tests
         run: node scripts/restore-committed-build-inputs.mjs
       - uses: actions/configure-pages@v6.0.0
