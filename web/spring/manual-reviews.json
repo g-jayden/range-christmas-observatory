@@ -7085,18 +7085,18 @@
       "imageHash": "cf3246e6865511e8cbd79c1e553ae5c3ebd52c7b21fd04188f1227e67e80427f",
       "sourceContentHash": "09d584ad7fc1d12c567e5a9fb1d24beebc645c0b73892cf6987de90879b11033",
       "listingFingerprint": "0bd4c411792ef4601c8d59f367c4c9003f9e0544a6ab102ac1040d8ff049b221",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/9/1784714218_9260.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.622Z",
-      "reviewArtifact": "renewed-source-human-sheet-07-20261124",
-      "disposition": "review",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/4/1784714219_4480.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "disposition": "include",
       "department": "spring-stems",
       "colours": [
         "绿色",
         "白色"
       ],
       "selectedNativeSourceUrl": "https://www.therange.co.uk/media/9/4/1784714219_4480.jpg",
-      "wholeProductFrame": false,
-      "reason": "Current exact source dimensions or named colour do not agree with the title, description, assembled product form or native photograph. Keep the genuine SKU pending authoritative reconciliation; do not invent measurements or substitute another variant.",
+      "wholeProductFrame": true,
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole budding hydrangea spray, with green foliage and pale unopened buds. Raw Colour Blue is preserved, but is not used to paint the actual green leaves blue.",
       "sourceFactsFingerprint": "9cbb03861478ac8eade3e6200a8d42f7dcb8073cca7606e49373b884c61a1caa"
     },
     "1419011": {
@@ -10737,15 +10737,22 @@
       "sourceFactsFingerprint": "dd46ddf0ccefaae69b8efd4c7fd22906071b3ee77e1cf32369f07f610a002d2f"
     },
     "1448441": {
-      "imageHash": "937dc215587b841a6304746661873b2ce41d5be572fa23a0d6a9c50f040add7b",
+      "imageHash": "61d628520d2e02b158b8216f9bf999b75752b6998d8015075ffbde6d51fbd4ad",
       "sourceContentHash": "4bf1dd58b4afb29f9b0dcdd9594897e039f2db8d744d359b6402ed75359e5140",
       "listingFingerprint": "7f6c925e259f1e4c34e53f02f0abc916c831980f4c17f6d05157b6c9e8bf1bb4",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/5/1786364171_6127.jpg",
-      "reviewedAt": "2026-11-24T03:41:39.436Z",
-      "reviewArtifact": "new-native-sheet-1-through-4-exact-SKU-20261124",
-      "disposition": "review",
-      "reason": "Exact title/features and the viewed native image disagree about botanical species, offered form, colour or quantity. Resolve exact source-to-photo identity rather than classifying a different-looking plant.",
-      "sourceFactsFingerprint": "5ece709ad8a58b5702e93ef43d1aff76a167672bd507115021a750ab64f204cd"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/9/1786359828_7884.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "disposition": "include",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole single pink-budding foliage stem. Exact offer contains six 55cm stems; mixed flower vases are styling references.",
+      "sourceFactsFingerprint": "5ece709ad8a58b5702e93ef43d1aff76a167672bd507115021a750ab64f204cd",
+      "department": "spring-stems",
+      "colours": [
+        "粉色",
+        "绿色"
+      ],
+      "wholeProductFrame": true,
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/0/9/1786359828_7884.jpg"
     },
     "1448442": {
       "disposition": "include",
@@ -11387,40 +11394,21 @@
       "sourceFactsFingerprint": "8e279cd5b8eccb69e16596d548671b08a6736bb209b31f779f915bf429799aa7"
     },
     "1448508": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "ac59abf9299479262d2cda74e0b326313689f7e03304ae178461eb7fa7b93eaa",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole trailing ficus with exposed insertion stem. Previous decorative pot is a styling accessory, not supplied.",
+      "imageHash": "b230709d0004365b029410f6266182abeb54bf66bf834dc54c82052b2c17eeb6",
       "sourceContentHash": "5eac98bd29b59e60ddd822180c35bd4c333f7f2179af54175a2e0dd393c55cb2",
       "listingFingerprint": "df6e142e845af2667e8b1af167b2e3e6c4fdc45e249053124b142b498417ae90",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/4/1777564706_4680.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.623Z",
-      "reviewArtifact": "renewed-source-human-sheet-09-20261124",
-      "wholeProductFrame": false,
-      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/2/8/1777564706_5527.jpg",
-      "nativeEquivalence": {
-        "equivalent": true,
-        "rms": 3.265014396663002,
-        "meanAbsolute": 1.9301350911458333,
-        "outlierRatio": 0.00537109375,
-        "foregroundRms": 3.2675469148983973,
-        "maxBlockRms": 7.460660716942792,
-        "thumbnailWidth": 300,
-        "thumbnailHeight": 300,
-        "originalWidth": 1500,
-        "originalHeight": 1500,
-        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1",
-        "sku": "1448508",
-        "variantId": "10278139",
-        "thumbnailUrl": "https://www.therange.co.uk/media/2/4/1777564706_4680.jpg",
-        "reviewedThumbnailHash": "cd2ae5fcbd5ca838535992a456feb899c4c4555e5dad92a1c032118e4c6a92d2",
-        "originalUrl": "https://www.therange.co.uk/media/2/8/1777564706_5527.jpg",
-        "originalHash": "ac59abf9299479262d2cda74e0b326313689f7e03304ae178461eb7fa7b93eaa",
-        "sourceContentHash": "4b678336497041bcaf5d43131865e6a49713298878c01b62e8213978c64d74b3",
-        "humanReviewArtifact": "extra-human-sheet-03",
-        "verifiedAt": "2026-11-24T04:02:12.673Z"
-      },
-      "sourceFactsFingerprint": "379cebcca4e096f0e647d5f96312c9ca4c4eb9a61b82a191915b2f706445607c"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/7/1793314242_6931.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/6/7/1793314242_6931.jpg",
+      "sourceFactsFingerprint": "379cebcca4e096f0e647d5f96312c9ca4c4eb9a61b82a191915b2f706445607c",
+      "colours": [
+        "绿色"
+      ]
     },
     "1448509": {
       "disposition": "include",
@@ -11584,21 +11572,21 @@
       "sourceFactsFingerprint": "ebfa7ff6a73073e7f882b071546fed79ba5d9611ecb7df4ab8e3aa220ae40b69"
     },
     "1448522": {
-      "imageHash": "3ba29a7fa283392ad984a729ae5eaecd472bc307782271ebb12d1775a1d07774",
+      "imageHash": "b6b8317fef65865ee520f3fb4132591c56740e3e155943882ae6175ac51f7f7b",
       "sourceContentHash": "476931f8d1aea61e90aae42cc4b49c2797a86bc6cffb7f8318895bb0012b3320",
       "listingFingerprint": "559ba59c4e55ea625a51df0f54864e2dd3e153287f605bd99d0c667c285f70d9",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/7/1793700192_9455.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.623Z",
-      "reviewArtifact": "renewed-source-human-sheet-09-20261124",
-      "disposition": "review",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/5/1786356719_3455.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "disposition": "include",
       "department": "spring-stems",
       "colours": [
         "白色",
         "绿色"
       ],
-      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/6/6/1793700192_5940.jpg",
-      "wholeProductFrame": false,
-      "reason": "Viewed the exact native full botanical, checked the exact SKU title/features/description and source specifications, and distinguished the supplied stem/bunch, planter and whole tree. Fresh flower and green-foliage colours are taken from the actual body. Natural brown woody stems do not turn pink/white spring blossoms into autumn foliage; generic conflicting shared-family Colour fields are preserved in the source record.",
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/4/5/1786356719_3455.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Six whole 65cm white gypsophilia stems with exposed ends, replacing a vase crop; no vase supplied.",
       "sourceFactsFingerprint": "eb4728df9c90935f42f1df7baf55e0dca835d20e5a96f9ea6c15de127825ee17"
     },
     "1448523": {
@@ -13776,15 +13764,22 @@
       "sourceFactsFingerprint": "cbd3fbf71425578daa62eb0902f121fa9b073677a6dc24bd8a2067f796ccf574"
     },
     "1448721": {
-      "imageHash": "937dc215587b841a6304746661873b2ce41d5be572fa23a0d6a9c50f040add7b",
+      "imageHash": "e953f1fa50522f004eb32a8a63c2a51dc094c65fffc18372b884868b53c3e493",
       "sourceContentHash": "8ac74a28c226b1443da988649e8a07da9526dec23be0729ca7a62c4438e2f98a",
       "listingFingerprint": "5e6d523151d06c688678a4e4771892e6af9372eb61acf5c2424937018718431a",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/9/1786359805_3104.jpg",
-      "reviewedAt": "2026-11-24T03:41:39.437Z",
-      "reviewArtifact": "new-native-sheet-1-through-4-exact-SKU-20261124",
-      "disposition": "review",
-      "reason": "Exact title/features and the viewed native image disagree about botanical species, offered form, colour or quantity. Resolve exact source-to-photo identity rather than classifying a different-looking plant.",
-      "sourceFactsFingerprint": "742ba6d6ec059d04aeab4257c11e4f847aefd2ca77ba347fe9b03548b0ca96cc"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/6/1786359529_2182.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "disposition": "include",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Six complete yellow blossom stems, with insertion ends visible. Exact title/features state six 100cm stems per offered bundle.",
+      "sourceFactsFingerprint": "742ba6d6ec059d04aeab4257c11e4f847aefd2ca77ba347fe9b03548b0ca96cc",
+      "department": "spring-stems",
+      "colours": [
+        "黄色",
+        "绿色"
+      ],
+      "wholeProductFrame": true,
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/8/6/1786359529_2182.jpg"
     },
     "1448722": {
       "disposition": "include",
@@ -21410,17 +21405,22 @@
       "sourceFactsFingerprint": "8791373720945d9315db837a43d9b6a130011cd0a1e0bdc64e80016810e7b0bf"
     },
     "1673140": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "52d180862a6fffbaeb77cfa55f89f40be5e22484f9bc9a1226e5eab815644a21",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole 30cm red-flowered bush with exposed bare stem; styled glass vessel is not supplied.",
+      "imageHash": "b6d0b32bc79a86b97420800bc7b706807b84c29ed92bce5335aa26dbece57c8c",
       "sourceContentHash": "1d77ce340b5facb79acd0cefaea22163a8cc8fef771813bb4de502b383067488",
       "listingFingerprint": "1eecdb43e92e985afe08924a6a997f69ed8c1d966e78498870064ba07128111e",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/6/1793709185_7098.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.624Z",
-      "reviewArtifact": "renewed-source-human-sheet-14-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "a1f91c6378589c03241da4391880a8ceddfbfbdb80ab18a613bba1ff9290a748"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/5/1793709185_7868.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "a1f91c6378589c03241da4391880a8ceddfbfbdb80ab18a613bba1ff9290a748",
+      "colours": [
+        "红色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/3/5/1793709185_7868.jpg"
     },
     "1673160": {
       "disposition": "include",
@@ -21453,17 +21453,21 @@
       ]
     },
     "1673193": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "219c02540095f2e8ee90f0986d10ac6e82467eb382c2522e1556d85750c20c93",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Six whole trailing plants with insertion stems visible, confirming the source count and bare-stem form.",
+      "imageHash": "39d5e0d2e57305b0768d1a886e8bfba471c18a767687a8de2ae92f7c51a364e3",
       "sourceContentHash": "6ae43f18664aa8a71ad7bbba903ce3fd554733e49cef0e5bb8f4e4eca8e8acc2",
       "listingFingerprint": "0fc3f749deb506838f349fcaeedfbdf3792c3468fd7d7f6c64aa87cf87d9a39b",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/5/1793724966_2847.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.624Z",
-      "reviewArtifact": "renewed-source-human-sheet-12-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "db3d90cf5f7e2595c3c83858c71cee2d24cd35660f23946d6665ff1a345ce027"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/5/1793724966_2958.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "db3d90cf5f7e2595c3c83858c71cee2d24cd35660f23946d6665ff1a345ce027",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/5/1793724966_2958.jpg"
     },
     "1673207": {
       "disposition": "include",
@@ -21725,21 +21729,22 @@
       "selectedNativeSourceUrl": "https://www.therange.co.uk/media/0/0/1793737685_7260.jpg"
     },
     "1673970": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-wreath-garland",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-wreath-garland description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "2e742496e9ba88a14a223c7c3573b2c358e6a134a6792b21d881232e4c1e6858",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole continuous white spring floral garland with both ends visible, replacing partial stairway scene.",
+      "imageHash": "60fb898f4347685b2e7ebf923db7dba3f08004976d66ee3fab90705addeb1a6b",
       "sourceContentHash": "0a4a98cd6dd1fa4e840891fad579982bcd06a01c9f54bd2044d9cf703beb6883",
       "listingFingerprint": "faf4b8cd4ffb3bf6b02b9937e75dea2707f6e4953ac9dd6fb45e003fdf3a95d0",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/9/1793737924_4140.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.624Z",
-      "reviewArtifact": "renewed-source-human-sheet-13-20261124",
-      "wholeProductFrame": false,
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/7/1793737926_9936.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
       "colours": [
         "白色",
         "绿色"
       ],
-      "sourceFactsFingerprint": "e21fc5913554004d62d65b6766bd508d65dd053aceebacbe1ad0712fbca8f1e9"
+      "sourceFactsFingerprint": "e21fc5913554004d62d65b6766bd508d65dd053aceebacbe1ad0712fbca8f1e9",
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/7/1793737926_9936.jpg"
     },
     "1673993": {
       "disposition": "include",
@@ -21781,17 +21786,22 @@
       "selectedNativeSourceUrl": "https://www.therange.co.uk/media/3/4/1793743813_6076.jpg"
     },
     "1675034": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-potted",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-potted description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "95d6b4cfb11986b4ddadc80b5f74cd09b3b42979768f38860f646bd555519bc2",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole hanging Tradescantia with supplied grey pot and jute hanger. Native close-up confirms green and silver-striped foliage.",
+      "imageHash": "2a0dc1f5482a9d3b95765e54de24901a33b936bbf06965ad1987dc4aba000c7e",
       "sourceContentHash": "436cdc61bd06e0a02fa348c1d5eff8bfcce9a7fb00c2bab5367b463dda676e19",
       "listingFingerprint": "ee9b633d90d8b44f7beddcec63336f61aa4ef14049b87bad00b1bbc042c221fb",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/0/1793744005_5311.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.624Z",
-      "reviewArtifact": "renewed-source-human-sheet-14-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "09b5f4b328e61b59590cf48ce9356248904b0a522b523f8d29bcaa710f49781b"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/0/1793839575_2902.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "09b5f4b328e61b59590cf48ce9356248904b0a522b523f8d29bcaa710f49781b",
+      "colours": [
+        "绿色",
+        "白色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/2/0/1793839575_2902.jpg"
     },
     "1675278": {
       "disposition": "include",
@@ -21972,17 +21982,23 @@
       "sourceFactsFingerprint": "300c9115e69ba712d5cc1ec11018c851aa30adae7556206a9d9c2270555019bd"
     },
     "1678527": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "5c0e2e65ad1a147b2c88f6654e311a5bbdc507a1ad462f0741d297657f96b124",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole coral spider lily single stem; bright coral/orange flowers and green leaves, not dried autumn foliage.",
+      "imageHash": "8fd5cf408efa7c00c9f66442d39d2cb0ad52362c30192b207d739cf2bec3e60d",
       "sourceContentHash": "af87df8088a04860c30b548072b2681ab62f6e32b12421b40cff53cbf5dc79fb",
       "listingFingerprint": "4aacd7942888126224f246d03f9f7c00cf7b9b358fbd99e972f83da3584413f8",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/3/1793777022_4366.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.624Z",
-      "reviewArtifact": "renewed-source-human-sheet-14-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "eb7a295e8c9a18104eb17cc509674a4f1fbf06851d51f38a8eaf45c5fa7b72a9"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/7/1793777024_4769.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "eb7a295e8c9a18104eb17cc509674a4f1fbf06851d51f38a8eaf45c5fa7b72a9",
+      "colours": [
+        "橙色",
+        "红色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/4/7/1793777024_4769.jpg"
     },
     "1678529": {
       "disposition": "exclude",
@@ -22415,17 +22431,22 @@
       ]
     },
     "1699617": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "828594a01a5694733075004674f87114081dc552a37389de4d0fb59ae3b3686f",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole 75cm boxwood-style bush and pale buds, with bare insertion stem; no pot supplied.",
+      "imageHash": "fc21223a5112a59da106b83a8f705f0fd1e7d7cb859dc96c5c343c34ff3f19f4",
       "sourceContentHash": "829b4809ed0ade9d0ac5fdd0ca39d5039a2e4b0fca1ca958289c9b4af0c9bf03",
       "listingFingerprint": "56e66ef6b85ecdbf0f5857738f65c012a4932d177c27e327e68203fc4d6005c0",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/8/1794419798_4098.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-15-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "dca4ad40ec20666a7cd66e94d803e4803e6e325100a569f475b206e8d31e963c"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/6/1794419801_1959.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "dca4ad40ec20666a7cd66e94d803e4803e6e325100a569f475b206e8d31e963c",
+      "colours": [
+        "绿色",
+        "白色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/7/6/1794419801_1959.jpg"
     },
     "1699645": {
       "disposition": "include",
@@ -22441,17 +22462,21 @@
       "sourceFactsFingerprint": "717920050caebd07676bb82e55f13e23e72ee7de28e963b096eaa92fb22395de"
     },
     "1699716": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "e7d0394fd197a5641d4372311815b3c5f27aed6b938bcc25b69b4d5c3c4d8dc6",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. All six whole 32cm leafy stems with visible ends; decorative container is excluded by exact description.",
+      "imageHash": "2b7da1e8f9e3ad5e09b5a046444c56e68e20b8698cef06072f2c5448c3081092",
       "sourceContentHash": "2ead71ba8d67dda383c917777fce8e7ed1374e48d7a9783d48f4db891635c922",
       "listingFingerprint": "a58996262f5ec80e5ed8460c121be8accbe39e1a85b46fc9bb9463d14dcda1e5",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/3/1794420329_2548.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-15-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "3b66b7e9a9fa301069f27ec90e3be80725c314cc41494d9b84c0c1675180c1e6"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/0/1794420330_5953.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "3b66b7e9a9fa301069f27ec90e3be80725c314cc41494d9b84c0c1675180c1e6",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/8/0/1794420330_5953.jpg"
     },
     "1699909": {
       "disposition": "include",
@@ -22467,17 +22492,22 @@
       "sourceFactsFingerprint": "77725cc56234869cb7cf10270403edae2d3e87dd1424ec050e10388240917007"
     },
     "1700775": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "b1a58f4f20992bb5d4618852ddbd19d026b0dcf2432a4168eb98cac320b7c076",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. All six whole 45cm variegated stems. Pale cream margins are part of the leaves, not the vase or room.",
+      "imageHash": "5f2bc83686f3260801daa9d360175445c2ff777f1818bd340d38431b4f2d9c0b",
       "sourceContentHash": "0b1e70f27ff2a62942e7d3e5a684d75cdd5c76b3072fdeb545c9981aef4826f8",
       "listingFingerprint": "a39e806357acecbf7c105aef606b71e0cfa15ff5d19e2d517800f7cc28be1d58",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/6/1794423975_9182.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-15-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "c0f7d11a36dcfc8bbcbce30b171ced61837c98e5117a2d94310edc384b7eab08"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/2/1794423976_9569.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "c0f7d11a36dcfc8bbcbce30b171ced61837c98e5117a2d94310edc384b7eab08",
+      "colours": [
+        "绿色",
+        "白色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/4/2/1794423976_9569.jpg"
     },
     "1700776": {
       "disposition": "include",
@@ -22543,17 +22573,22 @@
       "sourceFactsFingerprint": "9046aff8ec7443df2b7c2d857acc48b3a9f7d077e836a9e4327def48e38799ea"
     },
     "1700781": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "640c030ed13a2c1dc14ef39e6a81a7673318398fd69256d0e236956f3b795289",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Six whole 75cm purple heather-style stems, all bare ends visible, replacing vase crop.",
+      "imageHash": "2077b733db87f807f6a8d7ea35c915f4beb618c41806a0f6c335eba143c628e2",
       "sourceContentHash": "7e6c9aa059d4637141bdf79ffdae916d25933ef2faf6f69747a8f6747f906c86",
       "listingFingerprint": "ab118b13ec02e2bf998eeaf99acba52b3901523816a7aa8dfdb6deb3ab36c56f",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/7/1794424025_7827.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-15-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "3d706f8725a9bd3ea4ceb3d930d9beffeb07ae7c1bf5adf09dea85bc2d8f74be"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/8/1794424028_9914.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "3d706f8725a9bd3ea4ceb3d930d9beffeb07ae7c1bf5adf09dea85bc2d8f74be",
+      "colours": [
+        "紫色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/8/8/1794424028_9914.jpg"
     },
     "1700782": {
       "disposition": "include",
@@ -22754,17 +22789,22 @@
       "sourceFactsFingerprint": "c7940b7197f1032fc84a4384be21033c31a950262a850e57031c2cf570391635"
     },
     "1700801": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "75d213522a72826357ad9ac7fa0d6e1077de53d8c66994efb7b9bcaef824c49b",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Six whole 48cm green wild-berry blossom stems with pale buds, not Christmas red-berry foliage.",
+      "imageHash": "284050ddf19b1d36c3e7a32439f80420969085a3d0a99703fbaa84475f598eea",
       "sourceContentHash": "2f7103798d21adc9446f9a5b74117120f049eb0ceec82561b00c392188698dc7",
       "listingFingerprint": "b996a696ff34715d9b4d2238b5f9459207df6c25ea50030433b0b512585f83be",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/7/1794424068_2943.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-16-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "c3ab8407a6f0641ae85fc3f81977d7dbeb913d3129b9f21964fa641800be73c4"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/8/1794424068_5934.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "c3ab8407a6f0641ae85fc3f81977d7dbeb913d3129b9f21964fa641800be73c4",
+      "colours": [
+        "绿色",
+        "白色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/0/8/1794424068_5934.jpg"
     },
     "1700803": {
       "disposition": "include",
@@ -22810,17 +22850,21 @@
       "sourceFactsFingerprint": "e965136649ea64695ba0a8a8a09642476ad357e0618e0c6131e9c1d2f719f7fa"
     },
     "1700808": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "b172cf5aa5a7f28afe989c0f01e34cea3b75c81ed047d44793a9dc4abb3dd2bd",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Six complete 30cm boxwood-style foliage stems on white; vase is not supplied.",
+      "imageHash": "ce54d0b98a8956f578efb8e92f7337624bd140b5d1d46644d762da69e22419d6",
       "sourceContentHash": "f103e8167cf984dbdd953af37e1e5193802fbd03a54e82cea0692cc9da75d8cc",
       "listingFingerprint": "6a75f1569ef1da9b6c6bf30be478968b006090cb61265d7e08816f94e38e45b9",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/5/1794424151_1538.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-16-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "d37407b529f43a9f8d83b98a4cab99d113267ef463eb195317096d91117bf51c"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/2/1794424151_2934.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "d37407b529f43a9f8d83b98a4cab99d113267ef463eb195317096d91117bf51c",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/7/2/1794424151_2934.jpg"
     },
     "1700809": {
       "disposition": "include",
@@ -22836,17 +22880,21 @@
       "sourceFactsFingerprint": "65333212d72c3ea9bd5f4498e27574c147c178ec9af8dcb0d2dbff1831e09acb"
     },
     "1700810": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "7afe2e427f72e5b9591c3bb32c80cd5fc5997c0092db55300c452d25faebb5ba",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole single 75cm foliage bush including insertion stem; exact source excludes pot.",
+      "imageHash": "74ba7e09a77a5c956746b6a70ad02be5ee8ca66f06621a48beda5f60e7bce089",
       "sourceContentHash": "d22ebc3f9d10db8f43a5108dee55d72bb3affcf200a9bbfe379b5c548943738c",
       "listingFingerprint": "f77ea52e61b50bad9673a5bfa8e801790def4ff74cd39f3dbed72dda0bf41628",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/1/1794424155_7400.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-16-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "b03c131cd0699ad52c09e26e7dc155f967f3de2aa3cd24fcb8214f98c6e58dc8"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/7/1794424156_7322.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "b03c131cd0699ad52c09e26e7dc155f967f3de2aa3cd24fcb8214f98c6e58dc8",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/6/7/1794424156_7322.jpg"
     },
     "1700811": {
       "disposition": "include",
@@ -22891,17 +22939,21 @@
       "sourceFactsFingerprint": "6a6f0a396d5985b290774ce2996674ad12c46544caf634a6a6fdea805f10e396"
     },
     "1700816": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "2f3129d4e66500278c568720059cdb5a15781245c4273f57f50855c64abe7ec9",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Six whole 50cm spring-green fern stems, with all insertion ends visible.",
+      "imageHash": "abaa6a3a5d1ebb9eeba0e8ff7ab30c726ce7b357872121025db2593b10c961e1",
       "sourceContentHash": "033dee9f8e5438c8ed6cb6843ad348fba091c22f0a1c04f9d54453d4a7aa3bea",
       "listingFingerprint": "4a8552f5fb9bc8ef6efec4d811c6f636b0b4468977fe8dd6ee6bf09947d262a1",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/2/1794424166_3919.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-16-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "0ee5323932049a6e67547d8d3dae87fa305871e8030efb01b3ee7d8082e06d8d"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/5/1794424166_5588.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "0ee5323932049a6e67547d8d3dae87fa305871e8030efb01b3ee7d8082e06d8d",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/5/5/1794424166_5588.jpg"
     },
     "1700820": {
       "disposition": "include",
@@ -22990,17 +23042,21 @@
       "sourceFactsFingerprint": "2d2bd1bfd6ee5320d3786934bf29f427a850ee5af1cc5f3f5e7923d9470328db"
     },
     "1700826": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "a3e5e6086dceb0856ac299a338c8d0a3f3857b99e7e2995b45b1a40156e753e2",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole single 75cm laurel-style bush stem; styled vase is not supplied.",
+      "imageHash": "4ba665d72104d41cfe2065535f6b5ca5e0751d889327c19287e0284272ca4c2e",
       "sourceContentHash": "8c4f1ccc340c5aaf776e0c653a37d33354f8347d13d5a054f04b09c89dd8275d",
       "listingFingerprint": "09fc0c46a492b3d04de1430c0ef206cb94625b600c5f7c14b7bf3d43c392d661",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/1/1794426615_3250.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-16-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "9b5e0749a4138c7ebb079480d976d28cfdac073d5a5f0c5b79b51d96d89298b3"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/6/1794426615_7368.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "9b5e0749a4138c7ebb079480d976d28cfdac073d5a5f0c5b79b51d96d89298b3",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/9/6/1794426615_7368.jpg"
     },
     "1700829": {
       "disposition": "include",
@@ -23085,30 +23141,38 @@
       "sourceFactsFingerprint": "736f0d12a04db019719a2441ca82bd89c1c66f53ef24063f43aea2735cb77364"
     },
     "1700837": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "5549cd4970268099e0e713d598fd1e691f8b1dfcfa0218aefa2be41146d609f7",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Six complete 50cm mixed fern stems, including full fronds and insertion ends.",
+      "imageHash": "e973aec62bbe9c76937ebe122a9551e791963e6518471571858ce60f13272520",
       "sourceContentHash": "9313ad222abfb788d41088c95a09a9c4950a760922cf057325a1d02eb2fc93f5",
       "listingFingerprint": "6913491d74a7b2c978e67880bdfc8d0bb1c5a0b89666332cafd2e2f2a5da90f7",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/5/1794426633_3096.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-17-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "db3020233008bd159f85e5f65be84b1a713867d8f8a0b85f7d002ccbefc3abc9"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/3/1794426633_9886.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "db3020233008bd159f85e5f65be84b1a713867d8f8a0b85f7d002ccbefc3abc9",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/2/3/1794426633_9886.jpg"
     },
     "1700838": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "209560e4b0339798f205765e4099d2858d77bd08ca7b54646232fa365a7ca0cd",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole single 75cm rosemary-style bush with full insertion stem; exact model and unpotted contents checked.",
+      "imageHash": "37c1540f881df7b415958fdc823a22c6fe8ac4b84ac8f6802cc26bae30ca25a4",
       "sourceContentHash": "599c5363ad38d04c464015b6b5ed06652e6f105bec19fd12ad2760e7b21fbb34",
       "listingFingerprint": "5cced4671c62e362ccd6780e4a7768bd904c905b8a318aa6d27b832fd6424896",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/1/1794426635_3887.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-17-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "b0dfe9e4a83a0dd88f7c5e3ec4a4cdbae2a89e292b1c33aa1b8fc9bbe513fe05"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/1/1794426638_2383.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "b0dfe9e4a83a0dd88f7c5e3ec4a4cdbae2a89e292b1c33aa1b8fc9bbe513fe05",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/1/1794426638_2383.jpg"
     },
     "1700839": {
       "disposition": "include",
@@ -23171,17 +23235,21 @@
       "sourceFactsFingerprint": "29f28ff0305fe496ef6bb527c47dadfaabdf2d8b2ad746f68298c69f1d4ef4f5"
     },
     "1700844": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "266019626210e995050fd74bb0eb9d94fc1815b31d28f232659a88496a0614b1",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. All six whole 75cm laurel-style foliage stems; source excludes decorative pot.",
+      "imageHash": "259c7c0456187002aac234abc693425319b56af6ae620044e56602910ca0cd50",
       "sourceContentHash": "a1a8ab09019a402d454df0bff527cf1d9fd0ccc079146dd13069f14c25d10b92",
       "listingFingerprint": "bf7810f675b4d11acdd6ed62a6670f8cbc398dc12746c8d2dd706a24fdf14638",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/6/1794426648_2445.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-17-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "03e7bb4158b58e90aee59a79c625a7bc5dcba69bcb23690fd99c1d02e9ab060f"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/0/1794426649_8918.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "03e7bb4158b58e90aee59a79c625a7bc5dcba69bcb23690fd99c1d02e9ab060f",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/2/0/1794426649_8918.jpg"
     },
     "1700845": {
       "disposition": "exclude",
@@ -23288,17 +23356,22 @@
       "sourceFactsFingerprint": "35d3869b6cef9eab26add55d876c40b1291a499d48dc5b8b704d2f2c19e6b041"
     },
     "1700853": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "a0c11c3ff33c3315a9a697aa2fc61870d78739609ce435d7cb5f00d864bc6830",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Six whole 75cm boxwood-style budding bushes with bare ends; green leaves and pale buds belong to supplied body.",
+      "imageHash": "339f8612f4de90278dc8e92b885f971f9e5fbfe9dc33c93a19ea5c01e6ed8ec5",
       "sourceContentHash": "2335a412631d0cf8dcecb2a74babfa5416a086c3ec381a02f5e71f2c93cc792e",
       "listingFingerprint": "4824b046df28792a7693066d494b9ec7d654b90991b59de3090ee2f598b0af82",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/2/1794426663_4855.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-17-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "f42def2b4e031f7e90b01d90521a82da06a04a9e8aa7b888dc49c0969915bef4"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/3/1794426663_7923.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "f42def2b4e031f7e90b01d90521a82da06a04a9e8aa7b888dc49c0969915bef4",
+      "colours": [
+        "绿色",
+        "白色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/4/3/1794426663_7923.jpg"
     },
     "1700854": {
       "disposition": "include",
@@ -23376,17 +23449,21 @@
       "sourceFactsFingerprint": "f1ff0677bf32927fecbbb793071619959ab3c2cc265be6b2d959b30123977ea5"
     },
     "1700860": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "1691c0e72bd0a16d3eed32fdf0f09f73ccb60ee065835c7955ba1e3d6e562e8e",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Six complete 32cm fern-style filler stems and exposed ends, replacing obscuring vase scene.",
+      "imageHash": "020fbca3776f78eb71639bee0d0ecfcf904f55aa3204bb79f5a08d233f101185",
       "sourceContentHash": "e56e530e4a2a83326f1f7d163723314271acf264c701dbd435e6c1f353fef801",
       "listingFingerprint": "97bc51ecdfc26fd7beb403662bf46053b147418e3565cdcffe0da5760914a6b1",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/2/1794426680_2100.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-17-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "ce56c04743a39335821fe859bb8e828e1971ff038816c2dfa1cb39ceb112f86b"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/1/1794426682_8702.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "ce56c04743a39335821fe859bb8e828e1971ff038816c2dfa1cb39ceb112f86b",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/1/1794426682_8702.jpg"
     },
     "1700862": {
       "disposition": "include",
@@ -23453,17 +23530,22 @@
       ]
     },
     "1700867": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "c10a33c5051528af62021aae81ea0738eb7c29ea697151a3cada125efd946f2b",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Six whole 45cm white-blossom stems; title, exact features and native photo establish white/green. Raw Colour Green is preserved.",
+      "imageHash": "ca885ba11cb3d92b04bbb86abe88345758c0ee4b176dc39faef80c5800729152",
       "sourceContentHash": "cd1a5fde61f2ec117c155a70db5faefc61e97c7db125c3fe8832a826dbca880a",
       "listingFingerprint": "1bd4fe29861ca192bb4958e6946d09745a256b5c618ad9c4e99f044e7e028842",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/9/1794426697_5249.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-18-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "3ffbe3993739cf87825c5cde79d060db9f5c35646678d8148622a73ede975532"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/7/1794426698_7614.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "3ffbe3993739cf87825c5cde79d060db9f5c35646678d8148622a73ede975532",
+      "colours": [
+        "白色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/7/1794426698_7614.jpg"
     },
     "1700868": {
       "disposition": "include",
@@ -23566,17 +23648,21 @@
       "sourceFactsFingerprint": "c5fd66df1ea28eac58c97fe9137bc9c06d4337714372385d43b3f40463867068"
     },
     "1700877": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "87b6ddac539d988ac27a902b9fca58cc10553383f613b63591b8db2095afda4b",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Six whole trailing Monstera adansonii with insertion stems. Full-resolution close-ups reveal perforated leaves, resolving fern-like low-resolution appearance.",
+      "imageHash": "2210de8cc92fb5f687022211cb06905ae4710480dfb4ac7f6a1fb360d89eb74f",
       "sourceContentHash": "11c942b82cff57b7a69946317e5badde9669976fdeb64c61544ca11c65a66d11",
       "listingFingerprint": "414dce36027cb159fb1e1259ad493bf666e96a4ec1679b4f68041d7c7cb50121",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/6/1794427461_9809.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-18-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "433dd2aafd42bb1c4b982013b5131cc2323e1873347b488f07c50f58dd66f09a"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/4/1794427462_8681.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "433dd2aafd42bb1c4b982013b5131cc2323e1873347b488f07c50f58dd66f09a",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/6/4/1794427462_8681.jpg"
     },
     "1700878": {
       "disposition": "include",
@@ -23727,17 +23813,22 @@
       "sourceFactsFingerprint": "6bf238638ebc920138a44d7440fabb0320c113c051c36934d8639ea838fe4e15"
     },
     "1700891": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "8c39047c3ccd722d38e1aebc294064f3226d390cb75edfc51b042e438dd452eb",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Six whole 34cm purple lavender-style stems. Preserve source artificial-design name without asserting real botanical species; no vase supplied.",
+      "imageHash": "0385b5f39c3de21326f5cb95c677039a72eb844c942cb96c88d6956407a25fd4",
       "sourceContentHash": "c11a49184a86d25f82951e86e71d26864b563230751212e16b413699715c9c13",
       "listingFingerprint": "0b4990cf939a481ea28faebdf6d6e548784525b45759fe87cf5326b3263a3040",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/0/1794427486_6346.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.625Z",
-      "reviewArtifact": "renewed-source-human-sheet-18-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "ba6961b0b72e12d4ae29756545faa98c7def75161946faf2c6b00847bf6a0799"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/1/1794427486_5109.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "ba6961b0b72e12d4ae29756545faa98c7def75161946faf2c6b00847bf6a0799",
+      "colours": [
+        "紫色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/1/1794427486_5109.jpg"
     },
     "1700893": {
       "disposition": "include",
@@ -27589,15 +27680,19 @@
     "3223380": {
       "disposition": "include",
       "department": "spring-tree",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-tree description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "aeba3a1191d7866cffc5755ff8face73e8b7fa6899b1dd2ac49e61a060631063",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole Dracaena and supplied silver planter; exact source distinguishes 90cm plant and approximately 100cm when arranged.",
+      "imageHash": "66954281cd1c5cab250cdf18b993576ae37f18c28344d746df9a7837f8640ce6",
       "sourceContentHash": "fc4c638519ef3239f8379ce02f786c256d3137dff49343f6ebb02993349f3e1b",
       "listingFingerprint": "5ec3d1b7a7d646022dda2fde2ac15a8e24be86d28d28073c6030b733269d8d1d",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/3/1793408005_3705.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.175Z",
-      "reviewArtifact": "native-human-sheet-04",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/6/1792899630_8513.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
       "wholeProductFrame": true,
-      "sourceFactsFingerprint": "c65a7475235b9e2424b8701324dc7ec8b5a7007285721256038d65ead5602c92"
+      "sourceFactsFingerprint": "c65a7475235b9e2424b8701324dc7ec8b5a7007285721256038d65ead5602c92",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/0/6/1792899630_8513.jpg"
     },
     "3224108": {
       "disposition": "include",
@@ -33571,17 +33666,22 @@
       "sourceFactsFingerprint": "f5fb92b3ec41a0b13437c97cdb484fdcc481fdccdb9d1155c1ce1c7baf612d61"
     },
     "4860286": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "55d0d1db2f38eae6f792053b244e12523b5744eb2759875caff8af1cab58e684",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Six complete white protea stems, including all ends; exact pack is six 65cm stems.",
+      "imageHash": "1e3ded5a751a29773206469582ba4656a951c4bbb2e2940ab80f80c72ff1ea6f",
       "sourceContentHash": "79dbd6c142df08c53b24680245051895c7259ad5709b8ff51db88090cb72c1c4",
       "listingFingerprint": "3cb92c32925c262bd618ce4b7a0c4ac4a71d59be19f328a5ad9a83bcf5a5ced0",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/2/1793396903_1977.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.624Z",
-      "reviewArtifact": "renewed-source-human-sheet-12-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "a294026bb34efc6f888842babf1e98c6fd421d70ce8725897e9f4e71e33a6a6c"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/3/1792898443_2744.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "a294026bb34efc6f888842babf1e98c6fd421d70ce8725897e9f4e71e33a6a6c",
+      "colours": [
+        "白色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/7/3/1792898443_2744.jpg"
     },
     "4863544": {
       "disposition": "include",
@@ -38030,17 +38130,23 @@
       "sourceFactsFingerprint": "f3ef2914fa6d6c6d3c2e46f6c7eb611c51efb00d7df7810e274d3f734fc92b5c"
     },
     "6150120": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-wreath-garland",
-      "reason": "Current native source photo still needs a complete exact-product frame or source identity reconciliation.",
-      "imageHash": "375a402f1b742efb9cb3819a0ebd0740b782ca1a1abbbaf417dfc49cdd9b6dd2",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole pink spring floral wreath; 45cm arranged diameter and 35cm natural woven base are distinct source measurements.",
+      "imageHash": "1ae0a2369d87bd0e43a17934bc3ff4b010156c53b8827fe4d08c657ee46f066d",
       "sourceContentHash": "ffff14a2594b2e4e75e30aae8839906d891ee79d4c98ad2a3bd4d215d4aa5b8d",
       "listingFingerprint": "f24a60444df8060d39cfa1f50aa0646ee98fc9d01f95c2f3e339bed153625ac9",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/9/1792897918_1006.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.622Z",
-      "reviewArtifact": "renewed-source-human-sheet-05-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "13cdc5a7721c843c0bc5847a1851eba6d75a474806dc3992d3e91960c22aaa8c"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/4/1791492893_9063.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "13cdc5a7721c843c0bc5847a1851eba6d75a474806dc3992d3e91960c22aaa8c",
+      "colours": [
+        "粉色",
+        "白色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/6/4/1791492893_9063.jpg"
     },
     "6157202": {
       "disposition": "include",
@@ -38470,17 +38576,21 @@
       "sourceFactsFingerprint": "e6b3823488922198bdb9024526f68d7d7f825a58f20ce0e58490036ce38e6246"
     },
     "6288124": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "0cc914abd1f9e17c653d92c12d25f4c27a92ec0d929818ae177a3e1840599b08",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole single 90cm ficus bare stem; mixed floral vases in family gallery are styling references.",
+      "imageHash": "a1d4af4a4407f4734a26760870d7e8ac54c2b020b66d77d7ec9f5f69ae27873d",
       "sourceContentHash": "6b17a2fcbf7148718d3304fb9bf9c46276e2f3d850e79d3429cd5917a2b9e5dc",
       "listingFingerprint": "1a0c5a6b95207682c5af401397a43d225bc7f6d5cca2e7af4834a00550e18ac8",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/2/1793822464_9322.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.624Z",
-      "reviewArtifact": "renewed-source-human-sheet-14-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "130c50e7deb4190203bc218c8cf8a6f5b309c798fb75cf02c844b087152b535f"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/0/1792898042_3397.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "130c50e7deb4190203bc218c8cf8a6f5b309c798fb75cf02c844b087152b535f",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/7/0/1792898042_3397.jpg"
     },
     "6289605": {
       "disposition": "include",
@@ -39212,15 +39322,19 @@
     "6483183": {
       "disposition": "include",
       "department": "spring-tree",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-tree description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "eb0c4a993c9e71b7ed8b64cb8f0b106372c520ce3fa9af1dbdd7ff1ada999798",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole Dracaena with copper planter. Exact feature gives 100cm arranged height; 12cm plastic pot is a separate component, not plant height.",
+      "imageHash": "2c21c2ead86089212650bf43f4c7fb2551412f95aad3210c62e25583a3e38027",
       "sourceContentHash": "6f286a87cfdc401c9e625546e33bd50482ffc409011386619f45f1685664f676",
       "listingFingerprint": "36bf0afe51b3389a604798977183c1b8ad77859b6cd4a2e648d88772c591a5ad",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/3/1793408178_9329.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.209Z",
-      "reviewArtifact": "native-human-sheet-06",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/5/1792899419_6059.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
       "wholeProductFrame": true,
-      "sourceFactsFingerprint": "56a66cbeef180a73ff71b2203e62f9d5fe5eb85a5b9d253a8a39d5412a8a8d8a"
+      "sourceFactsFingerprint": "56a66cbeef180a73ff71b2203e62f9d5fe5eb85a5b9d253a8a39d5412a8a8d8a",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/2/5/1792899419_6059.jpg"
     },
     "6487361": {
       "disposition": "review",
@@ -43346,17 +43460,21 @@
       "wholeProductFrame": false
     },
     "7632202": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "14cc9d74259bc21589c0acfcc0c6b6e9a5a73a674751e4dc71d03617e7c4b22c",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole six-piece green leaf stem bundle; exact source excludes vases. Other orange floral styling arrangements are not this SKU.",
+      "imageHash": "96c09ddc5087f91010819bf882fd783c7a41f0bbe2b99b4edacdc6af896c1b36",
       "sourceContentHash": "ec06e1908259df294bee35608cf4fb91aff3466d05d95174753fcc847af5c24a",
       "listingFingerprint": "a446f4e350e4d487bf84184aa550ce0104391adc1db53a545ca2846e5249efb4",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/5/1793396920_1845.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.624Z",
-      "reviewArtifact": "renewed-source-human-sheet-12-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "f0792e2a8c83f06b4b3cadaaf9a1ea8afe596bc16bef74fdd66fd898863152c7"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/2/1736866044_3396.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "f0792e2a8c83f06b4b3cadaaf9a1ea8afe596bc16bef74fdd66fd898863152c7",
+      "colours": [
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/2/1736866044_3396.jpg"
     },
     "7632917": {
       "disposition": "exclude",
@@ -45766,17 +45884,22 @@
       "sourceFactsFingerprint": "f0535b14ff3463d4e1bbbfa67b325f9d9ffa3dfdc5585f0b69a75e9f299f0977"
     },
     "8278727": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-wreath-garland",
-      "reason": "Current native source photo still needs a complete exact-product frame or source identity reconciliation.",
-      "imageHash": "d31a0c5752bbf9eaa3f51b86bddb4ee2ebd64b7fe12514c07f3d76191703a0fc",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole pink floral wreath; exact source states 40cm arranged diameter and 30cm woven base. No autumn foliage palette.",
+      "imageHash": "93292f7a430486d3a6fc0df4ff6b59401ee14f3d7b144f236d75c983a0316892",
       "sourceContentHash": "abc812ad29ede73e1867462eca096653cbd40dd2fea92258983ded4c050e39d1",
       "listingFingerprint": "f72a6df44f403351dea2bf4ab7e0696ec58590fe4a4eedf56a7ab85b889ec3c3",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/3/1792898340_8159.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.622Z",
-      "reviewArtifact": "renewed-source-human-sheet-05-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "fc0baab704faac503dfcab10115a611d8431ffdc812b4c683630390609a8820f"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/9/1792898959_6434.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "fc0baab704faac503dfcab10115a611d8431ffdc812b4c683630390609a8820f",
+      "colours": [
+        "粉色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/7/9/1792898959_6434.jpg"
     },
     "8289780": {
       "disposition": "include",
@@ -50157,40 +50280,22 @@
       "sourceFactsFingerprint": "c526842d2b66244a9fe1dea234768e31375d1f6480263ef906149c1c8eaaf95c"
     },
     "9556606": {
-      "disposition": "review",
-      "department": "spring-wreath-garland",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-wreath-garland description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
-      "imageHash": "a21a4c42011678e32e44f39a0638432192f5e778ec4363f73d74ad5935a8c56c",
+      "disposition": "include",
+      "department": "spring-stems",
+      "reason": "Viewed the actual exact-SKU native gallery photos and checked selected-SKU title, description, size, colour, model and supplied contents. Whole separate cascading wisteria stem. Source states 12 faux pieces and panel labels 12 branches: loose sprays, not a continuous garland.",
+      "imageHash": "09f1530db75161ff444f2bd220e7eba66d457c092ad7609b7c566a85b92d0958",
       "sourceContentHash": "51338e44d0401ee6220c32d9041c910724f206105ade05a4cc796dc8e22df1c3",
       "listingFingerprint": "ef6a6d9667cc4440fcbf49c08c2c341943d19b09992570b179b54b9cc7228cc4",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/5/1790768206_6291.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.622Z",
-      "reviewArtifact": "renewed-source-human-sheet-07-20261124",
-      "wholeProductFrame": false,
-      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/4/5/1790768206_2546.jpg",
-      "nativeEquivalence": {
-        "equivalent": true,
-        "rms": 2.1790106849449287,
-        "meanAbsolute": 1.474853515625,
-        "outlierRatio": 0,
-        "foregroundRms": 2.1790351686960845,
-        "maxBlockRms": 3.1974925071582785,
-        "thumbnailWidth": 300,
-        "thumbnailHeight": 300,
-        "originalWidth": 1500,
-        "originalHeight": 1500,
-        "method": "exact-official-thumbnail-anchor-and-decoded-rgb-pixel-comparison-v1",
-        "sku": "9556606",
-        "variantId": "8329160",
-        "thumbnailUrl": "https://www.therange.co.uk/media/2/5/1790768206_6291.jpg",
-        "reviewedThumbnailHash": "e140e20cb482f3e49a72a6a80ba9c427cb0249c0acb3dc5dbf93e2831a6ddf62",
-        "originalUrl": "https://www.therange.co.uk/media/4/5/1790768206_2546.jpg",
-        "originalHash": "a21a4c42011678e32e44f39a0638432192f5e778ec4363f73d74ad5935a8c56c",
-        "sourceContentHash": "fd764e9cf5c2e36d9e299300eb1a375556853c34f4d477702f8590ce11b14bcf",
-        "humanReviewArtifact": "extra-human-sheet-10",
-        "verifiedAt": "2026-11-24T04:02:13.040Z"
-      },
-      "sourceFactsFingerprint": "93077faddd28e4efaafd62559361df1bf288b57a9a0a98b000c1a0e284337d96"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/1/1756452874_11_4955.jpg",
+      "reviewedAt": "2026-11-24T08:21:20.524Z",
+      "reviewArtifact": "paid-missing-gallery-human-review-20261124",
+      "wholeProductFrame": true,
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/1/1756452874_11_4955.jpg",
+      "sourceFactsFingerprint": "93077faddd28e4efaafd62559361df1bf288b57a9a0a98b000c1a0e284337d96",
+      "colours": [
+        "白色",
+        "绿色"
+      ]
     },
     "9564464": {
       "disposition": "include",
