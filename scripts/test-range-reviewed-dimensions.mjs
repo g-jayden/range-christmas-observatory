@@ -7,6 +7,7 @@ import {publishedEvidenceHealth} from '../server/published-evidence-health.mjs';
 import {treeHeightConflict} from '../web/catalogue-model.mjs';
 import {productSize} from '../web/product-facts.mjs';
 import {mailHeightLabel} from '../server/mail-assets.mjs';
+await import('./test-current-range-dimension-reviews.mjs');
 const pack=JSON.parse(await fs.readFile(new URL('../web/range-residual-reviewed-evidence.json',import.meta.url),'utf8'));
 const products=pack.records.map(r=>({sku:r.sku,variantId:r.expectedVariantId,variantName:r.variantName,kind:'tree',sourceUrl:r.sourceUrl,priceGBP:12.99,newStatus:true,observedAt:'2026-11-22T17:00:00Z',firstNewObservedAt:'2026-11-21T23:00:00Z'}));
 const result=applyRangeResidualEvidence([{products}],pack);assert.equal(result.uniqueSkus,pack.records.length);assert.equal(result.uniqueDimensionSkus,10);

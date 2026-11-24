@@ -1,3 +1,4 @@
+import {applyCurrentRangeDimensionReviews} from './range-current-dimension-reviews.mjs';
 import {parseDetails,applyDetails} from './details.mjs';
 import {applyRangeNativeIndex} from './range-native-index.mjs';
 import {detailFingerprint} from './collection-policy.mjs';
@@ -29,7 +30,7 @@ export function applyRangeResidualEvidence(snapshots,pack,{now=Date.now()}={}){
    report.applied.push({sku:p.sku,observedAt:d.observedAt});
   }
  }
- const index={entries:pack.nativeEntries||{}};for(const s of snapshots)applyRangeNativeIndex(s?.products||[],index);
+ const index={entries:pack.nativeEntries||{}};for(const s of snapshots){applyRangeNativeIndex(s?.products||[],index);report.dimensionReviews.push(...applyCurrentRangeDimensionReviews(s?.products));}
  report.uniqueSkus=new Set(report.applied.map(r=>r.sku)).size;report.uniqueDimensionSkus=new Set(report.dimensionReviews.map(r=>r.sku)).size;return report;
 }
 

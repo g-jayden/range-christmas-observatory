@@ -56,6 +56,9 @@ export function createBqSourceTransport({requestFree=requestBqPage,fetcher=fetch
     try{const value=verifiedFreePayload(await requestFree(url,{attempts:2,fresh,cookieFile}),url);remember(url,value);failedProducts.delete(url);output.set(url,value);}
     catch(e){if([0,403,408,429,500,502,503,504].includes(e.status||0))failed.push(url);else{failedProducts.set(url,e);output.set(url,e);}}
    }}));
+   // Parallel free responses finish in network order. Preserve the caller's
+   // page priority when batching only the failures; no page is read twice.
+   failed.sort((a,b)=>batch.indexOf(a)-batch.indexOf(b));
    if(failed.length){queue=queue.then(async()=>{try{const rows=await paid(failed);for(const row of rows){try{const value=decodeBqBatch(row);if(!validBqBusinessPayload(value,row.url))throw Object.assign(Error('Invalid exact B&Q business response'),{status:502});failedProducts.delete(row.url);output.set(row.url,value);}catch(e){failedProducts.set(row.url,e);output.set(row.url,e);}}}catch(e){for(const url of failed){failedProducts.set(url,e);output.set(url,e);}}});await queue;}
   }return output;
  }
