@@ -2810,14 +2810,21 @@
       "wholeProductFrame": true
     },
     "1193160": {
-      "imageHash": "d58a4894769bbe254f8e6ccaca1d4e2a07a3daa6d67b8523c53b024e585a3306",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "粉色",
+        "绿色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette.",
+      "imageHash": "44eece88ddf5d442030ec237aeed64767db80b8ffec14c6e086c1c8f6cd8a971",
       "sourceContentHash": "6656ee15d64bd5bd61eda5316bbb5e702c211bcaef6c46f505cdcf203567c667",
       "listingFingerprint": "4889331454cbaf509c8a72e15bc092d62a0f87bca080afe316679ab51e562134",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/3/1785851742_4549.jpg",
-      "reviewedAt": "2026-11-24T04:13:03.131Z",
-      "reviewArtifact": "remaining-native-sheet-1-through-4-and-four-full-size-inspections-20261124",
-      "disposition": "review",
-      "reason": "The native frame is a crop/detail, logo, marketing panel or styled arrangement hiding part of the supplied plant/stem, or its complete offered form/palette remains unresolved. Inspect another exact-SKU whole-product native frame before release."
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/6/6/1790229483_6176.jpg",
+      "reviewedAt": "2026-11-24T04:43:55.559Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "1193162": {
       "disposition": "review",
@@ -3944,14 +3951,20 @@
       "wholeProductFrame": false
     },
     "1302382": {
-      "imageHash": "c48d1132653ea3dba6dde72e3d61ea2bc38634c56b0961d95b19d3142651591a",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "绿色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette.",
+      "imageHash": "2af29615a81ce43c1d5144807a12e586f2d79f6ab89392cefb4ea583c67cfb38",
       "sourceContentHash": "2499a2148ece3c1c2cfae0e77c629819fdbb39451fdef8f9513000bf6ed8ee7f",
       "listingFingerprint": "e6faf4e6cf7ebd524e5f625eca746612581dc63663360dbb27f90842e6cc9509",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/8/1792898972_1259.jpg",
-      "reviewedAt": "2026-11-24T03:41:39.436Z",
-      "reviewArtifact": "new-native-sheet-1-through-4-exact-SKU-20261124",
-      "disposition": "review",
-      "reason": "The selected native frame crops or obscures the complete supplied stem/plant, is a styled multi-product arrangement, or leaves the botanical spring palette unresolved. Select and inspect a complete exact-SKU native gallery frame before release."
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/3/1/1777562753_8209.jpg",
+      "reviewedAt": "2026-11-24T04:43:55.551Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "1302401": {
       "disposition": "include",
@@ -11316,14 +11329,20 @@
       "wholeProductFrame": true
     },
     "1448593": {
-      "imageHash": "d7b605bd0c719503009dfeb0d25b8eae92216af2428674fcf4d71338f923ee95",
+      "disposition": "include",
+      "department": "spring-potted",
+      "colours": [
+        "绿色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette.",
+      "imageHash": "04c8ac53d62b5b600c54fbbc00baeddbc6fd55a5d156d52fb3d9c435b4476204",
       "sourceContentHash": "7640f9c625e71dff06c08a972ef8ae307bb9c60ae9e84325128c9076fa5c200f",
       "listingFingerprint": "6a84567b631ee697a9be72452dfb7d5d1a53133cf22f85d39285a60a7c85a6de",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/8/1786356869_5606.jpg",
-      "reviewedAt": "2026-11-24T03:41:39.440Z",
-      "reviewArtifact": "new-native-sheet-1-through-4-exact-SKU-20261124",
-      "disposition": "review",
-      "reason": "The selected native frame crops or obscures the complete supplied stem/plant, is a styled multi-product arrangement, or leaves the botanical spring palette unresolved. Select and inspect a complete exact-SKU native gallery frame before release."
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/3/1/1786361020_7735.jpg",
+      "reviewedAt": "2026-11-24T04:43:55.559Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "1448594": {
       "disposition": "include",
@@ -12490,14 +12509,20 @@
       ]
     },
     "1448719": {
-      "imageHash": "b527960d32f649e5179fe65a2ee65500fe2d2431c7f07548f929bacb1539a505",
+      "disposition": "include",
+      "department": "spring-tree",
+      "colours": [
+        "绿色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette. This full exact tree photograph shows the supplied metal planter; the separate detailed planter original remains in the gallery.",
+      "imageHash": "b67ca19a4cf69dd036146fd1ec5471d9c017c92605eb9f6b9617da11c2c641f6",
       "sourceContentHash": "247d4a227f9dbc32ac3cc2177c53c18137d1654b80be643677d3937646863649",
       "listingFingerprint": "4c84575ea5bf07410b76e82e65a7c0cf465298a50abcc129aed748cba3384467",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/6/1786359048_7573.jpg",
-      "reviewedAt": "2026-11-24T04:13:03.125Z",
-      "reviewArtifact": "remaining-native-sheet-1-through-4-and-four-full-size-inspections-20261124",
-      "disposition": "review",
-      "reason": "The native frame is a crop/detail, logo, marketing panel or styled arrangement hiding part of the supplied plant/stem, or its complete offered form/palette remains unresolved. Inspect another exact-SKU whole-product native frame before release."
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/9/7/1786372559_2845.jpg",
+      "reviewedAt": "2026-11-24T04:43:55.552Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "1448720": {
       "disposition": "include",
@@ -12986,14 +13011,20 @@
       "wholeProductFrame": true
     },
     "1449726": {
-      "imageHash": "e3c479101fd44f43b2e76f7f461c7a3b1508c5c9e5f9fc64f6b9e0a40ea69643",
+      "disposition": "include",
+      "department": "spring-tree",
+      "colours": [
+        "绿色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette. This full exact tree photograph shows the supplied metal planter; the separate detailed planter original remains in the gallery.",
+      "imageHash": "18f8869034e512f9640ad62c3552419c121788e91392e132785262aa5fd816c3",
       "sourceContentHash": "1133f45ad3083b7c49ee3115a7ff280b308c4c79d7f75246f07efd09360462a6",
       "listingFingerprint": "fa4a6b7850b540c31ce393e160ea2e7fb9588ef7a6afe9fc1ec037f420fa631c",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/5/1786369607_3693.jpg",
-      "reviewedAt": "2026-11-24T04:13:03.125Z",
-      "reviewArtifact": "remaining-native-sheet-1-through-4-and-four-full-size-inspections-20261124",
-      "disposition": "review",
-      "reason": "The native frame is a crop/detail, logo, marketing panel or styled arrangement hiding part of the supplied plant/stem, or its complete offered form/palette remains unresolved. Inspect another exact-SKU whole-product native frame before release."
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/4/0/1786373068_5626.jpg",
+      "reviewedAt": "2026-11-24T04:43:55.552Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "1449735": {
       "imageHash": "dce96981e45bbd784c69250b0d7f6b1ed2532537f00051688ef5327b40d7d4b5",
@@ -14485,14 +14516,21 @@
       ]
     },
     "1518584": {
-      "imageHash": "294b0887be4140f1af8e44fde733aa766ce117cfa6bc22451d794c2dc7a8acb5",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "粉色",
+        "白色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette. The newly available full native bunch has pale pink and cream blossoms with woody brown stems, not autumn foliage. All six stems remain distinct from single-stem offers.",
+      "imageHash": "07b28273bf6e54a33cc568b92b4880f713ebcab316c9cfbe6db341cc59f5962d",
       "sourceContentHash": "76646d43219e5ab054910c64c4981c1ac5ef4a90341619d74f2f376f5af60566",
       "listingFingerprint": "97e999d390e3042a470024026fcb0964fb9359b48d64d25936d121930d115ab4",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/4/1793397866_7449.jpg",
-      "reviewedAt": "2026-11-24T04:13:03.137Z",
-      "reviewArtifact": "remaining-native-sheet-1-through-4-and-four-full-size-inspections-20261124",
-      "disposition": "review",
-      "reason": "The native frame is a crop/detail, logo, marketing panel or styled arrangement hiding part of the supplied plant/stem, or its complete offered form/palette remains unresolved. Inspect another exact-SKU whole-product native frame before release."
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/3/2/1736867101_1371.jpg",
+      "reviewedAt": "2026-11-24T04:43:55.559Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "1520170": {
       "disposition": "include",
@@ -18949,16 +18987,20 @@
       "wholeProductFrame": true
     },
     "1613576": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "The native foam-rose bunch photo obscures the supplied stems; compare a complete source bunch frame.",
+      "colours": [
+        "奶油色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette.",
       "imageHash": "5aac3d8ed2a9310770869bb7fc9350e753206aff005f78ab45c9b8b8772b95b7",
       "sourceContentHash": "f1bd074dc070e7da847631ff5f78fd7ac9115c105b549e0014ee811edcd66996",
       "listingFingerprint": "23e32ee4b310ec5cae36d45e9dc4f3d0990cdde2d6d686d16e452a5e65e8e40e",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/8/1778858653_7524.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.280Z",
-      "reviewArtifact": "native-human-sheet-14",
-      "wholeProductFrame": false
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/3/3/1778858653_5037.jpg",
+      "reviewedAt": "2026-11-24T04:43:55.560Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "1614546": {
       "disposition": "include",
@@ -25880,14 +25922,28 @@
       "wholeProductFrame": true
     },
     "3469204": {
-      "imageHash": "5005a2ade9f22a18d92f6d05655b4a1dd4bd63b98f25a0824d4cc2ff453b2c0d",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "蓝色",
+        "绿色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette. Exact features and description explicitly identify soft light blue thistle; raw Colour Purple is preserved as a source discrepancy, while the inspected body is blue-grey with green foliage.",
+      "imageHash": "68b8cae705147a3ae9169b06d882077a911b0d450d650bd169ccfc2f00bb5bd9",
       "sourceContentHash": "7f7c55abeaf2be0f787989e86bd36cb08336688ae15927ae4a5958b00fd32386",
       "listingFingerprint": "92de263c5f38d36d328662bd4b754447a3c56d54846945f40f255f0f538dcba0",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/0/1790864197_1477.jpg",
-      "reviewedAt": "2026-11-24T04:13:03.131Z",
-      "reviewArtifact": "remaining-native-sheet-1-through-4-and-four-full-size-inspections-20261124",
-      "disposition": "review",
-      "reason": "The native frame is a crop/detail, logo, marketing panel or styled arrangement hiding part of the supplied plant/stem, or its complete offered form/palette remains unresolved. Inspect another exact-SKU whole-product native frame before release."
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/6/9/1790864202_1000.jpg",
+      "reviewedAt": "2026-11-24T04:43:55.559Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true,
+      "sourceDiscrepancies": [
+        {
+          "field": "Colour",
+          "sourceValue": "Purple",
+          "corroboration": "Exact features say Soft Blue Thistle; exact description says soft, light blue; inspected whole native stem is blue-grey with green foliage."
+        }
+      ]
     },
     "3477157": {
       "disposition": "include",
@@ -30102,16 +30158,21 @@
       ]
     },
     "4753081": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-tree",
-      "reason": "Native photo is a blossom close-up, not a whole-tree preview.",
-      "imageHash": "cb7a364fe8bd0a5b72294a5ae899d92ce50b67d186b49f0711a95145293d8d58",
+      "colours": [
+        "白色",
+        "绿色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette.",
+      "imageHash": "10ada30d052d4a26c45e2be3a3651e464db651beb3fe633da36b53d7873f9c3f",
       "sourceContentHash": "30d1df4ffd0f388c645b35bccf4c9c1540248b0dde0bf7b1686619ab9119ea63",
       "listingFingerprint": "507cc11765711941778632a87588d6b9875cf43b1a62e6651c7f38161e99fbc4",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/4/1792899751_4012.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.450Z",
-      "reviewArtifact": "native-human-sheet-28",
-      "wholeProductFrame": false
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/4/2/1793395893_9414.jpg",
+      "reviewedAt": "2026-11-24T04:43:55.552Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "4761304": {
       "disposition": "exclude",
@@ -32906,14 +32967,20 @@
       ]
     },
     "5572036": {
-      "imageHash": "3d4bcac355ad860641126fefc740d9b6c35cca70610316887b49dc1b5374ceca",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "绿色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette.",
+      "imageHash": "c0cbf55ed67b6ce97b637d1d1ae96a8f6fe3bfc216d3dc540bcd4ef538ac19da",
       "sourceContentHash": "52d4f54753daf79ea0a8b9977024beeced6a8ad5a5c4885a8424c19fe7104b05",
       "listingFingerprint": "7c04727063ac1228474fb956f766bf6a6368f2048801f57a1d588c8ed1de1b70",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/4/1778860309_8391.jpg",
-      "reviewedAt": "2026-11-24T04:13:03.132Z",
-      "reviewArtifact": "remaining-native-sheet-1-through-4-and-four-full-size-inspections-20261124",
-      "disposition": "review",
-      "reason": "The native frame is a crop/detail, logo, marketing panel or styled arrangement hiding part of the supplied plant/stem, or its complete offered form/palette remains unresolved. Inspect another exact-SKU whole-product native frame before release."
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/7/1/1737899169_11_2108.jpg",
+      "reviewedAt": "2026-11-24T04:43:55.559Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "5572625": {
       "imageHash": "04203fee783445793e70004554bf9ef05d58f00829bccf05fa3baac7b3a6df5f",
@@ -34562,16 +34629,20 @@
       "wholeProductFrame": true
     },
     "6101890": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "The native foam-rose photo crops or obscures the complete supplied bunch stems.",
+      "colours": [
+        "白色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette.",
       "imageHash": "df0bcb3339fe02beed24a1e20c8728762defdc951078747b934ea4cd37b621f8",
       "sourceContentHash": "5f5ee50f929c88e5c438bab413bf7155baefdc7da5d92a1b9649049419059d67",
       "listingFingerprint": "32f20c6ad30104925d536b3480504ca1aff4bbdf3ce433a3ee3ba237ffd66113",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/3/1778857618_5406.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.329Z",
-      "reviewArtifact": "native-human-sheet-19",
-      "wholeProductFrame": false
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/6/0/1778857618_2164.jpg",
+      "reviewedAt": "2026-11-24T04:43:55.559Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "6113832": {
       "disposition": "include",
@@ -35049,16 +35120,20 @@
       "wholeProductFrame": true
     },
     "6284761": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Selected native frame crops/obscures the supplied stem or bouquet; use a verified complete same-SKU gallery frame.",
+      "colours": [
+        "白色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette.",
       "imageHash": "61dc4c0feb201e69df2fc62e52a71a88afcdd55a6c389772cbc284ac723750a5",
       "sourceContentHash": "e6d6e363e18c85d021cf9cbfee7a7551c2fd44faf94052a3df6fec3595b0d8ed",
       "listingFingerprint": "2042138ff92c4277b76cd5bcafc5cb2205ffdea08f7155cebf41c520716346e8",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/4/1778857754_7536.jpg",
-      "reviewedAt": "2026-11-24T00:40:21.674Z",
-      "reviewArtifact": "extra-human-sheet-05",
-      "wholeProductFrame": false
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/5/1778857754_5182.jpg",
+      "reviewedAt": "2026-11-24T04:43:55.560Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "6285115": {
       "disposition": "include",
@@ -39646,16 +39721,21 @@
       "wholeProductFrame": true
     },
     "7648176": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-tree",
-      "reason": "Selected native image is a dimension infographic, marketing panel or distant lifestyle view rather than a clean whole-product image.",
+      "colours": [
+        "粉色",
+        "绿色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette. The source dimension-annotated original is intentionally retained because its main tree and starter pot are complete; the clean photographs cut off the pot. Native annotations remain unchanged; this is not described as a clean unannotated photograph.",
       "imageHash": "801e7b07f6a605c095a57c70187d22886263baa93709fdf472443f46452134d3",
       "sourceContentHash": "336a9a6a7c3a3775b8853b0a66f95a3f518274feaa3585dba27d97f8fa0c4026",
       "listingFingerprint": "b6bcfda099159b5ef126b24015ec637a4e4e349f6f3957858d3a5e09f36964d9",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/5/1694693382_11_6201.png",
-      "reviewedAt": "2026-11-24T00:40:21.728Z",
-      "reviewArtifact": "extra-human-sheet-09",
-      "wholeProductFrame": false
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/4/5/1694693381_11_7665.png",
+      "reviewedAt": "2026-11-24T04:43:55.549Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "7651902": {
       "imageHash": "2e127217f24fff1b60abd85d10f65bbbe1fdeca1227aaef01a7aa23684067243",
@@ -39917,16 +39997,20 @@
       "wholeProductFrame": true
     },
     "7711516": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Selected native frame crops or obscures the offered stem/bunch; select a verified whole-product gallery frame before release.",
+      "colours": [
+        "奶油色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette.",
       "imageHash": "8c10215972718b39b7806d863f0e4d2cb3076995f54f5256a8dc70ee37b98ec3",
       "sourceContentHash": "c6e9c409b2f763c3f239ff49e07725530c7ef4b9f1c955f157ba3f40c79e950f",
       "listingFingerprint": "8d7674e58e92562aad9ddcd06ed9486bcac80df856509e6cbb9bf13fc95edb94",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/9/1778857785_7995.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.344Z",
-      "reviewArtifact": "native-human-sheet-21",
-      "wholeProductFrame": false
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/4/9/1778857785_3881.jpg",
+      "reviewedAt": "2026-11-24T04:43:55.559Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "7713729": {
       "disposition": "include",
@@ -40847,16 +40931,20 @@
       "wholeProductFrame": true
     },
     "8002129": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Selected native frame crops or obscures the offered stem/bunch; select a verified whole-product gallery frame before release.",
-      "imageHash": "0f7a8691b490c4f428d69aec76786f69abe47b657ac2ba381b7273fb00a9d397",
+      "colours": [
+        "粉色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette.",
+      "imageHash": "3743bd1b94e74d331fd08c8278bebdc0890b5b3b5bbb4755f9cbb5ff888a4f5f",
       "sourceContentHash": "4c99d95a81b53dd39e965b979a294bdea165f89e4a5cdf3a5c0ec6b5cf3a98b6",
       "listingFingerprint": "7316963accda0f7ef9290e462366bf0cb7fba5dbf68d381d94c4d80d591a7261",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/9/1778250003_4042.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.346Z",
-      "reviewArtifact": "native-human-sheet-21",
-      "wholeProductFrame": false
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/1/0/1775119761_8849.png",
+      "reviewedAt": "2026-11-24T04:43:55.559Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "8014270": {
       "disposition": "include",
@@ -42566,16 +42654,21 @@
       "wholeProductFrame": true
     },
     "8551855": {
-      "disposition": "review",
-      "reason": "The selected native frame is a leaf/flower/pot close-up, obscures supplied stem ends, or is a logo instead of the whole offered product. Keep the real SKU pending a complete exact-gallery frame; do not exclude its spring colour merely because the picture is unsuitable.",
+      "disposition": "include",
       "department": "spring-tree",
-      "imageHash": "63d4c63e358b71f9fb3bf4df6d765d55fb4653f25a2a9d9e1af202ee425561cd",
+      "colours": [
+        "白色",
+        "绿色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette. The source dimension-annotated original is intentionally retained because its main tree and starter pot are complete; the clean photographs cut off the pot. Native annotations remain unchanged; this is not described as a clean unannotated photograph.",
+      "imageHash": "137562e67f04acaaffedbb4327672ba35dc104fe7c73cce0951e5dffd22b2d6f",
       "sourceContentHash": "724236a5c6af771f33cf43fb80335ee9322b9c5f030e8be1d99973ec772d1d3c",
       "listingFingerprint": "21768b0ef24806a7fb402bc4398b38c006279a1ebe6cb43515c52a3e1b3c467d",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/6/1694693476_11_3885.png",
-      "reviewedAt": "2026-11-24T01:40:47.368Z",
-      "reviewArtifact": "current-native-sheet-01",
-      "wholeProductFrame": false
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/6/6/1694693474_11_8012.png",
+      "reviewedAt": "2026-11-24T04:43:55.551Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "8552043": {
       "disposition": "exclude",
@@ -45971,16 +46064,20 @@
       ]
     },
     "9590047": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Selected native frame crops or obscures the offered stem/bunch; select a verified whole-product gallery frame before release.",
+      "colours": [
+        "奶油色"
+      ],
+      "reason": "Viewed the exact-SKU gallery comparisons (coverage-gallery-sheet-01 through 13), checked offered colour/pack and description/specifications, and chose a native frame showing the complete supplied botanical. Background colours and alternate offered variants are excluded from its body palette.",
       "imageHash": "3ae9fa96b65851130ed94181fe6e5c70d0c582155eddc6700474be25f709a39a",
       "sourceContentHash": "1b9acac7f4c47032e819e2e3aa5fbbd15c0acd75e4c03e61873198425009d1f2",
       "listingFingerprint": "7a8bd2edea74812ce3ac6c01f907891ecfb98018e273918e9247204df3349f4e",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/2/1778858665_6295.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.358Z",
-      "reviewArtifact": "native-human-sheet-22",
-      "wholeProductFrame": false
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/5/5/1778858665_9901.jpg",
+      "reviewedAt": "2026-11-24T04:43:55.559Z",
+      "reviewArtifact": "coverage-gallery-sheet-01-through-13-exact-SKU-native-20261124",
+      "wholeProductFrame": true
     },
     "9595969": {
       "disposition": "include",
