@@ -3,15 +3,16 @@ const copy=x=>structuredClone(x),id=r=>r.receipt?.id;
 // Restore only receipts owned by the completed archived run. A later checkout
 // may contain unrelated source charges, so never replace its aggregate ledger.
 export function restoreNativeRunReceipts(current,archive,{runId,authorizationId}={}){
- if(String(runId)!=='44707707847'||authorizationId!=='all-retailers-free-first-native-originals-20261119')throw Error('Unapproved native run receipt restore');
+ const runKeys={'44707707847':'native-44707707847-1','45496143412':'45496143412-1'},runKey=runKeys[String(runId)];if(!runKey||authorizationId!=='all-retailers-free-first-native-originals-20261119')throw Error('Unapproved native run receipt restore');
  const out=copy(current);out.restoredNativeReceipts||={};let added=0,credits=0,matched=0;
- for(const[period,p]of Object.entries(archive.periods||{}))for(const r of p.runs||[]){if(r.key!=='native-'+runId+'-1')continue;matched++;
+ for(const[period,p]of Object.entries(archive.periods||{}))for(const r of p.runs||[]){if(r.key!==runKey)continue;matched++;
   if(!/^native-session-[a-z0-9-]+$/i.test(id(r)||'')||r.receipt.authorizationId!==authorizationId||!Number.isFinite(r.credits)||r.credits<0||r.credits!==r.receipt.credits||!Number.isFinite(Date.parse(r.completedAt)))throw Error('Invalid archived native receipt');
   const target=out.periods?.[period];if(!target||!Number.isFinite(target.used))throw Error('Current receipt period missing');
   const known=Object.values(out.periods).flatMap(v=>v.runs||[]).find(x=>id(x)===id(r)),mark=out.restoredNativeReceipts[id(r)];if(known&&known.credits!==r.credits||mark&&(mark.credits!==r.credits||mark.period!==period))throw Error('Conflicting archived native receipt amount');
   if(!known&&!mark){target.used+=r.credits;target.runs=[...(target.runs||[]),copy(r)].sort((a,b)=>String(a.completedAt).localeCompare(String(b.completedAt))).slice(-80);added++;credits+=r.credits;}
   const scoped={receiptId:id(r),credits:r.credits,authorizationId,scope:'failed-native-originals-all-retailers'},prior=target.uncappedReceipts?.[id(r)];if(prior&&JSON.stringify(prior)!==JSON.stringify(scoped))throw Error('Conflicting archived native scope');target.uncappedReceipts||={};target.uncappedReceipts[id(r)]=scoped;
   out.restoredNativeReceipts[id(r)]={period,credits:r.credits,runId:String(runId)};
+  if(String(runId)==='45496143412'){if(r.receipt.billingVerified!==true||r.receipt.id!=='native-session-range-image-batch-45496143412-1')throw Error('Current native run receipt is not confirmed');const hold=target.reservations?.[runKey];if(hold&&hold.authorizationId!==authorizationId)throw Error('Native reservation ownership changed');if(hold)delete target.reservations[runKey];}
   if(Date.parse(r.completedAt)>Date.parse(out.nativeImageFallback?.completedAt||'1970-01-01'))out.nativeImageFallback={...copy(r.receipt),monthlyLimit:null,sourceCatalogueRequests:0};
  }
  if(!matched)throw Error('Archive has no verified receipts for its own native run');
