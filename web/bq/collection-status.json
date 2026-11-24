@@ -1,1 +1,1 @@
-{"complete":false,"checkedAt":"2026-11-24T12:10:21.183Z","error":"B&Q category did not close within bounded current membership passes: tree-decorations {\"expected\":10726,\"observed\":10724,\"drift\":true,\"pageFailures\":[]}","failedSourceUrl":null,"failedPageAttempts":null,"requests":1263,"firecrawlCredits":25,"sourceObservedAt":"2026-11-22T00:10:11.101Z"}
+{"complete":true,"observedAt":"2026-11-24T11:38:39.735Z","skus":25693,"requests":842,"firecrawlCredits":0}
