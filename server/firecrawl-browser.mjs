@@ -14,6 +14,7 @@ import {createFreeFirstRangeImages} from './range-free-images.mjs';
 import {materializeCommittedImage} from './committed-image-file.mjs';
 import {retainManufacturerOriginal} from './manufacturer-native-cache.mjs';
 import {createRangeDirectoryCheckpoint} from './range-directory-checkpoint.mjs';
+import {fetchFirecrawlFresh} from './firecrawl-fresh-connection.mjs';
 
 export async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000,anchors=[]}){
  const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status,url:response.url||target};return {status:200,url:response.url||target,value:json?await response.json():await response.text()}}catch(error){return {status:0,error:String(error.message).slice(0,180)}}};
@@ -132,7 +133,8 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  async function api(path,method,body){
   for(let attempt=0;;attempt++){
    metrics.firecrawlRequests++;
-   const response=await fetcher('https://api.firecrawl.dev/v2/'+path,{method,headers:{authorization:'Bearer '+key,...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(105000)});
+   const request=path==='scrape'&&fetcher===fetch?fetchFirecrawlFresh:fetcher;
+   const response=await request('https://api.firecrawl.dev/v2/'+path,{method,headers:{authorization:'Bearer '+key,...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(105000)});
    const result=await response.json();if(path==='scrape'){metrics.scrapeReceipts||=[];metrics.scrapeReceipts.push({id:result.data?.metadata?.scrapeId||result.id||null,credits:result.data?.metadata?.creditsUsed??result.metadata?.creditsUsed??null,httpStatus:response.status,sourceStatus:result.data?.metadata?.statusCode??null});}if(response.ok&&result.success!==false)return result;
    const detail=String(result.error?.message||result.error||result.message||result.code||'').replace(/fc-[\w-]+/g,'[redacted]');
    const proxyFailure=path==='scrape'&&response.status>=500&&/ERR_TUNNEL_CONNECTION_FAILED|internal proxy error/i.test(detail);
