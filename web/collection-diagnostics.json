@@ -782,6 +782,18 @@
       "sourceUrl": "https://www-lon.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/christow-artificial-olive-tree-4ft-6ft?json",
       "sourceStatus": 404,
       "observedAt": "2026-11-23T20:49:52.320Z"
+    },
+    {
+      "id": "mcp-01a20a2d-544f-7383-9f75-e66813a5d452",
+      "period": "2026-11",
+      "credits": 1,
+      "refunded": 0,
+      "authorizationId": "owner-all-collection-unrestricted-20261123",
+      "retailerId": "the-range",
+      "purpose": "Verify the provider-indexed official alternate Christow HTML address after ordinary free access failed; the exact source returned 404 and no source facts were promoted.",
+      "sourceUrl": "https://www-lon.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/christow-artificial-olive-tree-4ft-6ft",
+      "sourceStatus": 404,
+      "observedAt": "2026-11-24T00:12:59.639Z"
     }
   ],
   "unreceipted": [
