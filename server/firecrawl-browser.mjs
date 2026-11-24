@@ -13,6 +13,7 @@ import {createFreeFirstRangeSource} from './range-free-source.mjs';
 import {createFreeFirstRangeImages} from './range-free-images.mjs';
 import {materializeCommittedImage} from './committed-image-file.mjs';
 import {retainManufacturerOriginal} from './manufacturer-native-cache.mjs';
+import {createRangeDirectoryCheckpoint} from './range-directory-checkpoint.mjs';
 
 export async function readFamilyBundle({url,jsonUrl,initial,providedHtml,timeoutMs=20000,anchors=[]}){
  const read=async(target,json)=>{try{const response=await fetch(target,{credentials:'include',cache:'no-store',headers:json?{'X-Requested-With':'XMLHttpRequest',accept:'application/json'}:undefined,signal:AbortSignal.timeout(timeoutMs)});if(response.status!==200)return {status:response.status,url:response.url||target};return {status:200,url:response.url||target,value:json?await response.json():await response.text()}}catch(error){return {status:0,error:String(error.message).slice(0,180)}}};
@@ -126,6 +127,8 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
  let fallbackLimit=Math.max(0,Math.min(policy.maxFallbackScrapesPerRun??40,budget.limit-Math.ceil(ttl/30))),fallbackCache=new Map(),captureOriginals=new Map();let fallbackReserved=0,scrapeCredits=0,scrapeBillingVerified=true;
  if(ttl<60&&policy.catalogueTransport!=='enhanced-batch')throw budgetError('本轮积分不足以创建一个浏览器会话');
  const metrics={provider:'firecrawl-browser',billingMode:'code-session-time',firecrawlRequests:0,scrapeRequests:0,firecrawlCredits:0,creditsEstimatedUpperBound:ttl/30+fallbackLimit,browserCreditUpperBound:ttl/30,fallbackLimit,browserPages:0,familyReads:0,familyReuse:0,screenshots:0,sourceImageChecks:0};
+ const validateCatalogue=body=>parseSource({success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200}}});
+ const directoryCheckpoint=policy.cataloguePageCheckpoint?await createRangeDirectoryCheckpoint({file:policy.cataloguePageCheckpoint,validate:validateCatalogue,now}):null;
  async function api(path,method,body){
   for(let attempt=0;;attempt++){
    metrics.firecrawlRequests++;
@@ -279,7 +282,18 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    const section=page.locator('#variant_container');await section.scrollIntoViewIfNeeded();const bytes=await section.screenshot({type:'png',timeout:20000});metrics.screenshots++;return bytes.toString('base64');
   }finally{release(page)}
  }
- const catalogueBatch=createCatalogueTransport(async(fn,urls)=>{metrics.catalogueBatchRequests=(metrics.catalogueBatchRequests||0)+1;metrics.catalogueRequests=(metrics.catalogueRequests||0)+urls.length;const freeRows=freeSource?await freeSource.catalogues(urls):[],known=new Set(freeRows.map(r=>r.url)),paidUrls=urls.filter(u=>!known.has(u)),rows=[...freeRows,...(paidUrls.length?await scriptAction('('+fn.toString()+')('+JSON.stringify(paidUrls)+')',{entryUrl:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776'}):[])];console.log(JSON.stringify({phase:'catalogue-batch',requests:urls.length,failures:rows.filter(r=>r.status!==200||!r.body).map(({url,status,error,navigation})=>({url,status,error,navigation}))}));return rows;},{validate:body=>parseSource({success:true,data:{rawHtml:JSON.stringify(body),metadata:{statusCode:200}}}),recover:async url=>{metrics.catalogueDirectRepairs=(metrics.catalogueDirectRepairs||0)+1;console.log(JSON.stringify({phase:'catalogue-exception-repair',url}));return JSON.parse(await scrapeRaw(url,{fresh:true}));},maxRepairs:unrestrictedCollection(policy)?Infinity:Math.min(12,Math.floor(budget.limit/2))});
+ const catalogueBatch=createCatalogueTransport(async(fn,urls,{freshUrls=[]}={})=>{
+  const fresh=new Set(freshUrls),savedRows=directoryCheckpoint?urls.map(url=>directoryCheckpoint.read(url,{fresh:fresh.has(url)})).filter(Boolean):[],savedUrls=new Set(savedRows.map(r=>r.url)),pending=urls.filter(url=>!savedUrls.has(url));
+  metrics.catalogueCheckpointPagesReused=(metrics.catalogueCheckpointPagesReused||0)+savedRows.length;
+  metrics.catalogueBatchRequests=(metrics.catalogueBatchRequests||0)+(pending.length?1:0);metrics.catalogueRequests=(metrics.catalogueRequests||0)+pending.length;
+  const freeRows=freeSource&&pending.length?await freeSource.catalogues(pending):[];await directoryCheckpoint?.retain(freeRows);
+  const known=new Set(freeRows.map(r=>r.url)),paidUrls=pending.filter(u=>!known.has(u)),paidRows=paidUrls.length?await scriptAction('('+fn.toString()+')('+JSON.stringify(paidUrls)+')',{entryUrl:'https://www.therange.co.uk/p/deluxe-pre-lit-pop-up-tree-6ft/p12776/#12776'}):[];
+  // Persist each completed response before the next paid request or checkpoint.
+  // A later failure cannot erase already purchased, source-validated pages.
+  if(!Array.isArray(paidRows)||paidRows.length!==paidUrls.length||new Set(paidRows.map(r=>r.url)).size!==paidUrls.length||paidRows.some(r=>!paidUrls.includes(r.url)))throw Error('Catalogue batch URL membership mismatch');
+  await directoryCheckpoint?.retain(paidRows);const rows=[...savedRows,...freeRows,...paidRows];
+  console.log(JSON.stringify({phase:'catalogue-batch',requests:pending.length,reusedPages:savedRows.length,freshClosingReads:freshUrls.length,failures:rows.filter(r=>r.status!==200||!r.body).map(({url,status,error,navigation})=>({url,status,error,navigation}))}));return rows;
+ },{validate:validateCatalogue,recover:async url=>{metrics.catalogueDirectRepairs=(metrics.catalogueDirectRepairs||0)+1;console.log(JSON.stringify({phase:'catalogue-exception-repair',url}));const body=JSON.parse(await scrapeRaw(url,{fresh:true}));validateCatalogue(body);await directoryCheckpoint?.retain([{url,status:200,body,observedAt:new Date(now()).toISOString()}]);return body;},maxRepairs:unrestrictedCollection(policy)?Infinity:Math.min(12,Math.floor(budget.limit/2))});
  async function raw(input,options={}){
   const url=sourceUrl(input),u=new URL(url),catalogue=u.pathname==='/api/productlist';
   const identifier=JSON.stringify({url,formats:options.formats||[]});if(active.has(identifier))return active.get(identifier);
@@ -424,7 +438,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
   for(const p of products.slice(selected.length))failures.push({sku:p.sku,url:p.originalImageUrl,deferred:true,error:'Bounded native-image recovery limit reached'});
   console.log(JSON.stringify({phase:'targeted-native-image-context',products:selected.length,loaded:Object.keys(entries).length,failed:failures.length}));return {entries,failures};
  };
- reader.metrics=()=>({...metrics,...freeSource?.metrics(),scrapeCredits,sessionSeconds:created?Math.ceil(((browserEndedAt||now())-created)/1000):0});
+ reader.metrics=()=>({...metrics,...freeSource?.metrics(),...(directoryCheckpoint?{catalogueObservation:directoryCheckpoint.summary()}:{}),scrapeCredits,sessionSeconds:created?Math.ceil(((browserEndedAt||now())-created)/1000):0});
  reader.closeBrowser=async()=>{
   if(sessionClosed)return;sessionClosed=true;
   if(!session){browserReceipt={creditsBilled:0};metrics.fallbackLimit=availableFallback();return;}
