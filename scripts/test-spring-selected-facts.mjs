@@ -6,6 +6,7 @@ const selected=(title,features,description='')=>({sku:'75',variantId:'v75',varia
 const bare=selected('12 x 40cm Artificial Crocodile Fern Plant',['A pack of 12 bare stem fern plants.','No planter is included with this plant.']);
 assert.equal(springSourceDecision(bare).department,'spring-stems');
 assert.doesNotMatch(springSourceText(bare),/Autumn|170cm/);
+assert.doesNotMatch(springSourceText({...bare,sourceUrl:'https://www.therange.co.uk/p/family/#75'}),/Autumn|170cm/,'A trailing slash and exact SKU fragment retain the same official family path');
 for(const changed of[{sku:'other'},{variantId:'other'},{sourceUrl:'https://www.therange.co.uk/p/other'},{detailsReady:false}])assert.equal(springExactVariantSource({...bare,...changed}),null,'An unbound variant cannot displace raw source facts');
 assert.match(springSourceText({...bare,variantId:'other'}),/Autumn/);
 const orchid=selected('85cm Artificial Deluxe Bush Orchid, Dark Pink',['Arrives potted in a plain black plastic pot.','The plant has 56 dark pink flowers.']);

@@ -2,7 +2,8 @@
 // variant. Keep that raw record, but derive selected-SKU facts from its own fields.
 export function springExactVariantSource(p){
  const e=p.detailEvidence,x=e?.exactVariantSource;
- if(!p.detailsReady||!e?.verifiedProductSection||String(e.selectedSku)!==String(p.sku)||String(x?.selectedSku)!==String(p.sku)||String(x.variantId)!==String(p.variantId)||!x.sourceUrl||x.sourceUrl.split('#')[0]!==p.sourceUrl?.split('#')[0]||!/^[a-f0-9]{64}$/.test(x.sha256||''))return null;
+ const canonical=raw=>String(raw||'').split('#')[0].replace(/\/$/,'');
+ if(!p.detailsReady||!e?.verifiedProductSection||String(e.selectedSku)!==String(p.sku)||String(x?.selectedSku)!==String(p.sku)||String(x.variantId)!==String(p.variantId)||!x.sourceUrl||canonical(x.sourceUrl)!==canonical(p.sourceUrl)||!/^[a-f0-9]{64}$/.test(x.sha256||''))return null;
  return x;
 }
 export function springSourceText(p){
