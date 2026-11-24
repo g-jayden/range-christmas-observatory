@@ -1824,16 +1824,14 @@
       "wholeProductFrame": true
     },
     "510248": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native Queen Annes Lace heads look tan/dried; review the offered spring palette.",
       "imageHash": "7097bd01d58e8e45452d3511700cfd9521ef75aa161f2b63e97bd1286f453291",
       "sourceContentHash": "1b2e634ee6d1c73af5e09ba44d73f3c0bb2ca99109b173afbc8f1d8216e75ae9",
       "listingFingerprint": "bae3f53f60f5b59eb77601cd6b982fb493b4f4ab43e26d5c560336f702f32113",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/0/1774947032_4330.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.318Z",
-      "reviewArtifact": "native-human-sheet-18",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.017Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "510648": {
       "disposition": "include",
@@ -1860,16 +1858,14 @@
       "wholeProductFrame": false
     },
     "511020": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native Physalis stems have neutral dried-look husks; spring palette needs review.",
       "imageHash": "cf32f250750f70dbaca30870d6b62a19c251d30f7ed8b32a0634d59a22944daf",
       "sourceContentHash": "5cc6a26a975a7df1e98099d8f68dea41fa6a63e35814aa0a966b71ffa3daf583",
       "listingFingerprint": "93323dea16a6f15b8d36ed066bf89b6207dee7351f9ebe20f0241a68dec3554b",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/9/1784547709_5869.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.318Z",
-      "reviewArtifact": "native-human-sheet-18",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.017Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "511695": {
       "disposition": "include",
@@ -1896,16 +1892,14 @@
       "wholeProductFrame": true
     },
     "514070": {
-      "disposition": "review",
-      "department": "spring-potted",
-      "reason": "Cream flowers are mixed with prominent gold/brown dried-look stems and foliage. The complete arrangement needs an additional spring-palette review.",
       "imageHash": "1bbc6b00221d2b906158995ace00c7c007fd6993d94b72935ecaf0304c9b83f6",
       "sourceContentHash": "02af1d1ac0bf4d54e437eaf1f862e492ec5534c75421c14afa6a2d39465186c7",
       "listingFingerprint": "94b75242e39b03d4f262bcdd2a0bc150b5844019d4d3c43ea89ec5dd81afeed8",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/9/1781879468_7093.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.199Z",
-      "reviewArtifact": "native-human-sheet-05",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.018Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "514863": {
       "disposition": "include",
@@ -1932,16 +1926,14 @@
       "wholeProductFrame": true
     },
     "516028": {
-      "disposition": "review",
-      "reason": "The native frame illustrates several colour/design options or does not match the selected colour. Resolve the selected offered SKU picture/assortment before release; do not copy every illustrated variant into one offer.",
-      "department": "spring-stems",
-      "imageHash": "49f7bcb071acb8468ed7ef5591a5b11d351291d84e3a35b57a67aa445f6d07ce",
+      "imageHash": "c23c813a0de7a79a79ee1f217249d24e81cd29ee2c61dc8b46695a34cb041f65",
       "sourceContentHash": "ff2e3db04bf614898c9b37133540cd504d7d23b691a747c4bb4ed5d04b8b5483",
       "listingFingerprint": "d404b910f2896afb633172bb3ddd4a546bd18d0fa74b0aa39623102467a83722",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/9/1784303924_5345.jpg",
-      "reviewedAt": "2026-11-24T01:40:47.384Z",
-      "reviewArtifact": "current-native-sheet-03",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.021Z",
+      "disposition": "exclude",
+      "reason": "The exact native orchid stem has a decorative shimmer/glitter/metallic finish rather than a fresh botanical finish. Exclude this ornamental variant from the requested fresh spring collection."
     },
     "518998": {
       "disposition": "exclude",
@@ -2735,16 +2727,14 @@
       "wholeProductFrame": false
     },
     "1193168": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "Exact selected native file is a supplier logo, not the product. It must be replaced by a verified whole-product original.",
-      "imageHash": "d58a4894769bbe254f8e6ccaca1d4e2a07a3daa6d67b8523c53b024e585a3306",
+      "imageHash": "bce8c102a439781ecaf3e03067d4e1dc65576ad42c6c048f4be06ea23e42ac80",
       "sourceContentHash": "2d1c7b220118fd6da8d3726971d2dafb7fae5c46c27fe481238bdceb4421740d",
       "listingFingerprint": "bdedae0e1ea837a84cf5ca908463966e7cb9a2fe6c9cd3d5f022f85a5e256cbe",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/3/1785851742_4549.jpg",
-      "reviewedAt": "2026-11-24T00:40:21.754Z",
-      "reviewArtifact": "extra-human-sheet-10",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.020Z",
+      "disposition": "exclude",
+      "reason": "Viewed offered berries/foliage have a dominant orange, russet, brown or harvest-red decorative palette. Exclude this autumn-colour variant from the spring assortment."
     },
     "1193177": {
       "disposition": "include",
@@ -3213,16 +3203,14 @@
       "wholeProductFrame": false
     },
     "1241618": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "Native muted orange/brown/ochre palette needs a source-and-photo spring review.",
       "imageHash": "e7a4b838743cff245f216ebd5245f176e6271abeb5278e7a4e8cc890614e71b6",
       "sourceContentHash": "f30c7da4604ebc8d0ee1d327f226b89ef74322a3b30ab115c18d375d3755bebd",
       "listingFingerprint": "a4192219eaa93c9fdc9e770e6156a5f37834a05ed5bb19a29a7191fd244b948d",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/7/1787389868_1905.jpg",
-      "reviewedAt": "2026-11-24T00:40:21.756Z",
-      "reviewArtifact": "extra-human-sheet-10",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.017Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1241641": {
       "disposition": "include",
@@ -4354,40 +4342,34 @@
       "wholeProductFrame": true
     },
     "1338044": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "Viewed dark/russet/metallic or dried-looking palette needs additional exact-source spring review.",
       "imageHash": "75234734c8200df2b3d882dc81f53b51a24dbd3f6c077006f9fe30fbb4447cdd",
       "sourceContentHash": "1b05ce9f692dad23f53b75d793b181c17f94d669a687fc3f42954c80ccbb3030",
       "listingFingerprint": "b3879dd005387c08d26b1341ef183f9f7882cd9fc65cf6a24a7dcc6b50c8f414",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/1/1780480436_7149.jpg",
-      "reviewedAt": "2026-11-24T00:40:21.650Z",
-      "reviewArtifact": "extra-human-sheet-03",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.014Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "1338048": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "Native flowers are very dark burgundy/brown. Spring-palette suitability needs further review.",
       "imageHash": "435824ca17b4583169643c16186343e6084ac707361b4d7dfba9f7acbe0b1421",
       "sourceContentHash": "e9ee75fd15f60127e3a8130f88f80143006986de9a367a35307be05b81c9aec3",
       "listingFingerprint": "af1b364ca10df133a562d61d6885064be7efa2f063ba937e2993713e2d5d0683",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/9/1780517351_3309.jpg",
-      "reviewedAt": "2026-11-24T00:40:21.758Z",
-      "reviewArtifact": "extra-human-sheet-10",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.014Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "1338056": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The anemone close-up has brown foliage and muted purple petals; both full-stem preview and spring palette require review.",
       "imageHash": "704702a8669d8007cb289d8031931e38923ac47ed35ba4ef188f50a11b290fc6",
       "sourceContentHash": "50ff9144a2d8386276934495d4ccfb360c628ae07c68bad3e3581048960dc256",
       "listingFingerprint": "109fe47a7f7d0c14ddd705eef65cf800c9474d2dac74c587a65e1fa08d57a91c",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/0/1780523811_7683.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.613Z",
-      "reviewArtifact": "native-human-sheet-34",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.017Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1338796": {
       "disposition": "include",
@@ -4418,16 +4400,14 @@
       "wholeProductFrame": true
     },
     "1339168": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "Viewed dark/russet/metallic or dried-looking palette needs additional exact-source spring review.",
       "imageHash": "e5c3700dba7095a4124c8c441a3f41d35a5faebb44d58f27ecf29f66a98e0f04",
       "sourceContentHash": "ec70ab109b20b27db88652704e1248094e39c523ab3fa68a852dd431f22c925b",
       "listingFingerprint": "2054f9de537b74dd4eb26213c5351af88e1e7e8bfd517fdd75b75e16bc1f01ba",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/6/1780446319_5172.jpg",
-      "reviewedAt": "2026-11-24T00:40:21.650Z",
-      "reviewArtifact": "extra-human-sheet-03",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.020Z",
+      "disposition": "exclude",
+      "reason": "Viewed offered berries/foliage have a dominant orange, russet, brown or harvest-red decorative palette. Exclude this autumn-colour variant from the spring assortment."
     },
     "1339194": {
       "disposition": "include",
@@ -4942,16 +4922,14 @@
       "wholeProductFrame": true
     },
     "1340139": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "Native flowers are very dark burgundy/brown. Spring-palette suitability needs further review.",
       "imageHash": "eb857d9b5d0ebecf20f39dd258193b303ac9dc9116a054cd4eb17f341634aee4",
       "sourceContentHash": "60baed607dacf441ce603cf2dcbdf3d3afb118c5de07ca05a6aab18c8bf74bd1",
       "listingFingerprint": "2f7b19129d5b082b17976b9832dd93e0624fcf4fcceb0a80bcfddcf7931b30cd",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/2/1780532616_5295.jpg",
-      "reviewedAt": "2026-11-24T00:40:21.760Z",
-      "reviewArtifact": "extra-human-sheet-10",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.014Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "1340144": {
       "disposition": "include",
@@ -5193,16 +5171,14 @@
       "wholeProductFrame": true
     },
     "1362469": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native Dahlia has muted dusky petals and brown foliage. Review the spring palette before inclusion.",
       "imageHash": "6466eca30094f1405eb1cd779ac87334ccbbcc44211fbc01a2132a2c7dcd9f73",
       "sourceContentHash": "8e9c561971a539884346944311aa5bdc49da6cccccc7265c2bdda18c60793c4e",
       "listingFingerprint": "c4228d11dfeebfbf0c7b5fd4fbb7e507d0d10ac0b63ed03a83ade64f6ad232be",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/7/1793821631_1719.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.245Z",
-      "reviewArtifact": "native-human-sheet-09",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.018Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1362792": {
       "disposition": "include",
@@ -5303,16 +5279,14 @@
       "wholeProductFrame": false
     },
     "1365003": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native orchid spray has muted burgundy petals. Review whether the offered body fits the requested fresh spring palette.",
       "imageHash": "490820e049854f455e24979df38f08fc1de2b678eb26a7c54754bfb32e793d0d",
       "sourceContentHash": "f0965146e19a912c2cf370820cf1e82d5d85c3676a68c32327792bdda0562df3",
       "listingFingerprint": "8d1c5da444813edd15144bd395374a2ca52e723244badf7ef658d8a54a9e9176",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/4/1780516422_4324.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.245Z",
-      "reviewArtifact": "native-human-sheet-09",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.014Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "1365227": {
       "disposition": "include",
@@ -6363,16 +6337,14 @@
       "wholeProductFrame": false
     },
     "1438473": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The orange/red berry spray needs a spring-versus-autumn palette check before release.",
       "imageHash": "bba129eadb3a2ccf28617aef5f42ed821ae105d681be979f05ce5292832e4570",
       "sourceContentHash": "cedfab5081bae2c1fd69b1f24d40ffd60f0cfb2f17a6c790e4b6c1534b59464d",
       "listingFingerprint": "8136fcddc1a2fb9ad7afea495e6cc8f74c82c7181c977fbee1d62e3ebd9d207a",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/7/1785760407_2565.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.247Z",
-      "reviewArtifact": "native-human-sheet-09",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.019Z",
+      "disposition": "exclude",
+      "reason": "Viewed offered berries/foliage have a dominant orange, russet, brown or harvest-red decorative palette. Exclude this autumn-colour variant from the spring assortment."
     },
     "1438477": {
       "disposition": "include",
@@ -6885,16 +6857,14 @@
       "wholeProductFrame": true
     },
     "1438740": {
-      "disposition": "review",
-      "department": "spring-potted",
-      "reason": "The main floral heads are dark burgundy-brown; spring palette is not clear enough to release without an additional exact-source palette review.",
       "imageHash": "b8491ffaedf518f5cddba1bd47c836d7a715e4392e67a20d9b36e1eabd884e84",
       "sourceContentHash": "bf5fc6b31e730c5a61e6e5245470d896a9443dd357e028c629e76292ebc21b69",
       "listingFingerprint": "95cf80f06d8e4aad2c04162a14ebaff553e7dc4efa7a1051df9bb4b5b8e39ef6",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/7/1785771463_4369.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.140Z",
-      "reviewArtifact": "native-human-sheet-01",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.012Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "1438743": {
       "disposition": "include",
@@ -7220,16 +7190,14 @@
       "wholeProductFrame": false
     },
     "1438782": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "Viewed dark/russet/metallic or dried-looking palette needs additional exact-source spring review.",
       "imageHash": "07513970fccbe164dda1d0fee0005dc3c4efcb9340b83a27f2d3bb12a346904f",
       "sourceContentHash": "c655c86eee24c3868988a589e3d1c0372b937ce0a720a78a1af7d6e1070926d2",
       "listingFingerprint": "808d8b0ba2c43161f982bf3b33a5ed20ecec4267d08fd74b3034737469c5f29d",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/3/1785774851_2143.jpg",
-      "reviewedAt": "2026-11-24T00:40:21.654Z",
-      "reviewArtifact": "extra-human-sheet-03",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.015Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1438784": {
       "disposition": "include",
@@ -7624,16 +7592,14 @@
       "wholeProductFrame": true
     },
     "1438834": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The viewed flowers and green foliage can fit the fresh spring palette, but this exact frame crops or hides the ends of the supplied stems/bunch. Retain the product for a complete same-SKU native gallery frame, rather than rejecting its colour.",
       "imageHash": "7edf302d9887c6f15629abe604154c47caaf4fb7fb9ce280f2b48dd023eac8be",
       "sourceContentHash": "335679a4b56b12bff835e746c88d85cac20eb2efe5a2506dc61236331d0970cf",
       "listingFingerprint": "24a4bf0efa66510856ec00bcd9b7de33d1947276a5fc73d8b7de9354685790ee",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/0/1785773872_5319.jpg",
-      "reviewedAt": "2026-11-24T01:19:13.362Z",
-      "reviewArtifact": "palette-human-sheet-01",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.016Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1438835": {
       "disposition": "review",
@@ -8539,16 +8505,14 @@
       "wholeProductFrame": true
     },
     "1438929": {
-      "disposition": "review",
-      "department": "spring-potted",
-      "reason": "Native frame is a leaf/flower/pot close-up, a diagram or partial plant; obtain a clean whole-product exact-SKU original.",
-      "imageHash": "08810ae7b5c38ff052dfa4420abcf78cd0fb62cb141d41a57fef10002f59a8f7",
+      "imageHash": "000768b853afb6d805bfed34bff42f66d01e7778683f6d291dfa16beaa77f027",
       "sourceContentHash": "8a27d22e692c803b01f890fa6f23fca26dd2964ac0af109f0690dc7a195a0797",
       "listingFingerprint": "311a3b8e6d980b9ac7e0aae44f0dda58478674783d033ee4f3e9430e354b45ab",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/0/1785774697_7529.jpg",
-      "reviewedAt": "2026-11-24T00:40:21.632Z",
-      "reviewArtifact": "extra-human-sheet-01",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.013Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "1438932": {
       "disposition": "review",
@@ -12531,16 +12495,14 @@
       "wholeProductFrame": false
     },
     "1449758": {
-      "disposition": "review",
-      "department": "spring-potted",
-      "reason": "The dense dark purple spiral topiary needs an additional spring-palette check; its colour cannot be assumed to be ordinary green foliage.",
       "imageHash": "701eaaa614939844a6ef8534b7592bdeec262217135eed500af2895b4cb85743",
       "sourceContentHash": "90ec7bfdcdb085ca777c20569ca77fd9bc760bbdf421051bece4be3a13329f1d",
       "listingFingerprint": "7c853a963f10be628e20e66f086f46a6560001036fefb7610816d92d5ef78ce0",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/5/1786371498_1464.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.154Z",
-      "reviewArtifact": "native-human-sheet-02",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.013Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "1449777": {
       "disposition": "include",
@@ -14552,16 +14514,14 @@
       "wholeProductFrame": true
     },
     "1555011": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The pine-cone spray needs an explicit spring-versus-winter decor review; generic green colour alone is insufficient.",
       "imageHash": "45a625e3b8cc0638b3c329bc47bc431a3eafd2184c15edc0e6e924e10af27adb",
       "sourceContentHash": "7b101f20bed72652ad99f1fe05d4be7282ef9e63e21fd79a026133c7e9fb818a",
       "listingFingerprint": "da4241c61b84f8494f0360566c88057c9725b73350002872133d10f93d5cf24f",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/7/1790849126_1297.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.266Z",
-      "reviewArtifact": "native-human-sheet-11",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.020Z",
+      "disposition": "exclude",
+      "reason": "The viewed offered form is a conifer/pine-cone spray with prominent cones, corroborated by the product title/description. It belongs to winter/conifer decoration rather than the requested fresh spring botanical selection."
     },
     "1555664": {
       "disposition": "exclude",
@@ -15188,16 +15148,14 @@
       "wholeProductFrame": false
     },
     "1591144": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native eucalyptus bouquet has prominent brown/burgundy foliage rather than fresh green spring leaves; review its requested palette.",
       "imageHash": "3597834d0c4177e3b400a8c8670e5e9febc28c1b2a24b51ae74235b38b961acf",
       "sourceContentHash": "11144316dc28323e09e7542f361064b8ac3a2bab6cb5e1ef8fd2974e24c74812",
       "listingFingerprint": "da9dffb8cced048e4fb6f7c54eeac287593a050873f2fd8a971b6f5b3dd23bf5",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/2/1791797691_2009.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.268Z",
-      "reviewArtifact": "native-human-sheet-12",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.017Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1591148": {
       "disposition": "include",
@@ -15353,16 +15311,14 @@
       "wholeProductFrame": true
     },
     "1591177": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native Dianthus heads are dark brown-purple. Review spring palette and the source colour suffix.",
       "imageHash": "70800dd13347b5aa2619f83da2d648de04b55a58b29458d15b63404b94d40753",
       "sourceContentHash": "c2b8582a6a4cd061bde7777c6ccbd5946d5c23881516e7a43cc6d018f8523e0c",
       "listingFingerprint": "9fb4299911c9ba4246774badf259cbe33771b355c004a5c4a1c89e58b7086fa8",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/3/1791797738_2835.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.269Z",
-      "reviewArtifact": "native-human-sheet-12",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.016Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1591180": {
       "disposition": "include",
@@ -15517,16 +15473,14 @@
       "wholeProductFrame": true
     },
     "1591198": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native meadow flower heads are muted dark burgundy/brown. Confirm spring palette before release.",
       "imageHash": "ddfad1619f30cf9f28720722100ab85ccfc2cf3721d677bd7caf6b56612cfbc0",
       "sourceContentHash": "b02283247409927a8f2c2d9f1742bbba9731eeb23504d2c870dc9d5eb05a16ee",
       "listingFingerprint": "b8f0538500a24c2959201e0c099ee2245f915730bb7a7cebb8f259ff0aa779ab",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/0/1791797767_5718.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.270Z",
-      "reviewArtifact": "native-human-sheet-12",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.017Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1591201": {
       "disposition": "include",
@@ -15617,16 +15571,20 @@
       "wholeProductFrame": true
     },
     "1591221": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "Viewed dark/russet/metallic or dried-looking palette needs additional exact-source spring review.",
       "imageHash": "bc9e892843acf35de014db5031451a3f8c4ff56b51e13c6f40a6d1b10f9b511f",
       "sourceContentHash": "1c1f07c70993b9970d1f47fdc08944b180efd0d8170bdcc0d959a07e31e1e9cb",
       "listingFingerprint": "8ec10744eed44d8c9e40954cb2450f9feef727f01b046a40c144008034d286e5",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/8/1791797802_1666.jpg",
-      "reviewedAt": "2026-11-24T00:40:21.664Z",
-      "reviewArtifact": "extra-human-sheet-04",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.021Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "黄色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/0/1/1791797803_7435.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete native offered stem or potted plant. The product title and main description corroborate its botanical form and the visible fresh flower/green foliage palette. Major botanical colours come from the actual native body, while any conflicting generic Colour field and container descriptions remain in the raw source specifications."
     },
     "1591223": {
       "disposition": "include",
@@ -15941,16 +15899,14 @@
       ]
     },
     "1591265": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native eucalyptus leaves are black while the selected source name has a White suffix. Resolve source-to-photo colour identity before release.",
       "imageHash": "b72b69f07ea2471a7040b62a601fcd1069064ea024e65fc1eeb124010fdc689b",
       "sourceContentHash": "6db3d884a314fddb481118efb4d17ec073e1224da350a5439b36620d2b59e7fd",
       "listingFingerprint": "d6a77ed35211df4350c709e7f5e3bf6c9aecacc775b935b9d72d6724e7f8c19c",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/2/1791797923_2170.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.272Z",
-      "reviewArtifact": "native-human-sheet-12",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.016Z",
+      "disposition": "exclude",
+      "reason": "The exact viewed native eucalyptus leaves are black despite a White source colour suffix. This black decorative leaf palette is outside fresh spring colours; retain the original source labels without pretending that they describe the visible body colour."
     },
     "1591266": {
       "disposition": "include",
@@ -16125,16 +16081,14 @@
       "wholeProductFrame": true
     },
     "1591291": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native carnation has muted grey-purple petals and brown foliage; spring palette needs review.",
       "imageHash": "4d379ef0ce3e7ee4810f2bf72b90c8ee32026b0cb5ed26190e77fef340b525ac",
       "sourceContentHash": "cf0d65b4fbf6724d67c95661e35ec2194d20f92432d1ece0764067b4d4bf4c4a",
       "listingFingerprint": "122e228b6be08d4595fdb4e4e4899a4a8af79764c1803b4c52b54f65a1b7559b",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/5/1791797979_9111.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.273Z",
-      "reviewArtifact": "native-human-sheet-13",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.016Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1591293": {
       "disposition": "include",
@@ -16379,16 +16333,14 @@
       "wholeProductFrame": true
     },
     "1591328": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The hydrangea crown is a brown/tan seed-head form in the native photo. Review its fresh spring palette.",
       "imageHash": "41ad7e4ad2c84639a1b1a5bd640888b4b3fa5f4813948336ff61e3317f6bd07b",
       "sourceContentHash": "adfcba046166edc899a3c829d0bf7401f78f79913ca0fdd1a8eb953eaa15a824",
       "listingFingerprint": "1a998990f3ca2fd092b3cf13e1eb3721c6ecfb0f8241301073673db53f9ebe24",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/3/1791798045_6878.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.274Z",
-      "reviewArtifact": "native-human-sheet-13",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.017Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1591330": {
       "disposition": "include",
@@ -16427,16 +16379,21 @@
       "wholeProductFrame": true
     },
     "1591345": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "Viewed dark/russet/metallic or dried-looking palette needs additional exact-source spring review.",
       "imageHash": "e080458a5316e40de011923486a0e01e0bc1dd7699fea3432c7fd7de2004da73",
       "sourceContentHash": "ba64d0abe7e3b1d17fe214951faba2b62764eed117401ffbf2bffa1d8e1c5d43",
       "listingFingerprint": "8f5cb5da820f9d1782c383ae271e9471a35002fec272d1742e67d6ffd9faeaef",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/4/1791798070_1040.jpg",
-      "reviewedAt": "2026-11-24T00:40:21.665Z",
-      "reviewArtifact": "extra-human-sheet-04",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.023Z",
+      "disposition": "include",
+      "department": "spring-stems",
+      "colours": [
+        "红色",
+        "绿色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/4/9/1791798070_5543.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete native offered stem or potted plant. The product title and main description corroborate its botanical form and the visible fresh flower/green foliage palette. Major botanical colours come from the actual native body, while any conflicting generic Colour field and container descriptions remain in the raw source specifications."
     },
     "1591347": {
       "disposition": "include",
@@ -16527,16 +16484,14 @@
       "wholeProductFrame": false
     },
     "1591374": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native Ruby Triple Grass is muted brown/burgundy rather than fresh spring foliage; palette needs review.",
       "imageHash": "6c3879ef5adebe8f2cda80786ccf2aa2d59f77ed08760903b3e85b3155fbc8aa",
       "sourceContentHash": "c0d7c8b2e4fbf9c2d431a1c98f6f005514885b09caacc75d56446e9ab811e20b",
       "listingFingerprint": "0ff3b4321eedc65d5da38ecc3c1b6bf935b7f22e35149adc7752fcb6a889b29d",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/0/1791798093_8547.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.275Z",
-      "reviewArtifact": "native-human-sheet-13",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.017Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1591378": {
       "disposition": "include",
@@ -16575,16 +16530,14 @@
       "wholeProductFrame": true
     },
     "1591397": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native pink hydrangea crown has tan/brown heads. Review the source palette.",
       "imageHash": "e095c00d2bb8a9cb2a8af2a9af54e820ac0333287bacab1bd8fea53859827cf2",
       "sourceContentHash": "f10294980970e0b1202afb255ef6570a4e64995b518226d04718f4ed5131c70c",
       "listingFingerprint": "0fe6a38af8f7cdbe6d6f2694e7dc7c84bf7b3f6dcf4a637bac185d663f3101b5",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/8/1791798135_9228.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.275Z",
-      "reviewArtifact": "native-human-sheet-13",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.017Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1591400": {
       "disposition": "include",
@@ -16843,16 +16796,14 @@
       "wholeProductFrame": true
     },
     "1591981": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "Dark-red hydrangea heads and brown/yellow foliage need an additional spring-palette check.",
       "imageHash": "e6f1614205229a11d012f71c576150e8767344b3392fabe869546c9ebdeb4f41",
       "sourceContentHash": "f405d74778365c05d0d377dc8622d04a7502725acf18f06172bc1daad9b07b5a",
       "listingFingerprint": "1e253efc7a4a5283c86788c09f87042b037a46a6de70a78964a3cd65bec87fc0",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/8/1791806837_7670.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.276Z",
-      "reviewArtifact": "native-human-sheet-13",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.013Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "1591982": {
       "disposition": "include",
@@ -16956,16 +16907,14 @@
       "wholeProductFrame": true
     },
     "1592010": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "Viewed dark/russet/metallic or dried-looking palette needs additional exact-source spring review.",
       "imageHash": "2f3ed801b7a7e98c5ca956a71b49813d41717c621b80d5e8c61b628683142c0a",
       "sourceContentHash": "91b39332a9c207b04818ea9aa73b1ba46dbf4ca9a2fcbb9f3ed46f5da6da339b",
       "listingFingerprint": "d79b5a43c9abe4b85c3c2509580e896542357f0ea2511d5b29a28737c10a9580",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/6/1791806878_3734.jpg",
-      "reviewedAt": "2026-11-24T00:40:21.666Z",
-      "reviewArtifact": "extra-human-sheet-04",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.013Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "1592011": {
       "disposition": "include",
@@ -17255,16 +17204,14 @@
       ]
     },
     "1592086": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native Blackened Grass has muted grey/brown foliage; resolve its spring palette despite the Green suffix.",
       "imageHash": "891db7ebb8af793eb87d7e5a324868bf7c448db998d9ef18fcd60d64a7769c3a",
       "sourceContentHash": "883fb94b27e97022957893b5153e6fe62b45a7501a6138546b52d31b1193125c",
       "listingFingerprint": "8ea5da758a7b4b09732df3c67b80f6836a7c3cc0887b9bde2fe86a8ef0c025da",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/8/1791806976_4565.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.278Z",
-      "reviewArtifact": "native-human-sheet-14",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.016Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1592088": {
       "disposition": "include",
@@ -17543,16 +17490,14 @@
       "wholeProductFrame": true
     },
     "1592179": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native cream Banksia has tan/dried-looking foliage. Review the requested spring palette.",
       "imageHash": "7a62f0953150cc8a09808f87a9383cf43f7ac271e5d96727adb2a6428efa476d",
       "sourceContentHash": "e171e559758cfae4ef43964c8e9815a6574e39646538ebba31edfca3054c8d65",
       "listingFingerprint": "765dd274a307b2045db971da942d167100ea280d0f5c05d2feb0e52a8f9f9764",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/9/1791807090_9076.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.280Z",
-      "reviewArtifact": "native-human-sheet-14",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.016Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1592188": {
       "disposition": "include",
@@ -18618,16 +18563,14 @@
       ]
     },
     "1678523": {
-      "disposition": "review",
-      "reason": "The viewed frame still has a dark/dried-looking or ambiguous botanical palette, or insufficient full-stem detail. Additional exact-source/photo review is needed before fresh-spring acceptance.",
-      "department": "spring-stems",
-      "imageHash": "c0c0e14112059c4930eb2798d0f53eeabb9661a0850c6828b970c52f769c9eaa",
+      "imageHash": "3e48ccc84c3152bb36343d46e793a94f5472d7376b46a3e926478f7ea495bd1b",
       "sourceContentHash": "b200d05f91ef40aa5e51ddc03604dd213c79e4530ad43e17e05b7fd7e28f5103",
       "listingFingerprint": "cea8deae98db46b961a215037088c3b35eb4406ba6335c1f3b4fa7407102df56",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/3/1793777005_5622.jpg",
-      "reviewedAt": "2026-11-24T01:40:47.384Z",
-      "reviewArtifact": "current-native-sheet-03",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.018Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1678526": {
       "disposition": "exclude",
@@ -19117,16 +19060,14 @@
       "wholeProductFrame": true
     },
     "1700779": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The Pink Heather Fern body looks muted tan/pink and dried; review spring versus autumn palette.",
       "imageHash": "e67dbcb9fa3c96449143e40ada7aa313f3207834c7e21bbdf8b705029b8b64eb",
       "sourceContentHash": "9bc40c235a8f14da7b7cbd7338c2dd0cac1acde0423f83b0dba7fac7bcd676ae",
       "listingFingerprint": "d01d5434742ff6b2cef7ca988e7c0621e47f1a7eaeca5da678a30936737ccd3d",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/4/1794423996_9159.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.283Z",
-      "reviewArtifact": "native-human-sheet-14",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.019Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1700780": {
       "disposition": "exclude",
@@ -19252,16 +19193,14 @@
       "wholeProductFrame": false
     },
     "1700795": {
-      "disposition": "review",
-      "department": "spring-potted",
-      "reason": "Muted plum and grey foliage needs an additional spring-palette review; do not assume that a year-round description proves spring colour.",
       "imageHash": "86b20d008483c7b40b8ecde63440de0af1bf0d4d88dfb40880aa53210fb6dbd6",
       "sourceContentHash": "798f60f5779f9d46abbdb7f9ef9a1a49017cc810f246a6693fb82cfbb0b8211a",
       "listingFingerprint": "60a9ed15f3b6181a13ed5066906b04d01a8e802a6cd27d3f7ecbc8fb84ae9b17",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/2/1794424059_3561.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.163Z",
-      "reviewArtifact": "native-human-sheet-03",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.019Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1700796": {
       "disposition": "include",
@@ -19439,16 +19378,14 @@
       "wholeProductFrame": true
     },
     "1700815": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The pine-cone spray needs explicit spring-versus-winter review; a generic green source colour is insufficient.",
       "imageHash": "9980e85d3de564c2360702e909adf61c1950f9e372f24557c7e93a79a39ac742",
       "sourceContentHash": "60529aa13c7765ba64004e520757d26c89fb59b6a2cd27d89a1de6d3c85372a2",
       "listingFingerprint": "abf0b0b163d6a712d742ccaeb8952d9ef8aa1d3cc0efa2bade0ef5397c34fa4e",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/9/1794424162_4119.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.285Z",
-      "reviewArtifact": "native-human-sheet-14",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.021Z",
+      "disposition": "exclude",
+      "reason": "The viewed offered form is a conifer/pine-cone spray with prominent cones, corroborated by the product title/description. It belongs to winter/conifer decoration rather than the requested fresh spring botanical selection."
     },
     "1700816": {
       "disposition": "include",
@@ -20060,16 +19997,14 @@
       "wholeProductFrame": true
     },
     "1700879": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native red thistle foliage mixes red, orange and yellow with green; spring versus autumn palette needs review.",
       "imageHash": "40b31c69767086976dea002b4cd1ca88861078278c38daacbbba3b6bee3acdbe",
       "sourceContentHash": "f0ce2b4d8a2349bfe394097aab90de65aa63f5a571ad925e4c3e9d646a6d0369",
       "listingFingerprint": "d17d2f18bbdfeae41af35c4e0ed5dfb5c77dd46652269c8a6685ad2f631253db",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/5/1794427466_4037.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.673Z",
-      "reviewArtifact": "native-human-sheet-37",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.020Z",
+      "disposition": "exclude",
+      "reason": "Viewed offered berries/foliage have a dominant orange, russet, brown or harvest-red decorative palette. Exclude this autumn-colour variant from the spring assortment."
     },
     "1700881": {
       "disposition": "include",
@@ -20159,16 +20094,14 @@
       "wholeProductFrame": true
     },
     "1700889": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native Pink Heather Fern has muted brown/tan flower heads. Review the spring palette.",
       "imageHash": "2e1c3491c41cce9be5f598206157628bd164e3075eca2d0c20367a6af7f8d223",
       "sourceContentHash": "54a441ba67748bbe0c6c82f81c97b65dede268590f39db51bfef172fc79d3d57",
       "listingFingerprint": "332279629475ce0b1726a3fea62e2135dfe6314fccee0019e6658dcc046fe084",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/1/1794427482_3601.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.288Z",
-      "reviewArtifact": "native-human-sheet-15",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.018Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1700890": {
       "disposition": "review",
@@ -20654,16 +20587,14 @@
       "wholeProductFrame": true
     },
     "1848651": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native cream Dahlia has prominent brown leaves; the complete offered palette needs review.",
       "imageHash": "c06b6e8eed87fd455845a392742408bf0d44457cf3ff5b1e9415537e685f3dfd",
       "sourceContentHash": "4a5c76c59f90f34db5f5d88e398132de2ed748031252ce30689f3bd8c553c06d",
       "listingFingerprint": "e3d3cca4fe86d555b275d29f903cddb0d7b2a88077a97c7f8e6e3a63da1169fc",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/6/1793825798_3938.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.290Z",
-      "reviewArtifact": "native-human-sheet-15",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.018Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "1850653": {
       "disposition": "include",
@@ -20874,16 +20805,14 @@
       "wholeProductFrame": true
     },
     "1892088": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The title says Pink Dahlia but the actual native head is dark burgundy with orange/brown foliage. Resolve the source colour/palette.",
       "imageHash": "f0d6de29745e597dbf0d01dccfe95e051366b15b801c201617c86a067c77b1db",
       "sourceContentHash": "dcbc96006ee6bc573e1e911aba31c128056292f74c82abac3e133a30e0cd240e",
       "listingFingerprint": "9f2de45fc64262cd666813bf269b88c7c184a82428f8b46d8fd388237fb480e7",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/4/1793312224_1624.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.290Z",
-      "reviewArtifact": "native-human-sheet-15",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.015Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "1894068": {
       "disposition": "include",
@@ -21417,16 +21346,14 @@
       "wholeProductFrame": true
     },
     "2179059": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native peony-rose arrangement is dark burgundy and nearly black; review the requested spring palette.",
       "imageHash": "29e3f1f8cac0b6a9e88f937295b32c5ba64e574e826680c5cde267439ea6a5e8",
       "sourceContentHash": "57e7b4a8c2734d738b8a18ceb55404b2c35b906eaa573641ce38628217eec670",
       "listingFingerprint": "31d8621cfde5717679117d61bd5a2c38e6684fe24711488396c1f862935cbbd6",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/3/1790864957_5394.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.684Z",
-      "reviewArtifact": "native-human-sheet-37",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.014Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "2186605": {
       "disposition": "review",
@@ -26958,16 +26885,14 @@
       "wholeProductFrame": true
     },
     "4212520": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The source Dark Pink roses appear distressed brown in the native photo; resolve the actual spring palette.",
       "imageHash": "2153c861dedec5b2f9f69656a191c91f99a24c0930c09d1ae1a181d5af0322d9",
       "sourceContentHash": "64803e5beee30ebec1c1fea80d7a3552bf2a2e3db74724468e5c724810fb5398",
       "listingFingerprint": "8a996161167358c9848bda17b3a0a2cbc428bb87b43e365655104b411e2484f9",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/1/3/1793397863_1246.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.308Z",
-      "reviewArtifact": "native-human-sheet-17",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.018Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "4217506": {
       "disposition": "include",
@@ -27363,16 +27288,14 @@
       "wholeProductFrame": true
     },
     "4313879": {
-      "disposition": "review",
-      "department": "spring-potted",
-      "reason": "The exact title names pink hydrangea but the native frame shows dark burgundy-red flowers. Resolve the source colour and spring-palette conflict.",
       "imageHash": "7fbc226fe95a967bb11daf941cc9c5f146cf911f8ea6a40a171c48a0fc24ca65",
       "sourceContentHash": "942b4b21c11fd05467571705f032ae6f99b0ed89087dc89f85d2f1c00bb6fc64",
       "listingFingerprint": "ec99d26f8ecd5f3450721335db75dc8c7b6caf3a0938277ccfdf2189aa619bf9",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/8/1792898813_8230.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.191Z",
-      "reviewArtifact": "native-human-sheet-04",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.013Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "4314363": {
       "disposition": "include",
@@ -28832,16 +28755,14 @@
       "wholeProductFrame": false
     },
     "4811810": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native foam-rose bouquet is dark burgundy and cropped to its heads; spring palette and whole-bunch preview need review.",
       "imageHash": "aef4497d22e42c2f973ecc6286b58d531c6375660c27a1b9171af7e901507acd",
       "sourceContentHash": "b5d08bc1f60668e52acd8c974997a34f837f3467bcd70359e13fdc3fc1dc97b5",
       "listingFingerprint": "7614c0be9575686ae26a30162a0b024051a866535ebae07f4245df9afb8a0f69",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/2/6/1778857393_2007.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.314Z",
-      "reviewArtifact": "native-human-sheet-17",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.014Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "4815192": {
       "disposition": "include",
@@ -28956,16 +28877,14 @@
       "wholeProductFrame": true
     },
     "4837368": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native foam-rose buds are dark burgundy and the complete bunch stems are obscured.",
       "imageHash": "e59cced787362fb190a9e8a837057797e6bfd577ce1bdad3b0c266942e6bce14",
       "sourceContentHash": "90134c14ce7f361726f3a60d9c66e58943a61be84b3c513a571a10937dfc9d7e",
       "listingFingerprint": "4f528ca371deeb5e872c3a9afb4c8fbfad947956ed28bd5936371d605bed02ca",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/6/1/1778858181_4095.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.314Z",
-      "reviewArtifact": "native-human-sheet-18",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.014Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "4837909": {
       "disposition": "include",
@@ -31018,16 +30937,14 @@
       "wholeProductFrame": true
     },
     "5459614": {
-      "disposition": "review",
-      "department": "spring-potted",
-      "reason": "Native flowers are very dark burgundy/brown. Spring-palette suitability needs further review.",
       "imageHash": "b734823162430ca37e104def4a408e01d4da7258dd2fa238987bb967b860559f",
       "sourceContentHash": "415d07f35ec8933a80ad9b514347951cb22e35ae9cb307c09df9b65fe1433a5f",
       "listingFingerprint": "c45ceba6525fd8e2a2875cfb79dea73ab391b13d552402a77b392983664498fe",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/4/9/1690030311_7349.jpg",
-      "reviewedAt": "2026-11-24T00:40:21.783Z",
-      "reviewArtifact": "extra-human-sheet-11",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.015Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "5460708": {
       "disposition": "include",
@@ -34788,16 +34705,14 @@
       "wholeProductFrame": false
     },
     "6647091": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The source names Pink Ball Dahlia, but the native heads are dark burgundy with brown-orange leaves. Resolve source colour/palette.",
       "imageHash": "c00ba15c5db3fddf219045da2353d216f9de2eae5058406bd0a36ada6d7245d4",
       "sourceContentHash": "a3372f370f1e6e0681fe5b3e31a1020dcb90f067ef73ff1cd2b58c545592816b",
       "listingFingerprint": "984dedbbdf5a9343c67c080abbdc40c9075c7a546e1ec0bea15e3066c188376d",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/8/1793397869_7971.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.334Z",
-      "reviewArtifact": "native-human-sheet-20",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.015Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "6648573": {
       "disposition": "include",
@@ -35477,16 +35392,21 @@
       "wholeProductFrame": true
     },
     "6886163": {
-      "disposition": "review",
-      "department": "spring-potted",
-      "reason": "The selected flowering grass has muted brown-purple flower heads; review whether the body is a fresh spring palette.",
       "imageHash": "c120cbb6cb12e311a3079f0a4046682df6275fbe0939591eb8f671ca837395fb",
       "sourceContentHash": "88734fd3e0c75a9bcf779861dc06f7ae98dee8e386e35ae53375eaa297828fe7",
       "listingFingerprint": "a53fb5011a0ac1f6ed95938ff55e6ec8d02d997990ef53adc71e7aa92020343a",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/1/1793823484_3379.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.211Z",
-      "reviewArtifact": "native-human-sheet-06",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.023Z",
+      "disposition": "include",
+      "department": "spring-potted",
+      "colours": [
+        "绿色",
+        "紫色"
+      ],
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/4/9/1793823487_4683.jpg",
+      "wholeProductFrame": true,
+      "reason": "Viewed complete native offered stem or potted plant. The product title and main description corroborate its botanical form and the visible fresh flower/green foliage palette. Major botanical colours come from the actual native body, while any conflicting generic Colour field and container descriptions remain in the raw source specifications."
     },
     "6888338": {
       "disposition": "include",
@@ -35954,16 +35874,14 @@
       "wholeProductFrame": true
     },
     "7028189": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The orange/red berry spray needs a spring-versus-autumn palette review.",
       "imageHash": "6ef2c323f3997ced9fa7276ed23a2c5b0ec6e5a7fbc92ab1c26b5844bc1a1ebf",
       "sourceContentHash": "cf29373222fa86f627af349b7e4c649030fa9dc441a9602e2d1e1cea38ea831a",
       "listingFingerprint": "f1516a8e923997d3635a1ae7ae2f2bffa9b76d1a50ff80b1b7ad517047b5a44d",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/6/1793824204_5959.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.338Z",
-      "reviewArtifact": "native-human-sheet-20",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.020Z",
+      "disposition": "exclude",
+      "reason": "Viewed offered berries/foliage have a dominant orange, russet, brown or harvest-red decorative palette. Exclude this autumn-colour variant from the spring assortment."
     },
     "7030572": {
       "disposition": "include",
@@ -37261,16 +37179,14 @@
       "wholeProductFrame": true
     },
     "7461365": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native rose has prominent dusky/brown petals and leaves; verify the requested spring palette.",
       "imageHash": "9dfeeb41e6949ca1653069b434213d1c1ad020bbef1cdfc4929e0ae074d8f6d3",
       "sourceContentHash": "096be588dd0b602dc02e2031af922472eebda11471f23815a6a5cbd307ececc7",
       "listingFingerprint": "ead41385bbdc65395a51517ca4be0265a34d90953cf93837c1587107257ff361",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/8/1793825924_9437.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.772Z",
-      "reviewArtifact": "native-human-sheet-40",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.019Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "7465320": {
       "disposition": "include",
@@ -37839,16 +37755,14 @@
       "wholeProductFrame": true
     },
     "7596885": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native chrysanthemum flowers are dark burgundy/nearly black. Spring palette needs review.",
       "imageHash": "88b421446a0842809357f9928cfe6a7def4cd152996461b3362084d4398997fb",
       "sourceContentHash": "ff6fdc725a60e1f73eb8b4dcb6b395f6056751ae03f5cf0531154f1983828456",
       "listingFingerprint": "1ff46c933bee6dc27bd0a6d62696722a383e11274d226e0e9516a8fe44bba7cd",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/0/1793361902_3106.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.776Z",
-      "reviewArtifact": "native-human-sheet-40",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.015Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "7601028": {
       "disposition": "include",
@@ -40310,16 +40224,14 @@
       "wholeProductFrame": true
     },
     "8342812": {
-      "disposition": "review",
-      "reason": "The viewed frame still has a dark/dried-looking or ambiguous botanical palette, or insufficient full-stem detail. Additional exact-source/photo review is needed before fresh-spring acceptance.",
-      "department": "spring-stems",
-      "imageHash": "d82feda58e3c1fbe46f094a21b7eaefa21b09a280271272a45c197f76c99cd6d",
+      "imageHash": "13020d74c943c77a446070dee8b9e8cb17f19aae1deea0d4d8b3ceb64cec22e0",
       "sourceContentHash": "e271bd076e9634af9c97575cc6eef927b271454e551ed56cb7ce417fe96caf95",
       "listingFingerprint": "46ce3a2df1fad317e110bc8bd5e634bacc77056e86701ceecaa110d0dd61dbd8",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/2/1790259875_4034.jpg",
-      "reviewedAt": "2026-11-24T01:40:47.382Z",
-      "reviewArtifact": "current-native-sheet-03",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.014Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "8348396": {
       "disposition": "include",
@@ -44287,16 +44199,14 @@
       "wholeProductFrame": false
     },
     "9605332": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "Viewed muted/dark/orange botanical palette needs exact SKU source and seasonal review, not automatic spring acceptance.",
       "imageHash": "ebeefd4e7409d46d5b3365ae014914c2f7e9499bf5353eb43f5900c65583eba7",
       "sourceContentHash": "c1363a030340f38a2257b7408f4f5c94a0d3f142376a926c4258ff40a8638794",
       "listingFingerprint": "7dad7d506ee2c8a36b25784553adc3e6b80321b04cda3450f70bdf5251314d9b",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/5/3/1793398208_1461.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.359Z",
-      "reviewArtifact": "native-human-sheet-22",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.019Z",
+      "disposition": "exclude",
+      "reason": "Viewed actual botanical flowers/leaves have a visibly aged brown, tan, grey-brown, dried-looking or distressed warm palette, rather than fresh spring flowers/green foliage. This exclusion is based on the exact native image and source variant, not the backdrop or container."
     },
     "9610949": {
       "disposition": "include",
@@ -44536,16 +44446,14 @@
       ]
     },
     "9666794": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "Viewed muted/dark/orange botanical palette needs exact SKU source and seasonal review, not automatic spring acceptance.",
       "imageHash": "86e5b971f56b04ff1ebebbe8bb7feb8889d08d22f9fe7be86be079d5e52c84fd",
       "sourceContentHash": "92315dc21d369236b184a464982b5b2c0ff133956149c86206cac632a2ba425b",
       "listingFingerprint": "4ed32c421a5144bd58509adf2777c80b1d6f9df974315cfc566c2fb50180521a",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/7/9/1793398203_8283.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.359Z",
-      "reviewArtifact": "native-human-sheet-22",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.020Z",
+      "disposition": "exclude",
+      "reason": "Viewed offered berries/foliage have a dominant orange, russet, brown or harvest-red decorative palette. Exclude this autumn-colour variant from the spring assortment."
     },
     "9667099": {
       "disposition": "include",
@@ -44941,16 +44849,14 @@
       "wholeProductFrame": true
     },
     "9807855": {
-      "disposition": "review",
-      "department": "spring-stems",
-      "reason": "The native chrysanthemum frame is head-focused with dark burgundy petals. Whole-product preview and spring palette need review.",
       "imageHash": "9ba1e2c5828f011347b222fe8eae3bb9ec1b41400deebcfc5ec2571e1637e2bf",
       "sourceContentHash": "367e133b1c2e4f48ad661e0cb392012686d49445524f5683deaf49670ebff37b",
       "listingFingerprint": "ad3c462422be129efa8bfbde0dfd715220478339ed22b779dc1a83b63618743f",
       "reviewedSourceImageUrl": "https://www.therange.co.uk/media/0/5/1793821628_8164.jpg",
-      "reviewedAt": "2026-11-24T00:32:37.811Z",
-      "reviewArtifact": "native-human-sheet-42",
-      "wholeProductFrame": false
+      "reviewArtifact": "palette-current-sheet-1-and-2-exact-native-20261124",
+      "reviewedAt": "2026-11-24T02:55:22.015Z",
+      "disposition": "exclude",
+      "reason": "Viewed native botanical body is predominantly dark burgundy, nearly black or muted deep plum. Exclude this exact inspected decorative variant from the requested fresh spring-colour assortment; original source colour labels are preserved separately, and room/container colours are ignored."
     },
     "9816404": {
       "disposition": "include",
