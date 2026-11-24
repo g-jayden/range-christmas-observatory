@@ -13,7 +13,7 @@ permissions:
   contents: write
   actions: write
 concurrency:
-  group: approved-native-image-recovery
+  group: range-full-gallery-native-recovery
   cancel-in-progress: false
   queue: max
 jobs:
