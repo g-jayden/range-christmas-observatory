@@ -6,11 +6,13 @@ import{readSpring}from'./update-spring.mjs';import{atomicJson}from'./sync.mjs';i
 import{materializeCommittedImage}from'./committed-image-file.mjs';import{optimiseProductPreviews,applyProductPreviews}from'./product-previews.mjs';
 import{applySavedSpringPreviewOriginals}from'./spring-native-preview.mjs';
 import{springHumanFrameAudit}from'./spring-human-frame.mjs';
+import{bindSpringListingNativeImages}from'./spring-listing-native.mjs';
 const read=async(file,fallback)=>fs.readFile(file,'utf8').then(JSON.parse).catch(e=>{if(e.code!=='ENOENT')throw e;return fallback;});
 import{SPRING_VISUAL_PROMPTS,SPRING_VISUAL_PROMPT_VERSION,springVisualScores}from'./spring-visual-prompts.mjs';
 import{localVisualClassifier as classifier}from'./local-visual-classifier.mjs';
 export async function reviewSpring({repair=true}={}){
  const snapshot=await readSpring();if(!snapshot.source?.complete||snapshot.source.expected!==snapshot.products.length)throw Error('Complete official spring root observation required');
+ snapshot.listingNativeBindingAudit=bindSpringListingNativeImages(snapshot);
  const reviews=await read('web/spring/manual-reviews.json',{products:{}}),candidates=snapshot.products.filter(p=>springSourceDecision(p).disposition!=='exclude'&&!springReviewExcludes(p,reviews.products[p.sku]));let reader,budget;
  try{if(repair){const policy={...await loadPolicy(),maxRunSeconds:18000,repairImagesOnly:true,preferNativePreviewAssets:true,imageCheckpoint:'web/spring/image-checkpoint.json',imageBatchProbe:false};budget=await openCreditBudget(policy);reader=await createFirecrawlBrowserReader({policy,budget});
    // Only URLs proven by this exact SKU gallery are eligible. No resize URL

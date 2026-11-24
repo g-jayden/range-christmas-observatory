@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {detailFingerprint} from '../server/collection-policy.mjs';
+import {bindSpringListingNativeImages} from '../server/spring-listing-native.mjs';
+const at='2026-11-24T00:00:00Z',url='https://www.therange.co.uk/media/exact.jpg';
+function product(){const p={sku:'123',variantId:'456',recordType:'sku',observedAt:at,variantName:'Artificial Rose Stem',sourceUrl:'https://www.therange.co.uk/p/rose/#123',listingVariantImageUrl:url,detailsReady:true,detailEvidence:{verifiedProductSection:true,selectedSku:'123',exactVariantSource:{selectedSku:'123',variantId:'456'}},imageCacheEvidence:{sourceUrl:url,sha256:'a'.repeat(64),width:300,height:300},cachedImageUrl:'images/source/a.jpg'};p.detailInputFingerprint=detailFingerprint(p);return p;}
+const snapshot=p=>({observedAt:at,source:{complete:true,expected:1,url:'https://www.therange.co.uk/home-furnishings/vases-and-artificial-plants/'},products:[p]});
+const p=product();assert.equal(bindSpringListingNativeImages(snapshot(p)).bound,1);assert.equal(p.originalImageEvidence.width,300);assert.equal(p.originalImages[0].listingEvidence.method,'official-exact-SKU-listing-native-image');assert.equal(bindSpringListingNativeImages(snapshot(p)).bound,0);
+for(const change of[p=>p.detailsReady=false,p=>p.variantId='999',p=>p.observedAt='old',p=>p.listingVariantImageUrl=url+'?new',p=>p.imageCacheEvidence.sourceUrl=url+'?different',p=>p.detailInputFingerprint='old',p=>p.detailEvidence.selectedSku='999',p=>p.imageCacheEvidence.width=0]){const q=product();change(q);assert.equal(bindSpringListingNativeImages(snapshot(q)).bound,0);assert.equal(q.originalImages,undefined);}
+const q=product(),incomplete=snapshot(q);incomplete.source.complete=false;assert.equal(bindSpringListingNativeImages(incomplete).bound,0);
+const duplicate=snapshot(product());duplicate.products.push(product());duplicate.source.expected=2;assert.equal(bindSpringListingNativeImages(duplicate).bound,0);
+console.log('PASS: a missing PDP gallery can reuse the exact complete-root SKU listing file, retains real pixel dimensions, and rejects stale facts, mismatched variants/photos, duplicate rows and incomplete catalogues.');
