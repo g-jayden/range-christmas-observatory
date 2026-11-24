@@ -7,6 +7,14 @@ function mergeValue(base,a,b,label){
 }
 const receiptKey=r=>r.receipt?.id||r.key;
 const newestReceipt=(...values)=>clone(values.filter(Boolean).sort((a,b)=>String(b.completedAt||'').localeCompare(String(a.completedAt||''))||String(b.id||'').localeCompare(String(a.id||'')))[0]);
+export function mergeCollectorPreviewStatus(base={},a={},b={}){
+ const keys=new Set(['version','revision','checkedAt','products','registered','changed','limited','pending','sourceRequestsMade','batches','fetched','failed','categoryOrArrivalHistoryChanged']);
+ const valid=s=>s&&typeof s==='object'&&!Array.isArray(s)&&Object.keys(s).every(k=>keys.has(k))&&typeof s.version==='string'&&Number.isFinite(Date.parse(s.checkedAt))&&['products','registered','changed','limited','pending','batches','fetched','failed'].every(k=>s[k]===undefined||Number.isSafeInteger(s[k])&&s[k]>=0);
+ if(!valid(a)||!valid(b))throw Error('Only checked preview summary metadata may be reconciled');
+ if(same(a,b)||same(b,base))return clone(a);if(same(a,base))return clone(b);
+ const left=Date.parse(a.checkedAt),right=Date.parse(b.checkedAt);if(left===right)throw Error('Ambiguous concurrent preview summaries');
+ return clone(left>right?a:b);
+}
 export function mergeCollectorLedgers(base={},a={},b={}){
  const periods={},ids=new Set([...Object.keys(base.periods||{}),...Object.keys(a.periods||{}),...Object.keys(b.periods||{})]);
  for(const id of ids){

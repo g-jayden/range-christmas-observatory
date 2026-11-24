@@ -54,6 +54,7 @@ jobs:
       COLLECTION_MODE: ${{ inputs.mode || 'verify-all' }}
       COLLECTION_HEADLESS: 'false'
       COLLECTION_PROVIDER: firecrawl-browser
+      EVIDENCE_ISOLATE_WORKTREE: '1'
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
       ONNXRUNTIME_NODE_INSTALL_CUDA: skip
     environment:
@@ -119,7 +120,9 @@ jobs:
         run: node scripts/apply-retailer-gallery-audits.mjs
       - name: Verify source integrity, SKU matching and credit limits
         if: steps.tick.outputs.publish == 'true' || inputs.mode == 'probe'
-        run: npm test
+        run: |
+          node scripts/test-workflow-test-isolation.mjs
+          node scripts/run-isolated-workflow-tests.mjs
       - name: Verify catalogue-only transport without loading product assets
         if: inputs.mode == 'catalogue-probe'
         run: node scripts/test-catalogue-transport.mjs
@@ -291,7 +294,7 @@ jobs:
           compression-level: 9
           if-no-files-found: error
       - name: Preserve the full Range source and actual receipt before publication
-        if: always() && steps.tick.outputs.full == 'true' && steps.refresh.outcome != 'skipped'
+        if: always() && steps.refresh.outcome != 'skipped'
         continue-on-error: true
         timeout-minutes: 8
         uses: actions/upload-artifact@v7.0.2
@@ -309,6 +312,14 @@ jobs:
             web/theme-details/
             web/original-image-map/
             web/full-image-checkpoint.json
+            web/daily-image-checkpoint.json
+            web/monitor-state.json
+            web/monitor-proof.json
+            web/new-arrivals.json
+            web/new-image-audit.json
+            web/paid-native-index.json
+            web/preview-source-index.json.gz
+            web/preview-quality-cache.json.gz
             web/images/source/
             runtime/collection/
           retention-days: 3

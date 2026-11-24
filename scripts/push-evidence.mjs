@@ -1,4 +1,4 @@
-import {mergeCollectorLedgers,mergeCollectorImageCaches,mergeCollectorNativeIndexes} from '../server/collector-merge.mjs';
+import {mergeCollectorLedgers,mergeCollectorImageCaches,mergeCollectorNativeIndexes,mergeCollectorPreviewStatus} from '../server/collector-merge.mjs';
 import {gunzipSync,gzipSync} from 'node:zlib';
 import {execFileSync,spawn} from 'node:child_process';
 import {withDataPublicationLease} from '../server/pages-lease-client.mjs';
@@ -24,9 +24,9 @@ const maximumAttempts=process.env.EVIDENCE_NATIVE_ONLY==='1'?8:4;
 let saved=false;for(let attempt=1;attempt<=maximumAttempts;attempt++){
  try{
   assertLease();try{await gitNetwork('pull','--rebase','origin','main');}catch(error){
-   const conflicts=read('diff','--name-only','--diff-filter=U').split('\n').filter(Boolean),allowed=new Set(['web/collection-ledger.json','web/preview-quality-cache.json.gz','web/paid-native-index.json']);
+   const conflicts=read('diff','--name-only','--diff-filter=U').split('\n').filter(Boolean),allowed=new Set(['web/collection-ledger.json','web/preview-quality-cache.json.gz','web/paid-native-index.json','web/preview-status.json']);
    if(!conflicts.length||conflicts.some(p=>!allowed.has(p)))throw error;
-   for(const file of conflicts){const packed=file.endsWith('.gz'),stages=[1,2,3].map(n=>{const raw=execFileSync('git',['show',':'+n+':'+file],{maxBuffer:67108864});return JSON.parse((packed?gunzipSync(raw):raw).toString('utf8'));}),merged=file.endsWith('collection-ledger.json')?mergeCollectorLedgers(...stages):file.endsWith('paid-native-index.json')?mergeCollectorNativeIndexes(...stages):mergeCollectorImageCaches(...stages),bytes=Buffer.from(JSON.stringify(merged));fs.writeFileSync(file,packed?gzipSync(bytes):bytes);git('add','--',file);}
+   for(const file of conflicts){const packed=file.endsWith('.gz'),stages=[1,2,3].map(n=>{const raw=execFileSync('git',['show',':'+n+':'+file],{maxBuffer:67108864});return JSON.parse((packed?gunzipSync(raw):raw).toString('utf8'));}),merged=file.endsWith('collection-ledger.json')?mergeCollectorLedgers(...stages):file.endsWith('paid-native-index.json')?mergeCollectorNativeIndexes(...stages):file.endsWith('preview-status.json')?mergeCollectorPreviewStatus(...stages):mergeCollectorImageCaches(...stages),bytes=Buffer.from(JSON.stringify(merged));fs.writeFileSync(file,packed?gzipSync(bytes):bytes);git('add','--',file);}
    git('-c','core.editor=true','rebase','--continue');
    console.log(JSON.stringify({collectorReceiptConflictsReconciled:conflicts,sourceRequests:0,firecrawlCredits:0}));
   }
