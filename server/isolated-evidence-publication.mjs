@@ -1,5 +1,12 @@
 import fs from'node:fs/promises';import {readFileSync}from'node:fs';import os from'node:os';import path from'node:path';import{execFileSync,spawn}from'node:child_process';
 const capture=(cwd,args)=>execFileSync('git',args,{cwd,encoding:'utf8',maxBuffer:67108864,stdio:['ignore','pipe','pipe']}).trim();
+export function confirmedSharedMetadataFiles({root=process.cwd(),env=process.env}={}){
+ if(env.EVIDENCE_ISOLATE_WORKTREE!=='1'||env.EVIDENCE_ISOLATED_PUBLISHER==='1')return[];let marker;
+ try{marker=JSON.parse(readFileSync(path.join(root,'runtime/evidence-publication.json'),'utf8'));}catch(e){if(e.code==='ENOENT')return[];throw e;}
+ if(marker.runId!==env.GITHUB_RUN_ID||marker.runAttempt!==(env.GITHUB_RUN_ATTEMPT||'1')||!/^[a-f0-9]{40}$/.test(marker.revision||'')||!/^[a-f0-9]{40}$/.test(marker.collectorRevision||''))throw Error('Invalid confirmed shared metadata proof');
+ capture(root,['merge-base','--is-ancestor',marker.collectorRevision,'HEAD']);
+ return['web/collection-ledger.json','web/paid-native-index.json'].filter(file=>{try{return capture(root,['hash-object',file])===capture(root,['rev-parse',marker.revision+':'+file]);}catch{return false;}});
+}
 export function publishedEvidenceRevision({root=process.cwd(),env=process.env,localRevision=capture(root,['rev-parse','HEAD'])}={}){
  if(env.EVIDENCE_ISOLATE_WORKTREE!=='1'||env.EVIDENCE_ISOLATED_PUBLISHER==='1')return localRevision;
  const marker=JSON.parse(readFileSync(path.join(root,'runtime/evidence-publication.json'),'utf8'));
