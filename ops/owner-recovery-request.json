@@ -1,8 +1,8 @@
 {
-  "requestId": "owner-recovery-20261124-bq-membership-not-presentation-order",
+  "requestId": "owner-recovery-20261124-bq-exact-membership-current",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T12:15:59.207207+00:00",
+  "requestedAt": "2026-11-24T12:16:30.775792+00:00",
   "targets": [
-    "bq"
+    "bq-current"
   ]
 }
