@@ -554,17 +554,22 @@
       "sourceFactsFingerprint": "8f84193d821bea124478514c320323e2363657d7adfdeb01ae2880ba6254c464"
     },
     "205608": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "reason": "Directly inspected all saved exact-SKU native gallery frames and checked the offered title, description and specifications. The complete eucalyptus spray and its bare cut stem end are visible in the exact native frame. Muted green leaves have a pale glitter finish rather than orange/brown autumn foliage. The offer identifies an unpotted 77cm eucalyptus spray; no Christmas-only occasion or supplied vase appears in the exact source facts.",
       "imageHash": "4939b09e6a832b317ff9d60d6a2eb3ebb91fe8bc346c45780a021501b84dc44b",
       "sourceContentHash": "1d1f1de176d1ff39c069d90431a662df56ea2f81c95a5a7f60cef45b857af62f",
       "listingFingerprint": "054c4ed0a56f83479674a2cedddb45ed724ec02af3f68cc4d4561d693a782817",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/0/1536047828_1916.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.624Z",
-      "reviewArtifact": "renewed-source-human-sheet-15-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "0046b020b1dc7195fe613960269d08b7f7275b12a1ea89557aa2b92cc1ae4ab1"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/0/1536047828_6499.jpg",
+      "reviewedAt": "2026-11-24T13:31:58.008Z",
+      "reviewArtifact": "spring-current-gallery-sheets-20261124-205608-frame-0",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "0046b020b1dc7195fe613960269d08b7f7275b12a1ea89557aa2b92cc1ae4ab1",
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/8/0/1536047828_6499.jpg",
+      "colours": [
+        "绿色",
+        "白色"
+      ]
     },
     "213276": {
       "disposition": "include",
@@ -16280,17 +16285,23 @@
       "sourceFactsFingerprint": "9803e3bfef64ea6de583e78ca54100b601fdd72b30b7c6ed9e30e36a8d895c3f"
     },
     "1530352": {
-      "disposition": "review",
+      "disposition": "include",
       "department": "spring-stems",
-      "reason": "Human review of the saved native whole-product frame agrees with the exact offered spring-stems description and spring floral/green foliage palette. Colours refer to the offered botanical body, excluding the container and room.",
+      "reason": "Directly inspected all saved exact-SKU native gallery frames and checked the offered title, description and specifications. The isolated native frame shows the complete loose floral stem, its cut end, white daisy-like flowers, purple florets and green foliage. The exact SKU description identifies a 52cm artificial floral stem; a styled vase in the alternative image is not supplied. The Christmas gifting suggestion does not change the actual fresh spring floral body.",
       "imageHash": "7fcab275172a14f1e7733b06b62619e2fc735fc7e4660a3f6310fe01b5d5b628",
       "sourceContentHash": "77fef01ae41c9c38569b9386f7af062338d438217638efc452b17c646ad7998a",
       "listingFingerprint": "11f3f5d217d50524f0dd52a85895f0f54dea8d95074d61b29cd9bb31196c61ac",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/8/1/1790242393_1428.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.623Z",
-      "reviewArtifact": "renewed-source-human-sheet-11-20261124",
-      "wholeProductFrame": false,
-      "sourceFactsFingerprint": "9b68aa74135e7eedc9a28322689580cc68ba3261976513efe2ba77de5f1f6001"
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/8/1790242393_1446.jpg",
+      "reviewedAt": "2026-11-24T13:31:58.008Z",
+      "reviewArtifact": "spring-current-gallery-sheets-20261124-1530352-frame-0",
+      "wholeProductFrame": true,
+      "sourceFactsFingerprint": "9b68aa74135e7eedc9a28322689580cc68ba3261976513efe2ba77de5f1f6001",
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/9/8/1790242393_1446.jpg",
+      "colours": [
+        "白色",
+        "紫色",
+        "绿色"
+      ]
     },
     "1530394": {
       "disposition": "include",
@@ -27093,17 +27104,22 @@
       "sourceFactsFingerprint": "149ee92f948d1a0e9f6c8c0e708d6d4a2a63d9ad104ae954d855eec4e8624aec"
     },
     "3011297": {
-      "imageHash": "f3373a2baba81c811406a429f10e049d2809ffa499b9b8d035e14a34294db92d",
+      "imageHash": "5b6983661b82d8f86a49a6901aa1c37d59091da025d92ce586f17880036c7a53",
       "sourceContentHash": "77a8168a2c6c0196e6d99c5a7bfacff0c55178c484810b27ac5caf23675f762d",
       "listingFingerprint": "ea85faa2f3af3942dcbb402dc710ddfc84413ab896b82c92c9a511981a3ef513",
-      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/3/8/1790863795_5154.jpg",
-      "reviewedAt": "2026-11-24T07:06:15.621Z",
-      "reviewArtifact": "renewed-source-human-sheet-03-20261124",
-      "disposition": "review",
-      "reason": "The native frame is a crop/detail, logo, marketing panel or styled arrangement hiding part of the supplied plant/stem, or its complete offered form/palette remains unresolved. Inspect another exact-SKU whole-product native frame before release.",
+      "reviewedSourceImageUrl": "https://www.therange.co.uk/media/9/6/1790863798_6060.jpg",
+      "reviewedAt": "2026-11-24T13:31:58.007Z",
+      "reviewArtifact": "spring-current-gallery-sheets-20261124-3011297-frame-3",
+      "disposition": "include",
+      "reason": "Directly inspected all saved exact-SKU native gallery frames and checked the offered title, description and specifications. The full single ranunculus stem, leaf, open white/green bloom and bud are all visible on the native wooden-background frame. The exact offer explicitly supplies one stem, rather than the multi-stem styling vase in another frame. Its 44cm height and other axes remain the source specification values.",
       "sourceFactsFingerprint": "486ad373906dd8af100af49d555d5ff04eb29c003de800ed3bf22a9aed4a38e9",
       "department": "spring-stems",
-      "wholeProductFrame": false
+      "wholeProductFrame": true,
+      "selectedNativeSourceUrl": "https://www.therange.co.uk/media/9/6/1790863798_6060.jpg",
+      "colours": [
+        "白色",
+        "绿色"
+      ]
     },
     "3012722": {
       "disposition": "include",
@@ -51851,5 +51867,5 @@
       "sourceFactsFingerprint": "9d08022bb3ce3b14f93e79c58fee69fc9a571b4e9e347e2bdf4af042497d79de"
     }
   },
-  "reviewedAt": "2026-11-24T11:37:35.625Z"
+  "reviewedAt": "2026-11-24T13:31:58.008Z"
 }
