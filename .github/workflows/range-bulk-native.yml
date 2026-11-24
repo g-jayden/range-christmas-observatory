@@ -69,6 +69,10 @@ jobs:
           node scripts/restore-range-native-artifact.mjs
       - name: Recover missing originals in verified native batches, never recollect directories
         run: node scripts/mirror-range-originals.mjs
+      - name: Recover sparse unpushed original blobs before archiving
+        if: always()
+        continue-on-error: true
+        run: node scripts/prepare-native-recovery-archive.mjs
       - name: Keep a recoverable archive after any outcome
         if: always()
         continue-on-error: true
@@ -77,9 +81,7 @@ jobs:
         with:
           name: range-bulk-native-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            web/range-native*.json
-            web/collection-ledger.json
-            web/images/source/
+            runtime/native-recovery-saved/
           retention-days: 3
       - name: Publish saved originals without source collection
         if: success()
