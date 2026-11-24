@@ -380,10 +380,12 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
     results.push(item);
    }
    if(recoverChannel){const failedUrls=bad.map(r=>r.url);for(const url of failedUrls)retryUrls.delete(url);const recovery=[];for(let offset=0;offset<failedUrls.length;offset+=16)recovery.push({urls:failedUrls.slice(offset,offset+16),hashOnly:task.hashOnly,channelRecovery:true});tasks.splice(taskIndex+1,0,...recovery);console.log(JSON.stringify({phase:'native-transient-channel-recovery',attempted:attempted.length,failed:failedUrls.length,deferred:batch.length-attempted.length,onlyFailedUrlsRetried:true,concurrency:2,maximumRetriesPerUrl:1}));}
-   const deferredSize=Math.min(150,options.bodyBatchSize||150);for(let offset=0;offset<deferred.length;offset+=deferredSize)tasks.push({urls:deferred.slice(offset,offset+deferredSize),hashOnly:task.hashOnly,channelRecovery:task.channelRecovery});
+   const noProgress=policy.preferNativePreviewAssets===true&&batch.length>0&&attempted.length===0;
+   const deferredSize=noProgress?16:Math.min(150,options.bodyBatchSize||150);if(!(noProgress&&task.deferredRecovery))for(let offset=0;offset<deferred.length;offset+=deferredSize)tasks.push({urls:deferred.slice(offset,offset+deferredSize),hashOnly:task.hashOnly,channelRecovery:task.channelRecovery||noProgress,deferredRecovery:noProgress||task.deferredRecovery});
    if(taskIndex===tasks.length-1&&retryUrls.size){const retries=[...retryUrls];retryUrls.clear();for(let offset=0;offset<retries.length;offset+=200)tasks.push({urls:retries.slice(offset,offset+200),hashOnly:false});}
    for(let offset=0;offset<needsBody.length;offset+=200)tasks.push({urls:needsBody.slice(offset,offset+200),hashOnly:false});
    if(policy.imageCheckpoint)await atomicJson(policy.imageCheckpoint,{entries:{...checkpoint.entries,...previous.entries,...Object.fromEntries(results.filter(r=>r.ok).map(r=>[r.url,r]))},failures:results.filter(r=>!r.ok),observedAt:new Date(now()).toISOString()});
+   if(noProgress&&task.deferredRecovery)throw Error('图片主通道连续未执行任何地址，已保存原图并停止无进展付费重试');
    // Save every successfully downloaded original before testing the channel.
    // A transient first response gets one smaller two-connection probe, rather
    // than being mistaken for a permanent missing product or an endless retry.
