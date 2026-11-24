@@ -88,3 +88,8 @@ assert.equal(springSourceDecision({variantName:'Artificial Potted Fern',sourceDe
 console.log('PASS: empty stand-and-planter offers stay out; exact SKU bare stems override generic fern heuristics, whole trees remain trees, contradictory pot contents require review.');
 await import('./test-spring-human-frame.mjs');
 await import('./test-spring-listing-native.mjs');
+assert.equal(productNames({department:'spring-potted',variantName:'White Artificial Orchid in Pink Ceramic Pot',paletteEvidence:{colours:['白色','绿色']}}).zh,'白色／绿色兰花仿真盆栽');
+assert.equal(productNames({department:'spring-potted',variantName:'Artificial Agapanthus Plant with White Pot'}).zh,'百子莲仿真盆栽');
+assert.equal(productNames({department:'spring-tree',variantName:'2pcs Artificial Zamioculcas Tree - Green'}).zh,'绿色金钱树仿真树（2件套）');
+assert.equal(productNames({department:'spring-tree',variantName:'Pair of Artificial Pink and White Rose Trees',paletteEvidence:{colours:['粉色','白色','绿色']}}).zh,'粉色／白色／绿色玫瑰仿真树');
+console.log('PASS: Spring Chinese names retain audited botanical body colours, omit container colours, distinguish botanical species and preserve explicit pack quantities.');
