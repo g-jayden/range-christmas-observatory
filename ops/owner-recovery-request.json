@@ -1,11 +1,8 @@
 {
-  "requestId": "owner-recovery-20261124-spring-seasonal-usage-native-review",
+  "requestId": "owner-recovery-20261124-spring-final-palette-classification",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T02:45:36.950Z",
+  "requestedAt": "2026-11-24T03:00:09.414Z",
   "targets": [
-    "spring-review"
-  ],
-  "supersedeSpringBeforePaid": [
-    45312408979
+    "spring-classify"
   ]
 }
