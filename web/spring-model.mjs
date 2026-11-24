@@ -37,7 +37,7 @@ export function springSourceDecision(p){
  const firstFeature=description.split(/\n/).find(l=>/^\s*[-*]\s+/.test(l))||'';
  if(/(?:^|\/)vases(?:\/|$)/i.test(category)&&/\bvases?\b/i.test(firstFeature)&&!/\b(?:artificial|faux|potted|arrangement|includes?|included)\b/i.test(firstFeature))return{disposition:'exclude',reason:'official-vase-category-and-offered-container-description',evidence:firstFeature};
  const foliage=/\b(?:artificial|faux|fake|silk|flower|floral|foliage|leaf|leaves|garland|wreath|stem|spray|bouquet|pick|tree|potted|plant|fern|orchid|rose|hydrangea|eucalyptus|tulip|daisy|peony|gypsophila|lavender|blossom)\b/i;
- const namedPlantVessel=/artificial-plants(?:\/|$)/i.test(category)&&/\b(?:lily|lilies|eucalyptus|hydrangea|peony|tulip|rose|daisy|lavender)\b/i.test(title);
+ const namedPlantVessel=/(?:^|\/)artificial-(?:plants|flowers)(?:\/|$)/i.test(category)&&/\b(?:lily|lilies|eucalyptus|hydrangea|peony|tulip|rose|daisy|lavender)\b/i.test(title);
  if(/\b(?:vases?|planters?|pots?|baskets?|urns?|stands?|frames?|holders?|jugs?|bottles?|mugs?|watering cans?)\b/i.test(title)&&!namedPlantVessel&&!(/\b(?:in|with)\b[\s\S]*\b(?:pots?|vases?|planters?|baskets?|jugs?)\b|\b(?:arrangement|potted|artificial|faux|fake|tree|fern|succulent|orchid|flowering)\b/i.test(title)))return{disposition:'exclude',reason:'empty-container-or-accessory',evidence:title};
  if(!foliage.test(title+' '+category))return{disposition:'review',reason:'botanical-object-unconfirmed',evidence:title};
  const opening=(description.split(/## Information\s*/i)[1]||'').split(/(?<=[.!?])\s+/)[0]||'',offered=featureHead+' '+opening;
