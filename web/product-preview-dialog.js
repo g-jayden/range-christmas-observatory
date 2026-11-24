@@ -2,7 +2,7 @@ import {cardPreviewSource,productPreviewGallery} from './product-preview.mjs';
 import {annotatedImage,nativeImage} from './native-image-browser.mjs';
 import {productKey} from './product-facts.mjs';
 import {isFavorite,toggleFavorite,onFavoritesChange} from './favorites-store.mjs';
-export {cardPreviewSource};
+export {cardPreviewSource,productPreviewGallery};
 const escape=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let dialog,items=[],position=0,current,version=0,objectUrl;
 function heart(){if(!dialog||!current)return;const yes=isFavorite(current),button=dialog.querySelector('[data-preview-favorite]');button.setAttribute('aria-pressed',String(yes));button.setAttribute('aria-label',yes?'取消收藏 · Remove favorite':'收藏商品 · Save favorite');button.querySelector('path').setAttribute('fill',yes?'currentColor':'none');}
