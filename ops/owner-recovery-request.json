@@ -1,8 +1,18 @@
 {
-  "requestId": "owner-recovery-20261124-compact-native-saved-0630",
+  "requestId": "owner-recovery-20261124-independent-native-queue-0638",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T22:28:35.282Z",
+  "requestedAt": "2026-11-24T22:37:28.231Z",
   "targets": [
-    "native-saved-checkpoint"
+    "range-native-current"
+  ],
+  "supersedeRangeNativeBeforeCollection": [
+    {
+      "runId": 45501545685,
+      "expectedCommit": "fd1618a5cdbd78816a8de8b370f81b52d719847e"
+    },
+    {
+      "runId": 45500670029,
+      "expectedCommit": "5afd7f70a560d4a81e174a8c7c721b2f6453c828"
+    }
   ]
 }
