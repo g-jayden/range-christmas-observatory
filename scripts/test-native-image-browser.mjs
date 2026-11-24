@@ -9,6 +9,7 @@ globalThis.fetch=async url=>{requests++;assert.equal(url,'native/exact.jpg');ret
 const sha=b=>createHash('sha256').update(b).digest('hex'),source='https://cdn.next.co.uk/exact-original.jpg';
 const product=()=>({retailerId:'nx',sku:'one',originalImageUrl:source,originalCachedImageUrl:'native/exact.jpg',originalImageEvidence:{sourceUrl:source,sha256:sha(pixels)}});
 const {nativeImage}=await import('../web/native-image-browser.mjs');
+await assert.rejects(nativeImage({...product(),browseDetailsPending:true}),/Exact product record is still loading/);assert.equal(requests,0,'A compact browse row cannot download a thumbnail as an original before its exact record loads');
 const first=await nativeImage(product());assert.equal(requests,1);assert.equal(first.width,1800);assert.equal(entries.size,1);assert.equal(sha(new Uint8Array(await first.blob.arrayBuffer())),sha(pixels));
 // The same official URL can be changed by its owner. Both RAM and disk reuse
 // must depend on the current source digest, rather than the URL alone.
@@ -23,6 +24,7 @@ console.log('PASS: native bytes are SHA-verified before caching, survive reload 
 let draws=0;const labels=[];
 globalThis.document={createElement:()=>{const canvas={width:0,height:0,getContext:()=>({drawImage(){draws++;},measureText:s=>({width:s.length*8}),fillRect(){},fillText:s=>labels.push(s)}),toBlob:callback=>callback(new Blob(['annotated-native-pixels'],{type:'image/png'}))};return canvas;}};
 const {annotatedImage,cachedAnnotatedImage}=await import('../web/native-image-browser.mjs');
+await assert.rejects(annotatedImage({...product(),priceGBP:10,browseDetailsPending:true}),/Exact product record is still loading/);assert.equal(draws,0,'No low-resolution or size-missing save image can be rendered from a pending browse row');
 const named={...product(),priceGBP:10,heightLabel:'30cm'},firstAnnotated=await annotatedImage(named);assert.equal((await annotatedImage(named)),firstAnnotated);assert.equal(draws,1);assert.equal(cachedAnnotatedImage(named),firstAnnotated);
 await annotatedImage({...named,priceGBP:12});assert.equal(draws,2);assert(labels.includes('£12.00'));await annotatedImage({...named,heightLabel:'40cm'});assert.equal(draws,3);assert(labels.includes('40cm'));
 await assert.rejects(annotatedImage({...named,sourceImageConflict:{note:'conflict'}}),/conflict/);
