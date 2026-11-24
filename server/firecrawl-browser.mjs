@@ -380,7 +380,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
    if(batch.length!==items.length||batch.some(r=>!items.some(i=>i.url===r.url)))throw Error('图片批量核验没有返回全部请求地址');
    const attempted=batch.filter(r=>!r.deferred),bad=attempted.filter(r=>!r.ok||r.width<64||r.height<64),widespread=attempted.length>0&&bad.length>attempted.length*.8;
    const transient=row=>!row.ok&&(row.status===0||row.status===429||row.status>=500||!row.debug&&/fetch-or-decode/.test(row.error||''));
-   const recoverChannel=policy.preferNativePreviewAssets===true&&widespread&&bad.every(transient)&&!task.channelRecovery;
+   const recoverChannel=widespread&&bad.every(transient)&&!task.channelRecovery;
    rechecked+=batch.filter(r=>!r.deferred).length;const needsBody=[],deferred=[];
    for(const item of batch){
     if(item.deferred){deferred.push(item.url);continue;}if(!item.ok&&!retried.has(item.url)&&(item.status===0||item.status===429||item.status>=500||!item.debug&&/fetch-or-decode/.test(item.error||''))){retried.add(item.url);retryUrls.add(item.url);continue;}
@@ -394,7 +394,7 @@ export async function createFirecrawlBrowserReader({policy,budget,fetcher=fetch,
     results.push(item);
    }
    if(recoverChannel){const failedUrls=bad.map(r=>r.url);for(const url of failedUrls)retryUrls.delete(url);const recovery=[];for(let offset=0;offset<failedUrls.length;offset+=16)recovery.push({urls:failedUrls.slice(offset,offset+16),hashOnly:task.hashOnly,channelRecovery:true});tasks.splice(taskIndex+1,0,...recovery);console.log(JSON.stringify({phase:'native-transient-channel-recovery',attempted:attempted.length,failed:failedUrls.length,deferred:batch.length-attempted.length,onlyFailedUrlsRetried:true,concurrency:2,maximumRetriesPerUrl:1}));}
-   const noProgress=policy.preferNativePreviewAssets===true&&batch.length>0&&attempted.length===0;
+   const noProgress=batch.length>0&&attempted.length===0;
    const deferredSize=noProgress?16:Math.min(150,options.bodyBatchSize||150);if(!(noProgress&&task.deferredRecovery))for(let offset=0;offset<deferred.length;offset+=deferredSize)tasks.push({urls:deferred.slice(offset,offset+deferredSize),hashOnly:task.hashOnly,channelRecovery:task.channelRecovery||noProgress,deferredRecovery:noProgress||task.deferredRecovery});
    if(taskIndex===tasks.length-1&&retryUrls.size){const retries=[...retryUrls];retryUrls.clear();for(let offset=0;offset<retries.length;offset+=200)tasks.push({urls:retries.slice(offset,offset+200),hashOnly:false});}
    for(let offset=0;offset<needsBody.length;offset+=200)tasks.push({urls:needsBody.slice(offset,offset+200),hashOnly:false});

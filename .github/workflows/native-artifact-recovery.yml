@@ -1,0 +1,62 @@
+name: Restore saved native originals without source collection
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: owned-native-artifact-recovery
+  cancel-in-progress: false
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/
+            /web/*.mjs
+            /web/*.js
+            /web/*.json
+            /web/*.gz
+            /web/decoration-details/
+            /web/light-details/
+            /web/theme-details/
+            /web/original-image-map/
+            /web/spring/candidate-catalogue.json
+            /web/spring/review.json
+            /web/spring/status.json
+            /web/spring/source.json
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - run: npm ci --no-audit --no-fund
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          name: range-bulk-native-45491514916-1
+          run-id: 45491514916
+          github-token: ${{ github.token }}
+          path: runtime/restore-current-native
+      - name: Verify checkpoint promotion and finite transient recovery
+        run: |
+          node scripts/test-range-native-plan.mjs
+          node scripts/test-spring-native-transient-channel.mjs
+      - name: Recover only exact successful response bytes; keep billed receipt unchanged
+        run: node scripts/restore-current-native-artifact.mjs
+      - name: Resume uncollected originals after saved originals are restored
+        run: |
+          node --input-type=module - <<'JS'
+          const r=await fetch('https://api.github.com/repos/g-jayden/range-christmas-observatory/actions/workflows/range-bulk-native.yml/dispatches',{method:'POST',headers:{authorization:'Bearer '+process.env.GITHUB_TOKEN,accept:'application/vnd.github+json','content-type':'application/json'},body:JSON.stringify({ref:'main',inputs:{continuationDepth:'0'}}),signal:AbortSignal.timeout(20000)});if(r.status!==204)throw Error('Saved native continuation dispatch HTTP '+r.status);console.log(JSON.stringify({remainingNativeRecoveryRequested:true,sourceRequests:0,firecrawlCredits:0}));
+          JS
+      - name: Publish recovered bindings without collecting source data
+        run: node scripts/request-retailer-site-publish.mjs ar

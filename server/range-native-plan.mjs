@@ -1,6 +1,7 @@
 import {validProductImage} from './details.mjs';
 import {nativeSourceUrl} from '../web/product-facts.mjs';
 import {exactNativeGalleryMember} from './native-gallery-identity.mjs';
+import{createHash}from'node:crypto';
 export function rangeNativeTargets(products,{includeGallery=false}={}){const targets=new Map();for(const p of products){const spring=p.collectionId==='spring'&&p.springAudit?.disposition==='include'&&p.detailsReady===true&&p.detailEvidence?.verifiedProductSection===true&&String(p.detailEvidence.selectedSku)===String(p.sku);if(p.taxonomyAudit?.disposition!=='include'&&!spring||p.sourceImageConflict)continue;
  const selected=nativeSourceUrl(p),rejected=new Set([...(p.galleryRejections||[]),...(p.sourceFamilyReferenceImages||[])].map(g=>(g.url||g.sourceUrl||'').split('?')[0])),equivalent=p.identicalPhotoOriginalEvidence,urls=[selected,...(includeGallery?(p.originalImages||[]).map(g=>g.url):[])];
  for(const url of new Set(urls)){const gallery=p.originalImages?.find(g=>g.url===url&&exactNativeGalleryMember(p,g));if(!gallery||!validProductImage(url)||new URL(url).hostname!=='www.therange.co.uk'||rejected.has(url.split('?')[0])||equivalent?.comparison?.equivalent===true&&url===equivalent.rootUrl||targets.has(url))continue;
@@ -31,4 +32,9 @@ export function mergeCommittedRangeNativeEntries(current,checkpoint,targets,trac
   const latest=Date.parse(e.observedAt||0)>Date.parse(prior.observedAt||0)?e:prior,bindings=[...new Set([...(prior.bindings||[]),...(e.bindings||[])])].sort(),selectedSkus=[...new Set([...(prior.selectedSkus||[]),...(e.selectedSkus||[])])].sort();
   merged[url]={...latest,...(Number.isFinite(prior.bytes??e.bytes)?{bytes:prior.bytes??e.bytes}:{}),...(bindings.length?{bindings}:{}),...(selectedSkus.length?{selectedSkus}:{})};
  }return merged;
+}
+
+export async function verifiedCheckpointNativeEntries(targets,checkpoint,{existing={},readOriginal}={}){
+ const entries={},rejected=[];for(const[url,e]of Object.entries(checkpoint||{})){const target=targets.get(url);if(!target)continue;try{if(existing[url])try{validateRangeNativeEntry(target,existing[url]);continue;}catch{}validateRangeNativeEntry(target,e);if(!/^images\/source\/[a-f0-9]{64}\.(?:jpg|png|webp|gif|avif)$/.test(e.cachedImageUrl||''))throw Error('Unverified native checkpoint path');const bytes=await readOriginal(e.cachedImageUrl);if(createHash('sha256').update(bytes).digest('hex')!==e.hash||Number.isFinite(e.bytes)&&bytes.length!==e.bytes)throw Error('Native checkpoint bytes changed');entries[url]=e;}catch(error){rejected.push({url,error:String(error.message).slice(0,180)});}}
+ return{entries,rejected};
 }

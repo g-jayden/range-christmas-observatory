@@ -1,8 +1,8 @@
 {
-  "requestId": "owner-recovery-20261124-restore-priority-native-510041",
+  "requestId": "owner-recovery-20261124-restore-interrupted-native-artifact",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-24T21:32:58.732Z",
+  "requestedAt": "2026-11-24T21:54:04.139Z",
   "targets": [
-    "range-native-resolution"
+    "native-saved-checkpoint"
   ]
 }
