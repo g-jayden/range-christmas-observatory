@@ -1,10 +1,12 @@
 import {productDimensions,treeHeightConflict} from './catalogue-model.mjs';
 import {retailerForScope,retailerName} from './retailers.mjs';
+import {knownForeignProductPhoto} from './bq-foreign-photo-model.mjs';
 
 export const productRetailer=p=>p.retailerId==='the-range-gb'?'the-range':p.retailerId||retailerForScope(p.department||p.kind);
 export const productKey=p=>productRetailer(p)+':'+String(p.canonicalSku||p.sku);
 export const productPrice=p=>Number.isFinite(p.priceGBP)?'£'+p.priceGBP.toFixed(2):'官网未标价 · Price not specified';
 export function assertProductPhoto(p){
+ if(knownForeignProductPhoto(p))throw Error('官网所选图片为无关宠物笼，不能导出 · Unrelated official pet-crate photo cannot be exported');
  if(p.sourceImageConflict)throw Error(p.sourceImageConflict.note||'官网标题与配图冲突 · Official title and photo disagree');
 }
 export function componentSizeFacts(p){
