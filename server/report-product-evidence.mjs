@@ -1,4 +1,5 @@
 import{sameEvidenceIdentity}from'./verified-evidence.mjs';
+import{knownForeignProductPhoto}from'../web/bq-foreign-photo-model.mjs';
 // Range's compact in-stock catalogue predates the other retailers' explicit
 // inStock boolean. Its complete filtered directory and exact record membership
 // are the stock evidence; a missing boolean is not an out-of-stock response.
@@ -19,6 +20,7 @@ export function reportProductEvidence(product,candidate,source,{retailerId,now=D
  if(!fullDetail&&!directoryReport)reasons.push('exact-SKU-detail-proof-missing');
  if(!Number.isFinite(product.priceGBP)||product.priceGBP<0)reasons.push('current-price-missing');
  if(product.sourceImageConflict)reasons.push('official-title-photo-conflict');
+ if(knownForeignProductPhoto(product))reasons.push('known-unrelated-official-photo');
  if(product.previewReviewRequired||product.sourcePhotoQuarantined)reasons.push('whole-product-photo-unaccepted');
  if(product.classificationEvidence?.requiresReview||product.taxonomyAudit?.disposition==='exclude')reasons.push('physical-classification-unaccepted');
  return {accepted:!reasons.length,reasons,...(directoryReport?{contract:'current-directory-explicit-title-size-and-exact-SKU-native-gallery',reportSize:explicitSize,descriptionVerified:false}:{})};
