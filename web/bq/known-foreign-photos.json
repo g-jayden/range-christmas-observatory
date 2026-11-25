@@ -1,0 +1,191 @@
+{
+  "version": "bq-current-human-reviewed-pet-crate-cluster-20261125-v2",
+  "preview": "official 600px fit,0 JPEG qlt90",
+  "reviewMethod": "Visually inspected all exact-SKU official gallery frames; byte hashes denote unrelated full-size pet crates, not Christmas ornaments. Never a positive product approval.",
+  "images": [
+    {
+      "sha256": "48e08c2634be965d6c39d8a765f72d154030d037c09ae14b818ae6c44d5ec207",
+      "object": "full-size-pet-crate-or-accessory",
+      "reviewedAt": "2026-11-25T00:37:17.135Z",
+      "reviewArtifact": "bq-current-all-pending-gallery-20261125",
+      "sourceExamples": [
+        {
+          "sku": "8785489602861",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/12pcs-christmas-poinsettia-flower-artificial-with-clips-stems-red-5-5inch~8785489602861_08c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 8
+        },
+        {
+          "sku": "8884419679840",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/30-pack-6cm-christmas-balls-christmas-tree-decoration-plastic-christmas-ball-ornaments-sparkling-decorative-hanging-for-180~8884419679840_08c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 8
+        },
+        {
+          "sku": "8941467469448",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/christmas-hanging-ornament-set-pack-of-5-funny-stocking-cap-novelty-figure-tree-decorations-party-gift-type-two-festive-home-decor~8941467469448_08c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 8
+        }
+      ]
+    },
+    {
+      "sha256": "808a8f8ddaa20424e56059b4062f759396233e177e19aa2ad5645f67e3dcd6a2",
+      "object": "full-size-pet-crate-or-accessory",
+      "reviewedAt": "2026-11-25T00:37:17.135Z",
+      "reviewArtifact": "bq-current-all-pending-gallery-20261125",
+      "sourceExamples": [
+        {
+          "sku": "8884419679840",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/30-pack-6cm-christmas-balls-christmas-tree-decoration-plastic-christmas-ball-ornaments-sparkling-decorative-hanging-for-180~8884419679840_05c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 5
+        },
+        {
+          "sku": "8941467469448",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/christmas-hanging-ornament-set-pack-of-5-funny-stocking-cap-novelty-figure-tree-decorations-party-gift-type-two-festive-home-decor~8941467469448_05c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 5
+        },
+        {
+          "sku": "8941467469035",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/cute-elk-love-resin-christmas-tree-pendant-ornament-hanging-keepsake-decoration-diy-window-festive-holiday-home-party-decor~8941467469035_05c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 5
+        }
+      ]
+    },
+    {
+      "sha256": "d7a89c5da21dea453e5679426afe31d7f7f4427e350ac00c728629d873376039",
+      "object": "full-size-pet-crate-or-accessory",
+      "reviewedAt": "2026-11-25T00:37:17.135Z",
+      "reviewArtifact": "bq-current-all-pending-gallery-20261125",
+      "sourceExamples": [
+        {
+          "sku": "8884419679840",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/30-pack-6cm-christmas-balls-christmas-tree-decoration-plastic-christmas-ball-ornaments-sparkling-decorative-hanging-for-180~8884419679840_06c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 6
+        },
+        {
+          "sku": "8941467469448",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/christmas-hanging-ornament-set-pack-of-5-funny-stocking-cap-novelty-figure-tree-decorations-party-gift-type-two-festive-home-decor~8941467469448_06c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 6
+        },
+        {
+          "sku": "8941467469035",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/cute-elk-love-resin-christmas-tree-pendant-ornament-hanging-keepsake-decoration-diy-window-festive-holiday-home-party-decor~8941467469035_06c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 6
+        }
+      ]
+    },
+    {
+      "sha256": "eb1d0df828d6e98c896b2d6b6f6a884a4d7e964d05dd28bd8bd28a27777a9775",
+      "object": "full-size-pet-crate-or-accessory",
+      "reviewedAt": "2026-11-25T00:37:17.135Z",
+      "reviewArtifact": "bq-current-all-pending-gallery-20261125",
+      "sourceExamples": [
+        {
+          "sku": "8884419679840",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/30-pack-6cm-christmas-balls-christmas-tree-decoration-plastic-christmas-ball-ornaments-sparkling-decorative-hanging-for-180~8884419679840_07c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 7
+        },
+        {
+          "sku": "8941467469448",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/christmas-hanging-ornament-set-pack-of-5-funny-stocking-cap-novelty-figure-tree-decorations-party-gift-type-two-festive-home-decor~8941467469448_07c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 7
+        },
+        {
+          "sku": "8941467469035",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/cute-elk-love-resin-christmas-tree-pendant-ornament-hanging-keepsake-decoration-diy-window-festive-holiday-home-party-decor~8941467469035_07c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 7
+        }
+      ]
+    },
+    {
+      "sha256": "2973d072475903817f88ecd1f310dc26e1c0cfecf89b0f8706a5a47d6f4d24c7",
+      "object": "full-size-pet-crate-or-accessory",
+      "reviewedAt": "2026-11-25T00:37:17.135Z",
+      "reviewArtifact": "bq-current-all-pending-gallery-20261125",
+      "sourceExamples": [
+        {
+          "sku": "8941467469448",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/christmas-hanging-ornament-set-pack-of-5-funny-stocking-cap-novelty-figure-tree-decorations-party-gift-type-two-festive-home-decor~8941467469448_01c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 1
+        },
+        {
+          "sku": "8941467469035",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/cute-elk-love-resin-christmas-tree-pendant-ornament-hanging-keepsake-decoration-diy-window-festive-holiday-home-party-decor~8941467469035_01c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 1
+        },
+        {
+          "sku": "8941467468632",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/multicolour-personalised-christmas-snowman-tree-ornaments-pack-of-7-custom-name-wooden-xmas-decoration-gift-festive-home-decor~8941467468632_01c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 1
+        }
+      ]
+    },
+    {
+      "sha256": "74b7830061b27510c6bb576ab171303d01488c5ffd8fc3bfd9edf8445fb9446f",
+      "object": "full-size-pet-crate-or-accessory",
+      "reviewedAt": "2026-11-25T00:37:17.135Z",
+      "reviewArtifact": "bq-current-all-pending-gallery-20261125",
+      "sourceExamples": [
+        {
+          "sku": "8941467469448",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/christmas-hanging-ornament-set-pack-of-5-funny-stocking-cap-novelty-figure-tree-decorations-party-gift-type-two-festive-home-decor~8941467469448_02c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 2
+        },
+        {
+          "sku": "8941467469035",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/cute-elk-love-resin-christmas-tree-pendant-ornament-hanging-keepsake-decoration-diy-window-festive-holiday-home-party-decor~8941467469035_02c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 2
+        },
+        {
+          "sku": "8941467468632",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/multicolour-personalised-christmas-snowman-tree-ornaments-pack-of-7-custom-name-wooden-xmas-decoration-gift-festive-home-decor~8941467468632_02c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 2
+        }
+      ]
+    },
+    {
+      "sha256": "c134a3f0ca0b5dc9644824392a80675b3ad8d5c137064c85fbf3834d4e221000",
+      "object": "full-size-pet-crate-or-accessory",
+      "reviewedAt": "2026-11-25T00:37:17.135Z",
+      "reviewArtifact": "bq-current-all-pending-gallery-20261125",
+      "sourceExamples": [
+        {
+          "sku": "8941467469448",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/christmas-hanging-ornament-set-pack-of-5-funny-stocking-cap-novelty-figure-tree-decorations-party-gift-type-two-festive-home-decor~8941467469448_03c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 3
+        },
+        {
+          "sku": "8941467469035",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/cute-elk-love-resin-christmas-tree-pendant-ornament-hanging-keepsake-decoration-diy-window-festive-holiday-home-party-decor~8941467469035_03c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 3
+        },
+        {
+          "sku": "8941467468632",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/multicolour-personalised-christmas-snowman-tree-ornaments-pack-of-7-custom-name-wooden-xmas-decoration-gift-festive-home-decor~8941467468632_03c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 3
+        }
+      ]
+    },
+    {
+      "sha256": "32aabc39486c34548f989b673c4eeb1b06b0cf4033dc1a05d5cef36f2181c0aa",
+      "object": "full-size-pet-crate-or-accessory",
+      "reviewedAt": "2026-11-25T00:37:17.135Z",
+      "reviewArtifact": "bq-current-all-pending-gallery-20261125",
+      "sourceExamples": [
+        {
+          "sku": "8941467469448",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/christmas-hanging-ornament-set-pack-of-5-funny-stocking-cap-novelty-figure-tree-decorations-party-gift-type-two-festive-home-decor~8941467469448_04c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 4
+        },
+        {
+          "sku": "8941467469035",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/cute-elk-love-resin-christmas-tree-pendant-ornament-hanging-keepsake-decoration-diy-window-festive-holiday-home-party-decor~8941467469035_04c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 4
+        },
+        {
+          "sku": "8941467468632",
+          "url": "https://media.diy.com/is/image/KingfisherDigital/multicolour-personalised-christmas-snowman-tree-ornaments-pack-of-7-custom-name-wooden-xmas-decoration-gift-festive-home-decor~8941467468632_04c_MP?scl=1&fmt=jpg&qlt=100",
+          "frame": 4
+        }
+      ]
+    }
+  ]
+}
