@@ -1,12 +1,22 @@
 {
-  "requestId": "spring-native-bodies-20261124-structured-wildflower",
-  "baseObservedAt": "2026-11-24T06:01:25.250Z",
+  "requestId": "spring-native-bodies-20261125-new-arrival-whole-frame-alternates",
+  "baseObservedAt": "2026-11-25T03:12:26.787Z",
   "products": [
     {
-      "sku": "1339504",
-      "factsFingerprint": "b35945f1e1e81c98bf6686fd6b88b3cabf0414ffff4ffed8b643a64e774fadb5",
+      "sku": "523255",
+      "factsFingerprint": "dbd5e1eaedd2e01cc3da0592c7b933de563a277b5a8ee0ecdbe060c74f5fb9bf",
       "urls": [
-        "https://www.therange.co.uk/media/7/6/1792883140_2193.jpg"
+        "https://www.therange.co.uk/media/1/4/1792515695_6007.jpg",
+        "https://www.therange.co.uk/media/2/8/1792515696_5029.jpg",
+        "https://www.therange.co.uk/media/2/2/1792515697_1916.jpg"
+      ]
+    },
+    {
+      "sku": "522399",
+      "factsFingerprint": "f61dad4a52d0c84a6428728166db685c350c52cb301d76481e9e9b9fe43155e6",
+      "urls": [
+        "https://www.therange.co.uk/media/2/5/1792515686_5584.jpg",
+        "https://www.therange.co.uk/media/6/7/1792515688_6649.jpg"
       ]
     }
   ]
