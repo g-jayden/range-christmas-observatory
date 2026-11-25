@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import {productNames,PDF_LAYOUT_VERSION} from '../web/product-names.mjs';
+for(const variantName of ['Fiddle Tree in Pot','Artificial Fiddle Leaf Fig Tree','Ficus lyrata in pot']){const names=productNames({department:'spring-tree',variantName});assert.equal(names.en,variantName);assert(names.zh.includes('琴叶榕'),'The exact botanical product name must not fall back to generic green foliage');}
 import {offeredObject} from '../web/taxonomy.mjs';
 const villageModel = {variantName:'The Tipsy Tavern Model',kind:'decoration',department:'ornaments',sourceDescription:'A miniature festive pub building with warm lights.'};
 assert.equal(offeredObject(villageModel).id,'scenes');
