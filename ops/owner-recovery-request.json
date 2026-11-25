@@ -1,9 +1,8 @@
 {
-  "requestId": "owner-recovery-20261125-bq-exact-photo-publication",
+  "requestId": "owner-recovery-20261125-reviewed-native-originals",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-25T01:09:07.000Z",
+  "requestedAt": "2026-11-25T01:19:17Z",
   "targets": [
-    "static-pages-current",
-    "bq-photos-current"
+    "native-recovery-current"
   ]
 }
