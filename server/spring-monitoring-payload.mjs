@@ -15,5 +15,9 @@ export function springMonitoringPayload({source,catalogue,review,status},committ
   if(!/^\d{1,12}$/.test(sku)||seen.has(sku)||p.retailerId!=='the-range'||p.collectionId!=='spring'||p.observedAt!==accepted.observedAt||p.springAudit?.version!==SPRING_VERSION||!['include','exclude','review'].includes(disposition)||disposition==='include'&&!acceptedSkus.has(sku))throw Error('Unaccounted exact Spring inventory SKU '+sku);
   seen.add(sku);inventory.push({sku,variantId:String(p.variantId),disposition,inStock:p.inStock===true,newStatus:p.newStatus===true,everNew:p.everNew===true,arrivalEvidence:p.arrivalEvidence,firstNewObservedAt:p.firstNewObservedAt});
  }
- return{contract:SPRING_MONITOR_CONTRACT,version:SPRING_VERSION,collectionId:'spring',collectionComplete:true,ready:accepted.ready,reviewComplete:accepted.reviewComplete,reviewPending:accepted.reviewPending,observedAt:accepted.observedAt,discoveryBaselineAt:source.discoveryBaselineAt||source.observedAt,committedRevision,source:Object.fromEntries(['id','url','expected','observed','unique','complete'].filter(k=>accepted.source[k]!==undefined).map(k=>[k,accepted.source[k]])),inventory,products:accepted.products.map(springNotificationFacts)};
+ // The PDF builder resolves all measurements and full NEW evidence from the
+ // committed candidate catalogue. Repeating those large objects for every old
+ // product is unnecessary in the private discovery/queue request.
+ const products=accepted.products.map(p=>{const{dimensions,newEvidence,...facts}=springNotificationFacts(p);return facts;});
+ return{contract:SPRING_MONITOR_CONTRACT,version:SPRING_VERSION,collectionId:'spring',collectionComplete:true,ready:accepted.ready,reviewComplete:accepted.reviewComplete,reviewPending:accepted.reviewPending,observedAt:accepted.observedAt,discoveryBaselineAt:source.discoveryBaselineAt||source.observedAt,committedRevision,source:Object.fromEntries(['id','url','expected','observed','unique','complete'].filter(k=>accepted.source[k]!==undefined).map(k=>[k,accepted.source[k]])),inventory,products};
 }

@@ -1,9 +1,8 @@
 {
-  "requestId": "owner-recovery-20261125-spring-independent-arrivals",
+  "requestId": "owner-recovery-20261125-spring-compact-inventory",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-25T03:05:00.000Z",
+  "requestedAt": "2026-11-25T03:09:30.000Z",
   "targets": [
-    "spring-monitor-current",
-    "spring-daily-current"
+    "spring-monitor-current"
   ]
 }
