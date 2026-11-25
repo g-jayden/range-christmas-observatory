@@ -1,0 +1,48 @@
+name: Confirm Spring inventory and unified arrival monitoring
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [The Range spring botanical catalogue]
+    types: [completed]
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: range-spring-monitor-baseline
+  cancel-in-progress: false
+jobs:
+  monitoring:
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CONTROL_API_URL: ${{ vars.CONTROL_API_URL }}
+      CONTROL_TOKEN: ${{ secrets.CONTROL_TOKEN }}
+      GITHUB_TOKEN: ${{ github.token }}
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/web/images/
+            !/web/mail-assets/
+            !/web/reports/
+            !/web/bq/
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - name: Accept only closed inventory and individually verified products
+        run: node scripts/sync-spring-service.mjs
+      - name: Preserve the acknowledged baseline without changing review readiness
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add --sparse -- web/spring/source.json web/spring/candidate-catalogue.json web/spring/catalogue.json web/spring/status.json
+          git diff --cached --quiet || git commit -m "Confirm Spring inventory baseline and verified-only unified arrival queue [skip ci]"
+          EVIDENCE_ISOLATE_WORKTREE=1 EVIDENCE_NATIVE_ONLY=1 node scripts/push-evidence.mjs
+      - name: Publish without source collection or a separate email
+        run: node scripts/request-nx-site-publish.mjs

@@ -6,7 +6,7 @@ on:
     inputs:
       phase:
         type: choice
-        options: [all, review, repair, classify]
+        options: [all, daily, review, repair, classify]
         default: all
       resume:
         type: boolean
@@ -32,7 +32,8 @@ jobs:
       EVIDENCE_ISOLATE_WORKTREE: '1'
       COLLECTION_BUDGET_PHASE: spring-source
       SPRING_RESUME: ${{ inputs.resume && '1' || '0' }}
-      SPRING_LOCAL_ONLY: ${{ inputs.phase == 'classify' && '1' || '0' }}
+      SPRING_LOCAL_ONLY: ${{ (inputs.phase == 'classify' || inputs.phase == 'daily' || github.event_name == 'schedule') && '1' || '0' }}
+      SPRING_MODE: ${{ (inputs.phase == 'daily' || github.event_name == 'schedule') && 'daily' || 'all' }}
     steps:
       - uses: actions/checkout@v7.0.1
         with:

@@ -6,6 +6,7 @@ await import('./test-spring-review-bindings.mjs');
 import{springBodyColourFacts}from'../server/spring-colours.mjs';
 await import('./test-spring-selected-facts.mjs');
 await import('./test-spring-single-sku-information.mjs');
+await import('./test-spring-inventory-monitor.mjs');
 await import('./test-spring-gallery-references.mjs');
 await import('./test-spring-manufacturer-photo.mjs');
 await import('./test-manufacturer-native-full-update.mjs');

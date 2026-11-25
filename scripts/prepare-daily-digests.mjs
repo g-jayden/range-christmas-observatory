@@ -15,7 +15,7 @@ const prepared=[],failures=[],cache=new Map();let bqPrepared=false;const nativeR
 async function json(relative,root='web'){const key=root+'/'+relative;if(!cache.has(key))cache.set(key,fs.readFile(key,'utf8').then(JSON.parse));return cache.get(key);}
 async function exactProduct(candidate){
  const id=productRetailer(candidate),dep=candidate.taxonomyAudit?.primary||candidate.department||candidate.kind;let source,p;
- if(id==='the-range'&&candidate.collectionId==='spring'){source=await json('spring/catalogue.json');p=source.products.find(p=>String(p.sku)===String(candidate.sku));}
+ if(id==='the-range'&&candidate.collectionId==='spring'){source=await json('spring/candidate-catalogue.json').catch(e=>{if(e.code==='ENOENT')return json('spring/catalogue.json');throw e;});p=source.products.find(p=>String(p.sku)===String(candidate.sku));}
  else if(id==='the-range'){p=rangeBySku.get(String(candidate.sku));source=range;}
  else{
   let root='web';
