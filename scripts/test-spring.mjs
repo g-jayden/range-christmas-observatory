@@ -148,3 +148,5 @@ assert.equal(arrivalWhilePhotosPending.baselineReady,false,'Remembering a new ar
 assert.equal(arrivalWhilePhotosPending.discoveryBaselineAt,'2026-11-23T20:00:00Z');
 assert.equal(arrivalWhilePhotosPending.products[0].firstNewObservedAt,'2026-11-23T22:00:00Z');assert.equal(arrivalWhilePhotosPending.products[0].arrivalEvidence,'observed-after-baseline');
 console.log('PASS: a complete discovery baseline retains genuine subsequent NEW arrivals while photo verification is unfinished, without activating or emailing an unverified catalogue.');
+
+await import('./test-spring-daily-review-plan.mjs');
