@@ -22,10 +22,10 @@ export function asdaMemberships(p){
  else if(category==='D18M2G1C2')primary='asda-tree-decorations';
  else if(category==='D18M2G1C3'||/\b(?:christmas|string|cluster|icicle|curtain|fairy|net|rope|tree) lights?\b/.test(title))primary='asda-lights';
  else primary='asda-room';
- const use=String(spec['Indoor / Outdoor']||'').toLowerCase();
+ const use=String(spec['Indoor / Outdoor']||'').toLowerCase(),safety=String(spec['Safety Notes']||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').toLowerCase(),explicitIndoor=/\b(?:these |this |the )?(?:lights?|product|decoration)(?: is| are)?(?: designed| suitable| intended)?(?: for)? indoor use only\b/.test(safety+' '+body)||/^(?:for )?indoor use only[.!]?$/.test(safety.trim());
  // Indoor-only is stronger than outdoor styling in a photograph.
- const outdoor=!/indoor only/.test(use)&&(/outdoor|\bboth\b/.test(use)||/\boutdoor\b/.test(title)||/suitable for (?:indoor and |indoor\/)?outdoor/.test(body));
+ const outdoor=!/indoor only/.test(use)&&!explicitIndoor&&(/outdoor|\bboth\b/.test(use)||/\boutdoor\b/.test(title)||/suitable for (?:indoor and |indoor\/)?outdoor/.test(body));
  if(outdoor&&(/outdoor only/.test(use)||physical.id==='inflatable'))primary='asda-outdoor';
  const ids=[primary];if(outdoor)ids.push('asda-outdoor');
- return {primary,memberships:[...new Set(ids)],method:'ASDA-exact-SKU-object-description-image',nativeCategory:category,offeredObjectReason:physical.reason};
+ return {primary,memberships:[...new Set(ids)],method:'ASDA-exact-SKU-object-description-image',nativeCategory:category,offeredObjectReason:physical.reason,...(explicitIndoor?{indoorOutdoorEvidence:{decision:'indoor-only',source:'explicit exact-SKU safety/product text',originalUse:spec['Indoor / Outdoor']||null}}:{})};
 }
