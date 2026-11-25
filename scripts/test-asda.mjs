@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';import fs from 'node:fs/promises';import vm from 'node:vm';
+import './test-asda-offered-body.mjs';
 import {normaliseAsdaProduct,asdaFingerprint,asdaVariantListings,asdaDimensionFacts} from '../server/asda-products.mjs';
 import {asdaMemberships,ASDA_DEPARTMENTS,retailerProductKey} from '../web/asda-model.mjs';
 import {parseAsdaPage,asdaPageParserSource,asdaBatchScript,asdaDirectoryScript} from '../server/asda-source.mjs';
