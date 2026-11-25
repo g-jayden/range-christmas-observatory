@@ -8,7 +8,7 @@ import {rebuildStoredRangeViews} from '../server/rebuild-range-views.mjs';
 import {applyRangeNativeIndex} from '../server/range-native-index.mjs';
 import {rangeNativeTargets} from '../server/range-native-plan.mjs';
 import {mergeReportProduct} from '../server/report-product-evidence.mjs';
-import {publishBqCommittedEvidence} from '../server/bq-committed-evidence.mjs';
+import {prepareBqInternalEvidence} from '../server/bq-committed-evidence.mjs';
 import {applySavedRetailerReview} from '../server/saved-retailer-reviews.mjs';
 import {recoverNativeBatch,prioritizePendingOriginals,publishedNativeCandidates,nativeAuditFingerprint,canReuseNativeAudit} from '../server/native-recovery-batch.mjs';
 import {atomicJson} from '../server/sync.mjs';
@@ -20,7 +20,7 @@ const range=await rebuildStoredRangeViews({persist:false,includeProducts:true,ve
 const rangeBulkSources=rangeNativeTargets(range.products),rangeNativeIndex=await read('range-native-index.json');
 for(const name of ['range-native-index.json','new-original-recovery.json'])applyRangeNativeIndex(range.products,await read(name).catch(()=>({entries:{}})));products.push(...range.products.filter(p=>p.taxonomyAudit?.disposition==='include'));
 for(const retailer of ['asda','ms','bm','hb','du','nx','jl','mt','bq','ar']){
- let root='web';if(retailer==='bq'){root='runtime/native-recovery-evidence';await publishBqCommittedEvidence({outputRoot:root});}
+ let root='web';if(retailer==='bq'){root='runtime/native-recovery-evidence';await prepareBqInternalEvidence({purpose:'native-recovery'});}
  const json=p=>fs.readFile(root+'/'+p,'utf8').then(JSON.parse),detailCache=new Map(),d=await json(retailer+'/catalogue.json');let rows=d.products||[];
  if(d.departmentShards)rows=(await Promise.all([...new Set(Object.values(d.departmentShards))].map(p=>json(p)))).flatMap(s=>s.products||[]);
  const reviews=['asda','du'].includes(retailer)?await json(retailer+'/reviews.json'):null;
