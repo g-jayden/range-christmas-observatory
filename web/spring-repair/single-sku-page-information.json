@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "products": [
+    {
+      "sku": "1438709",
+      "variantId": "10231609",
+      "sourceUrl": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/artificial-bay-tree-pair-120cm-potted-entrance-decor/#1438709",
+      "sourceContentHash": "40e17f7e31188c2159a0b4b76c1f8466af3624fcc3f4b0a636650aff6b757f4c",
+      "response": {
+        "success": true,
+        "data": {
+          "metadata": {
+            "statusCode": 200
+          },
+          "sourceVariant": {
+            "code": "1438709",
+            "prod_id": 3599434,
+            "sku": 1438709,
+            "id": 10231609,
+            "attributes": {
+              "Length": "50cm",
+              "Material": "pe, Plastic",
+              "Width": "50cm",
+              "Height": "129cm",
+              "Depth": "50cm",
+              "_swatch": "Green",
+              "_hex": "#00630C"
+            },
+            "attributes_supplementary": {},
+            "product_specification": [],
+            "features": [
+              "Pair of trees",
+              "Realistic foliage",
+              "Shapeable stems",
+              "Fully potted",
+              "Ready to display",
+              "Low maintenance",
+              "Indoor use",
+              "Decorative design",
+              "Fits larger planters",
+              "Premium quality"
+            ],
+            "desc_override": 0,
+            "descriptionText": ""
+          },
+          "familyEvidence": {
+            "url": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/artificial-bay-tree-pair-120cm-potted-entrance-decor",
+            "jsonUrl": "https://www.therange.co.uk/home-furnishings-and-decor/vases-and-artificial-plants/artificial-plants/artificial-bay-tree-pair-120cm-potted-entrance-decor?json",
+            "variantSkus": [
+              "1438709"
+            ],
+            "breadcrumbs": [
+              "Home",
+              "Home Furnishings & Decor",
+              "Vases & Artificial Plants",
+              "Artificial Plants"
+            ],
+            "productId": "3599434",
+            "title": "Artificial Bay Tree Pair 120cm Potted Entrance Decor",
+            "features": [],
+            "information": "Create an elegant entrance or enhance your indoor décor with this pair of realistic artificial bay trees from Leaf Design UK. Each tree stands 120cm tall with an overall diameter of 50cm, providing a classic natural appearance without the need for watering or maintenance. Supplied in plastic pots and ready to display, the stems can be arranged to your preference or placed inside larger decorative planters with bark or gravel for a more realistic finish. Ideal for hallways, doorways, living rooms, offices and reception areas.",
+            "offers": [
+              {
+                "sku": "1438709",
+                "image": null
+              }
+            ],
+            "gallery": [
+              {
+                "url": "https://www.therange.co.uk/media/7/7/1785771688_3472.jpg",
+                "variants": [
+                  "10231609"
+                ]
+              },
+              {
+                "url": "https://www.therange.co.uk/media/0/9/1785773842_6424.jpg",
+                "variants": [
+                  "10231609"
+                ]
+              },
+              {
+                "url": "https://www.therange.co.uk/media/7/7/1785771688_3472.jpg",
+                "variants": [
+                  "10231609"
+                ]
+              },
+              {
+                "url": "https://www.therange.co.uk/media/0/9/1785773842_6424.jpg",
+                "variants": [
+                  "10231609"
+                ]
+              }
+            ],
+            "originalGallery": [
+              {
+                "url": "https://www.therange.co.uk/media/9/4/1785771688_7521.jpg",
+                "thumbnail": "https://www.therange.co.uk/media/7/7/1785771688_3472.jpg",
+                "variants": [
+                  "10231609"
+                ]
+              },
+              {
+                "url": "https://www.therange.co.uk/media/0/7/1785773842_5093.jpg",
+                "thumbnail": "https://www.therange.co.uk/media/0/9/1785773842_6424.jpg",
+                "variants": [
+                  "10231609"
+                ]
+              }
+            ],
+            "structuredOriginalImages": [
+              "https://www.therange.co.uk/media/3/6/1785773749_7373.jpg",
+              "https://www.therange.co.uk/media/7/7/1785771688_3472.jpg",
+              "https://www.therange.co.uk/media/0/9/1785773842_6424.jpg"
+            ],
+            "observedAt": "2026-11-25T02:43:53.603Z",
+            "sourceTransport": "Firecrawl-fresh-basic-two-exact-official-responses"
+          }
+        }
+      }
+    }
+  ],
+  "billing": {
+    "grossCredits": 2,
+    "refundedCredits": 0,
+    "provider": "Firecrawl MCP",
+    "scrapeIds": [
+      "01a21094-6f36-743a-8a10-17800c801ab3",
+      "01a21094-6e49-72ff-96f1-e95dd5695c0b"
+    ]
+  }
+}

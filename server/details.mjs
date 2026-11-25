@@ -44,6 +44,10 @@ export function parseVariantDetails(response,expectedSku,sourceUrl,observedAt=ne
  if(soleSku)for(const raw of f.structuredOriginalImages||[]){let url;try{url=new URL(raw,f.url);}catch{continue;}if(['https://www.therange.co.uk','https://kube-media-unpublished.rstore.com'].includes(url.origin)&&!url.username&&!url.password&&!url.port&&validProductImage(url.href)&&!originalImages.some(g=>g.url===url.href||g.thumbnail===url.href))originalImages.push({url:url.href,variantId:String(v.id),selectedSku:String(expectedSku),source:f.url,method:'single-SKU-structured-image'});}
 
  const exactVariantSource={version:1,selectedSku:String(expectedSku),variantId:String(v.id),sourceUrl:f.url,jsonSource:f.jsonUrl,description:String(v.descriptionText||''),features:(v.features||[]).map(String),descriptionOverride:v.desc_override===1,observedAt};
+ // A sole-SKU page's own information is also exact product evidence. Keep
+ // its independent HTML/variant counts so a short feature list cannot hide
+ // this description, and a multi-variant family cannot lend its prose.
+ if(soleSku&&f.htmlAvailable!==false&&v.desc_override!==1&&String(f.information||'').trim())exactVariantSource.singleSkuPageInformation={selectedSku:String(expectedSku),variantId:String(v.id),productId:String(f.productId),sourceUrl:f.url,variantSkus:f.variantSkus.map(String),offerSkus:f.offers.map(o=>String(o.sku)),htmlVerified:true,text:String(f.information).trim()};
  exactVariantSource.sha256=createHash('sha256').update(JSON.stringify(exactVariantSource)).digest('hex');
  return {sku:String(expectedSku),sourceUrl,observedAt,specs,text,featuresText,image,images,originalImages,exactVariantSource,verificationMethod:f.htmlAvailable===false?'official-exact-SKU-variant-json':'official-variant-json-and-product-page',sourceTransport:f.sourceTransport,breadcrumbs:f.breadcrumbs||[],jsonSource:f.jsonUrl,sourceRedirectEvidence:f.redirectedSource,htmlAvailable:f.htmlAvailable,contentHash:createHash('sha256').update(text).digest('hex')};
 }

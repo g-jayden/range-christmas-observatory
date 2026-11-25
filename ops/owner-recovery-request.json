@@ -1,14 +1,8 @@
 {
-  "requestId": "owner-recovery-20261125-complete-gallery-publication",
+  "requestId": "owner-recovery-20261125-single-sku-information",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-25T01:50:25Z",
+  "requestedAt": "2026-11-25T02:47:30.000Z",
   "targets": [
-    "static-pages-current"
-  ],
-  "supersedeReadOnlyPagesBeforeDeployment": [
-    {
-      "runId": 45528085761,
-      "expectedCommit": "f20a00339089e9f7f9d84311f137ee7e7ff851b3"
-    }
+    "spring-classify"
   ]
 }
