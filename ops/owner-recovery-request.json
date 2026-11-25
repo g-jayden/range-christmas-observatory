@@ -1,8 +1,14 @@
 {
-  "requestId": "owner-recovery-20261125-reviewed-native-originals",
+  "requestId": "owner-recovery-20261125-bounded-display-publication",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-25T01:19:17Z",
+  "requestedAt": "2026-11-25T01:34:15Z",
   "targets": [
-    "native-recovery-current"
+    "static-pages-current"
+  ],
+  "supersedeReadOnlyPagesBeforeDeployment": [
+    {
+      "runId": 45525618935,
+      "expectedCommit": "adf6dc972b27e6ed7825fac14e7bb9b7d821847d"
+    }
   ]
 }
