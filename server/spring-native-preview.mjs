@@ -1,5 +1,15 @@
 import {exactNativeGalleryMember} from './native-gallery-identity.mjs';
 import {materializeCommittedImage} from './committed-image-file.mjs';
+// Attach already captured exact gallery originals to the browser's native
+// detail viewer. This does not select a new main frame or approve a product.
+export function bindSpringSavedGalleryNatives(products,entries){
+ let applied=0;
+ for(const p of products)for(const g of p.originalImages||[]){const e=entries?.[g.url];
+  if(!exactNativeGalleryMember(p,g)||g.variantId!=null&&String(g.variantId)!==String(p.variantId)||e?.ok!==true||e.url!==g.url||!/^[a-f0-9]{64}$/.test(e.hash||'')||e.cachedImageUrl!=='images/source/'+e.hash+'.'+String(e.cachedImageUrl||'').split('.').pop()||!/^images\/source\/[a-f0-9]{64}\.(?:jpe?g|png|webp|avif|gif)$/.test(e.cachedImageUrl)||!Number.isInteger(e.width)||!Number.isInteger(e.height)||e.width<64||e.height<64)continue;
+  g.nativeCachePath=e.cachedImageUrl;g.nativeSha256=e.hash;g.sourceWidth=e.width;g.sourceHeight=e.height;applied++;
+ }
+ return{applied,sourceRequests:0,firecrawlCredits:0};
+}
 // A local-only review can select a better frame already collected earlier.
 // Bind the classification/PDF original to those exact saved bytes as well;
 // never classify one frame while showing a different frame to the customer.
