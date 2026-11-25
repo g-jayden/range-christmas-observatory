@@ -36,3 +36,4 @@ try{const source=root+'/web';await fs.mkdir(source+'/images/source',{recursive:t
  console.log('Same-origin full-product previews preserve aspect ratio, deduplicate output, retain every source fact and native byte, and reject an incorrect source digest.');
 }finally{await fs.rm(root,{recursive:true,force:true});}
 await import('./test-bounded-display-previews.mjs');
+await import('./test-browse-native-priority.mjs');

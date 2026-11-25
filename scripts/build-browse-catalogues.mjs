@@ -6,6 +6,7 @@ import {isSpringScope} from '../web/spring-model.mjs';
 import {retailerForScope} from '../web/retailers.mjs';
 import {browseIndexProduct} from '../web/catalogue-loader.mjs';
 import {createCardPreviewBuilder,inlineFirstCardPreviews} from './build-card-previews.mjs';
+import {browseNativePriorityOrder} from '../server/browse-native-priority.mjs';
 
 // Build immutable department views from the already-published snapshot. Every
 // product field and original gallery survives; browsing never recollects data.
@@ -15,6 +16,15 @@ export async function buildBrowseCatalogues(root='public',{departments=DEPARTMEN
  const read=async file=>{if(!loaded.has(file))loaded.set(file,fs.readFile(path.join(root,file),'utf8').then(s=>({data:JSON.parse(s),bytes:Buffer.byteLength(s)})).catch(e=>{if(e.code==='ENOENT')return null;throw e;}));return loaded.get(file);};
  await fs.mkdir(path.join(root,'browse'),{recursive:true});
  const identities=(await read('product-identities.json'))?.data||{};
+ const nativePriorityScopes=[];
+ if(cards)for(const{id}of departments){
+  const retailerId=retailerForScope(id),base=retailerId==='the-range'?(isSpringScope(id)?'spring/catalogue.json':id.startsWith('theme-')?'themes.json':'classified/'+id+'.json'):retailerId+'/catalogue.json';let source=await read(base);if(!source)continue;
+  if(source.data.departmentShards?.[id])source=await read(source.data.departmentShards[id]);if(!source)throw Error('Published department shard missing: '+id);
+  const arrivals=retailerId==='the-range'&&!isSpringScope(id)?await read('new-arrivals.json'):null;
+  const visible=(arrivals?availableProducts(source.data,arrivals.data):source.data.products||[]).filter(p=>inDepartment(p,id)).filter(p=>{const key=retailerId+':'+p.sku;return !identities.canonical?.[key]&&(!identities.primary?.[key]||isThemeScope(id)||id==='lights'||identities.primary[key]===id)&&(retailerId==='the-range'||p.inStock&&p.recordType==='sku');});
+  nativePriorityScopes.push({id,products:[...new Set([...visible.slice(0,1),...visible.filter(p=>isToday(p)).slice(0,6)])]});
+ }
+ if(cards)for(const p of browseNativePriorityOrder(nativePriorityScopes))await cards.warmNative(p);
  for(const {id}of departments){
   const retailerId=retailerForScope(id),base=retailerId==='the-range'?(isSpringScope(id)?'spring/catalogue.json':id.startsWith('theme-')?'themes.json':'classified/'+id+'.json'):retailerId+'/catalogue.json';
   let source=await read(base);if(!source)continue;
