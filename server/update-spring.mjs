@@ -2,7 +2,7 @@ import fs from'node:fs/promises';import{springReviewExcludes}from'./spring-revie
 import{applySavedSpringSourcePatches}from'./spring-source-patches.mjs';
 import{applySpringGalleryPatches}from'./spring-gallery-patches.mjs';
 import{applySavedSingleSkuInformation}from'./spring-single-sku-information.mjs';
-import{springDailyDetailPlan,springPendingArrival,selectSpringNativeImageTargets,retainSpringNativeImageEvidence}from'./spring-daily-plan.mjs';
+import{springDailyDetailPlan,springPendingArrival,selectSpringNativeImageTargets,retainSpringNativeImageEvidence,springDailyNativeImageProducts}from'./spring-daily-plan.mjs';
 import{publishCollectionCheckpoint}from'./collection-checkpoints.mjs';
 import{createHash}from'node:crypto';
 import{fileURLToPath}from'node:url';
@@ -51,8 +51,9 @@ export async function updateSpring(){
   }
   const photoProducts=candidates.filter(p=>springSourceDecision(p).disposition!=='exclude'&&(!daily||planned.has(p.sku)||springPendingArrival(p)));
   const nativeTargets=daily?selectSpringNativeImageTargets(photoProducts):0;
-  snapshot.imageAudit=await reader.auditImages(photoProducts,snapshot.imageAudit||{},{bodyBatchSize:80});
-  if(daily)console.log(JSON.stringify({phase:'spring-daily-exact-native-originals',selected:nativeTargets,verified:retainSpringNativeImageEvidence(photoProducts),products:photoProducts.length,sourceDirectoriesRequested:0}));
+  const imageProducts=daily?springDailyNativeImageProducts(photoProducts):photoProducts;
+  snapshot.imageAudit=await reader.auditImages(imageProducts,snapshot.imageAudit||{},{bodyBatchSize:80});
+  if(daily)console.log(JSON.stringify({phase:'spring-daily-exact-native-originals',selected:nativeTargets,verified:retainSpringNativeImageEvidence(photoProducts),products:photoProducts.length,observedGalleryImageRecords:imageProducts.length,sourceDirectoriesRequested:0}));
   await atomicJson('web/spring/source.json',snapshot);await reader.close();const native=reader.metrics();await budget.settle({credits:native.firecrawlCredits,receipt:native.receipt,report:{mode:'range-spring',native,products:snapshot.products.length}});snapshot.collectionAudit={native,completedAt:new Date().toISOString()};await atomicJson('web/spring/source.json',snapshot);console.log(JSON.stringify({phase:'spring-collected',total:snapshot.products.length,verified:photoProducts.filter(p=>p.detailsReady).length,images:snapshot.imageAudit.loaded,failed:snapshot.imageAudit.failed,native}));
  }catch(e){await reader?.close().catch(()=>{});const native=reader?.metrics()||{};await budget?.settle({credits:native.firecrawlCredits||0,receipt:native.receipt,report:{mode:'range-spring',error:e.message,native}});if(snapshot){snapshot.collectionError={error:e.message,at:new Date().toISOString()};await atomicJson('web/spring/source.json',snapshot);}throw e;}finally{await reader?.close();}
 }
