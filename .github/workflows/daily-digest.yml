@@ -4,7 +4,7 @@ on:
     branches: [main]
     paths: ['.github/workflows/daily-digest.yml']
   schedule:
-    - cron: '0,30 23,0-5 * * *'
+    - cron: '0,30 22,23,0-5 * * *'
   workflow_dispatch:
     inputs:
       repairCombined:

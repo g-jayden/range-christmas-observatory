@@ -64,8 +64,8 @@ for(const originalGroup of plan.plans){
   const group=originalGroup;
   const identity=catalogueIdentityIndex(products);for(const p of products){const canonical=identity.canonical[productRetailer(p)+':'+p.sku];if(canonical)p.canonicalSku=canonical;}
   const dir='web/reports/'+group.id;await fs.mkdir(dir,{recursive:true});
-  const bytes=await createCatalogueReport(products,{output:dir+'/NEW.pdf',readImage:p=>native.get(p)}),manifest={...(group.correction?{correction:true,originalReports:group.parents}:{}),version:'daily-native-pdf-v1',layoutVersion:PDF_LAYOUT_VERSION,planId:group.id,day:group.day,items,pdf:{sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length}};
-  await fs.writeFile(dir+'/manifest.json',JSON.stringify(manifest));prepared.push({id:group.id,products:items.length,bytes:bytes.length,deferred:group.deferredProducts||0});
+  const bytes=await createCatalogueReport(products,{output:dir+'/NEW.pdf',readImage:p=>native.get(p)}),manifest={...(group.correction?{correction:true,originalReports:group.parents}:{}),version:'daily-native-pdf-v1',layoutVersion:PDF_LAYOUT_VERSION,planId:group.id,day:group.day,...(group.fingerprint?{planFingerprint:group.fingerprint}:{}),items,pdf:{sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length}};
+  await fs.writeFile(dir+'/manifest.json',JSON.stringify(manifest));prepared.push({id:group.id,...(group.fingerprint?{fingerprint:group.fingerprint}:{}),products:items.length,bytes:bytes.length,deferred:group.deferredProducts||0});
  }catch(e){failures.push({plan:originalGroup.id,error:String(e.message).slice(0,250)});}
 }
 await nativeRecovery.close();

@@ -6,6 +6,8 @@ const dayAt=now=>new Date(now+28800000).toISOString().slice(0,10);
 const digest=async value=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))].map(v=>v.toString(16).padStart(2,'0')).join('');
 export const DAILY_DIGEST_CONTRACT='one-complete-daily-pdf-v3';
 const sentFor=(day,recipient)=>'digest-sent/'+day+'/'+recipient;
+export const preparedDigestKey=(day,recipient)=>'digest-prepared/'+day+'/'+recipient;
+const productFingerprint=rows=>digest(JSON.stringify(rows.map(p=>[p.digestProductKey,p]).sort((a,b)=>a[0].localeCompare(b[0]))));
 // Preserve real provider receipts from the retired per-batch contract. A new
 // deployment must not interpret a changed batch ID as permission to send again.
 export async function migrateDailyDigestReceipts(db,day){
@@ -23,8 +25,8 @@ export async function digestSourceBarrier(db,scopes,now=Date.now()){
 }
 // The plan contains product facts and an opaque recipient ID. Email addresses
 // never leave the private Worker and never appear in a public PDF manifest.
-export async function dailyDigestPlans(db,{now=Date.now(),maxPlans=10}={}){
- const day=dayAt(now),plans=[],waiting=[];if(new Date(now+28800000).getUTCHours()<7)return{plans,waiting,day,notDue:true};
+export async function dailyDigestPlans(db,{now=Date.now(),maxPlans=10,prepareAhead=false}={}){
+ const day=dayAt(now),plans=[],waiting=[],hour=new Date(now+28800000).getUTCHours();if(hour<(prepareAhead?6:7))return{plans,waiting,day,notDue:true};
  await migrateDailyDigestReceipts(db,day);
  const events=await db.list({prefix:'event/'}),pending=await db.list({prefix:'pending/'}),subs=await db.list({prefix:'sub/'}),products=new Map([...events,...pending].map(([,p])=>[retailerStorageSku(p),p]));
  for(const[key,sub]of subs){if(!sub.confirmedAt)continue;
@@ -32,7 +34,7 @@ export async function dailyDigestPlans(db,{now=Date.now(),maxPlans=10}={}){
   const rows=[];for(const[k,p]of products)if(eligible(sub,p)&&!await db.get('delivered/'+k+'/'+key.slice(4)))rows.push({...p,digestProductKey:k});
   if(!rows.length)continue;
   rows.sort((a,b)=>a.digestProductKey.localeCompare(b.digestProductKey));
-  const fingerprint=await digest(JSON.stringify(rows.map(p=>[p.digestProductKey,p.sourceUrl,p.firstDetectedAt||p.detectedAt||p.firstNewObservedAt]))),id=await digest(DAILY_DIGEST_CONTRACT+'/'+day+'/'+key),intent=await db.get('digest-intent/'+day+'/'+key.slice(4)),frozen=intent?.planId===id?await db.get('digest-plan/'+id):null,plan=frozen||{id,contract:DAILY_DIGEST_CONTRACT,day,recipient:key.slice(4),createdAt:new Date(now).toISOString(),fingerprint,products:rows,waitingRetailers:[]};
+  const fingerprint=await productFingerprint(rows),id=await digest(DAILY_DIGEST_CONTRACT+'/'+day+'/'+key),intent=await db.get('digest-intent/'+day+'/'+key.slice(4)),frozen=intent?.planId===id?await db.get('digest-plan/'+id):null,plan=frozen||{id,contract:DAILY_DIGEST_CONTRACT,day,recipient:key.slice(4),createdAt:new Date(now).toISOString(),fingerprint,products:rows,waitingRetailers:[]};
   if(!frozen)await db.put('digest-plan/'+id,plan);plans.push(plan);if(plans.length>=maxPlans)break;
  }
  await db.put('daily-digest-status',{day,contract:DAILY_DIGEST_CONTRACT,checkedAt:new Date(now).toISOString(),state:plans.length?'ready':waiting.length?'waiting-for-current-source':'no-unsent-verified-products',waitingRetailers:[...new Set(waiting.flatMap(w=>w.retailers.map(r=>r.retailerId)))],reportsReady:plans.length});
@@ -66,6 +68,7 @@ export async function dailyDigestOwnerCorrection(db,{ownerId,day,parentIds,reque
 }
 export function validateDigestManifest(plan,m){
  if(m?.version!=='daily-native-pdf-v1'||m.planId!==plan.id||m.day!==plan.day||!/^[a-f0-9]{64}$/.test(m.pdf?.sha256||'')||!Number.isInteger(m.pdf?.bytes)||m.pdf.bytes<1||!Array.isArray(m.items))throw Error('Invalid daily PDF manifest');
+ if(m.planFingerprint&&m.planFingerprint!==plan.fingerprint)throw Error('Prepared daily PDF facts changed; rebuild the whole report');
  const planned=new Map(plan.products.map(p=>[p.digestProductKey,p])),covered=new Set();
  for(const item of m.items){const p=planned.get(item.key);if(!p||covered.has(item.key)||item.sku!==p.sku||item.sourceUrl!==p.sourceUrl||item.retailerId!==(p.retailerId==='the-range-gb'?'the-range':p.retailerId||'the-range')||!Number.isFinite(item.priceGBP)||item.priceGBP<0||typeof item.size!=='string'||!item.size||!/^https:\/\//.test(item.imageSourceUrl||'')||!/^[a-f0-9]{64}$/.test(item.imageSha256||''))throw Error('Daily PDF product identity or native image evidence mismatch');covered.add(item.key);}
  if(covered.size!==planned.size)throw Error('Daily PDF must cover every planned NEW product');
@@ -74,12 +77,13 @@ export function validateDigestManifest(plan,m){
 export async function deliverDailyDigest(db,{body,send,origin,fetcher=fetch,now=Date.now()}={}){
  const{id,revision}=body||{};if(!/^[a-f0-9]{64}$/.test(id||'')||!/^[a-f0-9]{40}$/.test(revision||''))throw Error('Invalid pinned digest publication');
  const plan=await db.get('digest-plan/'+id);if(!plan)throw Error('Daily PDF plan unavailable');
+ if(body.fingerprint&&body.fingerprint!==plan.fingerprint)throw Error('Prepared daily PDF facts changed; rebuild the whole report');
  await migrateDailyDigestReceipts(db,plan.day);
  const sentKey=plan.test?'digest-test-sent/'+id:plan.correction?'digest-correction-sent/'+plan.day+'/'+plan.recipient:sentFor(plan.day,plan.recipient),already=await db.get(sentKey);if(already)return{accepted:true,alreadySent:true,products:already.products};
  if(!plan.test){if(plan.day!==dayAt(now)||plan.contract!==DAILY_DIGEST_CONTRACT||plan.parentId||plan.deferredProducts||plan.waitingRetailers?.length)throw Error('Only a complete current single daily report can be delivered');}
  if(!plan.test&&!plan.correction){const delivered=await Promise.all(plan.products.map(p=>db.get('delivered/'+p.digestProductKey+'/'+plan.recipient)));if(delivered.every(Boolean))return{accepted:true,alreadySent:true,products:plan.products.length};if(delivered.some(Boolean))throw Error('Some products were already delivered; rebuild a complete daily PDF');}
  const sub=await db.get('sub/'+plan.recipient);if(!sub?.confirmedAt||!plan.test&&plan.products.some(p=>!eligible(sub,p)))throw Error('Subscription changed before PDF delivery');
- if(!plan.test&&!plan.correction){if(!(await digestSourceBarrier(db,sub.scopes,now)).ready)throw Error('The whole daily report is waiting for every subscribed retailer source');if(!await db.get('digest-intent/'+plan.day+'/'+plan.recipient)){const candidates=new Map([...(await db.list({prefix:'event/'})),...(await db.list({prefix:'pending/'}))].map(([,p])=>[retailerStorageSku(p),p])),expected=[];for(const[k,p]of candidates)if(eligible(sub,p)&&!await db.get('delivered/'+k+'/'+plan.recipient))expected.push(k);if(JSON.stringify(expected.sort())!==JSON.stringify(plan.products.map(p=>p.digestProductKey).sort()))throw Error('The daily product queue changed; rebuild the whole single PDF before sending');}}
+ if(!plan.test&&!plan.correction){if(!(await digestSourceBarrier(db,sub.scopes,now)).ready)throw Error('The whole daily report is waiting for every subscribed retailer source');if(!await db.get('digest-intent/'+plan.day+'/'+plan.recipient)){const candidates=new Map([...(await db.list({prefix:'event/'})),...(await db.list({prefix:'pending/'}))].map(([,p])=>[retailerStorageSku(p),p])),expected=[];for(const[k,p]of candidates)if(eligible(sub,p)&&!await db.get('delivered/'+k+'/'+plan.recipient))expected.push({...p,digestProductKey:k});if(await productFingerprint(expected)!==plan.fingerprint)throw Error('The daily product queue changed; rebuild the whole single PDF before sending');}}
  const root='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/'+revision+'/web/reports/'+id+'/',r=await fetcher(root+'manifest.json',{signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error('Pinned daily PDF manifest HTTP '+r.status);
  const m=await r.json();validateDigestManifest(plan,m);
  if(plan.correction&&(m.correction!==true||JSON.stringify([...(m.originalReports||[])].sort())!==JSON.stringify(plan.parents)))throw Error('Consolidated correction must cover the original delivered report manifests');
@@ -88,6 +92,14 @@ export async function deliverDailyDigest(db,{body,send,origin,fetcher=fetch,now=
  if(large){if(Number(pdf.headers.get('content-length'))!==m.pdf.bytes)throw Error('Pinned daily PDF size mismatch');}
  else{const bytes=await pdf.arrayBuffer();if(bytes.byteLength!==m.pdf.bytes)throw Error('Daily PDF byte length mismatch');
  const actual=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(v=>v.toString(16).padStart(2,'0')).join('');if(actual!==m.pdf.sha256||new TextDecoder().decode(bytes.slice(0,5))!=='%PDF-')throw Error('Daily PDF native document digest mismatch');}
+ // Build and verify the one immutable document after the 06:00 source closure.
+ // Its publication is durable before 07:00; no mail or provider intent exists yet.
+ if(!plan.test&&!plan.correction&&new Date(now+28800000).getUTCHours()<7){
+  const notBefore=plan.day+'T07:00:00+08:00';
+  await db.put(preparedDigestKey(plan.day,plan.recipient),{id:plan.id,day:plan.day,recipient:plan.recipient,revision,fingerprint:plan.fingerprint,products:plan.products.length,pdfSha256:m.pdf.sha256,preparedAt:new Date(now).toISOString(),notBefore});
+  await db.put('daily-digest-prepared-status',{day:plan.day,preparedAt:new Date(now).toISOString(),products:plan.products.length,notBefore,state:'verified-single-report-waiting-for-0700'});
+  return{accepted:true,scheduled:true,mailSent:false,notBefore,products:plan.products.length,firecrawlCredits:0};
+ }
  // Brevo's API limit includes MIME/base64 overhead. Keep one original PDF;
  // a large report is a direct file link rather than resized source photos.
  const retailers=[...new Set(plan.products.map(p=>retailerName(p.retailerId)))],html='<div style="font:16px/1.8 Arial,sans-serif;color:#173c32"><h2>今日新品汇总 · Daily NEW products</h2>'+ (plan.test?'<p>这是使用真实官网商品的排版测试，不代表今天新增。This is a layout test with real source products; it does not claim a new discovery today.</p>':'')+'<p>'+plan.day+' · '+plan.products.length+' 款 / products</p><p>'+retailers.join(' · ')+'</p><p>全部新品集中在一个 PDF 文档中，按连锁店与类目排列，每页八张官网原图，附中英产品名、官网价格和尺寸。<br>One PDF, grouped by retailer and department. Eight original source photos per page, with Chinese and English product names, source prices and sizes.</p><p><a href="'+root+'NEW.pdf">下载完整 PDF · Download full PDF</a></p><p><a href="'+origin+'/unsubscribe?token='+encodeURIComponent(sub.unsubscribe)+'">取消订阅 · Unsubscribe</a></p></div>';
