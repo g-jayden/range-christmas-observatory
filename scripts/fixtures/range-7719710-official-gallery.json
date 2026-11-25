@@ -1,0 +1,190 @@
+{
+  "retailerId": "the-range",
+  "sku": "7719710",
+  "variantId": "7055463",
+  "variantName": "5ft Fibre Optic Christmas Tree with Star Topper and 8 Light Modes",
+  "listingVariantImageUrl": "https://www.therange.co.uk/media/5/4/1790417112_9336.jpg",
+  "variantImageUrl": "https://www.therange.co.uk/media/5/4/1790417112_9336.jpg",
+  "sourceUrl": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710/#7719710",
+  "originalImageUrl": "https://www.therange.co.uk/media/8/6/1793026555_1050.jpg",
+  "priceGBP": 46.75,
+  "specifications": {
+    "Assembly Required": "Limited assembly required",
+    "Weight": "4500g",
+    "Christmas Tree Height": "8ft",
+    "Width": "20cm",
+    "Fire Retardant": "Yes",
+    "Material": "PVC",
+    "Shipping Weight": "5kg",
+    "Length": "105cm",
+    "Colour": "Green"
+  },
+  "detailEvidence": {
+    "verifiedProductSection": true,
+    "selectedSku": "7719710",
+    "sourceContentHash": "50dfd154b3d7e0eebcdf045b56309deaaede0816115cbb8fe2020e9ae7830455"
+  },
+  "originalImages": [
+    {
+      "url": "https://www.therange.co.uk/media/8/6/1793026555_1050.jpg",
+      "thumbnail": "https://www.therange.co.uk/media/9/4/1793026555_9452.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/0/1/1793026556_4478.jpg",
+      "thumbnail": "https://www.therange.co.uk/media/8/9/1793026556_6046.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/9/4/1795444540_6497.jpg",
+      "thumbnail": "https://www.therange.co.uk/media/8/8/1795444540_1870.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/6/8/1795444542_7701.jpg",
+      "thumbnail": "https://www.therange.co.uk/media/6/2/1795444541_6904.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/0/7/1795444542_7325.jpg",
+      "thumbnail": "https://www.therange.co.uk/media/2/3/1795444542_8539.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/9/2/1795444543_4540.jpg",
+      "thumbnail": "https://www.therange.co.uk/media/8/4/1795444542_4541.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/6/4/1795444543_2050.jpg",
+      "thumbnail": "https://www.therange.co.uk/media/1/3/1795444543_6075.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/9/5/1795444543_5032.jpg",
+      "thumbnail": "https://www.therange.co.uk/media/2/9/1795444543_9520.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/9/1/1726669234_9082.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/9/8/1726669239_1153.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/8/9/1726669244_4091.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/2/1/1726669247_3010.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/0/8/1790417108_3532.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/5/4/1790417112_9336.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/5/0/1790862800_3764.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/0/9/1790862800_7684.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/8/2/1790862802_2619.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/7/3/1790862802_1512.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/9/7/1790862803_5052.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/0/1/1790862803_2703.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/8/2/1790862804_2713.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/7/5/1790862805_8104.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    },
+    {
+      "url": "https://www.therange.co.uk/media/0/6/1790862810_7870.jpg",
+      "variantId": "7055463",
+      "selectedSku": "7719710",
+      "source": "https://www.therange.co.uk/p/shatchi-nebula-led-fibre-optic-christmas-tree/m7719710",
+      "method": "single-SKU-structured-image"
+    }
+  ]
+}

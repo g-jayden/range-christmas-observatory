@@ -1,10 +1,11 @@
 import {validProductImage} from './details.mjs';
 import {nativeSourceUrl} from '../web/product-facts.mjs';
+import {reviewedSourcePhotoRejections} from '../web/source-photo-selection.mjs';
 import {exactNativeGalleryMember} from './native-gallery-identity.mjs';
 import{createHash}from'node:crypto';
 import {mergeNativeBindings,compactNativeEntries} from './native-bindings.mjs';
 export function rangeNativeTargets(products,{includeGallery=false}={}){const targets=new Map();for(const p of products){const spring=p.collectionId==='spring'&&p.springAudit?.disposition==='include'&&p.detailsReady===true&&p.detailEvidence?.verifiedProductSection===true&&String(p.detailEvidence.selectedSku)===String(p.sku);if(p.taxonomyAudit?.disposition!=='include'&&!spring||p.sourceImageConflict)continue;
- const selected=nativeSourceUrl(p),rejected=new Set([...(p.galleryRejections||[]),...(p.sourceFamilyReferenceImages||[])].map(g=>(g.url||g.sourceUrl||'').split('?')[0])),equivalent=p.identicalPhotoOriginalEvidence,urls=[selected,...(includeGallery?(p.originalImages||[]).map(g=>g.url):[])];
+ const selected=nativeSourceUrl(p),rejected=new Set([...(p.galleryRejections||[]),...(p.sourceFamilyReferenceImages||[]),...reviewedSourcePhotoRejections(p)].map(g=>(g.url||g.sourceUrl||'').split('?')[0])),equivalent=p.identicalPhotoOriginalEvidence,urls=[selected,...(includeGallery?(p.originalImages||[]).map(g=>g.url):[])];
  for(const url of new Set(urls)){const gallery=p.originalImages?.find(g=>g.url===url&&exactNativeGalleryMember(p,g));if(!gallery||!validProductImage(url)||new URL(url).hostname!=='www.therange.co.uk'||rejected.has(url.split('?')[0])||equivalent?.comparison?.equivalent===true&&url===equivalent.rootUrl||targets.has(url))continue;
  const expected=p.originalImageEvidence?.sourceUrl===url?p.originalImageEvidence:gallery.nativeSha256?{sourceUrl:url,selectedSku:p.sku,sha256:gallery.nativeSha256,width:gallery.sourceWidth||gallery.width,height:gallery.sourceHeight||gallery.height}:null;
  targets.set(url,{sku:p.sku,variantId:p.variantId,sourceUrl:p.sourceUrl,variantImageUrl:url,originalImageUrl:url,originalImages:[gallery],...(gallery.nativeCachePath?{originalCachedImageUrl:gallery.nativeCachePath}:{}),...(expected?{originalImageEvidence:expected}:{}),expectedNative:expected});
