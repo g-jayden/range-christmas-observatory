@@ -31,6 +31,9 @@ assert.equal((await deliverPreparedDigests({storage:db,now:seven-1,send,origin:'
 assert((await dispatchDigestDue({storage:db,env,now:seven,send,origin:'https://fixture.invalid',fetcher})).mailSent);assert.equal(sends,1,'The 07:00 Worker sends without waiting for a new GitHub runner');
 assert(await db.get('digest-sent/2026-11-26/a'));assert(!await db.get(preparedDigestKey(plan.day,plan.recipient)));
 await dispatchDigestDue({storage:db,env,now:seven+300000,send,origin:'https://fixture.invalid',fetcher});assert.equal(sends,1);assert.equal(dispatches,0);
+const later={...product,sku:'99999',detectedAt:new Date(seven+600000).toISOString()};await db.put('event/99999',later);await db.put('monitor',{lastDiscoverySuccess:new Date(seven+600000).toISOString()});
+const afterDaily=await dailyDigestPlans(db,{now:seven+1200000});assert.equal(afterDaily.plans.length,0);assert.equal(afterDaily.nextReportQueuedProducts,1);assert.equal((await db.get('daily-digest-status')).state,'daily-report-delivered-later-products-queued');assert.equal((await db.get('daily-digest-product-status')).state,'next-daily-report-queued');assert.equal(sends,1,'Verified arrivals after today\'s completed report stay queued, without another email or a false no-unsent status');
+await db.put('monitor',{lastDiscoverySuccess:new Date(seven+86400000-1800000).toISOString()});const tomorrow=await dailyDigestPlans(db,{now:seven+86400000});assert.equal(tomorrow.plans.length,1);assert.deepEqual(tomorrow.plans[0].products.map(p=>p.sku),['99999'],'The next daily report contains the deferred arrival and never repeats yesterday\'s delivered item');
 
 // Changes to facts on the same SKU require a complete rebuild, not a stale send.
 for(const change of [p=>({...p,priceGBP:9.99}),p=>({...p,detailEvidence:{sourceContentHash:'d'.repeat(64)}})]){
