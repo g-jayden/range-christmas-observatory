@@ -26,25 +26,26 @@ export async function digestSourceBarrier(db,scopes,now=Date.now()){
 // The plan contains product facts and an opaque recipient ID. Email addresses
 // never leave the private Worker and never appear in a public PDF manifest.
 export async function dailyDigestPlans(db,{now=Date.now(),maxPlans=10,prepareAhead=false}={}){
- const day=dayAt(now),plans=[],waiting=[],hour=new Date(now+28800000).getUTCHours();if(hour<(prepareAhead?6:7))return{plans,waiting,day,notDue:true};
+ const day=dayAt(now),plans=[],waiting=[],nextReportKeys=new Set(),hour=new Date(now+28800000).getUTCHours();let completedRecipients=0;if(hour<(prepareAhead?6:7))return{plans,waiting,day,notDue:true};
  await migrateDailyDigestReceipts(db,day);
  const events=await db.list({prefix:'event/'}),pending=await db.list({prefix:'pending/'}),subs=await db.list({prefix:'sub/'}),products=new Map([...events,...pending].map(([,p])=>[retailerStorageSku(p),p]));
  for(const[key,sub]of subs){if(!sub.confirmedAt)continue;
-  const barrier=await digestSourceBarrier(db,sub.scopes,now);if(!barrier.ready)waiting.push({recipient:key.slice(4),retailers:barrier.waiting});if(await db.get(sentFor(day,key.slice(4)))||!barrier.ready)continue;
   const rows=[];for(const[k,p]of products)if(eligible(sub,p)&&!await db.get('delivered/'+k+'/'+key.slice(4)))rows.push({...p,digestProductKey:k});
+  if(await db.get(sentFor(day,key.slice(4)))){completedRecipients++;for(const p of rows)nextReportKeys.add(p.digestProductKey);continue;}
+  const barrier=await digestSourceBarrier(db,sub.scopes,now);if(!barrier.ready)waiting.push({recipient:key.slice(4),retailers:barrier.waiting});if(!barrier.ready)continue;
   if(!rows.length)continue;
   rows.sort((a,b)=>a.digestProductKey.localeCompare(b.digestProductKey));
   const fingerprint=await productFingerprint(rows),id=await digest(DAILY_DIGEST_CONTRACT+'/'+day+'/'+key),intent=await db.get('digest-intent/'+day+'/'+key.slice(4)),frozen=intent?.planId===id?await db.get('digest-plan/'+id):null,plan=frozen||{id,contract:DAILY_DIGEST_CONTRACT,day,recipient:key.slice(4),createdAt:new Date(now).toISOString(),fingerprint,products:rows,waitingRetailers:[]};
   if(!frozen)await db.put('digest-plan/'+id,plan);plans.push(plan);if(plans.length>=maxPlans)break;
  }
- await db.put('daily-digest-status',{day,contract:DAILY_DIGEST_CONTRACT,checkedAt:new Date(now).toISOString(),state:plans.length?'ready':waiting.length?'waiting-for-current-source':'no-unsent-verified-products',waitingRetailers:[...new Set(waiting.flatMap(w=>w.retailers.map(r=>r.retailerId)))],reportsReady:plans.length});
- if(!plans.length){await db.put('daily-digest-product-status',{day,checkedAt:new Date(now).toISOString(),verifiedProducts:0,deferredProducts:0,state:'no-unsent-known-products',sourceVerificationPending:waiting.length>0});
+ await db.put('daily-digest-status',{day,contract:DAILY_DIGEST_CONTRACT,checkedAt:new Date(now).toISOString(),state:plans.length?'ready':waiting.length?'waiting-for-current-source':nextReportKeys.size?'daily-report-delivered-later-products-queued':completedRecipients?'daily-report-already-delivered':'no-unsent-verified-products',waitingRetailers:[...new Set(waiting.flatMap(w=>w.retailers.map(r=>r.retailerId)))],reportsReady:plans.length,completedRecipients,nextReportQueuedProducts:nextReportKeys.size});
+ if(!plans.length){await db.put('daily-digest-product-status',{day,checkedAt:new Date(now).toISOString(),verifiedProducts:nextReportKeys.size,deferredProducts:nextReportKeys.size,state:nextReportKeys.size?'next-daily-report-queued':'no-unsent-known-products',sourceVerificationPending:waiting.length>0});
   // The consolidated PDF queue is authoritative for delivery. An obsolete
   // per-product screenshot state must not report a delivery failure after every
   // eligible event has a receipt. Keep all pending evidence and seen history.
   const monitor=await db.get('monitor');if(!waiting.length&&['delivery-pending','delivery-blocked','delivery-waiting'].includes(monitor?.state)&&(await digestSourceBarrier(db,['tree'],now)).ready)await db.put('monitor',{...monitor,state:'active',stage:'complete',deliveryMode:'daily-native-pdf',pendingDeliveries:0,lastError:null,digestQueueCheckedAt:new Date(now).toISOString()});
  }
- return{day,plans,waiting,firecrawlCredits:0};
+ return{day,plans,waiting,nextReportQueuedProducts:nextReportKeys.size,firecrawlCredits:0};
 }
 export async function dailyDigestOwnerTest(db,{ownerId,products,requestId,now=Date.now()}={}){
  if(!/^[a-f0-9]{64}$/.test(ownerId||'')||!Array.isArray(products)||products.length<1||products.length>16||!/^[a-zA-Z0-9_-]{8,100}$/.test(requestId||''))throw Error('Invalid owner-only PDF test');
