@@ -21,14 +21,22 @@ for(const key of entries.keys())if(decodeURIComponent(key).includes(sha(pixels))
 const corrupt=await import('../web/native-image-browser.mjs?fresh=2');await corrupt.nativeImage(product());assert.equal(requests,3);
 console.log('PASS: native bytes are SHA-verified before caching, survive reload without refetch, recover corrupt storage, and changed source digests bypass old RAM/disk pixels.');
 
-let draws=0;const labels=[];
-globalThis.document={createElement:()=>{const canvas={width:0,height:0,getContext:()=>({drawImage(){draws++;},measureText:s=>({width:s.length*8}),fillRect(){},fillText:s=>labels.push(s)}),toBlob:callback=>callback(new Blob(['annotated-native-pixels'],{type:'image/png'}))};return canvas;}};
+let draws=0;const labels=[],imagePlacements=[],captionRects=[];
+globalThis.document={createElement:()=>{const canvas={width:0,height:0,getContext:()=>({drawImage(...args){draws++;imagePlacements.push(args);},measureText:s=>({width:s.length*8}),fillRect(...args){captionRects.push(args);},fillText:s=>labels.push(s)}),toBlob:callback=>callback(new Blob(['annotated-native-pixels'],{type:'image/png'}))};return canvas;}};
 const {annotatedImage,cachedAnnotatedImage}=await import('../web/native-image-browser.mjs');
 await assert.rejects(annotatedImage({...product(),priceGBP:10,browseDetailsPending:true}),/Exact product record is still loading/);assert.equal(draws,0,'No low-resolution or size-missing save image can be rendered from a pending browse row');
 const named={...product(),priceGBP:10,heightLabel:'30cm'},firstAnnotated=await annotatedImage(named);assert.equal((await annotatedImage(named)),firstAnnotated);assert.equal(draws,1);assert.equal(cachedAnnotatedImage(named),firstAnnotated);
 await annotatedImage({...named,priceGBP:12});assert.equal(draws,2);assert(labels.includes('£12.00'));await annotatedImage({...named,heightLabel:'40cm'});assert.equal(draws,3);assert(labels.includes('40cm'));
 await assert.rejects(annotatedImage({...named,sourceImageConflict:{note:'conflict'}}),/conflict/);
+assert.equal(firstAnnotated.nativeWidth,1800);assert.equal(firstAnnotated.nativeHeight,2400);assert.equal(firstAnnotated.width,1800);assert(firstAnnotated.height>2400);assert(captionRects.every(([,y])=>y>=2400),'Price/size backgrounds must never cover original product pixels');assert(imagePlacements.every(a=>a.length===3&&a[1]===0&&a[2]===0),'The original bitmap is drawn without resizing or cropping');
+const previousFetch=globalThis.fetch,previousBitmap=globalThis.createImageBitmap;
+try{
+ globalThis.fetch=async()=>new Response(pixels,{headers:{'content-type':'image/jpeg'}});globalThis.createImageBitmap=async()=>({width:300,height:300,close(){}});
+ const small={...named,sku:'actual-small',originalImageUrl:'https://cdn.next.co.uk/small-original.jpg',originalCachedImageUrl:'native/small.jpg',originalImageEvidence:{sourceUrl:'https://cdn.next.co.uk/small-original.jpg',sha256:sha(pixels)},specifications:{Height:'150cm',Width:'75cm',Depth:'45cm',Length:'150cm'}},beforeRects=captionRects.length,result=await annotatedImage(small);
+ assert.equal(result.nativeWidth,300);assert.equal(result.nativeHeight,300);assert.equal(result.width,300,'A small official original must not be enlarged');assert(result.height>300);assert(captionRects.slice(beforeRects).every(([,y])=>y>=300),'Long bilingual measurements must go below a small original, not obscure its lower half');assert.equal(result.height,result.nativeHeight+result.captionHeight);
+}finally{globalThis.fetch=previousFetch;globalThis.createImageBitmap=previousBitmap;}
 console.log('Annotated native image reuse avoids repeat PNG encoding; changed source price/size and conflicting photos cannot reuse an earlier overlay.');
+console.log('PASS: high- and low-resolution source images retain their complete native pixels; a separate lower caption band keeps price and dimensions at bottom-right without covering or enlarging the product.');
 
 // Native display must not wait behind slow browser storage writes.
 const normalOpen=globalThis.caches.open;let releaseWrite,writeStarted;const started=new Promise(resolve=>{writeStarted=resolve;});

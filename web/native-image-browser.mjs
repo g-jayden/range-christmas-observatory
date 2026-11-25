@@ -6,7 +6,7 @@ const cache=new Map(),nativeWeights=new Map(),annotations=new Map();
 const MAX_MEMORY_BYTES=64*1024*1024;
 function trimNative(){let bytes=[...nativeWeights.values()].reduce((n,v)=>n+v,0);for(const key of cache.keys()){if(cache.size<=24&&bytes<=MAX_MEMORY_BYTES)break;if(!nativeWeights.has(key))continue;bytes-=nativeWeights.get(key);nativeWeights.delete(key);cache.delete(key);}}
 function frameEvidence(p,item){const source=nativeSourceUrl(p,item),rows=[p.nativeExportEvidence,p.originalImageEvidence,...(p.originalImages||[]).filter(g=>g.url===source).map(g=>({...g,sha256:g.sha256||g.nativeSha256,sourceUrl:g.url})),item?.url===source?{...item,sourceUrl:item.url}:null].filter(e=>e?.sourceUrl===source&&(!e.selectedSku||String(e.selectedSku)===String(p.sku))&&(!e.variantId||!p.variantId||String(e.variantId)===String(p.variantId)));return rows.find(e=>/^[a-f0-9]{64}$/.test(e.sha256||''))||rows.find(e=>e.sourceVersion!=null&&Number.isInteger(e.width)&&Number.isInteger(e.height));}
-function annotationKey(p,item){return JSON.stringify([nativeSourceUrl(p,item),nativeImageCandidates(p,item),frameEvidence(p,item),p.observedAt,p.attributeObservedAt,productPrice(p),productSize(p)]);}
+function annotationKey(p,item){return JSON.stringify(['native-photo-plus-caption-v1',nativeSourceUrl(p,item),nativeImageCandidates(p,item),frameEvidence(p,item),p.observedAt,p.attributeObservedAt,productPrice(p),productSize(p)]);}
 export function cachedAnnotatedImage(p,item){assertProductPhoto(p);return annotations.get(annotationKey(p,item))?.value;}
 let service;let paidMirrors;
 async function recoveredNative(p,item,digest){try{paidMirrors??=fetch('paid-native-index.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{entries:{}}).catch(()=>{paidMirrors=undefined;return {entries:{}};});const source=nativeSourceUrl(p,item),e=(await paidMirrors).entries?.[source];return e?.ok&&e.sourceBytesUnchanged===true&&e.bindings?.includes(productKey(p))&&/^[a-f0-9]{64}$/.test(e.hash||'')&&(!digest||digest===e.hash)&&e.cachedImageUrl?.includes(e.hash+'.')?e:null;}catch{return null;}}
@@ -21,7 +21,19 @@ export async function nativeImage(p,item){
 }
 function wrap(ctx,text,width){return wrapReportText(text,width,t=>ctx.measureText(t).width);}
 const toBlob=canvas=>new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(Error('Image export failed')),'image/png'));
-async function renderAnnotatedImage(p,item){assertProductPhoto(p);const source=await nativeImage(p,item),bitmap=await createImageBitmap(source.blob),canvas=document.createElement('canvas');canvas.width=source.width;canvas.height=source.height;const ctx=canvas.getContext('2d');ctx.drawImage(bitmap,0,0);bitmap.close();const font=Math.max(12,Math.round(Math.min(canvas.width,canvas.height)*.025)),pad=Math.max(8,font*.65),max=Math.max(font*6,canvas.width*.64);ctx.font='500 '+font+'px system-ui, sans-serif';const lines=wrap(ctx,productPrice(p)+'\n'+productSize(p),max-pad*2),w=Math.min(canvas.width-pad,Math.max(...lines.map(s=>ctx.measureText(s).width))+pad*2),h=lines.length*font*1.4+pad*2,x=canvas.width-w-pad,y=canvas.height-h-pad;ctx.fillStyle='rgba(255,255,255,.93)';ctx.fillRect(x,y,w,h);ctx.fillStyle='#183c32';ctx.textAlign='right';ctx.textBaseline='top';for(let i=0;i<lines.length;i++)ctx.fillText(lines[i],x+w-pad,y+pad+i*font*1.4);return{...source,blob:await toBlob(canvas)};}
+async function renderAnnotatedImage(p,item){
+ assertProductPhoto(p);const source=await nativeImage(p,item),bitmap=await createImageBitmap(source.blob),canvas=document.createElement('canvas');
+ canvas.width=source.width;canvas.height=source.height;const ctx=canvas.getContext('2d'),font=Math.max(12,Math.round(Math.min(source.width,source.height)*.025)),pad=Math.max(8,font*.65);
+ ctx.font='500 '+font+'px system-ui, sans-serif';
+ const lines=wrap(ctx,productPrice(p)+'\n'+productSize(p),Math.max(font,source.width-pad*2)),captionHeight=Math.ceil(lines.length*font*1.4+pad*2);
+ // Add space for the caption instead of painting over product pixels. The
+ // original bitmap is copied at its native dimensions without cropping/scaling.
+ canvas.height=source.height+captionHeight;ctx.drawImage(bitmap,0,0);bitmap.close();
+ ctx.fillStyle='white';ctx.fillRect(0,source.height,source.width,captionHeight);
+ ctx.font='500 '+font+'px system-ui, sans-serif';ctx.fillStyle='#183c32';ctx.textAlign='right';ctx.textBaseline='top';
+ for(let i=0;i<lines.length;i++)ctx.fillText(lines[i],source.width-pad,source.height+pad+i*font*1.4);
+ return{...source,width:canvas.width,height:canvas.height,nativeWidth:source.width,nativeHeight:source.height,captionHeight,annotationLayout:'native-photo-plus-caption-v1',blob:await toBlob(canvas)};
+}
 export async function annotatedImage(p,item){
  assertProductPhoto(p);const key=annotationKey(p,item),prior=annotations.get(key);if(prior){annotations.delete(key);annotations.set(key,prior);return prior.promise;}
  const entry={promise:null,value:null};entry.promise=renderAnnotatedImage(p,item).then(value=>{entry.value=value;let bytes=[...annotations.values()].reduce((n,e)=>n+(e.value?.blob.size||0),0);for(const [k,e]of annotations){if(annotations.size<=16&&bytes<=MAX_MEMORY_BYTES)break;if(!e.value||k===key)continue;bytes-=e.value.blob.size;annotations.delete(k);}return value;},error=>{annotations.delete(key);throw error;});annotations.set(key,entry);return entry.promise;
