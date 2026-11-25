@@ -84,6 +84,7 @@ jobs:
           BROWSE_FETCH_VERIFIED_PREVIEWS: 'true'
         run: node scripts/build-static.mjs
       - name: Keep source-hash-bound display encodings
+        if: always()
         uses: actions/cache/save@v6.1.0
         with:
           path: runtime/card-preview-encodings
