@@ -1,9 +1,8 @@
 {
-  "requestId": "owner-recovery-20261125-native-and-asda-body-0040",
+  "requestId": "owner-recovery-20261125-candy-preview-publication",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-25T00:25:25.255Z",
+  "requestedAt": "2026-11-25T00:32:02.088Z",
   "targets": [
-    "native-recovery-current",
-    "asda-review-current"
+    "static-pages-current"
   ]
 }
