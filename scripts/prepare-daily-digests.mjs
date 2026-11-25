@@ -7,7 +7,7 @@ import {reportProductEvidence,mergeReportProduct,reportFieldProduct} from '../se
 import {createPaidNativeOriginals} from '../server/paid-native-originals.mjs';
 import {catalogueIdentityIndex} from '../server/catalogue-identities.mjs';
 import {applyRangeNativeIndex} from '../server/range-native-index.mjs';
-import {publishBqCommittedEvidence} from '../server/bq-committed-evidence.mjs';
+import {prepareBqInternalEvidence} from '../server/bq-committed-evidence.mjs';
 import fs from 'node:fs/promises';import {createHash} from 'node:crypto';
 import {control} from '../server/cloud-client.mjs';import {createCatalogueReport} from '../server/catalogue-report.mjs';import {productSize,productRetailer} from '../web/product-facts.mjs';
 const range=await rebuildStoredRangeViews({persist:false,includeProducts:true,verifyImageFiles:false}),rangeBySku=new Map((range.products||[]).map(p=>[String(p.sku),p]));
@@ -19,7 +19,7 @@ async function exactProduct(candidate){
  else if(id==='the-range'){p=rangeBySku.get(String(candidate.sku));source=range;}
  else{
   let root='web';
-  if(id==='bq'){if(!bqPrepared){await publishBqCommittedEvidence({outputRoot:'runtime/digest-evidence'});bqPrepared=true;}root='runtime/digest-evidence';}
+  if(id==='bq'){if(!bqPrepared){await prepareBqInternalEvidence({purpose:'report-candidates'});bqPrepared=true;}root='runtime/digest-evidence';}
   source=await json(id+'/catalogue.json',root);if(source.departmentShards?.[dep])source=await json(source.departmentShards[dep],root);
   p=source.products.find(p=>String(p.sku)===String(candidate.sku)||p.aliasSkus?.includes(String(candidate.sku)));
   if(!p&&id==='bq')p=(await json('bq/details/'+String(candidate.sku).slice(-2)+'.json',root))[candidate.sku];
