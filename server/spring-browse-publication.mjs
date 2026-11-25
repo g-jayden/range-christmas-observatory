@@ -3,6 +3,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {SPRING_VERSION,isSpringScope} from '../web/spring-model.mjs';
 import {exactNativeGalleryMember} from './native-gallery-identity.mjs';
+import {bindSpringSavedGalleryNatives} from './spring-native-preview.mjs';
 
 // Collection coverage, individual product acceptance and completion of the
 // remaining review queue are separate facts. A pending SKU cannot prevent
@@ -39,9 +40,12 @@ export async function publishVerifiedSpringBrowse(sourceRoot='web',targetRoot='p
  let catalogue=verifiedSpringBrowse(candidate,review,status);const output=path.join(targetRoot,'spring');
  const proofs=await fs.readFile(path.join(sourceRoot,'spring','identical-photo-originals.json'),'utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return null;throw e;});
  if(proofs?.products?.length){const {applyIdenticalSpringNativePhotos}=await import('./spring-identical-native.mjs'),source=JSON.parse(await fs.readFile(path.join(sourceRoot,'spring','source.json'),'utf8')),result=await applyIdenticalSpringNativePhotos(catalogue,source,proofs,{sourceRoot});catalogue=result.catalogue;}
+ const savedGallery=await fs.readFile(path.join(sourceRoot,'spring','image-checkpoint.json'),'utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return{entries:{}};throw e;});
+ const galleryAudit=bindSpringSavedGalleryNatives(catalogue.products,savedGallery.entries);
+ if(galleryAudit.applied)catalogue={...catalogue,revision:createHash('sha256').update(JSON.stringify(catalogue.products)).digest('hex'),savedGalleryNativeAudit:galleryAudit};
  await fs.mkdir(output,{recursive:true});
  await fs.writeFile(path.join(output,'catalogue.json'),JSON.stringify(catalogue));
- await fs.writeFile(path.join(output,'status.json'),JSON.stringify({...status,revision:catalogue.revision,browseReady:true,reviewComplete:catalogue.reviewComplete,ready:catalogue.ready,...(catalogue.originalPhotoUpgradeAudit?{originalPhotoUpgradeAudit:catalogue.originalPhotoUpgradeAudit}:{})}));
+ await fs.writeFile(path.join(output,'status.json'),JSON.stringify({...status,revision:catalogue.revision,browseReady:true,reviewComplete:catalogue.reviewComplete,ready:catalogue.ready,...(catalogue.originalPhotoUpgradeAudit?{originalPhotoUpgradeAudit:catalogue.originalPhotoUpgradeAudit}:{}),...(catalogue.savedGalleryNativeAudit?{savedGalleryNativeAudit:catalogue.savedGalleryNativeAudit}:{})}));
  await fs.writeFile(path.join(output,'review.json'),JSON.stringify(review));
  return {browseReady:true,products:catalogue.products.length,counts:review.counts,reviewPending:catalogue.reviewPending,reviewComplete:catalogue.reviewComplete,originalPhotoUpgradeAudit:catalogue.originalPhotoUpgradeAudit,sourceRequests:0,firecrawlCredits:0,sourceFactsChanged:false};
 }
