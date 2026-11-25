@@ -151,3 +151,4 @@ console.log('PASS: a complete discovery baseline retains genuine subsequent NEW 
 
 await import('./test-spring-daily-review-plan.mjs');
 await import('./test-spring-saved-gallery-natives.mjs');
+await import('./test-spring-local-native-previews.mjs');
