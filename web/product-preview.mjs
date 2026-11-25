@@ -5,7 +5,8 @@ export const cardPreviewSource=p=>rejectedPhoto(p)?SOURCE_PHOTO_CONFLICT_PLACEHO
 export function productPreviewGallery(p,full=p){
  if(rejectedPhoto(p)||rejectedPhoto(full))return [];
  if(p.displayImage)return [{url:p.displayImage.sourceUrl,thumbnail:p.fastPreview?.url||p.displayImage.cachePath,fallback:p.displayImage.cachePath}];
- const items=[],seen=new Set,add=(url,thumbnail,fallback,evidence={})=>{if(!url||seen.has(url))return;seen.add(url);items.push({...evidence,url,thumbnail:thumbnail||url,fallback});};
+ const key=raw=>{try{const u=new URL(raw);return u.origin==='https://media.diy.com'?u.origin+u.pathname:raw;}catch{return raw;}},blocked=new Set([...(p.galleryRejections||[]),...(full.galleryRejections||[]),...(p.sourceFamilyReferenceImages||[]),...(full.sourceFamilyReferenceImages||[])].flatMap(g=>[g.url,g.sourceUrl].filter(Boolean).map(key)));
+ const items=[],seen=new Set,add=(url,thumbnail,fallback,evidence={})=>{if(!url||seen.has(url)||blocked.has(key(url)))return;seen.add(url);items.push({...evidence,url,thumbnail:thumbnail||url,fallback});};
  const rawOriginals=full.originalImages||p.originalImages||[],equivalent=p.identicalPhotoOriginalEvidence||full.identicalPhotoOriginalEvidence;
  // An audited larger copy of the identical photograph replaces its thumbnail
  // in the gallery; do not offer that same 300px photo as a second detail frame.
