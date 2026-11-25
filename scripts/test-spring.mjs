@@ -150,3 +150,4 @@ assert.equal(arrivalWhilePhotosPending.products[0].firstNewObservedAt,'2026-11-2
 console.log('PASS: a complete discovery baseline retains genuine subsequent NEW arrivals while photo verification is unfinished, without activating or emailing an unverified catalogue.');
 
 await import('./test-spring-daily-review-plan.mjs');
+await import('./test-spring-saved-gallery-natives.mjs');
