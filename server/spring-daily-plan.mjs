@@ -7,6 +7,14 @@ export function springDailyDetailPlan(previous,candidates){
  return candidates.filter(p=>{const old=prior.get(String(p.sku));return !old||detailFingerprint(old)!==detailFingerprint(p)||arrival(p)&&(!p.detailsReady||!p.detailEvidence?.verifiedProductSection||String(p.detailEvidence.selectedSku)!==String(p.sku));});
 }
 const galleryFor=p=>(p.originalImages||[]).filter(g=>exactNativeGalleryMember(p,g)&&String(g.variantId)===String(p.variantId));
+export function springDailyNativeImageProducts(products){
+ const records=[...products],seen=new Set(products.map(p=>p.variantImageUrl));
+ // New offers need their complete observed gallery once, so a cropped main
+ // frame cannot make every retry compare the same unsuitable photograph.
+ // Historical NEW flags never turn an old catalogue into a full-image crawl.
+ for(const p of products)if(arrival(p)&&p.springAudit?.disposition!=='exclude')for(const g of galleryFor(p))if(!seen.has(g.url)){seen.add(g.url);records.push({...p,variantImageUrl:g.url,originalImageUrl:g.url});}
+ return records;
+}
 export function selectSpringNativeImageTargets(products){
  let selected=0;
  for(const p of products){
