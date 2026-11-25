@@ -1,8 +1,9 @@
 {
-  "requestId": "owner-recovery-20261125-candy-preview-publication",
+  "requestId": "owner-recovery-20261125-bq-exact-photo-publication",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-25T00:32:02.088Z",
+  "requestedAt": "2026-11-25T01:09:07.000Z",
   "targets": [
-    "static-pages-current"
+    "static-pages-current",
+    "bq-photos-current"
   ]
 }
