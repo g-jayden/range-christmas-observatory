@@ -20,7 +20,7 @@ export function applyBqReviewedAmendments(products,{index,visual,reviews,selecti
     if(!Array.isArray(extra)||extra.length>gallery.length||new Set(extra.map(g=>g.asset)).size!==extra.length)throw Error('Invalid B&Q gallery evidence updates');
     let staleGallery=false;
     for(const update of extra){
-      const hash=update.index?.sha256,inspected=[...(a.review.sourceImageConflict?.galleryQuarantine?.images||[]),...(a.review.rejectedGallery||[]).map(g=>({asset:bqAsset(g.url),imageHash:g.imageHash}))];
+      const hash=update.index?.sha256,inspected=[...(a.review.sourceImageConflict?.galleryQuarantine?.images||[]),...(a.review.rejectedGallery||[]).map(g=>({asset:bqAsset(g.url),imageHash:g.imageHash})),...(a.review.dimensionSourceConflict?.selectedSku===String(p.sku)?a.review.dimensionSourceConflict.images||[]:[]).map(g=>({asset:bqAsset(g.url),imageHash:g.imageHash}))];
       if(!gallery.includes(update.asset)||update.asset===a.asset||!/^[a-f0-9]{64}$/.test(hash||'')||update.visual?.imageHash!==hash||!Number.isSafeInteger(update.index.width)||!Number.isSafeInteger(update.index.height)||update.index.width<32||update.index.height<32||!Number.isFinite(Date.parse(update.index.checkedAt))||!inspected.some(g=>g.asset===update.asset&&g.imageHash===hash))throw Error('Unbound B&Q inspected gallery pixels');
       const saved=index[bqImageKey(update.asset)];if(saved?.sha256!==hash&&Date.parse(saved?.checkedAt)>Date.parse(update.index.checkedAt))staleGallery=true;
     }
