@@ -1,8 +1,8 @@
 {
-  "requestId": "owner-recovery-20261125-spring-compact-inventory",
+  "requestId": "owner-recovery-20261125-spring-empty-vessel-review",
   "authorization": "owner-standing-complete-unfinished-collection",
-  "requestedAt": "2026-11-25T03:09:30.000Z",
+  "requestedAt": "2026-11-25T03:24:00.000Z",
   "targets": [
-    "spring-monitor-current"
+    "spring-classify"
   ]
 }

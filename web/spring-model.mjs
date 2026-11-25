@@ -38,6 +38,10 @@ export function springSourceDecision(p){
  if(/\b(?:live|living|real)\s+(?:plants?|trees?|flowers?)|\b(?:seeds?|bulbs?)\s+(?:for|to)\s+(?:plant|grow)|\b(?:flower heads?|petal confetti|plant stands?|plant racks?|vase fillers?|wall art|wall panels?|memorial vases?|flower pots? holders?)\b/i.test(title))return{disposition:'exclude',reason:'non-artificial-botanical-product',evidence:title};
  if(/\b(?:print|printed|pattern|embossed)\b/i.test(title)&&/\b(?:pots?|vases?|jugs?|planters?)\b/i.test(title)&&!/\b(?:artificial|faux|potted|arrangement)\b/i.test(title))return{disposition:'exclude',reason:'printed-empty-container',evidence:title};
  const firstFeature=description.split(/\n/).find(l=>/^\s*[-*]\s+/.test(l))||'';
+ // A hurricane offered in the official vase department can be styled with
+ // flowers/candles without supplying either. Preserve real floral arrangements.
+ const vaseSource=/(?:^|\/)vases(?:\/|$)/i.test(String(p.sourceUrl||''));
+ if(vaseSource&&/\bglass\s+hurricane\b/i.test(title)&&!/\b(?:artificial|faux|fake|arrangement|potted|plants?)\b/i.test(title)&&/\b(?:showcas\w*|display\w*)\b.{0,90}\b(?:floral\s+arrangements?|flowers?|(?:pillar\s+)?candles?)\b/i.test(description)&&!/\b(?:includes?|supplied\s+with|complete\s+with)\b.{0,80}\b(?:flowers?|foliage|stems?|plants?)\b/i.test(description))return{disposition:'exclude',reason:'empty-glass-hurricane-in-official-vase-department',evidence:title+' '+firstFeature};
  if(/(?:^|\/)vases(?:\/|$)/i.test(category)&&/\bvases?\b/i.test(firstFeature)&&!/\b(?:artificial|faux|potted|arrangement|includes?|included)\b/i.test(firstFeature))return{disposition:'exclude',reason:'official-vase-category-and-offered-container-description',evidence:firstFeature};
  const foliage=/\b(?:artificial|faux|fake|silk|flower|floral|foliage|leaf|leaves|garland|wreath|stem|spray|bouquet|pick|tree|potted|plant|fern|orchid|rose|hydrangea|eucalyptus|tulip|daisy|peony|gypsophila|lavender|blossom)\b/i;
  const namedPlantVessel=/(?:^|\/)artificial-(?:plants|flowers)(?:\/|$)/i.test(category)&&/\b(?:lily|lilies|eucalyptus|hydrangea|peony|tulip|rose|daisy|lavender)\b/i.test(title);
