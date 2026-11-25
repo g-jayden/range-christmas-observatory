@@ -4,6 +4,7 @@ import {createHash} from 'node:crypto';
 import {SPRING_VERSION,isSpringScope} from '../web/spring-model.mjs';
 import {exactNativeGalleryMember} from './native-gallery-identity.mjs';
 import {bindSpringSavedGalleryNatives} from './spring-native-preview.mjs';
+import {execFileSync} from 'node:child_process';
 
 // Collection coverage, individual product acceptance and completion of the
 // remaining review queue are separate facts. A pending SKU cannot prevent
@@ -41,8 +42,14 @@ export async function publishVerifiedSpringBrowse(sourceRoot='web',targetRoot='p
  const proofs=await fs.readFile(path.join(sourceRoot,'spring','identical-photo-originals.json'),'utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return null;throw e;});
  if(proofs?.products?.length){const {applyIdenticalSpringNativePhotos}=await import('./spring-identical-native.mjs'),source=JSON.parse(await fs.readFile(path.join(sourceRoot,'spring','source.json'),'utf8')),result=await applyIdenticalSpringNativePhotos(catalogue,source,proofs,{sourceRoot});catalogue=result.catalogue;}
  const savedGallery=await fs.readFile(path.join(sourceRoot,'spring','image-checkpoint.json'),'utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return{entries:{}};throw e;});
- const galleryAudit=bindSpringSavedGalleryNatives(catalogue.products,savedGallery.entries);
- if(galleryAudit.applied)catalogue={...catalogue,revision:createHash('sha256').update(JSON.stringify(catalogue.products)).digest('hex'),savedGalleryNativeAudit:galleryAudit};
+ // A historical metadata row cannot publish a broken archive link. Sparse
+ // checkouts may omit a real tracked file; the committed tree still proves it.
+ let tracked=new Set();try{tracked=new Set(execFileSync('git',['ls-files','-z','--',path.join(sourceRoot,'images/source')],{encoding:'utf8',stdio:['ignore','pipe','pipe'],maxBuffer:67108864}).split('\0'));}catch{}
+ const available=new Map(),exists=async relative=>{if(!/^images\/source\/[a-f0-9]{64}\.(?:jpe?g|png|webp|avif|gif)$/.test(relative||''))return false;if(!available.has(relative)){const file=path.join(sourceRoot,relative);let yes=tracked.has(file);if(!yes)try{yes=(await fs.stat(file)).isFile();}catch(e){if(e.code!=='ENOENT')throw e;}available.set(relative,yes);}return available.get(relative);};
+ const durable={};for(const[url,e]of Object.entries(savedGallery.entries||{}))if(e.ok===true&&await exists(e.cachedImageUrl))durable[url]=e;
+ let removedUnavailable=0;for(const p of catalogue.products)for(const g of p.originalImages||[])if(g.nativeCachePath?.startsWith('images/source/')&&!await exists(g.nativeCachePath)){for(const k of['nativeCachePath','nativeSha256','sourceWidth','sourceHeight'])delete g[k];removedUnavailable++;}
+ const galleryAudit={...bindSpringSavedGalleryNatives(catalogue.products,durable),removedUnavailable};
+ if(galleryAudit.applied||removedUnavailable)catalogue={...catalogue,revision:createHash('sha256').update(JSON.stringify(catalogue.products)).digest('hex'),savedGalleryNativeAudit:galleryAudit};
  await fs.mkdir(output,{recursive:true});
  await fs.writeFile(path.join(output,'catalogue.json'),JSON.stringify(catalogue));
  await fs.writeFile(path.join(output,'status.json'),JSON.stringify({...status,revision:catalogue.revision,browseReady:true,reviewComplete:catalogue.reviewComplete,ready:catalogue.ready,...(catalogue.originalPhotoUpgradeAudit?{originalPhotoUpgradeAudit:catalogue.originalPhotoUpgradeAudit}:{}),...(catalogue.savedGalleryNativeAudit?{savedGalleryNativeAudit:catalogue.savedGalleryNativeAudit}:{})}));
