@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';import sharp from 'sharp';
 import {nativeSourceUrl,nativeImageCandidates} from '../web/product-facts.mjs';
+import {encodeDisplayPreview,MAX_DISPLAY_PREVIEW_BYTES,DISPLAY_PREVIEW_ENCODING} from '../server/display-preview.mjs';
 const OWN='https://raw.githubusercontent.com/g-jayden/range-christmas-observatory/main/web/';
 export async function inlineFirstCardPreviews(products,selected,{root,maxBytes=512*1024}={}){
  let used=0;const results=[];
@@ -12,9 +13,20 @@ export async function inlineFirstCardPreviews(products,selected,{root,maxBytes=5
  }return results;
 }
 export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot='runtime/bq-source/preview-files',additionalPreviewCacheRoots=['runtime/bq-previews'],fetchVerified=process.env.BROWSE_FETCH_VERIFIED_PREVIEWS==='true',fetcher=globalThis.fetch,encodingCacheRoot='runtime/card-preview-encodings'}={}){
- const work=new Map(),nativeFiles=new Map(),downloads=new Map();let imageRequests=0,imageFailures=0,repositoryImageRequests=0,remoteDenied=false;let generated=0,reused=0,bytes=0,active=0,invalidImages=0,nativeBytes=0,nativeCacheReused=0;const nativeRetailerBytes=new Map();const queue=[];
+ const work=new Map(),nativeFiles=new Map(),downloads=new Map(),encodingReads=new Map();let imageRequests=0,imageFailures=0,repositoryImageRequests=0,remoteDenied=false;let generated=0,reused=0,bytes=0,active=0,invalidImages=0,nativeBytes=0,nativeCacheReused=0;const nativeRetailerBytes=new Map();const queue=[];
  const limit=fn=>new Promise((resolve,reject)=>{queue.push({fn,resolve,reject});drain();});
  function drain(){while(active<4&&queue.length){const job=queue.shift();active++;Promise.resolve().then(job.fn).then(job.resolve,job.reject).finally(()=>{active--;drain();});}}
+ async function cachedEncoding(bound){
+  if(!encodingReads.has(bound)){
+   const task=(async()=>{try{
+    const cacheBase=path.join(encodingCacheRoot,bound+'-whole384q72');let record=JSON.parse(await fs.readFile(cacheBase+'.json','utf8')),encoded=await fs.readFile(cacheBase+'.webp');
+    if(record.sourceImageHash!==bound||!/^card-previews\/[a-f0-9]{64}\.webp$/.test(record.url)||createHash('sha256').update(encoded).digest('hex')!==path.basename(record.url,'.webp'))return null;
+    if(encoded.length>MAX_DISPLAY_PREVIEW_BYTES){encoded=await encodeDisplayPreview(encoded);record={...record,url:'card-previews/'+createHash('sha256').update(encoded).digest('hex')+'.webp',displayEncoding:DISPLAY_PREVIEW_ENCODING};await fs.writeFile(cacheBase+'.webp',encoded);await fs.writeFile(cacheBase+'.json',JSON.stringify(record));}
+    return {record,encoded};
+   }catch{return null;}})();encodingReads.set(bound,task);while(encodingReads.size>128)encodingReads.delete(encodingReads.keys().next().value);
+  }
+  const result=await encodingReads.get(bound);if(!result)encodingReads.delete(bound);return result;
+ }
  const local=value=>{if(typeof value!=='string')return null;const relative=value.startsWith(OWN)?value.slice(OWN.length):value;return /^images\/[\w./-]+\.(?:jpe?g|png|webp|avif)$/i.test(relative)&&!relative.split('/').includes('..')?relative:null;};
  const input=(value,bound)=>{const relative=local(value);if(relative)return {file:path.join(sourceRoot,relative),bound,repository:OWN+relative};if(/^[a-f0-9]{64}$/.test(bound||''))try{const u=new URL(value);if(u.origin==='https://media.diy.com'&&/^\/is\/image\/(?:Kingfisher|KingfisherDigital)\//.test(u.pathname)){u.search='';u.hash='';return {file:path.join(previewCacheRoot,createHash('sha256').update(u.href).digest('hex')+'.jpg'),alternateFiles:additionalPreviewCacheRoots.map(root=>path.join(root,createHash('sha256').update(u.href).digest('hex')+'.jpg')),bound,remote:value};}}catch{}return null;};
  async function readInput({file,alternateFiles=[],bound,remote}){
@@ -46,15 +58,15 @@ export function createCardPreviewBuilder(root,{sourceRoot='web',previewCacheRoot
   // traffic back to a protected retailer merely because a sparse file is absent.
   const sources=[...unique.map(c=>({...c,remote:undefined})),...unique.filter(c=>c.remote||/^[a-f0-9]{64}$/.test(c.bound||'')&&c.repository).map(c=>({...c,remote:c.remote||c.repository}))];
   for(const candidate of sources){const {file,bound}=candidate;
-   if(/^[a-f0-9]{64}$/.test(bound||''))try{const cacheBase=path.join(encodingCacheRoot,bound+'-whole384q72'),record=JSON.parse(await fs.readFile(cacheBase+'.json','utf8')),encoded=await fs.readFile(cacheBase+'.webp');if(record.sourceImageHash===bound&&/^card-previews\/[a-f0-9]{64}\.webp$/.test(record.url)&&createHash('sha256').update(encoded).digest('hex')===path.basename(record.url,'.webp')){await fs.mkdir(path.join(root,'card-previews'),{recursive:true});await fs.writeFile(path.join(root,record.url),encoded);reused++;bytes+=encoded.length;return {...p,fastPreview:record};}}catch{}
+   if(/^[a-f0-9]{64}$/.test(bound||'')){const cached=await cachedEncoding(bound);if(cached){const {record,encoded}=cached;await fs.mkdir(path.join(root,'card-previews'),{recursive:true});await fs.writeFile(path.join(root,record.url),encoded);reused++;bytes+=encoded.length;return {...p,fastPreview:record};}}
    const buffer=await readInput(candidate);if(!buffer)continue;
    const digest=createHash('sha256').update(buffer).digest('hex');
    if(/^[a-f0-9]{64}$/.test(bound||'')&&bound!==digest)continue;
    const key=digest+'/whole-384-webp-q72';if(!work.has(key))work.set(key,limit(async()=>{
     const cacheBase=path.join(encodingCacheRoot,digest+'-whole384q72');
-    try{const record=JSON.parse(await fs.readFile(cacheBase+'.json','utf8')),encoded=await fs.readFile(cacheBase+'.webp');if(record.sourceImageHash===digest&&/^card-previews\/[a-f0-9]{64}\.webp$/.test(record.url)&&createHash('sha256').update(encoded).digest('hex')===path.basename(record.url,'.webp')){await fs.mkdir(path.join(root,'card-previews'),{recursive:true});await fs.writeFile(path.join(root,record.url),encoded);reused++;bytes+=encoded.length;return record;}}catch{}
-    let meta,output;try{const image=sharp(buffer);meta=await image.metadata();if(!meta.width||!meta.height)throw Error('Cached preview has no image pixels');output=await image.rotate().resize({width:384,height:384,fit:'inside',withoutEnlargement:true}).webp({quality:72}).toBuffer();}catch{invalidImages++;return null;}
-    const hash=createHash('sha256').update(output).digest('hex'),url='card-previews/'+hash+'.webp';await fs.mkdir(path.join(root,'card-previews'),{recursive:true});await fs.writeFile(path.join(root,url),output);generated++;bytes+=output.length;const result={url,sourceImageHash:digest,sourceWidth:meta.width,sourceHeight:meta.height,representation:'uncropped-display-preview-native-original-retained'};await fs.mkdir(encodingCacheRoot,{recursive:true});await fs.writeFile(cacheBase+'.webp',output);await fs.writeFile(cacheBase+'.json',JSON.stringify(result));return result;
+    const cached=await cachedEncoding(digest);if(cached){const {record,encoded}=cached;await fs.mkdir(path.join(root,'card-previews'),{recursive:true});await fs.writeFile(path.join(root,record.url),encoded);reused++;bytes+=encoded.length;return record;}
+    let meta,output;try{const image=sharp(buffer);meta=await image.metadata();if(!meta.width||!meta.height)throw Error('Cached preview has no image pixels');output=await encodeDisplayPreview(buffer);}catch{invalidImages++;return null;}
+    const hash=createHash('sha256').update(output).digest('hex'),url='card-previews/'+hash+'.webp';await fs.mkdir(path.join(root,'card-previews'),{recursive:true});await fs.writeFile(path.join(root,url),output);generated++;bytes+=output.length;const result={url,sourceImageHash:digest,sourceWidth:meta.width,sourceHeight:meta.height,representation:'uncropped-display-preview-native-original-retained',displayEncoding:DISPLAY_PREVIEW_ENCODING};await fs.mkdir(encodingCacheRoot,{recursive:true});await fs.writeFile(cacheBase+'.webp',output);await fs.writeFile(cacheBase+'.json',JSON.stringify(result));return result;
    }));
    const preview=await work.get(key);if(preview)return {...p,fastPreview:preview};
   }
