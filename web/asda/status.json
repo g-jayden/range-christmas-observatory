@@ -1,1 +1,1 @@
-{"state":"error","lastSuccess":"2026-11-26T16:45:49.224Z","error":"ASDA grouped product not verified: SET13633","requests":1,"firecrawlCredits":1,"checkedAt":"2026-11-26T17:37:07.475Z"}
+{"state":"active","baselineReady":true,"observedAt":"2026-11-26T17:56:47.260Z","total":568,"productRecords":570,"uniqueSourceSkus":568,"expandedVariants":2,"products":521,"details":570,"issues":[],"firecrawlCredits":2,"requests":2}
