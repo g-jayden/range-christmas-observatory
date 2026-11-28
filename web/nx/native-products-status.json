@@ -1,1 +1,1 @@
-{"expected":829,"requests":829,"complete":true,"failures":[],"freeFailures":[],"firecrawlCredits":1}
+{"expected":813,"requests":813,"complete":true,"failures":[],"freeFailures":[{"itemCode":"244975","error":"Next exact item / stock identity mismatch"}],"firecrawlCredits":2}
